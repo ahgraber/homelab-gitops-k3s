@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - middlewares-authentik.yaml
+  # - middlewares-basicauth.yaml
+  - middlewares-cloudflare.yaml
+  - middlewares-headers-default.yaml
+  - middlewares-nextcloud.yaml
+  - middlewares-redirect-path.yaml
+  - middlewares-rfc1918.yaml
+# - secret.sops.yaml

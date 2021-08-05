@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: authentik
+  namespace: networking
+spec:
+  forwardAuth:
+    address: http://authentik-outpost:4180
+    authResponseHeaders:
+      - Authorization
+      - Set-Cookie
+      - X-Forwarded-User
