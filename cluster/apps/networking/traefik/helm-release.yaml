@@ -7,6 +7,8 @@ metadata:
   annotations:
     metallb.universe.tf/address-pool: frontend
 spec:
+  interval: 5m
+
   # see: https://github.com/fluxcd/helm-controller/issues/142
   install:
     remediation:
@@ -14,8 +16,8 @@ spec:
   upgrade:
     remediation:
       retries: 3
+  timeout: 10m
 
-  interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://helm.traefik.io/traefik

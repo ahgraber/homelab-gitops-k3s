@@ -85,9 +85,9 @@ in the editor and encrypt them when you save  and exit the file.
 
   ```sh
   # identify helm-controller name
-  HELM_CTRL=$(kubectl get pods -n flux-system | grep helm-controller | awk '{print $1}')
+  HELM_CTL=$(kubectl get pods -n flux-system | grep helm-controller | awk '{print $1}')
   # find last 20 logs for helmrelease name
-  kubectl --kubeconfig=./kubeconfig logs ${HELM_CTRL} -n flux-system | grep traefik | tail -20
+  kubectl --kubeconfig=${KUBECONFIG} logs ${HELM_CTL} -n flux-system | grep traefik | tail -20
   # get flux logs
   flux logs --kind=HelmRelease --name=traefik -n networking --tail 20
   ```
@@ -102,4 +102,21 @@ in the editor and encrypt them when you save  and exit the file.
 
   ```sh
   flux reconcile source helm traefik-charts -n flux-system
+  ```
+
+#### Delete and reinstall errored helm deployments
+
+* Delete with helm and `flux reconcile`
+
+  ```sh
+  helm delete traefik -n networking
+  sleep 120 && helm reconcile hr traefik -n networking
+  flux get hr traefik -n networking
+  ```
+
+*  helmrelease and reinstall via kustomization
+
+  ```sh
+  flux delete hr traefik -n networking
+  sleep 120 && flux reconcile kustomization apps
   ```
