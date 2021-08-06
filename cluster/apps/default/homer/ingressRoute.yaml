@@ -3,7 +3,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: homer
-  namespace: flux-system
+  namespace: networking
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
 spec:
