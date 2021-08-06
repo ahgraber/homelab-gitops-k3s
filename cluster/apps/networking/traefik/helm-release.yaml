@@ -64,7 +64,7 @@ spec:
       - "--api=true"
       - "--api.dashboard=true"
       - "--api.debug=true"
-      # - "--insecureSkipVerify=true"
+      - "--insecureSkipVerify=true"
       # - "--entryPoints.mysql.http.middlewares=rfc1918"
       # - "--entryPoints.metrics.http.middlewares=rfc1918"
       # - "--entryPoints.traefik.http.middlewares=rfc1918"
