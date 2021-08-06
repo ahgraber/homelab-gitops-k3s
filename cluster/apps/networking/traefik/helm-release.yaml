@@ -26,8 +26,10 @@ spec:
       type: LoadBalancer
       spec:
         # expects IP only, no netmask
-        externalIPs: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        # loadBalancerIP: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
+        externalIPs:
+          - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
+        # loadBalancerIP:
+        #  - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
       # annotations:
     logs:
       general:
