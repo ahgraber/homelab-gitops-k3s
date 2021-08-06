@@ -26,10 +26,9 @@ spec:
       type: LoadBalancer
       spec:
         # expects IP only, no netmask
-        externalIPs:
-          - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        # loadBalancerIP:
-        #  - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
+        # externalIPs:
+        #   - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
+        loadBalancerIP: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
       # annotations:
     logs:
       general:
@@ -55,23 +54,13 @@ spec:
       - "--api.dashboard=true"
       - "--api.debug=true"
       # - "--insecureSkipVerify=true"
-      ## external listen ports
-      # - "--entryPoints.web.Address=:80/tcp"
-      # - "--entrypoints.web.http.redirections.entryPoint.to=:443"
-      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      # - "--entryPoints.websecure.Address=:443/tcp"
-      # - "--entryPoints.mysql.Address=:3306/tcp"
       - "--entryPoints.mysql.http.middlewares=rfc1918"
-      # - "--entryPoints.metrics.Address=:9100"
       - "--entryPoints.metrics.http.middlewares=rfc1918"
-      # - -"-entryPoints.traefik.Address=:9000/tcp"
       - "--entryPoints.traefik.http.middlewares=rfc1918"
       ## providers
-      - "--providers.kubernetesingress"
       ## if next line is enabled, will need to add an annotation to ingresses you create to servce those requests:
-      - "--providers.kubernetesingress.ingressclass=traefik"
-      - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
-      # - "--providers.kubernetescrd"
+      # - "--providers.kubernetesingress.ingressclass=traefik"
+      # - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
       ## if next line is enabled, will need to add an annotation to ingresses you create to servce those requests:
       # - "--providers.kubernetescrd.ingressclass=traefik-crd"
       # - "--providers.kubernetescrd.ingressendpoint.ip=${METALLB_FRONTEND}"
@@ -117,10 +106,10 @@ spec:
         # The port protocol (TCP/UDP)
         protocol: TCP
       web:
-        port: 8080
-        # hostPort: 8000
         expose: true
         exposedPort: 80
+        port: 8000
+        # hostPort: 8000
         # The port protocol (TCP/UDP)
         protocol: TCP
         # Use nodeport if set. This is useful if you have configured Traefik in a LoadBalancer
@@ -128,10 +117,10 @@ spec:
         # Port Redirections-- Added in 2.2, make permanent redirects via entrypoints.
         redirectTo: websecure
       websecure:
-        port: 8443
-        # hostPort: 8443
         expose: true
         exposedPort: 443
+        port: 8443
+        # hostPort: 8443
         # nodePort: 32443
         # Set TLS at the entrypoint
         # https://doc.traefik.io/traefik/routing/entrypoints/#tls
