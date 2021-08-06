@@ -1,8 +1,7 @@
 # :sailboat:&nbsp; Installing k3s with k3sup
 
 :round_pushpin: Here we will be install [k3s](https://k3s.io/) with [k3sup](https://github.com/alexellis/k3sup).
-After completion, k3sup will drop a `kubeconfig` in your present working
-directory for use with interacting with your cluster with `kubectl`.
+After completion, k3sup will drop a `kubeconfig` in your present working directory for use with interacting with your cluster with `kubectl`.
 
 1. Ensure you are able to SSH into you nodes with using your private ssh key. This is how k3sup is able to connect to your remote node.
 
@@ -13,17 +12,20 @@ directory for use with interacting with your cluster with `kubectl`.
 
    ```sh
    echo "export USER=nrl" >> .envrc
+   echo "export KEYPATH='~/.ssh/id_rsa'" >> .envrc
    echo "export KVIP=10.2.113.113" >> .envrc
+   echo "export K3S_VERSION=v1.21.3+k3s1" >> .envrc
    direnv allow .
 
+   HOST="k01.ninerealmlabs.com"
    k3sup install \
-       --host=k01.ninerealmlabs.com \
-       --user=${USER} \
-       --ssh-key=~/.ssh/ahg_ninerealmlabs_id_rsa \
-       --k3s-version=v1.20.6+k3s1 \
-       --cluster \
-       --tls-san ${KVIP} \
-       --k3s-extra-args="--disable servicelb --disable traefik"
+      --host=${HOST} \
+      --user=${USER} \
+      --ssh-key=${KEYPATH} \
+      --k3s-version=${K3S_VERSION} \
+      --cluster \
+      --tls-san ${KVIP} \
+      --k3s-extra-args="--disable servicelb --disable traefik"
    ```
 
    Test the cluster initialization:
@@ -44,25 +46,22 @@ directory for use with interacting with your cluster with `kubectl`.
 4. Add the remaining **server** nodes
 
    ```sh
-   k3sup join \
-       --host=k02.ninerealmlabs.com \
-       --user=${USER} \
-       --server-host=${KVIP} \
-       --server-user=${USER} \
-       --ssh-key=~/.ssh/ahg_ninerealmlabs_id_rsa \
-       --k3s-version=v1.20.6+k3s1 \
-       --server \
-       --k3s-extra-args="--disable servicelb --disable traefik "
+   CONTROL=(
+      "k02.ninerealmlabs.com"
+      "k03.ninerealmlabs.com"
+   )
+   for HOST in ${CONTROL[@]}; do
+      k3sup join \
+         --host=${HOST} \
+         --user=${USER} \
+         --server-host=${KVIP} \
+         --server-user=${USER} \
+         --ssh-key=${KEYPATH} \
+         --k3s-version=${K3S_VERSION} \
+         --server \
+         --k3s-extra-args="--disable servicelb --disable traefik "
+   done
 
-   k3sup join \
-       --host=k03.ninerealmlabs.com \
-       --user=${USER} \
-       --server-host=${KVIP} \
-       --server-user=${USER} \
-       --ssh-key=~/.ssh/ahg_ninerealmlabs_id_rsa \
-       --k3s-version=v1.20.6+k3s1 \
-       --server \
-       --k3s-extra-args="--disable servicelb --disable traefik"
    ```
 
 5. Check cluster status:
@@ -76,14 +75,19 @@ directory for use with interacting with your cluster with `kubectl`.
 6. Join worker nodes (optional)
 
    ```sh
-   HOST=10.2.113.***
-   k3sup join \
-       --host=${HOST} \
-       --user=nrl \
-       --server-host=${KVIP} \
-       --server-user=nrl
-       --ssh-key=~/.ssh/ahg_ninerealmlabs_id_rsa \
-       --k3s-version=v1.20.6+k3s1
+   WORKER=(
+      ""
+      ""
+   )
+   for HOST in ${WORKER[@]}; do
+      k3sup join \
+         --host=${HOST} \
+         --user=${USER} \
+         --server-host=${KVIP} \
+         --server-user=${USER}
+         --ssh-key=${KEYPATH} \
+         --k3s-version=${K3S_VERSION}
+   done
    ```
 
 7. Check cluster status:

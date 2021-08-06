@@ -39,10 +39,8 @@ brew install gnupg
 
 ## :warning:&nbsp; pre-commit
 
-It is advisable to install [pre-commit](https://pre-commit.com/)
-and the pre-commit hooks that come with this repository.
-[sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit)
-will check to make sure you are not by accident commiting your secrets un-encrypted.
+It is advisable to install [pre-commit](https://pre-commit.com/) and the pre-commit hooks that come with this repository.
+[sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit) will check to make sure you are not by accident commiting your secrets un-encrypted.
 
 After pre-commit is installed on your machine run:
 
@@ -69,7 +67,9 @@ echo '.envrc' >> ~/.gitignore
 echo '.env' >> ~/.gitignore
 echo '.envrc' >> .gitignore
 echo '.env' >> .gitignore
-#
+
+# remove .gitignored files
+git ls-files -i --exclude-from=.gitignore | xargs git rm --cached
 
 # set up direnv config to whitelist folders for direnv
 mkdir -p ~/.config/direnv

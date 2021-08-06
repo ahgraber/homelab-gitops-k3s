@@ -1,14 +1,11 @@
 # :computer:&nbsp; High-Availability VirtualIP with kube-vip
 
-`kube-vip` is a Kubernetes Virtual IP and Load-Balancer for both control plane
-and Kubernetes services
+`kube-vip` is a Kubernetes Virtual IP and Load-Balancer for both control plane and Kubernetes services
 
 _`kube-vip` creates a virtual IP for the control plane for high availability (and acts as a loadBalancer for services), whereas `metallb` **only** acts a loadBalancer for services_
-However, most of `kube-vip`'s development is currently going to ensuring the
-VIP works, so we'll use it for control plane vIP and also use `metallb` for
-service load balancing.
+However, most of `kube-vip`'s development is currently going to ensuring the VIP works, so we'll use it for control plane vIP and also use `metallb` for service load balancing.
 
-https://kube-vip.io/hybrid/daemonset/
+[kube-vip reference](https://kube-vip.io/hybrid/daemonset/)
 
 -----
 
@@ -24,7 +21,7 @@ https://kube-vip.io/hybrid/daemonset/
 3. View/Edit the RBAC manifest to ensure that the following ruleset is present
 
    ```sh
-   nano /var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml
+   cat /var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml
    ```
 
    ...
@@ -75,7 +72,7 @@ https://kube-vip.io/hybrid/daemonset/
    ```sh
    sed -i.bak 's|server: https://.*:6443|server: https://'${KVIP}':6443|g' kubeconfig
    # test new kubeconfig
-   kubectl get nodes -o wide
+   kubectl --kubeconfig=${KUBECONFIG} get nodes -o wide
    # if works and looks good
    rm -f kubeconfig.bak
    ```

@@ -112,7 +112,7 @@ git push
 * [ ] Sync local repo with github
 * [ ] Bootstrap flux integration:
 
-```sh
+<!-- ```sh
 flux bootstrap github \
 --owner="${GITHUB_USER}" \
 --repository="${GITHUB_REPO}" \
@@ -123,7 +123,7 @@ flux bootstrap github \
 --network-policy=false
 ```
 
-_**Note**: When using k3s @onedr0p found that the network-policy flag has to be set to false, or Flux will not work_
+_**Note**: When using k3s @onedr0p found that the network-policy flag has to be set to false, or Flux will not work_ -->
 
 :round_pushpin: Due to race conditions with the Flux CRDs you will have to
 *run the below command twice*. There should be no errors on this second run.
@@ -189,12 +189,13 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 
 ## Verify ingress
 
-If your cluster is not accessible to outside world you can update your hosts
+If your cluster is not accessible to outside world you can provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
+<!-- or update your hosts
 file to verify the ingress controller is working.
 
 ```sh
 echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
-```
+``` -->
 
 Head over to your browser and you _should_ be able to access
 `https://homer.${BOOTSTRAP_DOMAIN}`
