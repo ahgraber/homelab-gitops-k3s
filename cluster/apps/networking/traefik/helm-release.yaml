@@ -126,7 +126,7 @@ spec:
         # Use nodeport if set. This is useful if you have configured Traefik in a LoadBalancer
         # nodePort: 32080
         # Port Redirections-- Added in 2.2, make permanent redirects via entrypoints.
-        redirectTo: websecure
+        # redirectTo: websecure
       websecure:
         expose: true
         exposedPort: 443
@@ -186,6 +186,7 @@ spec:
         minVersion: VersionTLS12
         maxVersion: VersionTLS13
         sniStrict: true
+
     tolerations:
       - key: "node-role.kubernetes.io/master"
         operator: "Exists"

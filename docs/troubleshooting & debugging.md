@@ -4,22 +4,21 @@
 
 ```sh
 kubectl --kubeconfig=${KUBECONFIG} get pods -n flux-system
-# NAME                                       READY   STATUS    RESTARTS   AGE
-# helm-controller-5bbd94c75-89sb4            1/1     Running   0          1h
-# kustomize-controller-7b67b6b77d-nqc67      1/1     Running   0          1h
-# notification-controller-7c46575844-k4bvr   1/1     Running   0          1h
-# source-controller-7d6875bcb4-zqw9f         1/1     Running   0          1h
 ```
 
 ## Verify ingress
 
-If your cluster is not accessible to outside world you can provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
-<!-- or update your hosts
+Check `https://traefik.${BOOTSTRAP_DOMAIN}/dashboard`
+
+Provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
+<!--
+or update your hosts
 file to verify the ingress controller is working.
 
 ```sh
 echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
-``` -->
+```
+-->
 
 Head over to your browser and you _should_ be able to access
 `https://homer.${BOOTSTRAP_DOMAIN}`
@@ -106,7 +105,7 @@ in the editor and encrypt them when you save  and exit the file.
 
 #### Delete and reinstall errored helm deployments
 
-* Delete with helm and `flux reconcile`
+* Delete helm deployment and `flux reconcile`
 
   ```sh
   helm delete traefik -n networking
@@ -114,9 +113,10 @@ in the editor and encrypt them when you save  and exit the file.
   flux get hr traefik -n networking
   ```
 
-*  helmrelease and reinstall via kustomization
+* Delete helmrelease and reinstall via full app kustomization
 
   ```sh
   flux delete hr traefik -n networking
   sleep 120 && flux reconcile kustomization apps
+  flux get hr traefik -n networking
   ```
