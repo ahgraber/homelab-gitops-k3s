@@ -7,6 +7,9 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
 spec:
+  entryPoints:
+    - web
+    - websecure
   routes:
     - match: Host(`homer.${SECRET_DOMAIN}`)
       kind: Rule
