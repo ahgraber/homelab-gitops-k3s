@@ -90,32 +90,32 @@ spec:
       enabled: false
     # equivalent to entryPoints static config
     ports:
-      traefik:
-        port: 9000
-        # Use hostPort if set.
-        # hostPort: 9000
-        #
-        # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
-        # means it's listening on all your interfaces and all your IPs. You may want
-        # to set this value if you need traefik to listen on specific interface
-        # only.
-        # hostIP: 192.168.100.10
+      # traefik:
+      #   port: 9000
+      #   # Use hostPort if set.
+      #   # hostPort: 9000
+      #   #
+      #   # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+      #   # means it's listening on all your interfaces and all your IPs. You may want
+      #   # to set this value if you need traefik to listen on specific interface
+      #   # only.
+      #   # hostIP: 192.168.100.10
 
-        # Override the liveness/readiness port. This is useful to integrate traefik
-        # with an external Load Balancer that performs healthchecks.
-        # healthchecksPort: 9000
+      #   # Override the liveness/readiness port. This is useful to integrate traefik
+      #   # with an external Load Balancer that performs healthchecks.
+      #   # healthchecksPort: 9000
 
-        # Defines whether the port is exposed if service.type is LoadBalancer or
-        # NodePort.
-        #
-        # You SHOULD NOT expose the traefik port on production deployments.
-        # If you want to access it from outside of your cluster,
-        # use `kubectl port-forward` or create a secure ingress
-        expose: false
-        # The exposed port for this service
-        exposedPort: 9000
-        # The port protocol (TCP/UDP)
-        protocol: TCP
+      #   # Defines whether the port is exposed if service.type is LoadBalancer or
+      #   # NodePort.
+      #   #
+      #   # You SHOULD NOT expose the traefik port on production deployments.
+      #   # If you want to access it from outside of your cluster,
+      #   # use `kubectl port-forward` or create a secure ingress
+      #   expose: false
+      #   # The exposed port for this service
+      #   exposedPort: 9000
+      #   # The port protocol (TCP/UDP)
+      #   protocol: TCP
       web:
         expose: true
         exposedPort: 80

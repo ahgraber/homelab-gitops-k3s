@@ -13,9 +13,10 @@ spec:
   routes:
     - match: Host(`traefik.${SECRET_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       kind: Rule
+      priority: 10
       # Enable auth middleware
       middlewares:
-        # - name: rfc1918
+        - name: rfc1918
         - name: basicauth
       services:
         - name: api@internal
