@@ -20,6 +20,11 @@ spec:
       repository: b4bz/homer
       tag: 21.07.1
       pullPolicy: IfNotPresent
+    env:
+      TZ: America/New_York
+    service:
+      port:
+        port: 8080
     ### use custom ingressRoute.yaml instead
     # ingress:
     #   main:
