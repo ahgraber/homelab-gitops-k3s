@@ -188,6 +188,20 @@ kubectl --kubeconfig=${KUBECONFIG} get kustomization -A
 flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 ```
 
+[optional] Add alias for update
+
+```sh
+cat << EOF >> ~/.aliases
+alias flux_update="
+flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
+sleep 60
+kubectl --kubeconfig=$(pwd)/kubeconfig get kustomization -A
+flux --kubeconfig=$(pwd)/kubeconfig get helmrelease -A
+"
+EOF
+source ~/.aliases
+```
+
 ## Verify ingress
 
 If your cluster is not accessible to outside world you can provide a dns override for
