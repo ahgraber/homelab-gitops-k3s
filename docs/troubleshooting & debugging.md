@@ -110,7 +110,7 @@ in the editor and encrypt them when you save  and exit the file.
 
   ```sh
   helm delete traefik -n networking
-  sleep 120 && helm reconcile hr traefik -n networking
+  sleep 120 && flux reconcile hr traefik -n networking
   flux get hr traefik -n networking
   ```
 
