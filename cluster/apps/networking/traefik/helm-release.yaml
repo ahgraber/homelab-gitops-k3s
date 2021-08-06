@@ -39,7 +39,7 @@ spec:
         # externalIPs:
         #   - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
         loadBalancerIP: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        # externalTrafficPolicy: Local  # Cluster
+        externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
       general:
