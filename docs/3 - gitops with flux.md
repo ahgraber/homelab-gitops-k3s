@@ -46,7 +46,8 @@ export BOOTSTRAP_DOMAIN="DOMAIN.COM"
 # Cloudflare API token for DNS certification
 export BOOTSTRAP_CLOUDFLARE_EMAIL="k8s-at-home@gmail.com"
 export BOOTSTRAP_CLOUDFLARE_TOKEN="kpG6iyg3FS_du_8KRShdFuwfbwu3zMltbvmJV6cD"
-# Pick a range of unused IPs that are on the same network as your nodes
+# Pick a range of *UNUSED* IPs that are on the same network as your nodes
+# Note: these cannot overlap with the kube-vip IP
 export BOOTSTRAP_METALLB_LB_RANGE="10.42.42.200-10.42.42.242"
 export BOOTSTRAP_METALLB_FRONTEND="10.42.42.42"
 export BOOTSTRAP_METALLB_RANCHER="10.42.42.42"
@@ -189,7 +190,8 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 
 ## Verify ingress
 
-If your cluster is not accessible to outside world you can provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
+If your cluster is not accessible to outside world you can provide a dns override for
+`https://homer.${BOOTSTRAP_DOMAIN}` in your router
 <!-- or update your hosts
 file to verify the ingress controller is working.
 
