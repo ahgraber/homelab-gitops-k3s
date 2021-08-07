@@ -11,6 +11,7 @@ kubectl --kubeconfig=${KUBECONFIG} get pods -n flux-system
 Check `https://traefik.${BOOTSTRAP_DOMAIN}/dashboard`
 
 Provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
+
 <!--
 or update your hosts
 file to verify the ingress controller is working.
@@ -28,19 +29,19 @@ Head over to your browser and you _should_ be able to access
 [VSCode SOPS](https://marketplace.visualstudio.com/items?itemName=signageos.signageos-vscode-sops)
 is a neat little plugin for those using VSCode.
 It will automatically decrypt you SOPS secrets when you click on the file
-in the editor and encrypt them when you save  and exit the file.
+in the editor and encrypt them when you save and exit the file.
 
 ## :point_right:&nbsp; Debugging
 
 ### 1. Sync with repo
 
-* Manually sync Flux with your Git repository
+- Manually sync Flux with your Git repository
 
   ```sh
   flux --kubeconfig=${KUBECONFIG} reconcile source git flux-system
   ```
 
-* Show the health of your main Flux `GitRepository`
+- Show the health of your main Flux `GitRepository`
 
   ```sh
   flux --kubeconfig=${KUBECONFIG} get sources git
@@ -48,19 +49,19 @@ in the editor and encrypt them when you save  and exit the file.
 
 ### 2. Debug Kustomizations
 
-* Show the health of kustomizations
+- Show the health of kustomizations
 
   ```sh
   kubectl --kubeconfig=${KUBECONFIG} get kustomization -A
   ```
 
-* Force flux to reconcile a kustomization:
+- Force flux to reconcile a kustomization:
 
   ```sh
   flux reconcile kustomization apps
   ```
 
-* View kustomization logs
+- View kustomization logs
 
   ```sh
   flux logs --kind=Kustomization --name=apps
@@ -68,19 +69,19 @@ in the editor and encrypt them when you save  and exit the file.
 
 ### 3. Debug Helm releases
 
-* Show the health of helm _releases_
+- Show the health of helm _releases_
 
   ```sh
   flux --kubeconfig=${KUBECONFIG} get helmrelease -A
   ```
 
-* Force flux to reconcile a helm release:
+- Force flux to reconcile a helm release:
 
   ```sh
   flux reconcile helmrelease traefik -n networking
   ```
 
-* Debug a nonfunctional helm release
+- Debug a nonfunctional helm release
 
   ```sh
   # identify helm-controller name
@@ -91,13 +92,13 @@ in the editor and encrypt them when you save  and exit the file.
   flux logs --kind=HelmRelease --name=traefik -n networking --tail 20
   ```
 
-* Show the health of your Helm _repositories_
+- Show the health of your Helm _repositories_
 
   ```sh
   flux --kubeconfig=${KUBECONFIG} get sources helm -A
   ```
 
-* Force flux to sync a helm repository:
+- Force flux to sync a helm repository:
 
   ```sh
   flux reconcile source helm traefik-charts -n flux-system
@@ -105,7 +106,7 @@ in the editor and encrypt them when you save  and exit the file.
 
 #### Delete and reinstall errored helm deployments
 
-* Delete helm deployment and `flux reconcile`
+- Delete helm deployment and `flux reconcile`
 
   ```sh
   helm delete traefik -n networking
@@ -113,7 +114,7 @@ in the editor and encrypt them when you save  and exit the file.
   flux get hr traefik -n networking
   ```
 
-* Delete helmrelease and reinstall via full app kustomization
+- Delete helmrelease and reinstall via full app kustomization
 
   ```sh
   flux delete hr traefik -n networking
@@ -123,19 +124,19 @@ in the editor and encrypt them when you save  and exit the file.
 
 ### 4. Debug Pods
 
-* Identify pods with
+- Identify pods with
 
   ```sh
   kubectl --kubeconfig=${KUBECONFIG} get pods -o wide -A
   ```
 
-* Get specific pod logs with
+- Get specific pod logs with
 
   ```sh
   kubectl --kubeconfig=${KUBECONFIG} logs <POD_NAME> -n <POD_NAMESPACE>
   ```
 
-* Get all logs pertaining to app with
+- Get all logs pertaining to app with
 
   ```sh
   kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=<NAME> -n <POD_NAMESPACE>

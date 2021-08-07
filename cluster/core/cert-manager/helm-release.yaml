@@ -16,16 +16,16 @@ spec:
         name: jetstack-charts
         namespace: flux-system
   values:
-    installCRDs: true
+    installCRDs: false # managed in crds kustomization
     webhook:
       enabled: true
     extraArgs:
-      - "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53"
-      - "--dns01-recursive-nameservers-only"
+      - '--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53'
+      - '--dns01-recursive-nameservers-only'
     cainjector:
       replicaCount: 1
-    podDnsPolicy: "None"
+    podDnsPolicy: 'None'
     podDnsConfig:
       nameservers:
-        - "1.1.1.1"
-        - "8.8.8.8"
+        - '1.1.1.1'
+        - '8.8.8.8'

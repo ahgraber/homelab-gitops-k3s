@@ -1,5 +1,5 @@
 ---
-name: "Support requests"
+name: 'Support requests'
 
 on:
   issues:
@@ -15,7 +15,7 @@ jobs:
       - uses: dessant/support-requests@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          support-label: "support"
+          support-label: 'support'
           issue-comment: >
             :wave: @{issue-author}, we use the issue tracker exclusively
             for bug reports and feature requests. However, this issue appears
@@ -24,4 +24,4 @@ jobs:
             - [Discord](https://discord.gg/sTMX7Vh)
           close-issue: true
           lock-issue: false
-          issue-lock-reason: "off-topic"
+          issue-lock-reason: 'off-topic'

@@ -38,7 +38,7 @@ spec:
         # expects IP only, no netmask
         # externalIPs:
         #   - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        loadBalancerIP: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
+        loadBalancerIP: '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
         # externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
@@ -55,17 +55,17 @@ spec:
       fallbackApiVersion: v1
     ingressRoute:
       dashboard:
-        enabled: false  # we'll use a custom ingressRoute with basic auth instead of the default one
+        enabled: false # we'll use a custom ingressRoute with basic auth instead of the default one
 
     globalArguments:
-      - "--global.checknewversion=false"
-      - "--global.sendanonymoususage=false"
+      - '--global.checknewversion=false'
+      - '--global.sendanonymoususage=false'
     additionalArguments:
-      - "--api"
-      - "--api.dashboard=true"
-      - "--api.debug=true"
+      - '--api'
+      - '--api.dashboard=true'
+      - '--api.debug=true'
       # - "--api.insecure=true"
-      - "--serverstransport.insecureskipverify=true"
+      - '--serverstransport.insecureskipverify=true'
       # - "--entryPoints.mysql.http.middlewares=rfc1918"
       # - "--entryPoints.metrics.http.middlewares=rfc1918"
       # - "--entryPoints.traefik.http.middlewares=rfc1918"
@@ -77,12 +77,12 @@ spec:
       # - "--providers.kubernetescrd.ingressclass=traefik-crd"
       # - "--providers.kubernetescrd.ingressendpoint.ip=${METALLB_FRONTEND}"
       ## other niceties
-      - "--log.level=INFO"
-      - "--ping"
+      - '--log.level=INFO'
+      - '--ping'
 
     env:
-    - name: TZ
-      value: "America/New_York"
+      - name: TZ
+        value: 'America/New_York'
 
     metrics:
       prometheus:
@@ -106,7 +106,7 @@ spec:
         exposedPort: 443
         tls:
           enabled: true
-          options: "default"
+          options: 'default'
       metrics:
         port: 8082
         expose: true
@@ -129,9 +129,9 @@ spec:
         drop: [ALL]
         add: [NET_BIND_SERVICE]
       readOnlyRootFilesystem: true
-      runAsGroup: 0  # 65532
-      runAsNonRoot: false  # true
-      runAsUser: 0  # 65532
+      runAsGroup: 0 # 65532
+      runAsNonRoot: false # true
+      runAsUser: 0 # 65532
 
     tlsOptions:
       default:
@@ -140,5 +140,5 @@ spec:
         sniStrict: true
 
     tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Exists"
+      - key: 'node-role.kubernetes.io/master'
+        operator: 'Exists'

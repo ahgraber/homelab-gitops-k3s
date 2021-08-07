@@ -7,8 +7,8 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
 
 2. Install the master node
 
-    > * `--cluster` creates a HA cluster with embedded etcd db
-    > * `--tls-san` adds the LoadBalancer’s virtual ip to the cert
+   > - `--cluster` creates a HA cluster with embedded etcd db
+   > - `--tls-san` adds the LoadBalancer’s virtual ip to the cert
 
    ```sh
    echo "export USER=nrl" >> .envrc
@@ -16,16 +16,16 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
    echo "export KVIP=10.2.113.113" >> .envrc
    echo "export K3S_VERSION=v1.21.3+k3s1" >> .envrc
    direnv allow .
-
+   
    HOST="k01.ninerealmlabs.com"
    k3sup install \
-      --host=${HOST} \
-      --user=${USER} \
-      --ssh-key=${KEYPATH} \
-      --k3s-version=${K3S_VERSION} \
-      --cluster \
-      --tls-san ${KVIP} \
-      --k3s-extra-args="--disable servicelb --disable traefik"
+     --host=${HOST} \
+     --user=${USER} \
+     --ssh-key=${KEYPATH} \
+     --k3s-version=${K3S_VERSION} \
+     --cluster \
+     --tls-san ${KVIP} \
+     --k3s-extra-args="--disable servicelb --disable traefik"
    ```
 
    Test the cluster initialization:
@@ -47,21 +47,20 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
 
    ```sh
    CONTROL=(
-      "k02.ninerealmlabs.com"
-      "k03.ninerealmlabs.com"
+     "k02.ninerealmlabs.com"
+     "k03.ninerealmlabs.com"
    )
    for HOST in ${CONTROL[@]}; do
-      k3sup join \
-         --host=${HOST} \
-         --user=${USER} \
-         --server-host=${KVIP} \
-         --server-user=${USER} \
-         --ssh-key=${KEYPATH} \
-         --k3s-version=${K3S_VERSION} \
-         --server \
-         --k3s-extra-args="--disable servicelb --disable traefik "
+     k3sup join \
+       --host=${HOST} \
+       --user=${USER} \
+       --server-host=${KVIP} \
+       --server-user=${USER} \
+       --ssh-key=${KEYPATH} \
+       --k3s-version=${K3S_VERSION} \
+       --server \
+       --k3s-extra-args="--disable servicelb --disable traefik "
    done
-
    ```
 
 5. Check cluster status:
@@ -76,17 +75,17 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
 
    ```sh
    WORKER=(
-      ""
-      ""
+     ""
+     ""
    )
    for HOST in ${WORKER[@]}; do
-      k3sup join \
-         --host=${HOST} \
-         --user=${USER} \
-         --server-host=${KVIP} \
-         --server-user=${USER}
-         --ssh-key=${KEYPATH} \
-         --k3s-version=${K3S_VERSION}
+     k3sup join \
+       --host=${HOST} \
+       --user=${USER} \
+       --server-host=${KVIP} \
+       --server-user=${USER}
+     --ssh-key=${KEYPATH} \
+       --k3s-version=${K3S_VERSION}
    done
    ```
 

@@ -15,11 +15,11 @@ spec:
       - key: node-role.kubernetes.io/master
         operator: NotIn
         values:
-          - "true"
+          - 'true'
   prepare:
     image: rancher/k3s-upgrade
     args:
-      - "prepare"
-      - "k3s-server"
+      - 'prepare'
+      - 'k3s-server'
   upgrade:
     image: rancher/k3s-upgrade

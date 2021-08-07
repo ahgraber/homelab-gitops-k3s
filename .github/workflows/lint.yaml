@@ -12,7 +12,7 @@ jobs:
       - name: yamllint
         uses: reviewdog/action-yamllint@v1
         with:
-          yamllint_flags: "-c .github/lint/.yamllint.yaml ./cluster"
+          yamllint_flags: '-c .github/lint/.yamllint.yaml ./cluster'
   shellcheck:
     runs-on: ubuntu-20.04
     steps:
@@ -20,8 +20,8 @@ jobs:
       - name: shellcheck
         uses: reviewdog/action-shellcheck@v1
         with:
-          path: "./hack"
-          level: "error"
+          path: './hack'
+          level: 'error'
   markdownlint:
     runs-on: ubuntu-20.04
     steps:

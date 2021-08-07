@@ -7,7 +7,7 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
 
 [kube-vip reference](https://kube-vip.io/hybrid/daemonset/)
 
------
+---
 
 1. SSH into control node
 
@@ -48,17 +48,17 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
 5. Create `kube-vip` manifest
 
    ```sh
-   export KVIP=10.2.113.113  # same IP provided to tls-san flag
+   export KVIP=10.2.113.113 # same IP provided to tls-san flag
    export INTERFACE=ens192  # standard network interface
-
+   
    kube-vip manifest daemonset \
-       --arp \
-       --interface ${INTERFACE} \
-       --address ${KVIP} \
-       --controlplane \
-       --leaderElection \
-       --taint \
-       --inCluster | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
+     --arp \
+     --interface ${INTERFACE} \
+     --address ${KVIP} \
+     --controlplane \
+     --leaderElection \
+     --taint \
+     --inCluster | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
    ```
 
 6. Check that the VIP is live on both k3s node and local machine

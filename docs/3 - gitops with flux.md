@@ -22,8 +22,8 @@ kubectl --kubeconfig=${KUBECONFIG} create namespace flux-system --dry-run=client
 ## 3. Add the Flux GPG key in-order for Flux to decrypt SOPS secrets
 
 ```sh
-gpg --export-secret-keys --armor "${FLUX_KEY_FP}" |
-kubectl --kubeconfig=${KUBECONFIG} create secret generic sops-gpg \
+gpg --export-secret-keys --armor "${FLUX_KEY_FP}" \
+  | kubectl --kubeconfig=${KUBECONFIG} create secret generic sops-gpg \
     --namespace=flux-system \
     --from-file=sops.asc=/dev/stdin
 ```
@@ -32,7 +32,7 @@ kubectl --kubeconfig=${KUBECONFIG} create secret generic sops-gpg \
 
 > _Note: Exported variables go into `./tmpl/...`, where there are exported to settings and secrets in the next step_
 
-**Edit before running or copying exports into .envrc**
+Here is a code blurb to quickly copy environmental variables into your .envrc. If using, **edit before running or copying exports into .envrc**
 
 ```sh
 cat << EOF >> .envrc
@@ -60,22 +60,21 @@ EOF
 ## 5. Create required files based on ALL exported environment variables
 
 > If additional customization is needed via variable exports, export variables,
-create templates in `./tmpl`, and add to export code below
-> If recreating secrets, may have to delete 'real' files outside of `./tmpl`
-> `>!` allows replacing of files on zsh.  In other shells, may use `>`
+> create templates in `./tmpl`, and add to export code below
+> If recreating secrets, may have to delete 'real' files outside of `./tmpl` > `>!` allows replacing of files on zsh. In other shells, may use `>`
 
 ```zsh
 # reload all env variables
 direnv allow .
 
 # create SOPS hook for secret encryption
-envsubst < ./tmpl/.sops.yaml >! ./.sops.yaml
+envsubst < ./tmpl/.sops.yaml > ! ./.sops.yaml
 # encrypt secrets
-envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
-envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
-envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
-envsubst < ./tmpl/cert-manager-secret.sops.yaml >! ./cluster/core/cert-manager/secret.sops.yaml
-envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
+envsubst < ./tmpl/cluster-secrets.sops.yaml > ! ./cluster/base/cluster-secrets.sops.yaml
+envsubst < ./tmpl/cluster-settings.yaml > ! ./cluster/base/cluster-settings.yaml
+envsubst < ./tmpl/gotk-sync.yaml > ! ./cluster/base/flux-system/gotk-sync.yaml
+envsubst < ./tmpl/cert-manager-secret.sops.yaml > ! ./cluster/core/cert-manager/secret.sops.yaml
+envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml > ! ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
 # add addl config/secrets
 ```
 
@@ -109,9 +108,9 @@ git push
 
 ## 10. Install Flux
 
-* [ ] Generate a new Github Personal Access Token with all `repository` permissions and add/update .envrc
-* [ ] Sync local repo with github
-* [ ] Bootstrap flux integration:
+- [ ] Generate a new Github Personal Access Token with all `repository` permissions and add/update .envrc
+- [ ] Sync local repo with github
+- [ ] Bootstrap flux integration:
 
 <!-- ```sh
 flux bootstrap github \
@@ -126,8 +125,8 @@ flux bootstrap github \
 
 _**Note**: When using k3s @onedr0p found that the network-policy flag has to be set to false, or Flux will not work_ -->
 
-:round_pushpin: Due to race conditions with the Flux CRDs you will have to
-*run the below command twice*. There should be no errors on this second run.
+:round*pushpin: Due to race conditions with the Flux CRDs you will have to
+\_run the below command twice*. There should be no errors on this second run.
 
 ```sh
 kubectl --kubeconfig=${KUBECONFIG} apply --kustomize=./cluster/base/flux-system
@@ -192,7 +191,7 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 
 ```sh
 cat << EOF >> ~/.aliases
-alias flux_update="
+alias flux-update="
 flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
 sleep 60
 kubectl --kubeconfig=$(pwd)/kubeconfig get kustomization -A
@@ -206,6 +205,7 @@ source ~/.aliases
 
 If your cluster is not accessible to outside world you can provide a dns override for
 `https://homer.${BOOTSTRAP_DOMAIN}` in your router
+
 <!-- or update your hosts
 file to verify the ingress controller is working.
 

@@ -11,17 +11,17 @@ Ubuntu, Debian or CentOS.
 on your workstation.
 
 | Tool                                                               | Purpose                                                             | Minimum version | Required |
-|--------------------------------------------------------------------|---------------------------------------------------------------------|:---------------:|:--------:|
-| [k3sup](https://github.com/alexellis/k3sup)                        | Tool to install k3s on your nodes                                   |    `0.10.2`     |    ✅     |
-| [kubectl](https://kubernetes.io/docs/tasks/tools/)                 | Allows you to run commands against Kubernetes clusters              |    `1.21.0`     |    ✅     |
-| [flux](https://toolkit.fluxcd.io/)                                 | Operator that manages your k8s cluster based on your Git repository |    `0.12.3`     |    ✅     |
-| [SOPS](https://github.com/mozilla/sops)                            | Encrypts k8s secrets with GnuPG                                     |     `3.7.1`     |    ✅     |
-| [GnuPG](https://gnupg.org/)                                        | Encrypts and signs your data                                        |    `2.2.27`     |    ✅     |
-| [pinentry](https://gnupg.org/related_software/pinentry/index.html) | Allows GnuPG to read passphrases and PIN numbers                    |     `1.1.1`     |    ✅     |
-| [direnv](https://github.com/direnv/direnv)                         | Exports env vars based on present working directory                 |    `2.28.0`     |    ❌     |
-| [pre-commit](https://github.com/pre-commit/pre-commit)             | Runs checks during `git commit`                                     |    `2.12.0`     |    ❌     |
-| [kustomize](https://kustomize.io/)                                 | Template-free way to customize application configuration            |     `4.1.0`     |    ❌     |
-| [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |     `3.5.4`     |    ❌     |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------- | :-------------: | :------: |
+| [k3sup](https://github.com/alexellis/k3sup)                        | Tool to install k3s on your nodes                                   |    `0.10.2`     |    ✅    |
+| [kubectl](https://kubernetes.io/docs/tasks/tools/)                 | Allows you to run commands against Kubernetes clusters              |    `1.21.0`     |    ✅    |
+| [flux](https://toolkit.fluxcd.io/)                                 | Operator that manages your k8s cluster based on your Git repository |    `0.12.3`     |    ✅    |
+| [SOPS](https://github.com/mozilla/sops)                            | Encrypts k8s secrets with GnuPG                                     |     `3.7.1`     |    ✅    |
+| [GnuPG](https://gnupg.org/)                                        | Encrypts and signs your data                                        |    `2.2.27`     |    ✅    |
+| [pinentry](https://gnupg.org/related_software/pinentry/index.html) | Allows GnuPG to read passphrases and PIN numbers                    |     `1.1.1`     |    ✅    |
+| [direnv](https://github.com/direnv/direnv)                         | Exports env vars based on present working directory                 |    `2.28.0`     |    ❌    |
+| [pre-commit](https://github.com/pre-commit/pre-commit)             | Runs checks during `git commit`                                     |    `2.12.0`     |    ❌    |
+| [kustomize](https://kustomize.io/)                                 | Template-free way to customize application configuration            |     `4.1.0`     |    ❌    |
+| [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |     `3.5.4`     |    ❌    |
 
 ## :ballot_box_with_check:&nbsp; Installation
 
@@ -73,7 +73,7 @@ git ls-files -i --exclude-from=.gitignore | xargs git rm --cached
 
 # set up direnv config to whitelist folders for direnv
 mkdir -p ~/.config/direnv
-echo > direnv.toml <<EOF
+echo > direnv.toml << EOF
 [whitelist]
 prefix = [ "/path/to/folders/to/whitelist" ]
 exact = [ "/path/to/envrc/to/whitelist" ]
@@ -103,7 +103,7 @@ echo "export EMAIL=\"${EMAIL}\"" >> .envrc
 echo "export PERSONAL_KEY_NAME=\"${FNAME} ${LNAME} ${EMAIL}\"" >> .envrc
 
 export GPG_TTY=$(tty)
-gpg --batch --full-generate-key <<EOF
+gpg --batch --full-generate-key << EOF
 Key-Type: 1
 Key-Length: 4096
 Subkey-Type: 1
@@ -130,7 +130,7 @@ export CLUSTERNAME=""
 echo "export FLUX_KEY_NAME=\"${CLUSTERNAME} (Flux) ${EMAIL}\"" >> .envrc
 
 export GPG_TTY=$(tty)
-gpg --batch --full-generate-key <<EOF
+gpg --batch --full-generate-key << EOF
 %no-protection
 Key-Type: 1
 Key-Length: 4096
