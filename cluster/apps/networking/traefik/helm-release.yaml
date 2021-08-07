@@ -39,7 +39,7 @@ spec:
         # externalIPs:
         #   - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
         loadBalancerIP: "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        externalTrafficPolicy: Local  # Cluster
+        # externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
       general:
@@ -64,6 +64,7 @@ spec:
       - "--api"
       - "--api.dashboard=true"
       - "--api.debug=true"
+      # - "--api.insecure=true"
       - "--serverstransport.insecureskipverify=true"
       # - "--entryPoints.mysql.http.middlewares=rfc1918"
       # - "--entryPoints.metrics.http.middlewares=rfc1918"
@@ -91,78 +92,29 @@ spec:
     # equivalent to entryPoints static config
     ports:
       traefik:
-        port: 9000
-        # Use hostPort if set.
-        # hostPort: 9000
-        #
-        # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
-        # means it's listening on all your interfaces and all your IPs. You may want
-        # to set this value if you need traefik to listen on specific interface
-        # only.
-        # hostIP: 192.168.100.10
-
-        # Override the liveness/readiness port. This is useful to integrate traefik
-        # with an external Load Balancer that performs healthchecks.
-        # healthchecksPort: 9000
-
-        # Defines whether the port is exposed if service.type is LoadBalancer or
-        # NodePort.
-        #
-        # You SHOULD NOT expose the traefik port on production deployments.
-        # If you want to access it from outside of your cluster,
-        # use `kubectl port-forward` or create a secure ingress
-        expose: false
-        # The exposed port for this service
-        exposedPort: 9000
-        # The port protocol (TCP/UDP)
-        protocol: TCP
+        # port: 9000
+        expose: true
+        # exposedPort: 9000
       web:
+        # port: 80
         expose: true
         exposedPort: 80
-        port: 8000
-        # hostPort: 8000
-        # The port protocol (TCP/UDP)
-        protocol: TCP
-        # Use nodeport if set. This is useful if you have configured Traefik in a LoadBalancer
-        # nodePort: 32080
-        # Port Redirections-- Added in 2.2, make permanent redirects via entrypoints.
-        # redirectTo: websecure
+        redirectTo: websecure
       websecure:
+        # port: 443
         expose: true
         exposedPort: 443
-        port: 8443
-        # hostPort: 8443
-        # nodePort: 32443
-        # Set TLS at the entrypoint
-        # https://doc.traefik.io/traefik/routing/entrypoints/#tls
         tls:
           enabled: true
           options: "default"
-      mysql:
-        port: 3306
-        # hostPort: 3306
-        # You may not want to expose the metrics port on production deployments.
-        # If you want to access it from outside of your cluster,
-        # use `kubectl port-forward` or create a secure ingress
-        expose: true
-        # The exposed port for this service
-        exposedPort: 3306
-        # The port protocol (TCP/UDP)
-        protocol: TCP
       metrics:
         port: 8082
-        # hostPort: 8082
-        # Defines whether the port is exposed if service.type is LoadBalancer or
-        # NodePort.
-        #
-        # You may not want to expose the metrics port on production deployments.
-        # If you want to access it from outside of your cluster,
-        # use `kubectl port-forward` or create a secure ingress
-        expose: false
-        # The exposed port for this service
+        expose: true
         exposedPort: 8082
-        # The port protocol (TCP/UDP)
-        protocol: TCP
+      mysql:
+        port: 3306
+        expose: true
+        exposedPort: 3306
     providers:
       kubernetesCRD:
         enabled: true
@@ -177,9 +129,9 @@ spec:
         drop: [ALL]
         add: [NET_BIND_SERVICE]
       readOnlyRootFilesystem: true
-      runAsGroup: 65532  # 0
-      runAsNonRoot: true  # false
-      runAsUser: 65532  # 0
+      runAsGroup: 0  # 65532
+      runAsNonRoot: false  # true
+      runAsUser: 0  # 65532
 
     tlsOptions:
       default:

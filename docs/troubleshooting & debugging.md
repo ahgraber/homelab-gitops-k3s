@@ -120,3 +120,23 @@ in the editor and encrypt them when you save  and exit the file.
   sleep 120 && flux reconcile kustomization apps
   flux get hr traefik -n networking
   ```
+
+### 4. Debug Pods
+
+* Identify pods with
+
+  ```sh
+  kubectl --kubeconfig=${KUBECONFIG} get pods -o wide -A
+  ```
+
+* Get specific pod logs with
+
+  ```sh
+  kubectl --kubeconfig=${KUBECONFIG} logs <POD_NAME> -n <POD_NAMESPACE>
+  ```
+
+* Get all logs pertaining to app with
+
+  ```sh
+  kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=<NAME> -n <POD_NAMESPACE>
+  ```
