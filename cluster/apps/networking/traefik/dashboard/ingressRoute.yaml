@@ -6,6 +6,7 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
+    - web
     - websecure
   routes:
     - match: Host(`traefik.${SECRET_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
