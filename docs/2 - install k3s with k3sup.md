@@ -26,11 +26,9 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
      --cluster \
      --tls-san ${KVIP} \
      --k3s-extra-args="--disable servicelb --disable traefik"
-   ```
-
-   Test the cluster initialization:
-
-   ```sh
+   
+   # Test the cluster initialization:
+   sleep 10
    kubectl config set-context default
    kubectl get node -o wide
    ```
@@ -61,17 +59,15 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
        --server \
        --k3s-extra-args="--disable servicelb --disable traefik "
    done
-   ```
-
-5. Check cluster status:
-
-   ```sh
+   
+   # Check cluster status:
    # export KUBECONFIG=$(pwd)/kubeconfig
+   sleep 30
    kubectl config set-context default
    kubectl get node -o wide
    ```
 
-6. Join worker nodes (optional)
+5. Join worker nodes (optional)
 
    ```sh
    WORKER=(
@@ -87,12 +83,10 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
      --ssh-key=${KEYPATH} \
        --k3s-version=${K3S_VERSION}
    done
-   ```
-
-7. Check cluster status:
-
-   ```sh
+   
+   # Check cluster status:
    # export KUBECONFIG=$(pwd)/kubeconfig
+   sleep 30
    kubectl config set-context default
    kubectl get node -o wide
    ```

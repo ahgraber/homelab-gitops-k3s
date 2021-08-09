@@ -139,5 +139,6 @@ in the editor and encrypt them when you save and exit the file.
 - Get all logs pertaining to app with
 
   ```sh
-  kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=<NAME> -n <POD_NAMESPACE>
+  # kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=<NAME> -n <POD_NAMESPACE>
+  kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=traefik -n networking
   ```
