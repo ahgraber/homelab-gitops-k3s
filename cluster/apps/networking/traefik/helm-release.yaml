@@ -43,11 +43,11 @@ spec:
       # annotations:
     logs:
       general:
-        # format: json
         level: DEBUG
+        # format: json
       access:
         enabled: true # handled in crds kustomization
-        format: json
+        # format: json
     # installCRDs: true
     ingressClass:
       enabled: false
