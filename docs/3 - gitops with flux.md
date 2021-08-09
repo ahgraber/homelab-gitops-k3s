@@ -70,11 +70,11 @@ direnv allow .
 # create SOPS hook for secret encryption
 envsubst < ./tmpl/.sops.yaml > ! ./.sops.yaml
 # encrypt secrets
-envsubst < ./tmpl/cluster-secrets.sops.yaml > ! ./cluster/base/cluster-secrets.sops.yaml
-envsubst < ./tmpl/cluster-settings.yaml > ! ./cluster/base/cluster-settings.yaml
-envsubst < ./tmpl/gotk-sync.yaml > ! ./cluster/base/flux-system/gotk-sync.yaml
-envsubst < ./tmpl/cert-manager-secret.sops.yaml > ! ./cluster/core/cert-manager/secret.sops.yaml
-envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml > ! ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
+envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
+envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
+envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
+envsubst < ./tmpl/cert-manager-secret.sops.yaml >! ./cluster/core/cert-manager/secret.sops.yaml
+envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
 # add addl config/secrets
 ```
 
@@ -125,8 +125,8 @@ flux bootstrap github \
 
 _**Note**: When using k3s @onedr0p found that the network-policy flag has to be set to false, or Flux will not work_ -->
 
-:round*pushpin: Due to race conditions with the Flux CRDs you will have to
-\_run the below command twice*. There should be no errors on this second run.
+:round_pushpin: Due to race conditions with the Flux CRDs you will have to
+\_*run the below command twice*. There should be no errors on this second run.
 
 ```sh
 kubectl --kubeconfig=${KUBECONFIG} apply --kustomize=./cluster/base/flux-system

@@ -7,4 +7,4 @@ metadata:
 spec:
   defaultCertificate:
     # secretName: '${SECRET_DOMAIN/./-}-tls'
-    secretName: '${SECRET_DOMAIN/.*[[:alpha:]]/}-stage-tls'
+    secretName: '${SECRET_DOMAIN/./-}-stage-tls'
