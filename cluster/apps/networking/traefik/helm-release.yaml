@@ -74,10 +74,10 @@ spec:
       # # providers
       # # if next line is enabled, will need to add an annotation to ingresses you create to servce those requests:
       # - '--providers.kubernetesingress.ingressclass=traefik'
-      - '--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}'
+      # - '--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}'
       # # if next line is enabled, will need to add an annotation to ingresses you create to servce those requests:
       # - '--providers.kubernetescrd.ingressclass=traefik-crd'
-      - '--providers.kubernetescrd.ingressendpoint.ip=${METALLB_FRONTEND}'
+      # - '--providers.kubernetescrd.ingressendpoint.ip=${METALLB_FRONTEND}'
       ## other niceties
       - '--log.level=INFO'
       - '--ping'
