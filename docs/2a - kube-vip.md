@@ -11,6 +11,11 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
 
 1. SSH into control node
 
+   ```ssh
+   # assumes .direnv variables set
+   ssh ${USER}@${HOST}
+   ```
+
 2. Download RBAC (Rule-Based Access Control) for kube-vip and save to control node's `manifiests` folder
 
    ```sh
@@ -67,7 +72,7 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
    ping ${KVIP}
    ```
 
-7. Redirect kubeconfig to kube-vip
+7. Redirect kubeconfig to kube-vip on local machine
 
    ```sh
    sed -i.bak 's|server: https://.*:6443|server: https://'${KVIP}':6443|g' kubeconfig
