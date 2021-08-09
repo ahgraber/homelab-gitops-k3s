@@ -13,9 +13,9 @@ spec:
       kind: Rule
       priority: 10
       # Enable auth middleware
-      middlewares:
+      # middlewares:
         # - name: rfc1918
-        - name: basicauth
+        # - name: basicauth
       services:
         - name: api@internal
           kind: TraefikService
