@@ -36,9 +36,9 @@ spec:
       type: LoadBalancer
       spec:
         # expects IP only, no netmask
-        # externalIPs:
-        #   - "${METALLB_FRONTEND}"  # this should be the metallb IP reserved for Ingress
-        loadBalancerIP: '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
+        externalIPs:
+          - '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
+        # loadBalancerIP: '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
         # externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
@@ -46,7 +46,7 @@ spec:
         format: json
         level: DEBUG
       access:
-        enabled: true
+        enabled: true # handled in crds kustomization
         format: json
     # installCRDs: true
     ingressClass:
@@ -129,9 +129,9 @@ spec:
         drop: [ALL]
         add: [NET_BIND_SERVICE]
       readOnlyRootFilesystem: true
-      runAsGroup: 0 # 65532
-      runAsNonRoot: false # true
-      runAsUser: 0 # 65532
+      runAsGroup: 65532 # 0
+      runAsNonRoot: true # false
+      runAsUser: 65532 # 0
 
     tlsOptions:
       default:

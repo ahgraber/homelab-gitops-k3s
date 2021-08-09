@@ -15,8 +15,8 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
-        # - name: rfc1918
-        # - name: basicauth
+        - name: rfc1918
+        - name: basicauth
       services:
         - name: homer
           namespace: default
