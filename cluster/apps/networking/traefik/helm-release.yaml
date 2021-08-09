@@ -83,10 +83,10 @@ spec:
       enabled: false
     # equivalent to entryPoints static config
     ports:
-      traefik:
-        # port: 9000
-        expose: true
-        exposedPort: 9000
+      # traefik:
+      #   # port: 9000
+      #   expose: true
+      #   exposedPort: 9000
       web:
         # port: 80
         expose: true
