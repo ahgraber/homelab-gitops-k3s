@@ -26,8 +26,8 @@ spec:
       spec:
         # expects IP only, no netmask
         # externalIPs:
-        #   - '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
-        loadBalancerIP: '${METALLB_FRONTEND}' # this should be the metallb IP reserved for Ingress
+        #   - "${METALLB_FRONTEND}" # this should be the metallb IP reserved for Ingress
+        loadBalancerIP: "${METALLB_FRONTEND}" # this should be the metallb IP reserved for Ingress
         # externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
@@ -50,7 +50,7 @@ spec:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
     additionalArguments:
-      - '--api=true'
+      - "--api=true"
       # - "--api.dashboard=true"
       - "--api.debug=true"
       - "--api.insecure=true"
@@ -76,10 +76,10 @@ spec:
     pilot:
       enabled: false
     ports:
-      traefik:
-        port: 9000
-        expose: true
-        exposedPort: 9000
+      # traefik:
+      #   port: 9000
+      #   expose: true
+      #   exposedPort: 9000
       web:
         # port: 80
         expose: true
@@ -126,4 +126,4 @@ spec:
 
     tolerations:
       - key: "node-role.kubernetes.io/master"
-        operator: 'Exists'
+        operator: "Exists"
