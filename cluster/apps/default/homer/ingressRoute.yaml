@@ -4,8 +4,6 @@ kind: IngressRoute
 metadata:
   name: homer
   namespace: networking
-  # annotations:
-  #   traefik.ingress.kubernetes.io/router.entrypoints: 'websecure'
 spec:
   entryPoints:
     # - web
