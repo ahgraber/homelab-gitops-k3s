@@ -8,16 +8,6 @@ metadata:
     metallb.universe.tf/address-pool: frontend
 spec:
   interval: 5m
-
-  # see: https://github.com/fluxcd/helm-controller/issues/142
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  timeout: 10m
-
   chart:
     spec:
       # renovate: registryUrl=https://helm.traefik.io/traefik
@@ -29,9 +19,7 @@ spec:
         namespace: flux-system
   values:
     deployment:
-      # kind: DaemonSet
-      kind: Deployment
-      replicas: 3
+      kind: DaemonSet
     service:
       enabled: true
       type: LoadBalancer
@@ -62,10 +50,10 @@ spec:
       - '--global.checknewversion=false'
       - '--global.sendanonymoususage=false'
     additionalArguments:
-      # - '--api'
-      # - '--api.dashboard=true'
-      # - '--api.debug=true'
-      - '--api.insecure=true'
+      - '--api=true'
+      - '--api.dashboard=true'
+      - '--api.debug=true'
+      # - '--api.insecure=true'
       - '--serverstransport.insecureskipverify=true'
       # - "--providers.kubernetesingress.ingressclass=traefik"
       # - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
