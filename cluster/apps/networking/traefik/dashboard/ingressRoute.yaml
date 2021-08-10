@@ -9,7 +9,7 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`traefik.${SECRET_DOMAIN}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`traefik.${SECRET_DOMAIN}`) # && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       # Enable auth middleware
       # middlewares:
