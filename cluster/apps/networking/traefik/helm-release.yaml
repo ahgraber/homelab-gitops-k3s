@@ -53,7 +53,7 @@ spec:
       - "--api=true"
       # - "--api.dashboard=true"
       - "--api.debug=true"
-      - "--api.insecure=true"
+      # - "--api.insecure=true"
       - "--serverstransport.insecureskipverify=true"
       - "--providers.kubernetesingress.ingressclass=traefik"
       - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
