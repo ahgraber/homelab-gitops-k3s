@@ -6,5 +6,5 @@ metadata:
   namespace: networking
 spec:
   defaultCertificate:
-    # secretName: '${SECRET_DOMAIN/./-}-tls'
-    secretName: '${SECRET_DOMAIN/./-}-stage-tls'
+    secretName: '${SECRET_DOMAIN/./-}-tls'
+    # secretName: '${SECRET_DOMAIN/./-}-stage-tls'
