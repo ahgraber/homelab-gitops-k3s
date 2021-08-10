@@ -7,7 +7,7 @@ metadata:
 spec:
   entryPoints:
     - web
-    - websecure
+    # - websecure
   routes:
     - match: Host(`traefik.${SECRET_DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       kind: Rule
