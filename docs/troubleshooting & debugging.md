@@ -90,6 +90,8 @@ in the editor and encrypt them when you save and exit the file.
   kubectl --kubeconfig=${KUBECONFIG} logs ${HELM_CTL} -n flux-system | grep traefik | tail -20
   # get flux logs
   flux logs --kind=HelmRelease --name=traefik -n networking --tail 20
+  # check configured values
+  helm get values traefik -n networking
   ```
 
 - Show the health of your Helm _repositories_
@@ -117,7 +119,7 @@ in the editor and encrypt them when you save and exit the file.
 - Delete helmrelease and reinstall via full app kustomization
 
   ```sh
-  flux delete hr traefik -n networking
+  flux delete hr traefik -n networking -s
   sleep 120 && flux reconcile kustomization apps
   flux get hr traefik -n networking
   ```
