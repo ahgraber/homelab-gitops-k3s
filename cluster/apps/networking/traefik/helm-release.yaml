@@ -50,7 +50,7 @@ spec:
       - '--global.checknewversion=false'
       - '--global.sendanonymoususage=false'
     additionalArguments:
-      - '--api=true'
+      # - '--api'
       - '--api.dashboard=true'
       - '--api.debug=true'
       # - '--api.insecure=true'
@@ -66,13 +66,14 @@ spec:
     env:
       - name: TZ
         value: 'America/New_York'
-
+    experimental:
+      plugins:
+        enabled: true
     metrics:
       prometheus:
         entryPoint: metrics
     pilot:
       enabled: false
-    # equivalent to entryPoints static config
     ports:
       # traefik:
       #   # port: 9000
