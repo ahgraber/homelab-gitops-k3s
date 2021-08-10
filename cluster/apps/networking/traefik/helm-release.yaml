@@ -67,9 +67,9 @@ spec:
     env:
       - name: TZ
         value: "America/New_York"
-    experimental:
-      plugins:
-        enabled: true
+    # experimental:
+    #   plugins:
+    #     enabled: true
     metrics:
       prometheus:
         entryPoint: metrics
