@@ -3,14 +3,13 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: rancher
-  namespace: kube-system
+  namespace: cattle-system
 spec:
   interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://releases.rancher.com/server-charts/stable
       chart: rancher
-      targetNamespace: cattle-system
       version: v2.5.9
       sourceRef:
         kind: HelmRepository
