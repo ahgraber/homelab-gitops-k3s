@@ -144,3 +144,11 @@ in the editor and encrypt them when you save and exit the file.
   # kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=<NAME> -n <POD_NAMESPACE>
   kubectl --kubeconfig=${KUBECONFIG} logs -l app.kubernetes.io/name=traefik -n networking
   ```
+
+- Clear evicted pods
+
+  ```sh
+  kubectl get po -a --all-namespaces -o json | \
+  jq  '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) |
+  "kubectl delete po \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+  ```
