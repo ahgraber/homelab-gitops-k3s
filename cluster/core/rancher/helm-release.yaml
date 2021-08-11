@@ -3,13 +3,14 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: rancher
-  namespace: cattle-system
+  namespace: kube-system
 spec:
   interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://releases.rancher.com/server-charts/stable
       chart: rancher
+      targetNamespace: cattle-system
       version: v2.5.9
       sourceRef:
         kind: HelmRepository
@@ -22,9 +23,9 @@ spec:
     # ingress.tls.source: secret  # if `tls-rancher-ingress` cert has been created, otherwise delete
     tls: ingress  # if using ingress with tls/ssl termination
     tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
-      operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
     ### use custom ingressRoute.yaml instead
     # ingress:
     #   main:
