@@ -5,5 +5,5 @@ resources:
   - cert-manager
   - democratic-csi
   - metallb-system
-  - rancher
+  # - rancher
   - system-upgrade
