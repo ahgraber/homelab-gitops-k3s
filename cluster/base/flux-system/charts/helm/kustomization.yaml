@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - authentik-charts.yaml
   - bitnami-charts.yaml
+  - democratic-csi-charts.yaml
   - grafana-charts.yaml
   # - ingress-nginx-charts.yaml
   - jetstack-charts.yaml
