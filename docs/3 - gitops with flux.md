@@ -76,6 +76,8 @@ envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
 envsubst < ./tmpl/cert-manager-secret.sops.yaml >! ./cluster/core/cert-manager/secret.sops.yaml
 envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
 # add addl config/secrets
+envsubst < ./tmpl/truenas-iscsi-secret.sops.yaml >! ./cluster/core/democratic-csi/iscsi-secret.sops.yaml
+envsubst < ./tmpl/truenas-nfs-secret.sops.yaml >! ./cluster/core/democratic-csi/nfs-secret.sops.yaml
 ```
 
 ## 6. :mag:&nbsp; **Verify** all the above files have the correct information present
@@ -90,6 +92,8 @@ sops --encrypt --in-place ./cluster/base/cluster-secrets.sops.yaml
 sops --encrypt --in-place ./cluster/core/cert-manager/secret.sops.yaml
 sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/secret.sops.yaml
 # add add'l secrets
+sops --encrypt --in-place ./cluster/core/democratic-csi/iscsi-secret.sops.yaml
+sops --encrypt --in-place ./cluster/core/democratic-csi/nfs-secret.sops.yaml
 ```
 
 :round_pushpin: Variables defined in `cluster-secrets.yaml` and

@@ -1,0 +1,89 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nfs-democratic-csi
+  namespace: democratic-csi
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://democratic-csi.github.io/charts/
+      chart: democratic-csi
+      version: 0.8.3
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi-charts
+        namespace: flux-system
+  values:
+    csiDriver:
+      name: "org.democratic-csi.truenas-nfs"
+
+    driver:
+      # see the driver-config-secret.yaml template for syntax
+      existingConfigSecret: democratic-csi-driver-config-nfs-secret
+      config:
+        ## NOTE: if setting an existing secret you must still set `driver.config.driver`
+        ## to the appropriate (equivalent) 'driver' value used in the secret,
+        ## as the value is used by the chart for other purposes beyond secret creation
+        driver: freenas-nfs
+
+    storageClasses:
+      - name: csi-truenas-nfs
+        defaultClass: false
+        reclaimPolicy: Delete # Delete, Retain
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          fsType: nfs
+        mountOptions:
+          - noatime
+          - nfsvers=4
+          - sec=sys
+        # secrets:
+        #   provisioner-secret:
+        #   controller-publish-secret:
+        #   node-stage-secret:
+        #   node-publish-secret:
+        #   controller-expand-secret:
+
+    controller:
+      enabled: true
+      externalResizer:
+        enabled: true
+      external Snapshotter:
+        enabled: false # not using k8s snapshots
+      externalHealthMonitorController:
+        enabled: false
+      livenessProbe:
+        enabled: true
+
+      strategy: deployment
+      hostNetwork: true
+      hostIPC: true
+
+      # for the controller, manually mount from the remote NFS server on start,
+      # so it can dynamically create PVC (the "crude" part)
+      # ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
+      driver:
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+              - SYS_ADMIN
+          privileged: true
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount truenas.ninerealmlabs.com:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
+        #   preStop:
+        #     exec:
+        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+
+    node:
+      rbac:
+        enabled: true
+      enabled: true
+      hostNetwork: true
+      hostIPC: true
+      kubeletHostPath: /var/lib/kubelet
