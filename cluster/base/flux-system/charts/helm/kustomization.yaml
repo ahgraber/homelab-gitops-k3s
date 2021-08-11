@@ -11,4 +11,5 @@ resources:
   - metallb-charts.yaml
   - nfs-subdir-external-provisioner-charts.yaml
   - prometheus-community-charts.yaml
+  - rancher-charts.yaml
   - traefik-charts.yaml
