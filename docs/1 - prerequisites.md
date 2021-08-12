@@ -85,7 +85,8 @@ direnv reload
 ## :bulb:&nbsp; SOPS
 
 The [SOPS VSCode Extension](https://github.com/signageos/vscode-sops)
-will auto-decrypt files locally
+will automatically decrypt you SOPS secrets when you click on the file
+in the editor and encrypt them when you save and exit the file.
 
 ## :closed_lock_with_key:&nbsp; Set up GnuPG keys
 

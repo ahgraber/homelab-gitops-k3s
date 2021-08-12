@@ -1,15 +1,13 @@
 # Template for deploying k3s backed by Flux
 
-Template for deploying a single [k3s](https://k3s.io/) cluster with [k3sup](https://github.com/alexellis/k3sup),
-backed by [Flux](https://toolkit.fluxcd.io/) and [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/).
+Deploy a single [k3s](https://k3s.io/) cluster with [k3sup](https://github.com/alexellis/k3sup),
+backed by the [GitOps](https://www.weave.works/blog/what-is-gitops-really) tool
+[Flux](https://toolkit.fluxcd.io/) and [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/).
+Cluster provisioned with [terraform on vsphere](https://github.com/ahgraber/homelab-terraform).
 
-The purpose here is to showcase how you can deploy an entire Kubernetes cluster
-and show it off to the world using the
-[GitOps](https://www.weave.works/blog/what-is-gitops-really) tool
-[Flux](https://toolkit.fluxcd.io/).
-When completed, your Git repository will be driving the state of your cluster.
-In addition with the help of the [Flux SOPS integration](https://toolkit.fluxcd.io/guides/mozilla-sops/)
-you'll be able to commit GPG encrypted secrets to your public repo.
+This Git repository will be specifies the state of the cluster.
+In addition, with the help of the [Flux SOPS integration](https://toolkit.fluxcd.io/guides/mozilla-sops/)
+GPG encrypted secrets can be committed to this public repo.
 
 ## With Inspiration from
 
