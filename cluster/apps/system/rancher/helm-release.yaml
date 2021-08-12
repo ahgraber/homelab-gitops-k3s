@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: rancher
-  namespace: cattle-system
+  namespace: kube-system
 spec:
   interval: 5m
   chart:
@@ -15,6 +15,7 @@ spec:
         kind: HelmRepository
         name: rancher-charts
         namespace: flux-system
+      targetNamespace: cattle-system
   values:
     rancherImageTag: v2.5.9
     hostname: rancher.${SECRET_DOMAIN}
