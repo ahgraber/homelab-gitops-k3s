@@ -35,7 +35,7 @@ gpg --export-secret-keys --armor "${FLUX_KEY_FP}" \
 Here is a code blurb to quickly copy environmental variables into your .envrc. If using, **edit before running or copying exports into .envrc**
 
 ```sh
-cat << EOF >> .envrc
+cat >> .envrc << EOF
 
 # The repo you created from this template
 export BOOTSTRAP_GITHUB_REPOSITORY="https://github.com/ahgraber/homelab-gitops-k3s"
@@ -68,7 +68,7 @@ EOF
 direnv allow .
 
 # create SOPS hook for secret encryption
-envsubst < ./tmpl/.sops.yaml > ! ./.sops.yaml
+envsubst < ./tmpl/.sops.yaml >! ./.sops.yaml
 # encrypt secrets
 envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
 envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
@@ -194,7 +194,7 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 [optional] Add alias for update
 
 ```sh
-cat << EOF >> ~/.aliases
+cat >> ~/.aliases << EOF
 alias flux-update="
 flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
 sleep 60

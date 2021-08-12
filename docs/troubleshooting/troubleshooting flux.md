@@ -1,39 +1,10 @@
-# Troubleshooting & Debugging
+# Troubleshooting flux system
 
-## Verify Flux
+- Verify flux is running
 
-```sh
-kubectl --kubeconfig=${KUBECONFIG} get pods -n flux-system
-```
-
-## Verify ingress
-
-Check `https://traefik.${BOOTSTRAP_DOMAIN}/dashboard`
-
-Provide a dns override for `https://homer.${BOOTSTRAP_DOMAIN}` in your router
-
-<!--
-or update your hosts
-file to verify the ingress controller is working.
-
-```sh
-echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
-```
--->
-
-Head over to your browser and you _should_ be able to access
-`https://homer.${BOOTSTRAP_DOMAIN}`
-
-## VSCode SOPS extension
-
-[VSCode SOPS](https://marketplace.visualstudio.com/items?itemName=signageos.signageos-vscode-sops)
-is a neat little plugin for those using VSCode.
-It will automatically decrypt you SOPS secrets when you click on the file
-in the editor and encrypt them when you save and exit the file.
-
-## :point_right:&nbsp; Debugging
-
-### 1. Sync with repo
+  ```sh
+  kubectl --kubeconfig=${KUBECONFIG} get pods -n flux-system
+  ```
 
 - Manually sync Flux with your Git repository
 
@@ -41,30 +12,31 @@ in the editor and encrypt them when you save and exit the file.
   flux --kubeconfig=${KUBECONFIG} reconcile source git flux-system
   ```
 
-- Show the health of your main Flux `GitRepository`
+- Get status of objects managed by Flux
 
   ```sh
-  flux --kubeconfig=${KUBECONFIG} get sources git
+  # flux --kubeconfig=${KUBECONFIG} get all -A
+  flux get sources git -A
+  flux get sources helm -A
+  flux get sources chart -A
+  flux get helmrelease -A
+  flux get kustomization -A
   ```
 
-### 2. Debug Kustomizations
-
-- Show the health of kustomizations
+- Force flux to reconcile:
 
   ```sh
-  kubectl --kubeconfig=${KUBECONFIG} get kustomization -A
-  ```
-
-- Force flux to reconcile a kustomization:
-
-  ```sh
-  flux reconcile kustomization apps
+  flux reconcile helmrelease RELEASENAME -n NAMESPACE
+  flux reconcile kustomization NAME
+  flux reconcile source SOURCE NAME
   ```
 
 - View kustomization logs
 
   ```sh
+  flux logs --kind=HelmRelease
   flux logs --kind=Kustomization --name=apps
+
   ```
 
 ### 3. Debug Helm releases
@@ -148,7 +120,13 @@ in the editor and encrypt them when you save and exit the file.
 - Clear evicted pods
 
   ```sh
-  kubectl get po -a --all-namespaces -o json | \
-  jq  '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) |
-  "kubectl delete po \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+  kubectl get po --all-namespaces -o json | \
+    jq  '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) |
+    "kubectl delete po \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+  ```
+
+- Remove disk pressure taint
+
+  ```sh
+  kubectl taint nodes {NODENAME} node.kubernetes.io/disk-pressure-
   ```
