@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: rancher-charts
         namespace: flux-system
-      targetNamespace: cattle-system
+  targetNamespace: cattle-system
   values:
     rancherImageTag: v2.5.9
     hostname: rancher.${SECRET_DOMAIN}
