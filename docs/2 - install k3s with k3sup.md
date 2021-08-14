@@ -16,7 +16,7 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
    echo "export KVIP=10.2.113.113" >> .envrc
    echo "export K3S_VERSION=v1.21.3+k3s1" >> .envrc
    direnv allow .
-   
+
    HOST="k01.ninerealmlabs.com"
    k3sup install \
      --host=${HOST} \
@@ -26,7 +26,7 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
      --cluster \
      --tls-san ${KVIP} \
      --k3s-extra-args="--disable servicelb --disable traefik"
-   
+
    # Test the cluster initialization:
    sleep 10
    kubectl config set-context default
@@ -59,7 +59,7 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
        --server \
        --k3s-extra-args="--disable servicelb --disable traefik "
    done
-   
+
    # Check cluster status:
    # export KUBECONFIG=$(pwd)/kubeconfig
    sleep 30
@@ -80,10 +80,10 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
        --user=${USER} \
        --server-host=${KVIP} \
        --server-user=${USER}
-     --ssh-key=${KEYPATH} \
+       --ssh-key=${KEYPATH} \
        --k3s-version=${K3S_VERSION}
    done
-   
+
    # Check cluster status:
    # export KUBECONFIG=$(pwd)/kubeconfig
    sleep 30

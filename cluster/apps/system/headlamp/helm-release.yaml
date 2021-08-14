@@ -1,0 +1,30 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: headlamp
+  namespace: system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://kinvolk.github.io/headlamp/
+      chart: headlamp
+      version: 0.1.1
+      sourceRef:
+        kind: HelmRepository
+        name: headlamp-charts
+        namespace: flux-system
+  values:
+    replicaCount: 1
+    config:
+      # -- base url path at which headlamp should run
+      baseURL: "headlamp.${SECRETDOMAIN}"
+    service:
+      type: ClusterIP
+      port: 80
+    ingress:
+      enabled: false
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
