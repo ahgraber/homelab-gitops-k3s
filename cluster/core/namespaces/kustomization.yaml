@@ -4,5 +4,6 @@ resources:
   - cattle-system.yaml
   - cert-manager.yaml
   - democratic-csi.yaml
+  - mariadb.yaml
   - metallb-system.yaml
   - networking.yaml
