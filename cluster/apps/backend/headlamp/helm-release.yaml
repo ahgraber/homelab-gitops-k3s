@@ -19,7 +19,7 @@ spec:
     replicaCount: 1
     config:
       # -- base url path at which headlamp should run
-      baseURL: "headlamp.${SECRETDOMAIN}"
+      # baseURL: "/"
     service:
       type: ClusterIP
       port: 80
