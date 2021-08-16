@@ -107,16 +107,16 @@ spec:
         enabled: true
     rbac:
       enabled: true
-    # ## Resolves: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
-    # ## https://stackoverflow.com/questions/66138370/permission-problem-w-helm3-installation-of-traefik-on-port-80-hostnetwork
-    # securityContext:
-    #   capabilities:
-    #     drop: [ALL]
-    #     add: [NET_BIND_SERVICE]
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 65532 # 0
-    #   runAsNonRoot: true # false
-    #   runAsUser: 65532 # 0
+    ## Resolves: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
+    ## https://stackoverflow.com/questions/66138370/permission-problem-w-helm3-installation-of-traefik-on-port-80-hostnetwork
+    securityContext:
+      capabilities:
+        drop: [ALL]
+        add: [NET_BIND_SERVICE]
+      readOnlyRootFilesystem: true
+      runAsGroup: 65532 # 0
+      runAsNonRoot: true # false
+      runAsUser: 65532 # 0
 
     tlsOptions:
       default:
