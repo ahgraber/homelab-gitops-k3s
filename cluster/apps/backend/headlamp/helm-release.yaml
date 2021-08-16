@@ -33,7 +33,7 @@ spec:
       create: true
     service:
       type: ClusterIP
-      port: 443
+      port: 80
     ingress:
       enabled: false
     tolerations:
