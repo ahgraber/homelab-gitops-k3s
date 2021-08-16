@@ -77,16 +77,16 @@ spec:
       enabled: false
     ports:
       traefik:
-        port: 9000
+        # port: 9000
         expose: true
         exposedPort: 9000
       web:
-        port: 80
+        # port: 80
         expose: true
         exposedPort: 80
         redirectTo: websecure
       websecure:
-        port: 443
+        # port: 443
         expose: true
         exposedPort: 443
         tls:
@@ -107,16 +107,16 @@ spec:
         enabled: true
     rbac:
       enabled: true
-    ## Resolves: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
-    ## https://stackoverflow.com/questions/66138370/permission-problem-w-helm3-installation-of-traefik-on-port-80-hostnetwork
-    securityContext:
-      capabilities:
-        drop: [ALL]
-        add: [NET_BIND_SERVICE]
-      readOnlyRootFilesystem: true
-      runAsGroup: 65532 # 0
-      runAsNonRoot: true # false
-      runAsUser: 65532 # 0
+    # ## Resolves: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
+    # ## https://stackoverflow.com/questions/66138370/permission-problem-w-helm3-installation-of-traefik-on-port-80-hostnetwork
+    # securityContext:
+    #   capabilities:
+    #     drop: [ALL]
+    #     add: [NET_BIND_SERVICE]
+    #   readOnlyRootFilesystem: true
+    #   runAsGroup: 65532 # 0
+    #   runAsNonRoot: true # false
+    #   runAsUser: 65532 # 0
 
     tlsOptions:
       default:
