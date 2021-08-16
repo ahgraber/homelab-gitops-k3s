@@ -18,11 +18,22 @@ spec:
   values:
     replicaCount: 1
     config:
-      # -- base url path at which headlamp should run
       baseURL: "/"
+      # use OIDC or serviceAccount (below)
+      oidc:
+        # -- OIDC client ID
+        clientID: ""
+        # -- OIDC client secret
+        clientSecret: ""
+        # -- OIDC issuer URL
+        issuerURL: ""
+        # -- OIDC scopes to be used
+        scopes: ""
+    serviceAccount:
+      create: true
     service:
       type: ClusterIP
-      port: 80
+      port: 443
     ingress:
       enabled: false
     tolerations:
