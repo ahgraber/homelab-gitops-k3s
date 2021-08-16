@@ -77,16 +77,16 @@ spec:
       enabled: false
     ports:
       traefik:
-        # port: 9000
+        port: 9000
         expose: true
         exposedPort: 9000
       web:
-        # port: 80
+        port: 80
         expose: true
         exposedPort: 80
         redirectTo: websecure
       websecure:
-        # port: 443
+        port: 443
         expose: true
         exposedPort: 443
         tls:
