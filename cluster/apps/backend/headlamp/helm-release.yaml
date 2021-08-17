@@ -18,7 +18,7 @@ spec:
   values:
     replicaCount: 1
     config:
-      baseURL: "/"
+      baseURL: ""
       # use OIDC or serviceAccount (below)
       oidc:
         # -- OIDC client ID
