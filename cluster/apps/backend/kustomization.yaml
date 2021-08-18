@@ -5,4 +5,4 @@ resources:
   - headlamp
   # - mariadb
   # - myphpadmin
-  # - rancher
+  - rancher
