@@ -4,14 +4,24 @@ resources:
   - authentik-charts.yaml
   - bitnami-charts.yaml
   - dashboard-charts.yaml
+  - deliveryhero-charts.yaml
   - democratic-csi-charts.yaml
+  - descheduler-charts.yaml
+  - falco-security-charts.yaml
   - grafana-charts.yaml
   - headlamp-charts.yaml
+  - infracloudio-charts.yaml
   # - ingress-nginx-charts.yaml
   - jetstack-charts.yaml
   - k8s-at-home-charts.yaml
+  - kuberhealthy-charts.yaml
+  - lwolf-charts.yaml
   - metallb-charts.yaml
   - nfs-subdir-external-provisioner-charts.yaml
+  - node-feature-discovery-charts.yaml
   - prometheus-community-charts.yaml
   - rancher-charts.yaml
+  - stakater-charts.yaml
   - traefik-charts.yaml
+  - victoriametrics-charts.yaml
+  - weaveworks-kured-charts.yaml
