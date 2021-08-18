@@ -8,7 +8,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://helm.traefik.io/traefik
+      # renovate: registryUrl=https://charts.bitnami.com/bitnami
       chart: mariadb-galera
       version: 5.8.2
       sourceRef:
