@@ -1,8 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - backend
-  - default
-  - kube-system
-  - networking
-  - system-upgrade
+  - secret.sops.yaml
+  - helm-release.yaml
+  - prometheus-rule.yaml
