@@ -4,6 +4,7 @@
 After completion, k3sup will drop a `kubeconfig` in your present working directory for use with interacting with your cluster with `kubectl`.
 
 1. Ensure you are able to SSH into you nodes with using your private ssh key. This is how k3sup is able to connect to your remote node.
+_In OPNsense, set Unbound DNS overrides to IP address and node name of terraform'd nodes_
 
 2. Install the master node
 
@@ -13,19 +14,19 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
    ```sh
    echo "export USER=nrl" >> .envrc
    echo "export KEYPATH='~/.ssh/id_rsa'" >> .envrc
-   echo "export KVIP=10.2.113.113" >> .envrc
+   echo "export KVIP=10.2.113.1" >> .envrc
    echo "export K3S_VERSION=v1.21.3+k3s1" >> .envrc
    direnv allow .
 
-   HOST="k01.ninerealmlabs.com"
+   HOST="km01.ninerealmlabs.com"
    k3sup install \
-     --host=${HOST} \
-     --user=${USER} \
-     --ssh-key=${KEYPATH} \
-     --k3s-version=${K3S_VERSION} \
+     --host="${HOST}" \
+     --user="${USER}" \
+     --ssh-key="${KEYPATH}" \
+     --k3s-version="${K3S_VERSION}" \
      --cluster \
-     --tls-san ${KVIP} \
-     --k3s-extra-args="--disable servicelb --disable traefik"
+     --tls-san "${KVIP}" \
+     --k3s-extra-args="--disable servicelb --disable traefik --node-taint node-role.kubernetes.io/master=true:NoSchedule"
 
    # Test the cluster initialization:
    sleep 10
@@ -45,19 +46,19 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
 
    ```sh
    CONTROL=(
-     "k02.ninerealmlabs.com"
-     "k03.ninerealmlabs.com"
+     "km02.ninerealmlabs.com"
+     "km03.ninerealmlabs.com"
    )
-   for HOST in ${CONTROL[@]}; do
+   for HOST in "${CONTROL[@]}"; do
      k3sup join \
-       --host=${HOST} \
-       --user=${USER} \
-       --server-host=${KVIP} \
-       --server-user=${USER} \
-       --ssh-key=${KEYPATH} \
-       --k3s-version=${K3S_VERSION} \
+       --host="${HOST}" \
+       --user="${USER}" \
+       --server-host="${KVIP}" \
+       --server-user="${USER}" \
+       --ssh-key="${KEYPATH}" \
+       --k3s-version="${K3S_VERSION}" \
        --server \
-       --k3s-extra-args="--disable servicelb --disable traefik "
+       --k3s-extra-args="--disable servicelb --disable traefik --node-taint node-role.kubernetes.io/master=true:NoSchedule"
    done
 
    # Check cluster status:
@@ -71,16 +72,17 @@ After completion, k3sup will drop a `kubeconfig` in your present working directo
 
    ```sh
    WORKER=(
-     ""
-     ""
+     "kw01.ninerealmlabs.com"
+     "kw02.ninerealmlabs.com"
+     "kw03.ninerealmlabs.com"
    )
-   for HOST in ${WORKER[@]}; do
+   for HOST in "${WORKER[@]}"; do
      k3sup join \
-       --host=${HOST} \
-       --user=${USER} \
-       --server-host=${KVIP} \
-       --server-user=${USER}
-       --ssh-key=${KEYPATH} \
+       --host="${HOST}" \
+       --user="${USER}" \
+       --server-host="${KVIP}" \
+       --server-user="${USER}" \
+       --ssh-key="${KEYPATH}" \
        --k3s-version=${K3S_VERSION}
    done
 
