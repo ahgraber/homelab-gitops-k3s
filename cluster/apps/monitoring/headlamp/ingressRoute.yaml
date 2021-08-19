@@ -15,7 +15,7 @@ spec:
       middlewares:
         # - name: basicauth
         - name: rfc1918
-        - name: headers-default
+        # - name: headers-default
       services:
         - name: headlamp
           namespace: backend
