@@ -41,11 +41,16 @@ cat >> .envrc << EOF
 export BOOTSTRAP_GITHUB_REPOSITORY="https://github.com/ahgraber/homelab-gitops-k3s"
 export GITHUB_USER="ahgraber"
 export GITHUB_TOKEN="qwertyuiop123456789"
+export BOOTSTRAP_DEFAULT_USER="ahgraber"
+export BOOTSTRAP_DEFAULT_EMAIL="k8s-at-home@gmail.com"
+export BOOTSTRAP_DEFAULT_PASSWORD="changeme"
+
 # Choose one of your domains or use a made up one
 export BOOTSTRAP_DOMAIN="DOMAIN.COM"
 # Cloudflare API token for DNS certification
 export BOOTSTRAP_CLOUDFLARE_EMAIL="k8s-at-home@gmail.com"
 export BOOTSTRAP_CLOUDFLARE_TOKEN="kpG6iyg3FS_du_8KRShdFuwfbwu3zMltbvmJV6cD"
+
 # Pick a range of *UNUSED* IPs that are on the same network as your nodes
 # Note: these cannot overlap with the kube-vip IP
 export BOOTSTRAP_METALLB_LB_RANGE="10.42.42.200-10.42.42.242"
