@@ -47,15 +47,15 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
    kube-vip version
    ```
 
-   > If you get an error like _"ctr: image "docker.io/plndr/kube-vip:0.3.4": not found"_, edit alias:
+   > If you get an error like _"ctr: image "docker.io/plndr/kube-vip:0.3.7": not found"_, edit alias:
    > `alias kube-vip="k3s ctr run --rm --net-host docker.io/plndr/kube-vip:${VERSION} vip /kube-vip"`
 
 5. Create `kube-vip` manifest
 
    ```sh
-   export KVIP=10.2.113.113 # same IP provided to tls-san flag
+   export KVIP=10.2.113.1 # same IP provided to tls-san flag
    export INTERFACE=ens192  # standard network interface
-   
+
    kube-vip manifest daemonset \
      --arp \
      --interface ${INTERFACE} \
@@ -64,6 +64,15 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
      --leaderElection \
      --taint \
      --inCluster | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
+   ```
+
+   View/Edit the `kube-vip` manifest to ensure that the following toleration is present to allow it to run on control-plane nodes (if we tainted the control-plane)
+
+   ```yml
+   tolerations:
+     - effect: NoSchedule
+       key: node-role.kubernetes.io/master
+       operator: Exists
    ```
 
 6. Check that the VIP is live on both k3s node and local machine
