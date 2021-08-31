@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`headlamp.${SECRET_DOMAIN}`) && (PathPrefix(`/`)
+    - match: Host(`headlamp.${SECRET_DOMAIN}`)  # && (PathPrefix(`/`)
       kind: Rule
       # Enable auth middleware
       middlewares:
