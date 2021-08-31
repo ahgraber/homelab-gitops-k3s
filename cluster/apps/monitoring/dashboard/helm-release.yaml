@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       # renovate: registryUrl=https://kubernetes.github.io/dashboard/
-      chart: dashboard
+      chart: kubernetes-dashboard
       version: 5.0.0
       sourceRef:
         kind: HelmRepository
