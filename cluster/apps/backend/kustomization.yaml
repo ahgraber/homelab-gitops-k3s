@@ -3,5 +3,4 @@ kind: Kustomization
 resources:
   # - mariadb
   # - myphpadmin
-  # - rancher
   # - velero
