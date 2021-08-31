@@ -4,8 +4,9 @@ kind: Middleware
 metadata:
   name: nextcloud
   namespace: networking
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   redirectRegex:
-    permanent: true
-    regex: ^https://(.*)/.well-known/(card|cal)dav$
+    regex: https://(.*)/.well-known/(card|cal)dav
     replacement: https://${1}/remote.php/dav/

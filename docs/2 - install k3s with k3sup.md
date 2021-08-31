@@ -12,15 +12,15 @@ _In OPNsense, set Unbound DNS overrides to IP address and node name of terraform
    > - `--tls-san` adds the LoadBalancer’s virtual ip to the cert
 
    ```sh
-   echo "export USER=nrl" >> .envrc
+   echo "export USER='username'" >> .envrc
    echo "export KEYPATH='~/.ssh/id_rsa'" >> .envrc
-   echo "export KVIP=10.2.113.1" >> .envrc
-   echo "export K3S_VERSION=v1.21.3+k3s1" >> .envrc
+   echo "export KVIP='10.42.42.42'" >> .envrc
+   echo "export K3S_VERSION='v1.21.3+k3s1'" >> .envrc
+   echo "export CTRL=(k01 k02 k03)" >> .envrc
    direnv allow .
 
-   HOST="km01.ninerealmlabs.com"
    k3sup install \
-     --host="${HOST}" \
+     --host="${CTRL[0]}" \
      --user="${USER}" \
      --ssh-key="${KEYPATH}" \
      --k3s-version="${K3S_VERSION}" \
@@ -45,11 +45,7 @@ _In OPNsense, set Unbound DNS overrides to IP address and node name of terraform
 4. Add the remaining **server** nodes
 
    ```sh
-   CONTROL=(
-     "km02.ninerealmlabs.com"
-     "km03.ninerealmlabs.com"
-   )
-   for HOST in "${CONTROL[@]}"; do
+   for HOST in "${CTRL[@]:1}"; do
      k3sup join \
        --host="${HOST}" \
        --user="${USER}" \
@@ -71,19 +67,15 @@ _In OPNsense, set Unbound DNS overrides to IP address and node name of terraform
 5. Join worker nodes (optional)
 
    ```sh
-   WORKER=(
-     "kw01.ninerealmlabs.com"
-     "kw02.ninerealmlabs.com"
-     "kw03.ninerealmlabs.com"
-   )
-   for HOST in "${WORKER[@]}"; do
+   echo "export WORK=(k04 k05 k06)" >> .envrc
+   for HOST in "${WORK[@]}"; do
      k3sup join \
        --host="${HOST}" \
        --user="${USER}" \
        --server-host="${KVIP}" \
        --server-user="${USER}" \
        --ssh-key="${KEYPATH}" \
-       --k3s-version=${K3S_VERSION}
+       --k3s-version="${K3S_VERSION}"
    done
 
    # Check cluster status:
