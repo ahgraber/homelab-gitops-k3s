@@ -63,6 +63,12 @@
   kubectl --kubeconfig=${KUBECONFIG} get pods -o wide -A
   ```
 
+- Get pod issues with
+
+  ```sh
+  kubectl --kubeconfig=${KUBECONFIG} describe pods <POD_NAME> -n <POD_NAMESPACE>
+  ```
+
 - Get specific pod logs with
 
   ```sh
