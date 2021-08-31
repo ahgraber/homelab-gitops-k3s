@@ -10,17 +10,17 @@ spec:
     spec:
       # renovate: registryUrl=https://kubernetes.github.io/dashboard/
       chart: dashboard
-      version: 4.5.0
+      version: 5.0.0
       sourceRef:
         kind: HelmRepository
         name: dashboard-charts
         namespace: flux-system
   values:
     replicaCount: 1
-    extraArgs:
-      - --enable-skip-login
-      - --enable-insecure-login
-      # - --system-banner="Welcome to Kubernetes"
+    # extraArgs:
+    #   - --enable-skip-login
+    #   - --enable-insecure-login
+    #   # - --system-banner="Welcome to Kubernetes"
     service:
       type: ClusterIP
       port: 443

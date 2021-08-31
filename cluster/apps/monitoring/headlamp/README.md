@@ -6,13 +6,15 @@ Headlamp uses RBAC for checking whether and how users can access resources. This
 
 ```sh
 # Create Service Account
-kubectl -n kube-system create serviceaccount headlamp-admin
+NAMESPACE=monitoring  # kube-system
+kubectl -n ${NAMESPACE} create serviceaccount headlamp-admin
 # Give admin rights to account (automatically created by Helm chart)
-kubectl create clusterrolebinding headlamp-admin --serviceaccount=kube-system:headlamp-admin --clusterrole=cluster-admin
+kubectl create clusterrolebinding headlamp-admin --serviceaccount=${NAMESPACE}:headlamp-admin --clusterrole=cluster-admin
 # Get the Secret name
-SECRETNAME=$(kubectl -n kube-system get secrets | grep headlamp-admin | awk '{print $1}')
+SECRETNAME=$(kubectl -n ${NAMESPACE} get secrets | grep headlamp-admin | awk '{print $1}')
 # Get the Token
-kubectl -n kube-system describe secret ${SECRETNAME}
+kubectl -n ${NAMESPACE} describe secret ${SECRETNAME}
+unset NAMESPACE
 ```
 
 ## [OpenID Connect](https://kinvolk.io/docs/headlamp/latest/installation/in-cluster/oidc/)
