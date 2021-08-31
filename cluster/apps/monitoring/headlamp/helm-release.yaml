@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://kinvolk.github.io/headlamp/
       chart: headlamp
-      version: 0.1.1
+      version: 0.1.2
       sourceRef:
         kind: HelmRepository
         name: headlamp-charts
