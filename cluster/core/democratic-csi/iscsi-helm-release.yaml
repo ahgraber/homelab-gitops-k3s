@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: iscsi-democratic-csi
-  namespace: democratic-csi
+  namespace: ss
 spec:
   interval: 5m
   chart:
