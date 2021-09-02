@@ -1,0 +1,147 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mariadb-galera
+  namespace: mariadb
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.bitnami.com/bitnami
+      chart: mariadb-galera
+      version: 5.8.2
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+  values:
+    ## Global Docker image parameters
+    ## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+    ## Current available global Docker image parameters: imageRegistry and imagePullSecrets
+    ##
+    # global:
+    #   imageRegistry: myRegistryName
+    #   imagePullSecrets:
+    #     - myRegistryKeySecretName
+    #   storageClass: nfs-client-db
+
+    ## Specifies the Kubernetes Cluster's Domain Name.
+    #  clusterDomain: ninerealmlabs.com
+
+    ## svc properties
+    service:
+      ## Kubernetes service type and port number
+      type: ClusterIP
+      port: 3306
+
+      # ## Set the LoadBalancer service type to internal only.
+      # ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+      # loadBalancerIP: 10.2.118.130
+
+      # ## Load Balancer sources
+      # ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+      # loadBalancerSourceRanges:
+      # - 10.2.0.0/16
+      # - 10.1.0.0/24
+      # - 10.0.0.0/24
+
+      # ## Provide any additional annotations which may be required. This can be used to
+      # ## set the LoadBalancer service type to internal only.
+      # ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+      # annotations: {}
+
+    ## An array to add extra environment variables
+    extraEnvVars:
+      - name: TZ
+        value: "America/New_York"
+      - name: BITNAMI_DEBUG
+        value: "true"
+
+    # ## Role Based Access
+    # ## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
+    # rbac:
+    #   ## Specifies whether RBAC rules should be created
+    #   create: false
+
+    ## Pod Security Context
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+      runAsUser: 1001
+
+    ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
+    existingSecret: "mariadb-secret"
+
+    # ## Galera configuration
+    # galera:
+    #   ## Galera cluster name
+    #   name: galera
+
+    #   # ## Bootstraping options
+    #   # ## ref: https://github.com/bitnami/bitnami-docker-mariadb-galera#bootstraping
+    #   # bootstrap:
+    #   #   ## Node to bootstrap from, you will need to change this parameter in case you want to bootstrap from other node
+    #   #   bootstrapFromNode:
+    #   #   ## Force safe_to_bootstrap in grastate.date file.
+    #   #   ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
+    #   #   forceSafeToBootstrap: false
+
+    ## TLS configuration
+    # tls:
+    #   ## Enable TLS
+    #   enabled: true
+    #   ## Name of the secret that contains the certificates
+    #   certificatesSecret: cert-secret-ninerealmlabs-prod
+
+    ## Number of replicas (odd - 3 or 5 typical).  Do not exceed node count.
+    replicaCount: 3
+
+    ## Enable persistence using Persistent Volume Claims
+    ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    persistence:
+      ## If true, use a Persistent Volume Claim, If false, use emptyDir
+      enabled: true
+      # ## Enable persistence using an existing PVC
+      # existingClaim:
+      # ## Subdirectory of the volume to mount
+      # subPath:
+      ## mountPath is the internal directory to mount
+      # mountPath: /bitnami/mariadb
+      ## Persistent Volume Storage Class
+      storageClass: "csi-truenas-iscsi"
+      ## Persistent Volume Claim annotations
+      # annotations: {}
+      # ## Persistent Volume Access Mode
+      # accessModes:
+      #   - ReadWriteOnce
+      ## Persistent Volume size
+      size: 8Gi
+
+    ## MariaDB Galera containers' liveness and readiness probes
+    ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+    livenessProbe:
+      enabled: true
+      ## Initializing the database could take some time
+      initialDelaySeconds: 300 # 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 120 # 30
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      enabled: false
+      ## Initializing the database could take some time
+      initialDelaySeconds: 300 # 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      ## Let's wait 600 seconds by default, it should give enough time in any cluster for mysql to init
+      failureThreshold: 48
