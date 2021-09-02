@@ -10,7 +10,7 @@ spec:
   routes:
     - match: HostSNI(`*`)
       services:
-        - name: mariadb
+        - name: mariadb-galera
           namespace: mariadb
           port: 3306
           kind: Service

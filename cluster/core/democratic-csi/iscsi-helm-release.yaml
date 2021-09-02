@@ -31,7 +31,7 @@ spec:
     storageClasses:
       - name: csi-truenas-iscsi
         defaultClass: false
-        reclaimPolicy: Delete # Delete, Retain
+        reclaimPolicy: Retain # Delete, Retain
         volumeBindingMode: Immediate
         allowVolumeExpansion: true
         parameters:
