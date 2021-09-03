@@ -16,9 +16,10 @@ spec:
         name: bitnami-charts
         namespace: flux-system
   values:
+    image:
+      debug: true
     ## MariaDB architecture. Allowed values: standalone or replication
-    # architecture: standalone
-    architecture: replication
+    architecture: standalone
 
     ## MariaDB Authentication parameters
     auth:
@@ -46,12 +47,12 @@ spec:
         enabled: true
         storageClass: "csi-truenas-iscsi"
         size: 8Gi
-      ## An array to add extra environment variables on MariaDB primary containers
-      extraEnvVars:
-        - name: TZ
-          value: "America/New_York"
-        - name: BITNAMI_DEBUG
-          value: "true"
+      # ## An array to add extra environment variables on MariaDB primary containers
+      # extraEnvVars:
+      #   - name: TZ
+      #     value: "America/New_York"
+      #   - name: BITNAMI_DEBUG
+      #     value: "true"
     ## Mariadb Secondary parameters
     secondary:
       ## Number of Mariadb Secondary replicas to deploy
@@ -63,9 +64,9 @@ spec:
         enabled: true
         storageClass: "csi-truenas-iscsi"
         size: 8Gi
-      ## An array to add extra environment variables on MariaDB primary containers
-      extraEnvVars:
-        - name: TZ
-          value: "America/New_York"
-        - name: BITNAMI_DEBUG
-          value: "true"
+      # ## An array to add extra environment variables on MariaDB primary containers
+      # extraEnvVars:
+      #   - name: TZ
+      #     value: "America/New_York"
+      #   - name: BITNAMI_DEBUG
+      #     value: "true"
