@@ -1,4 +1,6 @@
-### 3. Debug Helm releases
+# Troubleshooting services
+
+## Debug HelmRelease
 
 - Show the health of helm _releases_
 
@@ -37,7 +39,7 @@
   flux reconcile source helm traefik-charts -n flux-system
   ```
 
-#### Delete and reinstall errored helm deployments
+### Delete and reinstall errored helm deployments
 
 - Delete helm deployment and `flux reconcile`
 
@@ -55,7 +57,7 @@
   flux get hr traefik -n networking
   ```
 
-### 4. Debug Pods
+## Debug Pods
 
 - Identify pods with
 
