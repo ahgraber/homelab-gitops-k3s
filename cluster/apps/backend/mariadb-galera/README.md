@@ -77,7 +77,6 @@ _Hints:_
 
 - May have to disable liveness/readiness probes or set to extended timeout on init and then reset to default after
 - May want to create additional loadBalancer service to provide stable IP for non-k8s apps (or administration)
-- May have to play with mountOptions for NFS mount -- recommend "hard, nolock"
 
 _Debug:_
 If restarting and get CrashLoopBackoff due to _"It may not be safe to bootstrap the cluster from this node. It was not the last one to leave the cluster and may not contain all the updates. To force cluster bootstrap with this node, edit the grastate.dat file manually and set safe_to_bootstrap to 1."_
