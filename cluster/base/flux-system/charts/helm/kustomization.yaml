@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - authentik-charts.yaml
   - bitnami-charts.yaml
+  - cockroachdb-charts.yaml
   - dashboard-charts.yaml
   - deliveryhero-charts.yaml
   - democratic-csi-charts.yaml
