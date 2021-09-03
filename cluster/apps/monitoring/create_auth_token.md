@@ -10,11 +10,17 @@ NAMESPACE=monitoring  # kube-system
 kubectl -n ${NAMESPACE} create serviceaccount dashboard-admin
 # Give admin rights to account (automatically created by Helm chart)
 kubectl create clusterrolebinding dashboard-admin --serviceaccount=${NAMESPACE}:dashboard-admin --clusterrole=cluster-admin
+unset NAMESPACE
+```
+
+```sh
 # Get the Secret name
+NAMESPACE=monitoring  # kube-system
 SECRETNAME=$(kubectl -n ${NAMESPACE} get secrets | grep dashboard-admin | awk '{print $1}')
 # Get the Token
 kubectl -n ${NAMESPACE} describe secret ${SECRETNAME}
 unset NAMESPACE
+unset SECRETNAME
 ```
 
 ## [OpenID Connect](https://kinvolk.io/docs/headlamp/latest/installation/in-cluster/oidc/)
