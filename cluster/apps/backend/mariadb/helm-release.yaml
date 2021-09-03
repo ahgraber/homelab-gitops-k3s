@@ -21,7 +21,6 @@ spec:
     ## MariaDB architecture. Allowed values: standalone or replication
     architecture: standalone
 
-    ## MariaDB Authentication parameters
     auth:
       ## NOTE: When it's set the other auth/password parameters are ignored.
       ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
@@ -51,22 +50,19 @@ spec:
       # extraEnvVars:
       #   - name: TZ
       #     value: "America/New_York"
-      #   - name: BITNAMI_DEBUG
-      #     value: "true"
-    ## Mariadb Secondary parameters
-    secondary:
-      ## Number of Mariadb Secondary replicas to deploy
-      replicaCount: 2
-      service:
-        type: ClusterIP
-        port: 3306
-      persistence:
-        enabled: true
-        storageClass: "csi-truenas-iscsi"
-        size: 8Gi
-      # ## An array to add extra environment variables on MariaDB primary containers
-      # extraEnvVars:
-      #   - name: TZ
-      #     value: "America/New_York"
-      #   - name: BITNAMI_DEBUG
-      #     value: "true"
+
+    # ## Mariadb Secondary parameters
+    # secondary:
+    #   ## Number of Mariadb Secondary replicas to deploy
+    #   replicaCount: 2
+    #   service:
+    #     type: ClusterIP
+    #     port: 3306
+    #   persistence:
+    #     enabled: true
+    #     storageClass: "csi-truenas-iscsi"
+    #     size: 8Gi
+    #   # ## An array to add extra environment variables on MariaDB primary containers
+    #   # extraEnvVars:
+    #   #   - name: TZ
+    #   #     value: "America/New_York"
