@@ -5,7 +5,8 @@ metadata:
   name: mariadb
   namespace: mariadb
 spec:
-  interval: 5m
+  interval: 10m
+  timeout: 10m  # extended period because of lengthy startup
   chart:
     spec:
       # renovate: registryUrl=https://charts.bitnami.com/bitnami
