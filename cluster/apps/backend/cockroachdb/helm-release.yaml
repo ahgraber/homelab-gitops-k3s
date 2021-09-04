@@ -23,6 +23,14 @@ spec:
       podManagementPolicy: Parallel
       budget:
         maxUnavailable: 1
+      resources:
+        limits:
+          memory: "4Gi"
+        requests:
+          memory: "4Gi"
+    conf:
+      cache: "1Gi"
+      max-sql-memory: "1Gi"
 
     service:
       ports:
@@ -62,7 +70,7 @@ spec:
 
     # Whether to run securely using TLS certificates.
     tls:
-      enabled: false
+      enabled: true
       serviceAccount:
         create: true
       # certs:
