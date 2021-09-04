@@ -101,6 +101,8 @@ sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/secret.s
 sops --encrypt --in-place ./cluster/core/democratic-csi/iscsi-secret.sops.yaml
 sops --encrypt --in-place ./cluster/core/democratic-csi/nfs-secret.sops.yaml
 sops --encrypt --in-place ./cluster/apps/backend/mariadb/mariadb-secret.sops.yaml
+sops --encrypt --in-place ./cluster/apps/backend/mariadb-galera/mariadb-secret.sops.yaml
+
 ```
 
 :round_pushpin: Variables defined in `cluster-secrets.yaml` and
