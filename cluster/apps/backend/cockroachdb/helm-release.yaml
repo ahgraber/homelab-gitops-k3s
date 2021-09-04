@@ -62,24 +62,24 @@ spec:
 
     # Whether to run securely using TLS certificates.
     tls:
-      enabled: true
+      enabled: false
       serviceAccount:
         create: true
-      certs:
-        # Bring your own certs scenario. If provided, tls.init section will be ignored.
-        provided: false
-        # Enable if the secret is a dedicated TLS. TLS secrets are created by cert-mananger, for example.
-        tlsSecret: true
-        # Enable if the you want cockroach db to create its own certificates
-        selfSigner:
-          # If set, the cockroach db will generate its own certificates
-          enabled: false
+      # certs:
+      #   # Bring your own certs scenario. If provided, tls.init section will be ignored.
+      #   provided: false
+      #   # Enable if the secret is a dedicated TLS. TLS secrets are created by cert-mananger, for example.
+      #   tlsSecret: true
+      #   # Enable if the you want cockroach db to create its own certificates
+      #   selfSigner:
+      #     # If set, the cockroach db will generate its own certificates
+      #     enabled: false
 
-        # Use cert-manager to issue certificates for mTLS.
-        certManager: true
-        # Specify an Issuer or a ClusterIssuer to use, when issuing node and client certificates.
-        # The values correspond to the issuerRef specified in the certificate.
-        certManagerIssuer:
-          group: cert-manager.io
-          kind: ClusterIssuer
-          name: cockroachdb
+      #   # Use cert-manager to issue certificates for mTLS.
+      #   certManager: true
+      #   # Specify an Issuer or a ClusterIssuer to use, when issuing node and client certificates.
+      #   # The values correspond to the issuerRef specified in the certificate.
+      #   certManagerIssuer:
+      #     group: cert-manager.io
+      #     kind: ClusterIssuer
+      #     name: cockroachdb
