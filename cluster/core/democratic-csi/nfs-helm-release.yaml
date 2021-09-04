@@ -49,6 +49,27 @@ spec:
 
     controller:
       enabled: true
+      driver:
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+              - SYS_ADMIN
+          privileged: true
+        # ### for the controller, manually mount from the remote NFS server on start,
+        # ### so it can dynamically create PVC (the "crude" part)
+        # ### ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount truenas.ninerealmlabs.com:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
+        #   preStop:
+        #     exec:
+        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
       externalResizer:
         enabled: true
       external Snapshotter:
@@ -62,28 +83,17 @@ spec:
       hostNetwork: true
       hostIPC: true
 
-      # for the controller, manually mount from the remote NFS server on start,
-      # so it can dynamically create PVC (the "crude" part)
-      # ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
-      driver:
-        securityContext:
-          allowPrivilegeEscalation: true
-          capabilities:
-            add:
-              - SYS_ADMIN
-          privileged: true
-        # lifecycle:
-        #   postStart:
-        #     exec:
-        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount truenas.ninerealmlabs.com:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
-        #   preStop:
-        #     exec:
-        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+
 
     node:
+      enabled: true
+      driver:
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
       rbac:
         enabled: true
-      enabled: true
       hostNetwork: true
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
