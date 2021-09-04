@@ -25,12 +25,17 @@ spec:
         maxUnavailable: 1
       resources:
         limits:
-          memory: "4Gi"
+          memory: "4GiB"
         requests:
-          memory: "4Gi"
+          memory: "4GiB"
+
     conf:
-      cache: "1Gi"
-      max-sql-memory: "1Gi"
+      # CockroachDB's port to listen to inter-communications and client connections.
+      port: 26257
+      # CockroachDB's port to listen to HTTP requests.
+      http-port: 8080
+      cache: "1GiB"
+      max-sql-memory: "1GiB"
 
     service:
       ports:
@@ -70,7 +75,7 @@ spec:
 
     # Whether to run securely using TLS certificates.
     tls:
-      enabled: true
+      enabled: false
       serviceAccount:
         create: true
       # certs:
