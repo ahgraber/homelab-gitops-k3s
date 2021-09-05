@@ -17,19 +17,41 @@ spec:
         name: bitnami-charts
         namespace: flux-system
   values:
+    global:
+        postgresql:
+          username: postgres
+          password: ${DB_ROOT_PWD}
+          # # PostgreSQL password for the postgres user when username is not postgres
+          # postgresPassword: ${DB_ROOT_PWD}
+          ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
+          # existingSecret: "postgresql-secret"
+          repmgrUsername: repmgr
+          repmgrPassword: ${DB_ROOT_PWD}
+        pgpool:
+          adminUsername: admin
+          adminPassword: ${DB_ROOT_PWD}
+
     postgresqlImage:
       debug: true
 
     postgresql:
       replicaCount: 3
-      username: postgres
-      password: ${DB_ROOT_PWD}
-      # PostgreSQL password for the postgres user when username is not postgres
-      postgresPassword: ${DB_ROOT_PWD}
-      ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
-      # existingSecret: "postgresql-secret"
-      repmgrUsername: repmgr
-      repmgrPassword: ${DB_ROOT_PWD}
+      initdbScripts:
+        - vaultwarden.sql: |
+            #!/bin/sh
+            if [[ $(hostname) == *-0  ]]; then
+              echo "First node"
+              mysql -P 3306 -uroot -prandompassword -e "create database new_database";
+              CREATE DATABASE vaultwarden;
+              CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '${DB_USER_PWD}';
+              GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
+            else
+              echo "Not first node"
+            fi
+
+    pgpool:
+      usernames: postgres-user
+      passwords: ${DB_USER_PWD}
 
     service:
       ## Kubernetes service type and port number

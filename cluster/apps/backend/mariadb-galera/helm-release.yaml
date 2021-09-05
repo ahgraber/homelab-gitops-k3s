@@ -36,6 +36,23 @@ spec:
     #     ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
     #     forceSafeToBootstrap: false
 
+    ## initialize sql server
+    initdbScripts:
+      - testsvc.sh: |
+          #!/bin/sh
+          if [[ $(hostname) == *-0  ]]; then
+            echo "First node"
+
+            export SERVICE=testsvc
+            mysql -P 3306 -uroot -p${DB_ROOT_PWD} -e \
+            "CREATE USER \"$SERVICE\"@'%' IDENTIFIED VIA mysql_native_password USING \"${DB_USER_PWD}\";
+            GRANT USAGE ON *.* TO \"$SERVICE\"@'% REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+            CREATE DATABASE IF NOT EXISTS `$SERVICE`;
+            GRANT ALL PRIVILEGES ON `$SERVICE`.* TO \"$SERVICE\"@'%';"
+          else
+            echo "Not first node"
+          fi
+
     service:
       ## Kubernetes service type and port number
       type: ClusterIP
