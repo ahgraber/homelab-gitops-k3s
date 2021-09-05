@@ -77,7 +77,7 @@ spec:
         ## SMTP timeout.
         #timeout: 15
         ## Use existing secret for SMTP authentication. Keys are 'smtp-user' and 'smtp-password'.
-        existingSecret: "smtp-secret"
+        existingSecret: "vaultwarden-secret"
 
       ## Logging options. https://github.com/dani-garcia/vaultwarden/wiki/Logging
       log:
