@@ -1,0 +1,135 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vaultwarden
+  namespace: vaultwarden
+spec:
+  interval: 10m
+  timeout: 10m  # extended period because of lengthy startup
+  chart:
+    spec:
+      # renovate: registryUrl=https://gissilabs.github.io/charts/
+      chart: vaultwarden
+      version:
+      sourceRef:
+        kind: HelmRepository
+        name: gissilabs-charts
+        namespace: flux-system
+  values:
+    vaultwarden:
+      ## Set Bitwarden URL, mandatory for invitations over email. Recommended if using a reverse proxy / ingress.
+      domain: "https://vaultwarden.ninerealmlabs.com"
+      ## Allow any user to sign-up: https://github.com/dani-garcia/vaultwarden/wiki/Disable-registration-of-new-users
+      allowSignups: false
+      ## Verify e-mail before login is enabled. SMTP must be enabled.
+      verifySignup: true
+      ## When a user logs in an email is required to be sent. If sending the email fails the login attempt will fail. SMTP must be enabled.
+      requireEmail: true
+      ## Maximum attempts before an email token is reset and a new email will need to be sent.
+      emailAttempts: 3
+      ## Email token validity in seconds.
+      #emailTokenExpiration: 600
+      ## Allow invited users to sign-up even feature is disabled: https://github.com/dani-garcia/vaultwarden/wiki/Disable-invitations
+      allowInvitation: true
+      ## Show password hints: https://github.com/dani-garcia/vaultwarden/wiki/Password-hint-display
+      showPasswordHint: true
+      ## Enable Websockets for notification. https://github.com/dani-garcia/vaultwarden/wiki/Enabling-WebSocket-notifications
+      ## Redirect HTTP path "/notifications/hub" to port 3012. Ingress/IngressRoute controllers are automatically configured.
+      enableWebsockets: true
+      ## Enable Web Vault (static content). https://github.com/dani-garcia/vaultwarden/wiki/Disabling-or-overriding-the-Vault-interface-hosting
+      enableWebVault: true
+      ## Restrict creation of orgs. Options are: 'all', 'none' or a comma-separated list of users.
+      orgCreationUsers: all
+      ## Limit attachment disk usage per organization.
+      #attachmentLimitOrg:
+      ## Limit attachment disk usage per user.
+      #attachmentLimitUser:
+      ## HaveIBeenPwned API Key. Can be purchased at https://haveibeenpwned.com/API/Key.
+      #hibpApiKey:
+      ## Map of custom environment variables. Use carefully.
+      #extraEnv:
+      #  IP_HEADER: CF-Connecting-IP
+      #  ALLOWED_IFRAME_ANCESTORS: myintranet.local
+
+      admin:
+        ## Enable admin portal.
+        enabled: true
+        ## Disabling the admin token will make the admin portal accessible to anyone, use carefully:
+        ## https://github.com/dani-garcia/vaultwarden/wiki/Disable-admin-token
+        disableAdminToken: false
+        ## Use existing secret for the admin token. Key is 'admin-token'.
+        existingSecret: "vaultwarden-secret"
+
+      ## Enable SMTP. https://github.com/dani-garcia/vaultwarden/wiki/SMTP-configuration
+      smtp:
+        enabled: true # configure in admin panel
+        ## SMTP hostname, required if SMTP is enabled.
+        host: "in-v3.mailjet.com"
+        ## SMTP sender e-mail address, required if SMTP is enabled.
+        from: "noreply@mail.${SECRET_DOMAIN}"
+        ## Enable SSL connection.
+        ssl: true
+        ## SMTP port. Defaults to 25 without SSL, 587 with SSL.
+        port: 587
+        ## SMTP Authentication Mechanisms. Comma-separated options: 'Plain', 'Login' and 'Xoauth2'. Defaults to 'Plain'.
+        authMechanism: Login
+        ## SMTP timeout.
+        #timeout: 15
+        ## Use existing secret for SMTP authentication. Keys are 'smtp-user' and 'smtp-password'.
+        existingSecret: "smtp-secret"
+
+      ## Logging options. https://github.com/dani-garcia/vaultwarden/wiki/Logging
+      log:
+        ## Log to file.
+        file: ""
+        ## Log level. Options are "trace", "debug", "info", "warn", "error" or "off".
+        level: "debug"
+        ## Log timestamp format. See https://docs.rs/chrono/0.4.15/chrono/format/strftime/index.html. Defaults to time in milliseconds.
+        #timeFormat: ""
+
+      icons:
+        ## Disables download of external icons. Setting to true will still serve icons from cache (/data/icon_cache). TTL will default to zero.
+        disableDownload: false
+        ## Cache time-to-live for icons fetched. 0 means no purging.
+        #cache: 2592000
+        ## Cache time-to-live for icons that were not available. 0 means no purging.
+        #cacheFailed: 259200
+
+    database:
+      ## Database type, must be one of: 'sqlite', 'mysql' or 'postgresql'.
+      type: mysql
+      ## URL for external databases (mysql://user:pass@host:port or postgresql://user:pass@host:port).
+      # url: ""
+      ## Use existing secret for database URL, key 'database-url'.
+      existingSecret: "vaultwarden-secret"
+      ## Set the size of the database connection pool.
+      #maxConnections: 10
+      ## Connection retries during startup, 0 for infinite. 1 second between retries.
+      #retries: 15
+
+    service:
+      type: ClusterIP
+      httpPort: 80
+      websocketPort: 3012
+      externalTrafficPolicy: Cluster
+
+    ## Kubernetes Ingress
+    ingress:
+      enabled: false
+    ingressRoute:
+      enabled: false # use manual config
+
+    persistence:
+      enabled: true
+      size: 1Gi
+      accessMode: ReadWriteOnce
+      ## Persistent Volume storage class
+      storageClass: "csi-truenas-nfs"
+      ## Use existing Persistent Volume Claim
+      # existingClaim:
+
+    replicaCount: 1
+
+    serviceAccount:
+      create: false
