@@ -9,4 +9,5 @@ resources:
   - metallb-system.yaml
   - monitoring.yaml
   - networking.yaml
+  - postgresql.yaml
   - vaultwarden.yaml

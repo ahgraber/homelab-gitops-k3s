@@ -100,6 +100,10 @@ spec:
         port: 3306
         expose: true
         exposedPort: 3306
+      postgresql:
+        port: 5432
+        expose: true
+        exposedPort: 5432
     providers:
       kubernetesCRD:
         enabled: true

@@ -1,0 +1,75 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: postgresql-ha
+  namespace: postgresql
+spec:
+  interval: 10m
+  timeout: 10m  # extended period because of lengthy startup
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.bitnami.com/bitnami
+      chart: postgresql-ha
+      version: 7.9.2
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+  values:
+    postgresqlImage:
+      debug: true
+
+    postgresql:
+      replicaCount: 3
+      username: postgres
+      password: ${DB_ROOT_PWD}
+      # PostgreSQL password for the postgres user when username is not postgres
+      postgresPassword: ${DB_ROOT_PWD}
+      ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
+      # existingSecret: "postgresql-secret"
+      repmgrUsername: repmgr
+      repmgrPassword: ${DB_ROOT_PWD}
+
+    service:
+      ## Kubernetes service type and port number
+      type: ClusterIP
+      port: 5432
+
+    persistence:
+      enabled: true
+      storageClass: "csi-truenas-iscsi"
+      size: 8Gi
+
+    ## An array to add extra environment variables
+    extraEnvVars:
+      - name: TZ
+        value: "America/New_York"
+
+    ## MariaDB Galera containers' liveness and readiness probes
+    ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+    livenessProbe:
+      enabled: true
+      ## Once the startup probe has succeeded once, the liveness probe takes over
+      initialDelaySeconds: 60 # 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      ## Initializing the database could take some time
+      enabled: true
+      initialDelaySeconds: 180 # 30
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      enabled: true
+      ## Initializing the database could take some time
+      # This allows 200 s delay (120s + 8*10s)
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 8
