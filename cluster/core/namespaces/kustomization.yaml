@@ -4,9 +4,9 @@ resources:
   - backend.yaml
   - cattle-system.yaml
   - cert-manager.yaml
-  - cockroachdb.yaml
   - democratic-csi.yaml
   - mariadb.yaml
   - metallb-system.yaml
   - monitoring.yaml
   - networking.yaml
+  - vaultwarden.yaml
