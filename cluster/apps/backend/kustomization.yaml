@@ -3,4 +3,6 @@ kind: Kustomization
 resources:
   - mariadb-galera
   - myphpadmin
+  # - pgadmin
+  - postgresql-ha
   # - velero
