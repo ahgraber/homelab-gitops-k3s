@@ -40,22 +40,22 @@ spec:
 
     ## initialize sql server
     # initdbScripts:
-    #   init-service.sh: |-
+    #   init-service-db.sh: |-
     #     #!/bin/sh
     #     if [[ $(hostname) == *-0  ]]; then
     #       export SERVICE=testsvc
     #       export ROOT_PWD="changeme123"
     #       export USER_PWD="1234!"
-    #       echo "Creating ${SERVICE} user and database"
-    #       mysql -uroot -p${ROOT_PWD} -e \
-    #       "CREATE USER \"${SERVICE}\"@'%' IDENTIFIED VIA mysql_native_password USING \"${USER_PWD}\";
-    #       GRANT USAGE ON *.* TO \"${SERVICE}\"@'% REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-    #       CREATE DATABASE IF NOT EXISTS `${SERVICE}`;
-    #       GRANT ALL PRIVILEGES ON `${SERVICE}`.* TO \"${SERVICE}\"@'%';"
+    #       echo "Creating $SERVICE user and database"
+    #       mysql -uroot -p${DB_ROOT_PWD} -e \
+    #       "CREATE USER \"$SERVICE\"@'%' IDENTIFIED VIA mysql_native_password USING \"${DB_USER_PWD}\";
+    #       GRANT USAGE ON *.* TO \"$SERVICE\"@'% REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+    #       CREATE DATABASE IF NOT EXISTS `$SERVICE`;
+    #       GRANT ALL PRIVILEGES ON `$SERVICE`.* TO \"$SERVICE\"@'%';"
     #     else
     #       echo "Skipping install as not 0th node"
     #     fi
-    initdbScriptsConfigMap: "init-mariadb-configmap"
+    initdbScriptsConfigMap: "init-configmap-mariadb"
 
     service:
       ## Kubernetes service type and port number
