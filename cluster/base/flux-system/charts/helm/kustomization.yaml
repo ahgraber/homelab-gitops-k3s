@@ -3,14 +3,13 @@ kind: Kustomization
 resources:
   - authentik-charts.yaml
   - bitnami-charts.yaml
-  - cockroachdb-charts.yaml
   - dashboard-charts.yaml
   - deliveryhero-charts.yaml
   - democratic-csi-charts.yaml
   - descheduler-charts.yaml
   - falco-security-charts.yaml
+  - gissilabs-charts.yaml
   - grafana-charts.yaml
-  - headlamp-charts.yaml
   - infracloudio-charts.yaml
   # - ingress-nginx-charts.yaml
   - jetstack-charts.yaml
