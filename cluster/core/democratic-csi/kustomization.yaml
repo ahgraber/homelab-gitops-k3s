@@ -3,5 +3,7 @@ kind: Kustomization
 resources:
   - iscsi-helm-release.yaml
   - nfs-helm-release.yaml
-  - iscsi-secret.sops.yaml
-  - nfs-secret.sops.yaml
+  - iscsi-secret.yaml
+  # - iscsi-secret.sops.yaml
+  - nfs-secret.yaml
+  # - nfs-secret.sops.yaml
