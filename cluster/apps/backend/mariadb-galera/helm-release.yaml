@@ -44,6 +44,7 @@ spec:
           echo "First node"
 
           export SERVICE=testsvc
+          export DB_ROOT_PWD="MdfmeSsZrt54"
           export DB_USER_PWD="1234!"
           mysql -uroot -p${DB_ROOT_PWD} -e \
           "CREATE USER \"${SERVICE}\"@'%' IDENTIFIED VIA mysql_native_password USING \"${DB_USER_PWD}\";
