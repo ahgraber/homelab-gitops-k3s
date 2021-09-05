@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   - configmap-mariadb.yaml
+  # - ingresroute-mariadb.yaml
   - mariadb-secret.yaml
-  # - mariadb-secret.sops.yaml
