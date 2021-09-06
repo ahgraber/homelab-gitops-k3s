@@ -20,8 +20,7 @@ data:
     function initdb {
       # note: if this presents problems in the future, look into heredoc indentations
       /opt/bitnami/mariadb/bin/mysql --port=3306 --user="root" --password="$ROOT_PWD" -v <<EOSQL
-    SET old_passwords = 0;
-    CREATE USER '$1'@'%' IDENTIFIED VIA mysql_native_password USING '$USER_PWD';
+    CREATE USER '$1'@'%' IDENTIFIED BY '$USER_PWD';
     GRANT USAGE ON *.* TO '$1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
     CREATE DATABASE IF NOT EXISTS \`$1\`;
     GRANT ALL PRIVILEGES ON \`$1\`.* TO '$1'@'%';
