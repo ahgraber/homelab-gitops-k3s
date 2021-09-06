@@ -1,0 +1,70 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  interval: 10m
+  timeout: 10m  # extended period because of lengthy startup
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.bitnami.com/bitnami
+      chart: mariadb
+      version: 9.4.4
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+  values:
+    image:
+      debug: true
+    ## MariaDB architecture. Allowed values: standalone or replication
+    architecture: standalone
+
+    auth:
+      ## NOTE: When it's set the other auth/password parameters are ignored.
+      ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
+      existingSecret: mariadb-secret
+
+    initdbScriptsConfigMap: "init-configmap-mariadb"
+
+    ## Mariadb Primary parameters
+    primary:
+      service:
+        type: ClusterIP
+        port: 3306
+      persistence:
+        enabled: true
+        storageClass: "csi-truenas-iscsi"
+        size: 8Gi
+      ## An array to add extra environment variables on MariaDB primary containers
+      extraEnvVars:
+        - name: TZ
+          value: "America/New_York"
+
+    # ## Mariadb Secondary parameters
+    # secondary:
+    #   ## Number of Mariadb Secondary replicas to deploy
+    #   replicaCount: 2
+    #   service:
+    #     type: ClusterIP
+    #     port: 3306
+    #   persistence:
+    #     enabled: true
+    #     storageClass: "csi-truenas-iscsi"
+    #     size: 8Gi
+    #   # ## An array to add extra environment variables on MariaDB primary containers
+    #   # extraEnvVars:
+    #   #   - name: TZ
+    #   #     value: "America/New_York"
+
+
+    rbac:
+      create: false
+
+    volumePermissions:
+      enabled: false
+
+    metrics:
+      enabled: false
