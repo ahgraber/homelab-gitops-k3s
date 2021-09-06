@@ -17,7 +17,14 @@ data:
       exit 0
     fi
 
+    export ROOT_PWD="${DB_ROOT_PWD}"
+    export USER_PWD="${DB_USER_PWD}"
+    # echo "ROOT_PWD=$ROOT_PWD"
+    # echo "USER_PWD=$USER_PWD"
+
     function initdb {
+      echo "Creating \"$1\" user and database"
+
       # note: if this presents problems in the future, look into heredoc indentations
       /opt/bitnami/mariadb/bin/mysql --port=3306 --user="root" --password="$ROOT_PWD" -v <<EOSQL
     CREATE USER '$1'@'%' IDENTIFIED BY '$USER_PWD';
@@ -28,12 +35,10 @@ data:
     EOSQL
     }
 
-    export SERVICE="testsvc"
-    export ROOT_PWD="${DB_ROOT_PWD}"
-    export USER_PWD="${DB_USER_PWD}"
+    export SERVICES=(
+      "vaultwarden"
+    )
 
-    echo "ROOT_PWD=$ROOT_PWD"
-    echo "USER_PWD=$USER_PWD"
-
-    echo "Creating \"$SERVICE\" user and database"
-    initdb "$SERVICE"
+    for SVC in "${SERVICES[@]}"; do
+      initdb "$SVC"
+    done
