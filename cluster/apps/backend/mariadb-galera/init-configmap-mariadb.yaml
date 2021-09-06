@@ -7,6 +7,11 @@ metadata:
   namespace: mariadb
 kind: ConfigMap
 data:
+  # testsvc.sql: |
+  #     CREATE USER \"$SERVICE\"@'%' IDENTIFIED VIA mysql_native_password USING \"$USER_PWD\";
+  #     GRANT USAGE ON *.* TO \"$SERVICE\"@'% REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+  #     CREATE DATABASE IF NOT EXISTS `$SERVICE`;
+  #     GRANT ALL PRIVILEGES ON `$SERVICE`.* TO \"$SERVICE\"@'%';
   testsvc.sh: |
     #!/bin/sh
     if [[ $(hostname) == *-0  ]]; then
@@ -19,12 +24,13 @@ data:
       echo "ROOT_PWD=$ROOT_PWD"
       echo "USER_PWD=$USER_PWD"
 
-      echo "Creating $SERVICE user and database"
-      mysql -uroot -p$ROOT_PWD -e \
-      "CREATE USER \"$SERVICE\"@'%' IDENTIFIED VIA mysql_native_password USING \"$USER_PWD\";
-      GRANT USAGE ON *.* TO \"$SERVICE\"@'% REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+      echo "Creating '$SERVICE' user and database"
+      mysql --port=3306 --user=root --password="$ROOT_PWD" -v -e <<EOF
+      CREATE USER '$SERVICE'@'%' IDENTIFIED VIA mysql_native_password USING '$USER_PWD';
+      GRANT USAGE ON *.* TO '$SERVICE'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
       CREATE DATABASE IF NOT EXISTS `$SERVICE`;
-      GRANT ALL PRIVILEGES ON `$SERVICE`.* TO \"$SERVICE\"@'%';"
+      GRANT ALL PRIVILEGES ON `$SERVICE`.* TO '$SERVICE'@'%';
+      EOF
     else
       echo "Skipping install as not 0th node"
     fi
