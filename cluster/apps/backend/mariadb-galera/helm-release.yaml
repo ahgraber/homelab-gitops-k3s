@@ -25,18 +25,17 @@ spec:
     ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
     existingSecret: "mariadb-secret"
 
-    ## Galera configuration
-    galera:
-      ## Bootstraping options
-      ## ref: https://github.com/bitnami/bitnami-docker-mariadb-galera#bootstraping
-      ## ref: https://github.com/bitnami/charts/tree/master/bitnami/mariadb-galera#bootstraping-a-node-other-than-0
-      bootstrap:
-        ## Node to bootstrap from, you will need to change this parameter in case you want to bootstrap from other node
-        bootstrapFromNode: 0  # {0, 1, 2}
-        ## Force safe_to_bootstrap in grastate.dat file.
-        ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
-        forceSafeToBootstrap: true
-
+    # ## Galera configuration
+    # galera:
+    #   ## Bootstraping options
+    #   ## ref: https://github.com/bitnami/bitnami-docker-mariadb-galera#bootstraping
+    #   ## ref: https://github.com/bitnami/charts/tree/master/bitnami/mariadb-galera#bootstraping-a-node-other-than-0
+    #   bootstrap:
+    #     ## Node to bootstrap from, you will need to change this parameter in case you want to bootstrap from other node
+    #     bootstrapFromNode: 0  # {0, 1, 2}
+    #     ## Force safe_to_bootstrap in grastate.dat file.
+    #     ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
+    #     forceSafeToBootstrap: true
 
     # configurationConfigMap: "mariadb-configmap"
 
