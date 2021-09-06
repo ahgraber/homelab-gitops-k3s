@@ -8,4 +8,4 @@ resources:
   - middlewares-nextcloud.yaml
   - middlewares-redirect-path.yaml
   - middlewares-rfc1918.yaml
-  - basicauth-secret.sops.yaml
+  - secret-basicauth.sops.yaml
