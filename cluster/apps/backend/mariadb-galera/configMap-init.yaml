@@ -43,7 +43,7 @@ data:
     if [[ $(hostname) == *-0  ]]; then
       echo "Installing on 0th node"
 
-      for SVC in "$SERVICES[@]"; do
+      for SVC in "$SERVICES"; do
         initdb "$SVC"
       done
     else
