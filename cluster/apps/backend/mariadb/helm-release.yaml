@@ -60,7 +60,6 @@ spec:
     #   #   - name: TZ
     #   #     value: "America/New_York"
 
-
     rbac:
       create: false
 
