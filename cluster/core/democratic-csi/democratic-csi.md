@@ -84,14 +84,14 @@ The current drivers implement the depth and breadth of the `csi` spec, providing
 
 `democratic-csi` uses config secrets to hold sensitive information and those configmaps are passed into the helm values.
 
-- See `./values-generic-nfs.yaml` for [configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/nfs-client.yaml) using [nfs driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/nfs-client.yaml)
-- See `./values-truenas-nfs.yaml`, `./values-truenas-nfs-db.yaml`, and `./secret-truenas-nfs.yaml` for [reference configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-nfs.yaml) using [freenas driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-nfs.yaml)
-- See `./values-truenas-iscsi.yaml' and `./secret-truenas-iscsi.yaml` for [configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-iscsi.yaml) using [iscsi driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-iscsi.yaml)
+- See [generic nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/nfs-client.yaml) using [nfs driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/nfs-client.yaml)
+- See [truenas nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-nfs.yaml) using [freenas driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-nfs.yaml)
+- See [truenas iscsi configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-iscsi.yaml) using [iscsi driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-iscsi.yaml)
 
 ### iSCSI
 
-iSCSI PVs will 'retain' on deletion of PVC
+iSCSI PVs will 'retain' on deletion of PVC.  Will have to manually delete from kubernetes cluster _and_ delete both `targets` and `extents` from truenas iscsi share.
 
 ### NFS
 
-NFS PVs will 'delete' on deletion of PVC
+NFS PVs will 'delete' on deletion of PVC.
