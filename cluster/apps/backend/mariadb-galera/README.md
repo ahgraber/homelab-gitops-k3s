@@ -82,8 +82,6 @@ _Hints:_
 
 If restarting and get CrashLoopBackoff due to _"It may not be safe to bootstrap the cluster from this node. It was not the last one to leave the cluster and may not contain all the updates. To force cluster bootstrap with this node, edit the grastate.dat file manually and set safe_to_bootstrap to 1."_
 
-**[SEE NOTES](https://github.com/bitnami/charts/tree/master/bitnami/mariadb-galera#bootstraping-a-node-other-than-0)**
-
 ```yaml
 galera:
   #   ## Galera cluster name
@@ -97,6 +95,50 @@ galera:
     ## Force safe_to_bootstrap in grastate.date file.
     ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
     forceSafeToBootstrap: true
+```
+
+To ascertain grastate / safe to bootstrap, run below command.
+**[See bootstraping notes](https://github.com/bitnami/charts/tree/master/bitnami/mariadb-galera#bootstraping-a-node-other-than-0)**
+
+```sh
+PVCS=(
+  "data-mariadb-galera-0"
+  "data-mariadb-galera-1"
+  "data-mariadb-galera-2"
+)
+
+for PVC in "${PVCS[@]}"; do
+  kubectl run volpod -n mariadb --image="bitnami/minideb" -i --rm --tty --overrides='
+  {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+          "name": "volpod",
+          "namespace": "mariadb"
+      },
+      "spec": {
+          "containers": [{
+              "command": [
+                  "cat",
+                  "/mnt/data/grastate.dat"
+              ],
+              "image": "bitnami/minideb",
+              "name": "mycontainer",
+              "volumeMounts": [{
+                  "mountPath": "/mnt",
+                  "name": "galeradata"
+              }]
+          }],
+          "restartPolicy": "Never",
+          "volumes": [{
+              "name": "galeradata",
+              "persistentVolumeClaim": {
+                  "claimName": "'$PVC'"
+              }
+          }]
+      }
+  }'
+done
 ```
 
 ---
