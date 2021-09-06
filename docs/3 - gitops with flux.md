@@ -78,14 +78,7 @@ envsubst < ./tmpl/.sops.yaml >! ./.sops.yaml
 envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
 envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
 envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
-envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/basicauth-secret.sops.yaml
-
-
-# envsubst < ./tmpl/cert-manager-secret.sops.yaml >! ./cluster/core/cert-manager/certmanager-secret.sops.yaml
-# envsubst < ./tmpl/truenas-iscsi-secret.sops.yaml >! ./cluster/core/democratic-csi/iscsi-secret.sops.yaml
-# envsubst < ./tmpl/truenas-nfs-secret.sops.yaml >! ./cluster/core/democratic-csi/nfs-secret.sops.yaml
-# envsubst < ./tmpl/mariadb-secret.sops.yaml >! ./cluster/apps/backend/mariadb/mariadb-secret.sops.yaml
-# envsubst < ./tmpl/vaultwarden-secret.sops.yaml >! ./cluster/apps/security/vaultwarden/vaultwarden-secret.sops.yaml
+envsubst < ./tmpl/secret-traefik-middlewares.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/secret-basicauth.sops.yaml
 ```
 
 ## 6. :mag:&nbsp; **Verify** all the above files have the correct information present
@@ -98,14 +91,7 @@ envsubst < ./tmpl/traefik-middlewares-secret.sops.yaml >! ./cluster/apps/network
 export GPG_TTY=$(tty)
 # Encrypt SOPS secrets
 sops --encrypt --in-place ./cluster/base/cluster-secrets.sops.yaml
-sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/basicauth-secret.sops.yaml
-
-# sops --encrypt --in-place ./cluster/core/cert-manager/certmanager-secret.sops.yaml
-# sops --encrypt --in-place ./cluster/core/democratic-csi/iscsi-secret.sops.yaml
-# sops --encrypt --in-place ./cluster/core/democratic-csi/nfs-secret.sops.yaml
-# sops --encrypt --in-place ./cluster/apps/backend/mariadb/mariadb-secret.sops.yaml
-# sops --encrypt --in-place ./cluster/apps/backend/mariadb-galera/mariadb-secret.sops.yaml
-# sops --encrypt --in-place ./cluster/apps/security/vaultwarden/vaultwarden-secret.sops.yaml
+sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/secret-basicauth.sops.yaml
 ```
 
 :round_pushpin: Variables defined in `cluster-secrets.yaml` and

@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: vaultwarden-route
+  name: route-vaultwarden
   namespace: networking
 spec:
   entryPoints:

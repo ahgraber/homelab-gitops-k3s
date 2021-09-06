@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: homer-config
+  name: pvc-homer-config
 spec:
   accessModes:
     - ReadWriteOnce
