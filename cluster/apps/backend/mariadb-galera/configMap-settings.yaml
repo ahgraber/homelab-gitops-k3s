@@ -3,7 +3,7 @@ metadata:
   annotations:
     # meta.helm.sh/release-name: mariadb-galera
     meta.helm.sh/release-namespace: mariadb
-  name: configmap-mariadb-galera
+  name: configmap-mariadb-galera-settings
 kind: ConfigMap
 data:
   my.cnf: |-
