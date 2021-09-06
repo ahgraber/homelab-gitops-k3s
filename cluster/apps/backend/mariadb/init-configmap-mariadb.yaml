@@ -28,9 +28,7 @@ data:
     EOSQL
     }
 
-    echo "Installing on 0th node"
-
-    export SERVICE=testsvc
+    export SERVICE="testsvc"
     export ROOT_PWD=${DB_ROOT_PWD}
     export USER_PWD=${DB_USER_PWD}
 
