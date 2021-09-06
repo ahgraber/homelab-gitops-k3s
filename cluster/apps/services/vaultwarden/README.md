@@ -6,7 +6,9 @@ Vaultwarden is a lightweight Bitwarden client written in Rust.
 
 To use an existing sql server:
 
-1. Create 'vaultwarden' database and account on server.  `phpmyadmin` is included in the gitops repo to access the mariadb sql server.  It will be easiest to try to create the `vaultwarden` user and select the _"Create database with same name and grant all privileges"_ checkbox during user creation
+1. Create 'vaultwarden' database and account on server.
+   1. Edit initdb configMap in database Helm chart, or
+   2. Use `phpmyadmin` or `pgadmin` to access the sql server.  It will be easiest to try to create the `vaultwarden` user and select the _"Create database with same name and grant all privileges"_ checkbox during user creation
 
 2. Provide connection string as secret
 
