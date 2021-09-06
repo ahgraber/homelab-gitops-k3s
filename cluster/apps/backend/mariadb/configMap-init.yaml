@@ -40,6 +40,6 @@ data:
       "vaultwarden"
     )
 
-    for SVC in "${SERVICES[@]}"; do
+    for SVC in "$SERVICES[@]"; do
       initdb "$SVC"
     done
