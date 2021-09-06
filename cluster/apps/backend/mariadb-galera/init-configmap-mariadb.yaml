@@ -17,16 +17,24 @@ data:
     # check if socket is initialized (only happens on first boot)
     # ref: https://github.com/bitnami/charts/issues/1395#issuecomment-578066552
     if [[ -S /opt/bitnami/mariadb/tmp/mysql.sock ]]; then
-      echo "Running DB initialisation..."
+      echo "Running DB initialization..."
     else
-      echo "Not running initialisation, exiting..."
+      echo "Not first boot, skipping initialization. Exiting..."
       exit 0
     fi
 
-    if [[ $(hostname) == *-0  ]]; then
-      echo "Check if mysql is running"
-      ps -ef | grep mysql
+    function initdb {
+      # note: if this presents problems in the future, look into heredoc indentations
+      /opt/bitnami/mariadb/bin/mysql --port=3306 --user="root" --password="$ROOT_PWD" -v <<EOSQL
+    CREATE USER '$1'@'%' IDENTIFIED VIA mysql_native_password USING '$USER_PWD';
+    GRANT USAGE ON *.* TO '$1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+    CREATE DATABASE IF NOT EXISTS `$1`;
+    GRANT ALL PRIVILEGES ON `$1`.* TO '$1'@'%';
+    FLUSH PRIVILEGES;
+    EOSQL
+    }
 
+    if [[ $(hostname) == *-0  ]]; then
       echo "Installing on 0th node"
 
       export SERVICE=testsvc
@@ -37,13 +45,7 @@ data:
       echo "USER_PWD=$USER_PWD"
 
       echo "Creating '$SERVICE' user and database"
-      # note: if this presents problems in the future, look into heredoc indentations
-      /opt/bitnami/mariadb/bin/mysql --port=3306 --user="root" --password="$ROOT_PWD" -v <<EOSQL
-      CREATE USER '$SERVICE'@'%' IDENTIFIED VIA mysql_native_password USING '$USER_PWD';
-      GRANT USAGE ON *.* TO '$SERVICE'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
-      CREATE DATABASE IF NOT EXISTS `$SERVICE`;
-      GRANT ALL PRIVILEGES ON `$SERVICE`.* TO '$SERVICE'@'%';
-    EOSQL
+      initdb "$SERVICE"
     else
       echo "Skipping install as not 0th node"
     fi
