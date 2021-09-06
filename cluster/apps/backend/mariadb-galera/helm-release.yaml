@@ -37,7 +37,7 @@ spec:
     #     ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
     #     forceSafeToBootstrap: true
 
-    # configurationConfigMap: "mariadb-configmap"
+    # configurationConfigMap: "configmap-mariadb-galera-settings"
 
     ## initialize sql server
     # initdbScripts:
@@ -56,7 +56,7 @@ spec:
     #     else
     #       echo "Skipping install as not 0th node"
     #     fi
-    initdbScriptsConfigMap: "init-configmap-mariadb-galera"
+    initdbScriptsConfigMap: "configmap-mariadb-galera-init"
 
     service:
       ## Kubernetes service type and port number
