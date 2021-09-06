@@ -8,7 +8,7 @@ metadata:
 kind: ConfigMap
 data:
   testsvc.sh: |
-    #!/bin/sh
+    #!/bin/bash
     # check if socket is initialized (only happens on first boot)
     # ref: https://github.com/bitnami/charts/issues/1395#issuecomment-578066552
     if [[ -S /opt/bitnami/mariadb/tmp/mysql.sock ]]; then
@@ -43,7 +43,7 @@ data:
     if [[ $(hostname) == *-0  ]]; then
       echo "Installing on 0th node"
 
-      for SVC in "$SERVICES"; do
+      for SVC in "$SERVICES[@]"; do
         initdb "$SVC"
       done
     else
