@@ -23,7 +23,7 @@ spec:
     replicaCount: 3
 
     ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
-    existingSecret: "mariadb-secret"
+    existingSecret: "secret-mariadb-galera"
 
     # ## Galera configuration
     # galera:

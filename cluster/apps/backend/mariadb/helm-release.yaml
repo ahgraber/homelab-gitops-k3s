@@ -25,7 +25,7 @@ spec:
     auth:
       ## NOTE: When it's set the other auth/password parameters are ignored.
       ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
-      existingSecret: mariadb-secret
+      existingSecret: "secret-mariadb"
 
     initdbScriptsConfigMap: "init-configmap-mariadb"
 
