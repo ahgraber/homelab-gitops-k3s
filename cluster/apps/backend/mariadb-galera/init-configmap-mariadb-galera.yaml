@@ -3,7 +3,7 @@ metadata:
   annotations:
     # meta.helm.sh/release-name: mariadb-galera
     meta.helm.sh/release-namespace: mariadb
-  name: init-configmap-mariadb
+  name: init-configmap-mariadb-galera
   namespace: mariadb
 kind: ConfigMap
 data:
