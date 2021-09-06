@@ -82,6 +82,8 @@ _Hints:_
 
 If restarting and get CrashLoopBackoff due to _"It may not be safe to bootstrap the cluster from this node. It was not the last one to leave the cluster and may not contain all the updates. To force cluster bootstrap with this node, edit the grastate.dat file manually and set safe_to_bootstrap to 1."_
 
+_To reset state of data, must delete **both** `targets` and `extents` in truenas iscsi share_
+
 ```yaml
 galera:
   #   ## Galera cluster name
