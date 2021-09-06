@@ -3,5 +3,4 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   - ingressroute-vaultwarden.yaml
-  - vaultwarden-secret.yaml
-  # - vaultwarden-secret.sops.yaml
+  - secret-vaultwarden.yaml
