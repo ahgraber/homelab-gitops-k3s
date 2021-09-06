@@ -21,3 +21,5 @@ kubeconfig
 .private/
 .logs/
 .task/
+# Local archives
+**/archive
