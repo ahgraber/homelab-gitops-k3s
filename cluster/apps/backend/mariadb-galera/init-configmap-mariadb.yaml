@@ -15,6 +15,9 @@ data:
   testsvc.sh: |
     #!/bin/sh
     if [[ $(hostname) == *-0  ]]; then
+      echo "Check if mysql is running"
+      ps -ef | grep mysql
+
       echo "Installing on 0th node"
 
       export SERVICE=testsvc
