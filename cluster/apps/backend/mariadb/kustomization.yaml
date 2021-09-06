@@ -5,4 +5,4 @@ resources:
   # - configmap-mariadb.yaml  # unused
   - init-configmap-mariadb.yaml
   # - ingresroute-mariadb.yaml
-  - mariadb-secret.yaml
+  - secret-mariadb.yaml
