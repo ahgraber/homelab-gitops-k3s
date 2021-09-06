@@ -26,7 +26,7 @@ spec:
         ## NOTE: if setting an existing secret you must still set `driver.config.driver`
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
-        driver: freenas-iscsi
+        driver: freenas-api-iscsi
 
     storageClasses:
       - name: csi-truenas-iscsi
