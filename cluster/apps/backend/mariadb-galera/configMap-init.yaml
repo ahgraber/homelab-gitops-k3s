@@ -36,16 +36,12 @@ data:
     EOSQL
     }
 
-    export SERVICES=(
-      "vaultwarden"
-    )
-
     if [[ $(hostname) == *-0  ]]; then
       echo "Installing on 0th node"
 
-      for SVC in "${SERVICES[@]}"; do
-        initdb "$SVC"
-      done
+      # initialize users + databases
+      initdb "vaultwarden"
+
     else
       echo "Skipping install as not 0th node"
     fi
