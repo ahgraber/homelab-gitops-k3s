@@ -78,8 +78,11 @@ _Hints:_
 - May have to disable liveness/readiness probes or set to extended timeout on init and then reset to default after
 - May want to create additional loadBalancer service to provide stable IP for non-k8s apps (or administration)
 
-_Debug:_
+# Debug
+
 If restarting and get CrashLoopBackoff due to _"It may not be safe to bootstrap the cluster from this node. It was not the last one to leave the cluster and may not contain all the updates. To force cluster bootstrap with this node, edit the grastate.dat file manually and set safe_to_bootstrap to 1."_
+
+**[SEE NOTES](https://github.com/bitnami/charts/tree/master/bitnami/mariadb-galera#bootstraping-a-node-other-than-0)**
 
 ```yaml
 galera:
