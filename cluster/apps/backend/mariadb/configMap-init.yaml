@@ -36,10 +36,5 @@ data:
     EOSQL
     }
 
-    export SERVICES=(
-      "vaultwarden"
-    )
-
-    for SVC in "${SERVICES:-$SERVICES[@]}"; do
-      initdb "$SVC"
-    done
+    # initialize users + databases
+    initdb "vaultwarden"
