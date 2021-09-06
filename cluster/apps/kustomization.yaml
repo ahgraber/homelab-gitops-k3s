@@ -7,5 +7,5 @@ resources:
   - monitoring
   - networking
   # - security
-  - services
+  # - services
   - system-upgrade
