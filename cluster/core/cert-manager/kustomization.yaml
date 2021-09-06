@@ -4,5 +4,4 @@ resources:
   - helm-release.yaml
   - letsencrypt-production.yaml
   - letsencrypt-staging.yaml
-  - certmanager-secret.yaml
-  # - certmanager-secret.sops.yaml
+  - secret-certmanager.yaml

@@ -21,7 +21,7 @@ spec:
 
     driver:
       # see the driver-config-secret.yaml template for syntax
-      existingConfigSecret: democratic-csi-driver-config-iscsi-secret
+      existingConfigSecret: secret-democratic-csi-driver-config-iscsi
       config:
         ## NOTE: if setting an existing secret you must still set `driver.config.driver`
         ## to the appropriate (equivalent) 'driver' value used in the secret,
