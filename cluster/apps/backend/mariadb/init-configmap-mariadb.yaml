@@ -1,0 +1,41 @@
+apiVersion: v1
+metadata:
+  annotations:
+    meta.helm.sh/release-namespace: mariadb
+  name: init-configmap-mariadb
+  namespace: mariadb
+kind: ConfigMap
+data:
+  testsvc.sh: |
+    #!/bin/sh
+    # check if socket is initialized (only happens on first boot)
+    # ref: https://github.com/bitnami/charts/issues/1395#issuecomment-578066552
+    if [[ -S /opt/bitnami/mariadb/tmp/mysql.sock ]]; then
+      echo "Running DB initialization..."
+    else
+      echo "Not first boot, skipping initialization. Exiting..."
+      exit 0
+    fi
+
+    function initdb {
+      # note: if this presents problems in the future, look into heredoc indentations
+      /opt/bitnami/mariadb/bin/mysql --port=3306 --user="root" --password="$ROOT_PWD" -v <<EOSQL
+    CREATE USER '$1'@'%' IDENTIFIED VIA mysql_native_password USING '$USER_PWD';
+    GRANT USAGE ON *.* TO '$1'@'%' REQUIRE NONE WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0;
+    CREATE DATABASE IF NOT EXISTS `$1`;
+    GRANT ALL PRIVILEGES ON `$1`.* TO '$1'@'%';
+    FLUSH PRIVILEGES;
+    EOSQL
+    }
+
+    echo "Installing on 0th node"
+
+    export SERVICE=testsvc
+    export ROOT_PWD=${DB_ROOT_PWD}
+    export USER_PWD=${DB_USER_PWD}
+
+    echo "ROOT_PWD=$ROOT_PWD"
+    echo "USER_PWD=$USER_PWD"
+
+    echo "Creating '$SERVICE' user and database"
+    initdb "$SERVICE"
