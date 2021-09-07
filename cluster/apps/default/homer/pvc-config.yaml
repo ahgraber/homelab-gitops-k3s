@@ -3,11 +3,12 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pvc-homer-config
+  namespace: default
 spec:
   accessModes:
     - ReadWriteOnce
   # storageClassName: local-path
-  storageClassName: csi-truenas-nfs
+  storageClassName: "csi-truenas-nfs"
   resources:
     requests:
       storage: 128Mi
