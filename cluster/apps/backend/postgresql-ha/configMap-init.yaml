@@ -1,7 +1,7 @@
 apiVersion: v1
 metadata:
   annotations:
-    # meta.helm.sh/release-name: postgresql-ha
+    meta.helm.sh/release-name: postgresql-ha
     meta.helm.sh/release-namespace: postgresql
   name: configmap-postgresql-ha-init
   namespace: postgresql
