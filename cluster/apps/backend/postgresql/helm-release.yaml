@@ -10,48 +10,38 @@ spec:
   chart:
     spec:
       # renovate: registryUrl=https://charts.bitnami.com/bitnami
-      chart: postgresql-ha
-      version: 7.9.2
+      chart: postgresql
+      version: 10.9.4
       sourceRef:
         kind: HelmRepository
         name: bitnami-charts
         namespace: flux-system
   values:
-    global:
-        postgresql:
-          username: postgres
-          password: ${DB_ROOT_PWD}
-          # # PostgreSQL password for the postgres user when username is not postgres
-          # postgresPassword: ${DB_ROOT_PWD}
-          ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
-          # existingSecret: "postgresql-secret"
-          repmgrUsername: repmgr
-          repmgrPassword: ${DB_ROOT_PWD}
-        pgpool:
-          adminUsername: admin
-          adminPassword: ${DB_ROOT_PWD}
-
-    postgresqlImage:
+    image:
       debug: true
 
-    postgresql:
-      replicaCount: 3
-      initdbScripts:
-        - vaultwarden.sql: |
-            #!/bin/sh
-            if [[ $(hostname) == *-0  ]]; then
-              echo "First node"
-              mysql -P 3306 -uroot -prandompassword -e "create database new_database";
-              CREATE DATABASE vaultwarden;
-              CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '${DB_USER_PWD}';
-              GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
-            else
-              echo "Not first node"
-            fi
+    replication:
+      enabled: false
+      # user: repl_user
+      # password: ${DB_ROOT_PWD}
 
-    pgpool:
-      usernames: postgres-user
-      passwords: ${DB_USER_PWD}
+    global:
+      postgresql:
+        # postgresqlPassword: ${DB_ROOT_PWD}
+        # replicationPassword: ${DB_ROOT_PWD}
+        existingSecret: "secret-postgresql"
+
+    # postgresqlUsername: postgres
+    # postgresqlPassword: ${DB_ROOT_PWD}
+    # postgresqlPostgresPassword: ${DB_ROOT_PWD}
+    ## NOTE: When it's set the other auth/password parameters are ignored.
+    ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
+    # existingSecret: "secret-postgresql"
+
+    # configurationConfigMap: ""
+    initdbScriptsConfigMap: "configmap-postgresql-init"
+    # initdbUser:
+    # initdbPassword:
 
     service:
       ## Kubernetes service type and port number
@@ -68,30 +58,11 @@ spec:
       - name: TZ
         value: "America/New_York"
 
-    ## MariaDB Galera containers' liveness and readiness probes
-    ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-    livenessProbe:
-      enabled: true
-      ## Once the startup probe has succeeded once, the liveness probe takes over
-      initialDelaySeconds: 60 # 120
-      periodSeconds: 10
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 3
-    readinessProbe:
-      ## Initializing the database could take some time
-      enabled: true
-      initialDelaySeconds: 180 # 30
-      periodSeconds: 10
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 3
-    startupProbe:
-      enabled: true
-      ## Initializing the database could take some time
-      # This allows 200 s delay (120s + 8*10s)
-      initialDelaySeconds: 120
-      periodSeconds: 10
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 8
+    rbac:
+      create: false
+
+    volumePermissions:
+      enabled: false
+
+    metrics:
+      enabled: false
