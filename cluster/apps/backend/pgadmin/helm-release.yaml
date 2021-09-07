@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: pgadmin
+  namespace: postgresql
+spec:
+  interval: 10m
+  timeout: 10m  # extended period because of lengthy startup
+  chart:
+    spec:
+      # renovate: registryUrl=https://helm.runix.net
+      chart: pgadmin4
+      version: 1.7.2
+      sourceRef:
+        kind: HelmRepository
+        name: runix-charts
+        namespace: flux-system
+  values:
+    env:
+      email: ${SECRET_DEFAULT_EMAIL}
+      password: ${SECRET_DEFAULT_PASSWORD}
+
+    persistentVolume:
+      enabled: true
+      size: 1Gi
+      storageClass: "csi-truenas-nfs"
+
+    ## Service configuration
+    service:
+      type: ClusterIP
+      port: 80
+
+    ## Ingress configuration
+    ingress:
+      ## Set to true to enable ingress record generation
+      enabled: false # we'll define a custom ingressRoute

@@ -21,6 +21,7 @@ resources:
   - node-feature-discovery-charts.yaml
   - prometheus-community-charts.yaml
   - rancher-charts.yaml
+  - runix-charts.yaml
   - stakater-charts.yaml
   - traefik-charts.yaml
   - victoriametrics-charts.yaml
