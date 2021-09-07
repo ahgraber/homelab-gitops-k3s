@@ -1,7 +1,7 @@
 apiVersion: v1
 metadata:
   annotations:
-    # meta.helm.sh/release-name: mariadb
+    meta.helm.sh/release-name: mariadb
     meta.helm.sh/release-namespace: mariadb
   name: configmap-mariadb-init
   namespace: mariadb
