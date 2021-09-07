@@ -42,5 +42,5 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: pvc-homer-config
+        existingClaim: "pvc-homer-config"
         mountPath: /www/assets
