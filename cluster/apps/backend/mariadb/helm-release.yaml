@@ -23,8 +23,11 @@ spec:
     architecture: standalone
 
     auth:
+      # rootPassword: ${DB_ROOT_PWD}
+      # password: ${DB_USER_PWD}
+      # replicationPassword: ${DB_ROOT_PWD}
       ## NOTE: When it's set the other auth/password parameters are ignored.
-      ## Use existing secret (ignores rootUser.password, db.password, and galera.mariabackup.password)
+      ## Use existing secret (ignores auth.rootPassword, auth.password, and auth.replicationPassword)
       existingSecret: "secret-mariadb"
 
     # configurationConfigMap: "configmap-mariadb-settings"
