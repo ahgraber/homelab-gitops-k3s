@@ -7,6 +7,12 @@ metadata:
 spec:
   interval: 10m
   timeout: 10m  # extended period because of lengthy startup
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       # renovate: registryUrl=https://helm.runix.net
@@ -26,7 +32,7 @@ spec:
       pullPolicy: IfNotPresent
 
     replicaCount: 1
-    strategy: Recreate
+    # strategy: Recreate
 
     env:
       email: "admin"
