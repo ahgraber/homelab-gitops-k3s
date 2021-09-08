@@ -17,6 +17,9 @@ spec:
         name: runix-charts
         namespace: flux-system
   values:
+    replicaCount: 1
+    strategy: Recreate
+
     env:
       email: admin
       password: "${SECRET_DEFAULT_PASSWORD}"
