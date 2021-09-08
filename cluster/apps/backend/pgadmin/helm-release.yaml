@@ -31,6 +31,25 @@ spec:
       type: ClusterIP
       port: 80
 
+    # ## Server definitions will be loaded at launch time. This allows connection
+    # ## information to be pre-loaded into the instance of pgAdmin4 in the container.
+    # ## Ref: https://www.pgadmin.org/docs/pgadmin4/latest/import_export_servers.html
+    # serverDefinitions:
+    #   enabled: false
+    #   servers: |-
+    #   #  "1": {
+    #   #    "Name": "Minimally Defined Server",
+    #   #    "Group": "Servers",
+    #   #    "Port": 5432,
+    #   #    "Username": "postgres",
+    #   #    "Host": "postgres.postgres",
+    #   #    "SSLMode": "prefer",
+    #   #    "MaintenanceDB": "postgres"
+    #   #  }
+
+    networkPolicy:
+      enabled: true
+
     ## Ingress configuration
     ingress:
       ## Set to true to enable ingress record generation
