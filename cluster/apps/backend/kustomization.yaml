@@ -4,7 +4,7 @@ resources:
   - mariadb
   # - mariadb-galera
   - myphpadmin
-  # - pgadmin
+  - pgadmin
   - postgresql
   # - postgresql-ha
   # - velero
