@@ -9,12 +9,12 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`pgadmin.${SECRET_DOMAIN}`) # && (PathPrefix(`/`)
+    - match: Host(`pgadmin.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
         - name: rfc1918
-        - name: basicauth
+        # - name: basicauth  # app chart essentially includes basicauth
       services:
         - name: pgadmin-pgadmin4
           namespace: postgresql
