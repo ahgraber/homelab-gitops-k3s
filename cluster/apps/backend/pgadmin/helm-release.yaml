@@ -23,19 +23,20 @@ spec:
         name: runix-charts
         namespace: flux-system
   values:
-    # specifying older image to allow env.email and env.password
-    # ref: https://github.com/rowanruseler/helm-charts/issues/50#issuecomment-836999586
-    image:
-      registry: docker.io
-      repository: dpage/pgadmin4
-      tag: "4.25"
-      pullPolicy: IfNotPresent
+    # # specifying older image to allow env.email and env.password
+    # # ref: https://github.com/rowanruseler/helm-charts/issues/50#issuecomment-836999586
+    # image:
+    #   registry: docker.io
+    #   repository: dpage/pgadmin4
+    #   tag: "4.25"
+    #   pullPolicy: IfNotPresent
 
     replicaCount: 1
     # strategy: Recreate
 
     env:
-      email: "admin"
+      # email: "admin"
+      email: "ahgraber@ninerealmlabs.com"
       password: "${SECRET_DEFAULT_PASSWORD}"
       ## If True, allows pgAdmin4 to create session cookies based on IP address
       enhanced_cookie_protection: "False"
