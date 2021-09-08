@@ -50,6 +50,7 @@ spec:
     controller:
       enabled: true
       driver:
+        image: docker.io/democraticcsi/democratic-csi:latest
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
@@ -83,11 +84,17 @@ spec:
       hostNetwork: true
       hostIPC: true
 
-
-
     node:
       enabled: true
+      mount:
+        # should fsck be executed before mounting the fs
+        checkFilesystem:
+          xfs:
+            enabled: true
+          ext4:
+            enabled: true
       driver:
+        image: docker.io/democraticcsi/democratic-csi:latest
         tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
