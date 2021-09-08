@@ -18,8 +18,10 @@ spec:
         namespace: flux-system
   values:
     env:
-      email: ${SECRET_DEFAULT_EMAIL}
-      password: ${SECRET_DEFAULT_PASSWORD}
+      email: admin
+      password: "${SECRET_DEFAULT_PASSWORD}"
+      ## If True, allows pgAdmin4 to create session cookies based on IP address
+      enhanced_cookie_protection: "False"
 
     persistentVolume:
       enabled: true
