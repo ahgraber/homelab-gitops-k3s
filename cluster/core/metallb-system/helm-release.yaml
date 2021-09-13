@@ -33,7 +33,7 @@ spec:
         - name: mariadb
           protocol: layer2
           addresses:
-            - '${METALLB_MARIADB/32'
+            - '${METALLB_MARIADB}/32'
         - name: postgres
           protocol: layer2
           addresses:
