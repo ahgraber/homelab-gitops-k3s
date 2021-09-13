@@ -45,7 +45,9 @@ spec:
 
     service:
       ## Kubernetes service type and port number
-      type: ClusterIP
+      # type: ClusterIP
+      type: LoadBalancer
+      loadBalancerIP: ${METALLB_POSTGRES}
       port: 5432
 
     persistence:
