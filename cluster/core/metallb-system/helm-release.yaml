@@ -30,6 +30,14 @@ spec:
           protocol: layer2
           addresses:
             - '${METALLB_RANCHER}/32'
+        - name: mariadb
+          protocol: layer2
+          addresses:
+            - '${METALLB_MARIADB/32'
+        - name: postgres
+          protocol: layer2
+          addresses:
+            - '${METALLB_POSTGRES}/32'
     controller:
       tolerations:
         - effect: NoSchedule
