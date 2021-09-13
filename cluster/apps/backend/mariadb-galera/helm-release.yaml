@@ -50,7 +50,9 @@ spec:
 
     service:
       ## Kubernetes service type and port number
-      type: ClusterIP
+      # type: ClusterIP
+      type: LoadBalancer
+      loadBalancerIP: ${METALLB_MARIADB}
       port: 3306
 
     persistence:
