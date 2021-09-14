@@ -29,6 +29,7 @@ spec:
       ## NOTE: When it's set the other auth/password parameters are ignored.
       ## Use existing secret (ignores auth.rootPassword, auth.password, and auth.replicationPassword)
       existingSecret: "secret-mariadb"
+      database: mariadb
 
     # configurationConfigMap: "configmap-mariadb-settings"
     initdbScriptsConfigMap: "configmap-mariadb-init"
