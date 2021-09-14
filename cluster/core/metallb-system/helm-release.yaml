@@ -21,23 +21,23 @@ spec:
         - name: default
           protocol: layer2
           addresses:
-            - '${METALLB_LB_RANGE}'
+            - ${METALLB_LB_RANGE}
         - name: frontend
           protocol: layer2
           addresses:
-            - '${METALLB_FRONTEND}/32'
+            - ${METALLB_FRONTEND}/32
         - name: rancher
           protocol: layer2
           addresses:
-            - '${METALLB_RANCHER}/32'
+            - ${METALLB_RANCHER}/32
         - name: mariadb
           protocol: layer2
           addresses:
-            - '${METALLB_MARIADB}/32'
+            - ${METALLB_MARIADB}/32
         - name: postgres
           protocol: layer2
           addresses:
-            - '${METALLB_POSTGRES}/32'
+            - ${METALLB_POSTGRES}/32
     controller:
       tolerations:
         - effect: NoSchedule
