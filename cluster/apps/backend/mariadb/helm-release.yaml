@@ -36,10 +36,11 @@ spec:
     ## Mariadb Primary parameters
     primary:
       service:
-      # type: ClusterIP
-      type: LoadBalancer
-      loadBalancerIP: ${METALLB_MARIADB}
-      port: 3306
+        # type: ClusterIP
+        type: LoadBalancer
+        loadBalancerIP: ${METALLB_MARIADB}
+        port: 3306
+
       persistence:
         enabled: true
         storageClass: "csi-truenas-iscsi"
