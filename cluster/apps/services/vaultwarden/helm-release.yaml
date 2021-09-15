@@ -98,7 +98,7 @@ spec:
 
     database:
       ## Database type, must be one of: 'sqlite', 'mysql' or 'postgresql'.
-      type: mysql
+      type: postgresql
       ## Use existing secret for database URL, key 'database-url'.
       existingSecret: "secret-vaultwarden"
       ## Set the size of the database connection pool.
