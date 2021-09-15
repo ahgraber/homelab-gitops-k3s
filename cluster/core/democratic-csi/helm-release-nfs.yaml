@@ -50,7 +50,9 @@ spec:
     controller:
       enabled: true
       driver:
-        image: docker.io/democraticcsi/democratic-csi:latest
+        # image: docker.io/democraticcsi/democratic-csi:latest
+        image: docker.io/democraticcsi/democratic-csi:v1.3.2
+        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
@@ -96,6 +98,7 @@ spec:
       driver:
         # image: docker.io/democraticcsi/democratic-csi:latest
         image: docker.io/democraticcsi/democratic-csi:v1.3.2
+        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
