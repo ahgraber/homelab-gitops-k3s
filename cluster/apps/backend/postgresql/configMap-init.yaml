@@ -28,13 +28,13 @@ data:
 
       # note: if this presents problems in the future, look into heredoc indentations
       psql "postgresql://postgres:$ROOT_PWD@localhost:5432" -e <<EOSQL
-    CREATE USER "$1" IDENTIFED BY '$USER_PWD';
+    CREATE USER $1 WITH LOGIN PASSWORD '$USER_PWD';
     CREATE DATABASE "$1";
     GRANT ALL PRIVILEGES ON DATABASE "$1" TO "$1";
     EOSQL
     }
 
-    # CREATE USER $1 WITH LOGIN PASSWORD '$USER_PWD';
+    # CREATE USER "$1" IDENTIFED BY '$USER_PWD';
     # CREATE USER $1 WITH ENCRYPTED PASSWORD '$USER_PWD';
 
     # initialize users + databases
