@@ -34,8 +34,5 @@ data:
     EOSQL
     }
 
-    # CREATE USER "$1" IDENTIFED BY '$USER_PWD';
-    # CREATE USER $1 WITH ENCRYPTED PASSWORD '$USER_PWD';
-
     # initialize users + databases
     initdb "vaultwarden"
