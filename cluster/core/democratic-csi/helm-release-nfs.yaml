@@ -16,9 +16,6 @@ spec:
         name: democratic-csi-charts
         namespace: flux-system
   values:
-    csiDriver:
-      name: "org.democratic-csi.truenas-nfs"
-
     driver:
       # see the driver-config-secret.yaml template for syntax
       existingConfigSecret: secret-democratic-csi-driver-config-nfs
@@ -27,6 +24,94 @@ spec:
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
         driver: freenas-api-nfs
+
+    csiDriver:
+      name: "org.democratic-csi.truenas-nfs"
+      # version: 1.2.0
+
+    controller:
+      enabled: true
+
+      hostNetwork: false
+      hostIPC: false
+
+      strategy: deployment
+
+      externalAttacher:
+        enabled: false
+      externalProvisioner:
+        enabled: true
+      externalResizer:
+        enabled: true
+      external Snapshotter:
+        enabled: false
+        # 1.20+ should use v4.0.0+
+        # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
+        image: k8s.gcr.io/sig-storage/csi-snapshotter:v4.0.0
+      externalHealthMonitorController:
+        enabled: false
+
+      livenessProbe:
+        enabled: true
+
+      driver:
+        # image: docker.io/democraticcsi/democratic-csi:latest
+        image: docker.io/democraticcsi/democratic-csi:v1.3.2
+        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
+        logLevel: info
+        # ### for the controller, manually mount from the remote NFS server on start,
+        # ### so it can dynamically create PVC (the "crude" part)
+        # ### ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount ${TRUENAS_IP}:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
+        #   preStop:
+        #     exec:
+        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+              - SYS_ADMIN
+          privileged: true
+
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
+
+
+    node:
+      enabled: true
+      rbac:
+        enabled: true
+      hostNetwork: true
+      hostIPC: true
+      kubeletHostPath: /var/lib/kubelet
+
+      livenessProbe:
+        enabled: true
+
+      mount:
+        # should fsck be executed before mounting the fs
+        checkFilesystem:
+          xfs:
+            enabled: true
+          ext4:
+            enabled: true
+
+      driver:
+        # image: docker.io/democraticcsi/democratic-csi:latest
+        image: docker.io/democraticcsi/democratic-csi:v1.3.2
+        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
+        logLevel: info
+
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
 
     storageClasses:
       - name: csi-truenas-nfs
@@ -46,65 +131,3 @@ spec:
         #   node-stage-secret:
         #   node-publish-secret:
         #   controller-expand-secret:
-
-    controller:
-      enabled: true
-      driver:
-        # image: docker.io/democraticcsi/democratic-csi:latest
-        image: docker.io/democraticcsi/democratic-csi:v1.3.2
-        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
-        securityContext:
-          allowPrivilegeEscalation: true
-          capabilities:
-            add:
-              - SYS_ADMIN
-          privileged: true
-        # ### for the controller, manually mount from the remote NFS server on start,
-        # ### so it can dynamically create PVC (the "crude" part)
-        # ### ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
-        # lifecycle:
-        #   postStart:
-        #     exec:
-        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount ${TRUENAS_IP}:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
-        #   preStop:
-        #     exec:
-        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
-      externalResizer:
-        enabled: true
-      external Snapshotter:
-        enabled: false # not using k8s snapshots
-      externalHealthMonitorController:
-        enabled: false
-      livenessProbe:
-        enabled: true
-
-      strategy: deployment
-      hostNetwork: true
-      hostIPC: true
-
-    node:
-      enabled: true
-      mount:
-        # should fsck be executed before mounting the fs
-        checkFilesystem:
-          xfs:
-            enabled: true
-          ext4:
-            enabled: true
-      driver:
-        # image: docker.io/democraticcsi/democratic-csi:latest
-        image: docker.io/democraticcsi/democratic-csi:v1.3.2
-        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
-      rbac:
-        enabled: true
-      hostNetwork: true
-      hostIPC: true
-      kubeletHostPath: /var/lib/kubelet
