@@ -7,8 +7,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-path
-  # storageClassName: "csi-truenas-nfs"
+  # storageClassName: local-path
+  storageClassName: "csi-truenas-nfs"
   resources:
     requests:
-      storage: 128Mi
+      # storage: 128Mi
+      storage: 1Gi
