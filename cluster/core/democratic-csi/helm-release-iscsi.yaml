@@ -28,6 +28,60 @@ spec:
         ## as the value is used by the chart for other purposes beyond secret creation
         driver: freenas-api-iscsi
 
+    controller:
+      enabled: true
+      hostNetwork: true
+      hostIPC: true
+      strategy: deployment
+      externalAttacher:
+        enabled: true
+      externalProvisioner:
+        enabled: true
+      externalResizer:
+        enabled: true
+      external Snapshotter:
+        enabled: true
+        # 1.20+ should use v4.0.0+
+        # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
+        image: k8s.gcr.io/sig-storage/csi-snapshotter:v4.2.1
+      externalHealthMonitorController:
+        enabled: false
+      livenessProbe:
+        enabled: true
+      driver:
+        image: docker.io/democraticcsi/democratic-csi:latest
+        logLevel: info
+        # securityContext:
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
+
+    node:
+      enabled: true
+      rbac:
+        enabled: true
+      hostNetwork: true
+      hostIPC: true
+      kubeletHostPath: /var/lib/kubelet
+
+      livenessProbe:
+        enabled: true
+      mount:
+        # should fsck be executed before mounting the fs
+        checkFilesystem:
+          xfs:
+            enabled: true
+          ext4:
+            enabled: true
+      driver:
+        image: docker.io/democraticcsi/democratic-csi:latest
+        logLevel: info
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
+
     storageClasses:
       - name: csi-truenas-iscsi
         defaultClass: false
@@ -45,44 +99,8 @@ spec:
         #   node-publish-secret:
         #   controller-expand-secret:
 
-    controller:
-      enabled: true
-      driver:
-        image: docker.io/democraticcsi/democratic-csi:latest
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
-      externalResizer:
-        enabled: true
-      external Snapshotter:
-        enabled: false # not using k8s snapshots
-      externalHealthMonitorController:
-        enabled: false
-      livenessProbe:
-        enabled: true
-
-      strategy: deployment
-      hostNetwork: true
-      hostIPC: true
-
-    node:
-      enabled: true
-      mount:
-        # should fsck be executed before mounting the fs
-        checkFilesystem:
-          xfs:
-            enabled: true
-          ext4:
-            enabled: true
-      driver:
-        image: docker.io/democraticcsi/democratic-csi:latest
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
-      rbac:
-        enabled: true
-      hostNetwork: true
-      hostIPC: true
-      kubeletHostPath: /var/lib/kubelet
+    volumeSnapshotClasses:
+      - name: csi-truenas-iscsi
+        deletionPolicy: Retain # Delete, Retain
+        # secrets:
+        #   snapshotter-secret:

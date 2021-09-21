@@ -7,7 +7,9 @@ resources:
   - democratic-csi.yaml
   - mariadb.yaml
   - metallb-system.yaml
+  - minio.yaml
   - monitoring.yaml
   - networking.yaml
   - postgresql.yaml
   - vaultwarden.yaml
+  - velero.yaml

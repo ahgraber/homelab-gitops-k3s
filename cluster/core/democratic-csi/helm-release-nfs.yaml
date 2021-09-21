@@ -31,32 +31,27 @@ spec:
 
     controller:
       enabled: true
-
       hostNetwork: false
       hostIPC: false
-
       strategy: deployment
-
       externalAttacher:
-        enabled: false
+        enabled: true
       externalProvisioner:
         enabled: true
       externalResizer:
         enabled: true
       external Snapshotter:
-        enabled: false
+        enabled: true
         # 1.20+ should use v4.0.0+
         # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
-        image: k8s.gcr.io/sig-storage/csi-snapshotter:v4.0.0
+        image: k8s.gcr.io/sig-storage/csi-snapshotter:v4.2.1
       externalHealthMonitorController:
         enabled: false
-
       livenessProbe:
         enabled: true
-
       driver:
-        # image: docker.io/democraticcsi/democratic-csi:latest
-        image: docker.io/democraticcsi/democratic-csi:v1.3.2
+        image: docker.io/democraticcsi/democratic-csi:latest
+        # image: docker.io/democraticcsi/democratic-csi:v1.3.2
         # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         logLevel: info
         # ### for the controller, manually mount from the remote NFS server on start,
@@ -69,19 +64,16 @@ spec:
         #   preStop:
         #     exec:
         #       command: ["/bin/sh","-c","umount /mnt/nfs"]
-
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
             add:
               - SYS_ADMIN
           privileged: true
-
         tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
             operator: Exists
-
 
     node:
       enabled: true
@@ -131,3 +123,9 @@ spec:
         #   node-stage-secret:
         #   node-publish-secret:
         #   controller-expand-secret:
+
+    volumeSnapshotClasses:
+      - name: csi-truenas-nfs
+        deletionPolicy: Retain # Delete, Retain
+        # secrets:
+        #   snapshotter-secret:
