@@ -70,7 +70,7 @@ spec:
           # subscriptionId:
           # storageAccount:
           s3Url: https://s3.us-west-002.backblazeb2.com
-          publicUrl: https://s3.us-west-002.backblazeb2.com
+          # publicUrl: https://s3.us-west-002.backblazeb2.com
           # publicUrl: https://s3.${SECRET_DOMAIN}
 
       volumeSnapshotLocation:
