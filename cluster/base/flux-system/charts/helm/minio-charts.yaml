@@ -6,5 +6,8 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: https://operator.min.io/
+  # operator (clustered/multitenancy -- i.e., not what we want!)
+  # url: https://operator.min.io/
+  # gateway (https://github.com/minio/ming)
+  url: https://ming.min.io/
   timeout: 2m
