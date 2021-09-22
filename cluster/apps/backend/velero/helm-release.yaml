@@ -56,7 +56,8 @@ spec:
       backupStorageLocation:
         name: default
         provider: aws
-        bucket: 4596a1d327d9f1fd74bc061b
+        bucket: ninerealmlabs-velero
+        # bucket: 4596a1d327d9f1fd74bc061b
         # # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
         # prefix:
         # default indicates this location is the default backup storage location. Optional.
