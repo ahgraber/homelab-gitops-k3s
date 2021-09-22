@@ -55,7 +55,7 @@ spec:
       provider: aws
       backupStorageLocation:
         name: default
-        provider: backblaze
+        provider: aws
         bucket: 4596a1d327d9f1fd74bc061b
         # # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
         # prefix:
@@ -70,12 +70,12 @@ spec:
           # subscriptionId:
           # storageAccount:
           s3Url: s3.us-west-002.backblazeb2.com
-          # publicUrl: s3.us-west-002.backblazeb2.com
+          publicUrl: s3.us-west-002.backblazeb2.com
           # publicUrl: https://s3.${SECRET_DOMAIN}
 
       volumeSnapshotLocation:
         name: velero
-        provider: democratic-csi
+        provider: csi
         # config:
         #   region: us-west-002
         #   apiTimeout:
@@ -141,7 +141,7 @@ spec:
               app.kubernetes.io/name: mariadb
           ttl: "120h"
           includedNamespaces:
-            - postgrmariadbesql
+            - mariadb
       hourly-postgresql:
         schedule: "0 * * * *"
         template:
