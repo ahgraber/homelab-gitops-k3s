@@ -9,17 +9,8 @@ kind: ConfigMap
 data:
   testsvc.sh: |
     #!/bin/bash
-    # # check if socket is initialized (only happens on first boot)
-    # # ref: https://github.com/bitnami/charts/issues/1395#issuecomment-578066552
-    # if [[ -S /opt/bitnami/mariadb/tmp/mysql.sock ]]; then
-    #   echo "Running DB initialization..."
-    # else
-    #   echo "Not first boot, skipping initialization. Exiting..."
-    #   exit 0
-    # fi
-
-    export ROOT_PWD="${DB_ROOT_PWD}"
-    export USER_PWD="${DB_USER_PWD}"
+    export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
+    export USER_PWD="${SECRET_DB_USER_PWD}"
     # echo "ROOT_PWD=$ROOT_PWD"
     # echo "USER_PWD=$USER_PWD"
 
@@ -36,3 +27,5 @@ data:
 
     # initialize users + databases
     initdb "vaultwarden"
+    initdb "authentik"
+    # initdb "mealie"

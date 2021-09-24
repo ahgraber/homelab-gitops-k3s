@@ -1,127 +1,74 @@
-# **mariadb**
+# postgresql
 
-MariaDB is a community-developed, commercially supported fork of the MySQL relational database management system, intended to remain free and open-source software under the GNU General Public License.
+Postgres is a ...
 
-MariaDB _Galera_ Cluster is a virtually synchronous multi-primary cluster for MariaDB. It requires at least 3 _nodes_ so pods can run in HA.
+## Installation
 
----
+Install using Helm chart.  Modify [configMap-init.yaml](configMap-init.yaml) to include any databases/users that need to be create on initial install (see `initdb` command at end).
 
-# Installation
+## Create DB and User
 
-Install with helm or rancher using [bitnami/mariadb](https://artifacthub.io/packages/helm/bitnami/mariadb), <br>
-or install[bitnami/mariadb-galera](https://artifacthub.io/packages/helm/bitnami/mariadb-galera)
+### Prerequisites
 
-1. Create namespace
+Install psql cli with `homebrew`
 
-   ```sh
-   kubectl create namespace mariadb
-   ```
+```sh
+brew install libpq
 
-2. Create secret for username/password
-
-   - From command line:
-
-     1. Calculate secrets with
-
-        ```sh
-        # kubectl create secret TYPE -n NAMESPACE SECRETNAME --from-literal=KEY=LITERAL,KEY-LITERAL
-        kubectl create secret generic mariadb-secret -n mariadb \
-        --from-literal=mariadb-root-password=<ROOT_PWD> \
-        --from-literal=mariadb-password=<DB_PWD> \
-        --from-literal=mariadb-replication-password=<BKUP_PWD> \
-        --from-literal=mariadb-galera-mariabackup-password=<BKUP_PWD>
-        # or
-        kubectl create secret generic mariadb-secret -n mariadb \
-        --from-file=mariadb-root-password=../.secrets/db_root_pwd.txt \
-        --from-file=mariadb-password=../.secrets/db_pwd.txt \
-        --from-file=mariadb-replication-password=../.secrets/db_bkup_pwd.txt \
-        --from-file=mariadb-galera-mariabackup-password=../.secrets/db_bkup_pwd.txt
-        ```
-
-   - From yaml: edit mariadb-secret.yaml and apply
-
-<!-- 3. Create Persistent Volume Claim to [allow volume persistence across upgrades](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues/)
-   * In Rancher:
-     1. Cluster > local > Default
-     2. Workloads > Volumes
-     3. Add Volume -->
-
-4. Install mariadb or mariadb-galera
-
-   - In Rancher
-     1. Cluster > local > Default
-     2. Apps > Launch
-     3. mariadb
-     4. Copy values from [`mariadb-values.yaml`](./mariadb-values.yaml) into values 'edit as yaml'
-   - create ingressRoute to provide access; add to firewall dns override:
-     `kubectl apply -f ./ingressroute-mariadb.yaml`
-
-5. [optional] Install [`phpmyadmin`]()
-
-   - In Rancher
-     1. Cluster > local > Default
-     2. Apps > Launch
-     3. mariadb
-     4. Copy values from [`phpmyadmin-values.yaml`](./phpmyadmin-values.yaml) into values 'edit as yaml'
-   - create ingressRoute to provide access; add to firewall dns override:
-     `kubectl apply -f ./ingressroute-phpmyadmin.yaml`
-
-6.
-
-### _Notes:_
-
-- [Galera inter-cluster TLS/SSL appears to be nonfunctional (May, 2021)](https://github.com/bitnami/charts/issues/5765)
-  ... that said, even if it works, we'd have to create a new secret in the `mariadb` namespace or mount a cert file
-
-_Hints:_
-
-- May have to disable liveness/readiness probes or set to extended timeout on init and then reset to default after
-- May want to create additional loadBalancer service to provide stable IP for non-k8s apps (or administration)
-
-_Debug:_
-If restarting and get CrashLoopBackoff due to _"It may not be safe to bootstrap the cluster from this node. It was not the last one to leave the cluster and may not contain all the updates. To force cluster bootstrap with this node, edit the grastate.dat file manually and set safe_to_bootstrap to 1."_
-
-```yaml
-galera:
-  #   ## Galera cluster name
-  #   name: galera
-
-  ## Bootstraping options
-  ## ref: https://github.com/bitnami/bitnami-docker-mariadb-galera#bootstraping
-  bootstrap:
-    ## Node to bootstrap from, you will need to change this parameter in case you want to bootstrap from other node
-    bootstrapFromNode: 0
-    ## Force safe_to_bootstrap in grastate.date file.
-    ## This will set safe_to_bootstrap=1 in the node indicated by bootstrapFromNode.
-    forceSafeToBootstrap: true
+# symlink all tools from libpq into /usr/local/bin
+brew link --force libpq
 ```
 
----
+### Creation script
 
-# MySQL Workbench
+If additional databases are required after install, run below commands
 
-https://docs.bitnami.com/general/infrastructure/mariadb/configuration/configure-workbench/
+```sh
+# DB and User name
+# export ROOT_PWD="${SECRETS_DB_ROOT_PWD}"
+# export USER_PWD="${SECRETS_DB_USER_PWD}"
+DB="authentik"
 
----
+function initdb {
+  echo "Creating \"$1\" user and database"
 
-# Backup / Restore
+  # note: if this presents problems in the future, look into heredoc indentations
+  psql "postgresql://postgres:${SECRETS_DB_ROOT_PWD}@${SETTINGS_METALLB_POSTGRES}:5432" -e <<EOSQL
+CREATE USER $1 WITH LOGIN PASSWORD '${SECRETS_DB_USER_PWD}';
+CREATE DATABASE "$1";
+GRANT ALL PRIVILEGES ON DATABASE "$1" TO "$1";
+EOSQL
+}
 
-See [mariadb docs](https://docs.bitnami.com/general/infrastructure/mariadb/administration/backup-restore-mysql-mariadb/)
+initdb "${DB}"
+unset DB
+# unset ROOT_PWD
+# unset USER_PWD
 
-- Backup
+# # Variables contained in an unescaped or unquoted heredoc will be expanded
+# # by the *local* shell *before* the local shell executes the ssh command
+# # The solution is to use an escaped or single-quoted heredoc, <<\EOF or <<'EOF'
+# # or only escape the variables in the heredoc that should *not* be expanded locally
+# # Thus, variables listed above do NOT get escaped; all other variables DO get escaped
+# ssh root@truenas.ninerealmlabs.com 'bash -s' << EOF
+# # transfer variable data
+# export DB="${DB}"
+# export ROOT_PWD="${ROOT_PWD}"
+# export USER_PWD="${ROOT_PWD}"
 
-  ```sh
-  # single database
-  mysqldump -u root -p <DB_NAME> > backup.sql
-  # all DBs
-  mysqldump -A -u root -p > backup.sql
-  ```
+# function initdb {
+#   echo "Creating \"$1\" user and database"
 
-- Restore
+#   # note: if this presents problems in the future, look into heredoc indentations
+#   psql "postgresql://postgres:$ROOT_PWD@localhost:5432" -e <<EOSQL
+# CREATE USER $1 WITH LOGIN PASSWORD '$USER_PWD';
+# CREATE DATABASE "$1";
+# GRANT ALL PRIVILEGES ON DATABASE "$1" TO "$1";
+# EOSQL
+# }
 
-  ```sh
-  # single database
-  mysql -u root -p -D <DB_NAME> < backup.sql
-  # all DBs
-  mysql -u root -p < backup.sql
-  ```
+# initdb \${DB}
+# unset DB
+# unset ROOT_PWD
+# unset USER_PWD
+```

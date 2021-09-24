@@ -121,6 +121,7 @@ spec:
     # Whether to create volumesnapshotlocation crd, if false => disable snapshot feature
     snapshotsEnabled: true
 
+    ### Don't need restic since `democratic-csi` can use snapshots (assuming `external-snapshotter` is installed)
     # deployRestic: true
     # restic:
     #   podVolumePath: /var/lib/kubelet/pods
@@ -134,8 +135,8 @@ spec:
         schedule: "0 5 * * *"
         template:
           ttl: "120h"
-      hourly-mariadb:
-        schedule: "0 * * * *"
+      daily4-mariadb:
+        schedule: "0 */6 * * *"
         template:
           labelSelector:
             matchLabels:
@@ -143,8 +144,8 @@ spec:
           ttl: "120h"
           includedNamespaces:
             - mariadb
-      hourly-postgresql:
-        schedule: "0 * * * *"
+      daily4-postgresql:
+        schedule: "0 */6 * * *"
         template:
           labelSelector:
             matchLabels:
