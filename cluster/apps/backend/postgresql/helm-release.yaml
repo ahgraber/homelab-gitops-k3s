@@ -23,17 +23,17 @@ spec:
     replication:
       enabled: false
       # user: repl_user
-      # password: ${DB_ROOT_PWD}
+      # password: ${SECRET_DB_ROOT_PWD}
 
     global:
       postgresql:
-        # postgresqlPassword: ${DB_ROOT_PWD}
-        # replicationPassword: ${DB_ROOT_PWD}
+        # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+        # replicationPassword: ${SECRET_DB_ROOT_PWD}
         existingSecret: "secret-postgresql"
 
     # postgresqlUsername: postgres
-    # postgresqlPassword: ${DB_ROOT_PWD}
-    # postgresqlPostgresPassword: ${DB_ROOT_PWD}
+    # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+    # postgresqlPostgresPassword: ${SECRET_DB_ROOT_PWD}
     ## NOTE: When it's set the other auth/password parameters are ignored.
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
     # existingSecret: "secret-postgresql"

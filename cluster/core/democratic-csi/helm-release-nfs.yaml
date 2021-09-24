@@ -60,7 +60,7 @@ spec:
         # lifecycle:
         #   postStart:
         #     exec:
-        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount ${TRUENAS_IP}:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
+        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount ${SECRET_TRUENAS_IP}:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
         #   preStop:
         #     exec:
         #       command: ["/bin/sh","-c","umount /mnt/nfs"]
