@@ -33,6 +33,8 @@ spec:
       enabled: true
       hostNetwork: false
       hostIPC: false
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       strategy: deployment
       externalAttacher:
         enabled: true
@@ -82,6 +84,8 @@ spec:
       hostNetwork: true
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
 
       livenessProbe:
         enabled: true
