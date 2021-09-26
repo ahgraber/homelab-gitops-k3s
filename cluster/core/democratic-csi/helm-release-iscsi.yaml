@@ -32,6 +32,8 @@ spec:
       enabled: true
       hostNetwork: true
       hostIPC: true
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
       strategy: deployment
       externalAttacher:
         enabled: true
@@ -64,7 +66,8 @@ spec:
       hostNetwork: true
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
-
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
       livenessProbe:
         enabled: true
       mount:
