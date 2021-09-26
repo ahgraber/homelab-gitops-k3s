@@ -51,6 +51,9 @@ spec:
         - name: TZ
           value: "America/New_York"
 
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-mariadb"
+
     # ## Mariadb Secondary parameters
     # secondary:
     #   ## Number of Mariadb Secondary replicas to deploy

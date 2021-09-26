@@ -25,6 +25,9 @@ spec:
       repository: velero/velero
       tag: v1.6.3
 
+    podAnnotations:
+      secret.reloader.stakater.com/reload: "secret-velero"
+
     initContainers:
       - name: velero-plugin-for-aws
         image: velero/velero-plugin-for-aws:v1.2.1
@@ -57,7 +60,6 @@ spec:
         name: default
         provider: aws
         bucket: ninerealmlabs-velero
-        # bucket: 4596a1d327d9f1fd74bc061b
         # # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
         # prefix:
         # default indicates this location is the default backup storage location. Optional.
@@ -71,8 +73,6 @@ spec:
           # subscriptionId:
           # storageAccount:
           s3Url: https://s3.us-west-002.backblazeb2.com
-          # publicUrl: https://s3.us-west-002.backblazeb2.com
-          # publicUrl: https://s3.${SECRET_DOMAIN}
 
       volumeSnapshotLocation:
         name: velero
@@ -134,22 +134,23 @@ spec:
       daily-backup:
         schedule: "0 5 * * *"
         template:
-          ttl: "120h"
-      daily4-mariadb:
-        schedule: "0 */6 * * *"
-        template:
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: mariadb
-          ttl: "120h"
-          includedNamespaces:
-            - mariadb
-      daily4-postgresql:
-        schedule: "0 */6 * * *"
-        template:
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: postgresql
-          ttl: "120h"
-          includedNamespaces:
-            - postgresql
+          ttl: 168h0m0s
+
+      # daily4-mariadb:
+      #   schedule: "0 */6 * * *"
+      #   template:
+      #     labelSelector:
+      #       matchLabels:
+      #         app.kubernetes.io/name: mariadb
+      #     ttl: 168h0m0s
+      #     includedNamespaces:
+      #       - mariadb
+      # daily4-postgresql:
+      #   schedule: "0 */6 * * *"
+      #   template:
+      #     labelSelector:
+      #       matchLabels:
+      #         app.kubernetes.io/name: postgresql
+      #     ttl: 168h0m0s
+      #     includedNamespaces:
+      #       - postgresql
