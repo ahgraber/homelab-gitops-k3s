@@ -55,6 +55,10 @@ spec:
       storageClass: "csi-truenas-iscsi"
       size: 8Gi
 
+    primary:
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-postgresql"
+
     ## An array to add extra environment variables
     extraEnvVars:
       - name: TZ
