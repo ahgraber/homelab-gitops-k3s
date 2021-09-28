@@ -1,0 +1,31 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-mariadb-backup
+  namespace: mariadb
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mysqldump
+              image: mariadb:latest
+              env:
+                MARIADB_ROOT_PASSWORD: ${SECRET_DB_ROOT_PWD}
+                MARIADB_ROOT_HOST: cron
+                MARIADB_DATABASE: cron
+              command: ["/bin/sh"]
+              args: [
+                  "-c",
+                  'exec mysqldump -h mariadb.mariadb -u root -p${SECRET_DB_ROOT_PWD} -A --flush-privileges > /backup/backup-$(date +"%m-%d-%Y-%H-%M").sql',
+                ]
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+            - name: backup-mariadb
+              persistentVolumeClaim:
+                claimName: backup-mariadb
