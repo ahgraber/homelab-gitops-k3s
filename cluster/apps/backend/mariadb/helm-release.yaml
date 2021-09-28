@@ -44,14 +44,24 @@ spec:
 
       persistence:
         enabled: true
-        storageClass: "csi-truenas-iscsi"
-        size: 8Gi
+        existingClaim: data-mariadb-0
+        # storageClass: "csi-truenas-iscsi"
+        # size: 8Gi
       ## An array to add extra environment variables on MariaDB primary containers
       extraEnvVars:
         - name: TZ
           value: "America/New_York"
 
+      extraVolumes:
+        - name: backup
+          persistentVolumeClaim:
+            claimName: backup-mariadb
+      extraVolumeMounts:
+        - name: backup
+          mountPath: /backup
+
       podAnnotations:
+        backup.velero.io/backup-volumes: backup #, data
         secret.reloader.stakater.com/reload: "secret-mariadb"
 
     # ## Mariadb Secondary parameters
