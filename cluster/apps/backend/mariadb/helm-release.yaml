@@ -80,8 +80,11 @@ spec:
     #   #   - name: TZ
     #   #     value: "America/New_York"
 
+    serviceAccount:
+      create: true
+
     rbac:
-      create: false
+      create: true
 
     volumePermissions:
       enabled: false
