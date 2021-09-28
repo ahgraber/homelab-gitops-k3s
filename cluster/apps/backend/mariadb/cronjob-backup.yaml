@@ -4,6 +4,7 @@ metadata:
   name: cronjob-mariadb-backup
   namespace: mariadb
 spec:
+  # Kubernetes uses UTC exclusively - adjust from local time!
   schedule: "*/10 * * * *"
   jobTemplate:
     spec:
@@ -13,9 +14,12 @@ spec:
             - name: mysqldump
               image: mariadb:latest
               env:
-                MARIADB_ROOT_PASSWORD: ${SECRET_DB_ROOT_PWD}
-                MARIADB_ROOT_HOST: cron
-                MARIADB_DATABASE: cron
+                - name: MARIADB_ROOT_PASSWORD
+                  value: ${SECRET_DB_ROOT_PWD}
+                - name: MARIADB_ROOT_HOST
+                  value: cron
+                - name: MARIADB_DATABASE
+                  value: cron
               command: ["/bin/sh"]
               args: [
                   "-c",
