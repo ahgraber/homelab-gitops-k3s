@@ -19,7 +19,7 @@ spec:
               command: ["/bin/sh"]
               args: [
                   "-c",
-                  'exec mysqldump -h mariadb.mariadb -u root -p${SECRET_DB_ROOT_PWD} -A --flush-privileges > /backup/backup-$(date +"%m-%d-%Y-%H-%M").sql',
+                  'exec mysqldump -h mariadb.mariadb -u root -p${SECRET_DB_ROOT_PWD} --all-databases --flush-privileges > /backup/backup-$(date +"%m-%d-%Y-%H-%M").sql',
                 ]
               volumeMounts:
                 - name: backup
