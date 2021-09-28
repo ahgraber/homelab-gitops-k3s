@@ -4,6 +4,7 @@ resources:
   - helm-release.yaml
   # - configMap-settings.yaml  # unused
   - configMap-init.yaml
-  - cronjob-backup.yaml
+  # - cronjob-backup.yaml
   # - ingresRoute.yaml
+  - pvc.yaml
   - secret.yaml
