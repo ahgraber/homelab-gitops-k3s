@@ -58,7 +58,8 @@ spec:
             claimName: backup-mariadb
       extraVolumeMounts:
         - name: backup
-          mountPath: /backup
+          mountPath: /mnt/backup
+          # mountPath: /bitnami/mariadb/backup
 
       podAnnotations:
         backup.velero.io/backup-volumes: backup #, data
