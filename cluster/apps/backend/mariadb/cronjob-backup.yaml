@@ -43,7 +43,8 @@ metadata:
   namespace: mariadb
 spec:
   # Kubernetes uses UTC exclusively - adjust from local time!
-  schedule: "*/10 * * * *"
+  # Local is (UTC - 4) // UTC is (local + 4)
+  schedule: "20 4 * * *"
   jobTemplate:
     spec:
       backoffLimit: 3  # retry only once
