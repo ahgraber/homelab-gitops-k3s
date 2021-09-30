@@ -82,7 +82,7 @@ spec:
                   else
                     echo 'Running incremental backup...'
                     BASEDIR=$(kubectl exec mariadb-0 -n mariadb -- cat /mnt/backup/BASEDIR)
-                    TARGETDIR="/mnt/backup/incremental.d/incr-$(date +'%Y-%b-%d_%H.%M')"
+                    TARGETDIR="/mnt/backup/incremental.d/incr-$(date +'%Y-%m-%d_%H.%M')"
                     echo "BASEDIR=$BASEDIR"
                     echo "TARGETDIR=$TARGETDIR"
                     kubectl exec mariadb-0 -n mariadb -- mkdir -p $TARGETDIR
