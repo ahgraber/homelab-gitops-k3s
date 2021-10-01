@@ -48,13 +48,13 @@ spec:
 
       host     replication     postgres    0.0.0.0/0          md5
       host     replication     postgres    ::/0               md5
-      local    replication     postgres                       trust
+      local    replication     postgres                       md5
       host     replication     postgres    127.0.0.1/32       md5
       host     replication     postgres    ::1/128            md5
       host     replication     postgres    0.0.0.0/0          md5
       host     replication     repl_user    0.0.0.0/0          md5
       host     replication     repl_user    ::/0               md5
-      local    replication     repl_user                       trust
+      local    replication     repl_user                       md5
       host     replication     repl_user    127.0.0.1/32       md5
       host     replication     repl_user    ::1/128            md5
       host     replication     repl_user    0.0.0.0/0          md5
