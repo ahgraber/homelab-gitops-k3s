@@ -30,6 +30,11 @@ done
 ### Restore
 
 ```sh
+# empty datadir
+cd /bitnami/mariadb/data
+rm -rf *
+# restore backup
 mariabackup --copy-back --target-dir=/mnt/backup/backup.d/
-chown -R mysql:mysql /var/lib/mysql/
+# restore permissions
+chown -R 1001 /bitnami/mariadb/data/
 ```
