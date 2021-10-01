@@ -52,20 +52,34 @@ spec:
 
     persistence:
       enabled: true
-      storageClass: "csi-truenas-iscsi"
-      size: 8Gi
+      existingClaim: data-postgresql-postgresql-0
+      # storageClass: "csi-truenas-iscsi"
+      # size: 8Gi
+
+    ## An array to add extra environment variables
+    extraEnv:
+      - name: TZ
+        value: "America/New_York"
+
 
     primary:
       podAnnotations:
         secret.reloader.stakater.com/reload: "secret-postgresql"
 
-    ## An array to add extra environment variables
-    extraEnvVars:
-      - name: TZ
-        value: "America/New_York"
+      extraVolumes:
+        - name: backup
+          persistentVolumeClaim:
+            claimName: backup-mariadb
+      extraVolumeMounts:
+        - name: backup
+          mountPath: /mnt/backup
+          # mountPath: /bitnami/mariadb/backup
 
-    rbac:
-      create: false
+    serviceAccount:
+      create: true
+
+    # rbac:
+    #   create: true
 
     volumePermissions:
       enabled: false
