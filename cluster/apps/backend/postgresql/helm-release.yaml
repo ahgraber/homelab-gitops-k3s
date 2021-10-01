@@ -69,7 +69,7 @@ spec:
       extraVolumes:
         - name: backup
           persistentVolumeClaim:
-            claimName: backup-mariadb
+            claimName: backup-postgresql
       extraVolumeMounts:
         - name: backup
           mountPath: /mnt/backup
