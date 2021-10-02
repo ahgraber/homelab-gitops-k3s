@@ -7,7 +7,7 @@ metadata:
   namespace: postgresql
 kind: ConfigMap
 data:
-  testsvc.sh: |
+  init_db.sh: |
     #!/bin/bash
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
@@ -29,3 +29,26 @@ data:
     initdb "vaultwarden"
     initdb "authentik"
     # initdb "mealie"
+  backup.sh: |
+    #!/bin/bash
+    export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
+    export USER_PWD="${SECRET_DB_USER_PWD}"
+
+    echo 'Making .pgpass file...'
+    cat > /bitnami/postgresql/.pgpass << EOF
+    # hostname:port:database:username:password
+    **:*:replication:postgres:$ROOT_PWD
+    EOF
+    chmod 0600 /bitnami/postgresql/.pgpass
+
+    echo 'Making backup directories if they do not exist...'
+    kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p /mnt/backup/{backup.d,incremental.d}
+
+    echo 'Checking backup directory...'
+    if [ -z "$(ls -A /mnt/backup/backup.d)" ]; then
+      echo "Base backup location /mnt/backup/backup.d is empty, running full backup..."
+      PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D /mnt/backup/backup.d
+      echo "Base backup successful"
+
+    echo 'Removing .pgpass file...'
+    rm -rf /bitnami/postgresql/.pgpass
