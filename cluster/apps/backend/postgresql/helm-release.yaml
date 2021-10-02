@@ -39,12 +39,7 @@ spec:
     # existingSecret: "secret-postgresql"
 
     # settings to archive Write Ahead Log for incremental backups
-    postgresqlExtendedConf: {
-      "archiveCommand": 'test ! -f /mnt/backup/incremental.d/%f && cp %p /mnt/backup/incremental.d/%f',
-      "archiveMode": "on",
-      "archiveTimeout": 120,
-      "walLevel": "replica",
-    }
+    # postgresqlExtendedConf: {}
 
     pgHbaConfiguration: |
       host     all             all         0.0.0.0/0          md5
@@ -61,13 +56,10 @@ spec:
       host     replication     postgres    ::1/128            md5
       host     replication     postgres    0.0.0.0/0          md5
 
-    # configurationConfigMap: |
-    #   ""
+    configurationConfigMap: "configmap-postgresql-conf"
     initdbScriptsConfigMap: "configmap-postgresql-init"
     # initdbUser:
     # initdbPassword:
-
-
 
     service:
       ## Kubernetes service type and port number
