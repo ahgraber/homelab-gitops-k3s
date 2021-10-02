@@ -7,7 +7,7 @@ metadata:
   namespace: mariadb
 kind: ConfigMap
 data:
-  testsvc.sh: |
+  init_db.sh: |
     #!/bin/bash
     # check if socket is initialized (only happens on first boot)
     # ref: https://github.com/bitnami/charts/issues/1395#issuecomment-578066552
