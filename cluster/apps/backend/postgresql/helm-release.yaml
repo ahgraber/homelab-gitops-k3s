@@ -40,7 +40,7 @@ spec:
 
     # settings to archive Write Ahead Log for incremental backups
     postgresqlExtendedConf: {
-      "archiveCommand": 'test ! -f /mnt/backup/backup.d/pg_wal/%f && cp %p /mnt/backup/backup.d/pg_wal/%f',
+      "archiveCommand": 'test ! -f /mnt/backup/incremental.d/%f && cp %p /mnt/backup/incremental.d/%f',
       "archiveMode": "on",
       "archiveTimeout": 120,
       "walLevel": "replica",
