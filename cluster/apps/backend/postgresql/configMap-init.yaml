@@ -28,16 +28,20 @@ data:
     # initialize users + databases
     initdb "vaultwarden"
     initdb "authentik"
-    # initdb "mealie"
+    initdb "mealie"
+    initdb "nextcloud"
+
+    unset ROOT_PWD
+    unset USER_PWD
+
   backup.sh: |
     #!/bin/bash
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
-    export USER_PWD="${SECRET_DB_USER_PWD}"
 
     echo 'Making .pgpass file...'
     cat > /bitnami/postgresql/.pgpass << EOF
     # hostname:port:database:username:password
-    **:*:replication:postgres:$ROOT_PWD
+    *:*:replication:postgres:$ROOT_PWD
     EOF
     chmod 0600 /bitnami/postgresql/.pgpass
 
@@ -52,3 +56,4 @@ data:
 
     echo 'Removing .pgpass file...'
     rm -rf /bitnami/postgresql/.pgpass
+    unset ROOT_PWD
