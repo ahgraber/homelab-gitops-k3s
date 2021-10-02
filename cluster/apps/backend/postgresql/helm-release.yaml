@@ -38,11 +38,12 @@ spec:
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
     # existingSecret: "secret-postgresql"
 
+    # settings to archive Write Ahead Log for incremental backups
     postgresqlExtendedConf: {
-      "walLevel": "replica",
-      "archiveMode": "on",
       "archiveCommand": 'test ! -f /mnt/backup/backup.d/pg_wal/%f && cp %p /mnt/backup/backup.d/pg_wal/%f',
-      "archiveTimeout": 86400,
+      "archiveMode": "on",
+      "archiveTimeout": 120,
+      "walLevel": "replica",
     }
 
     pgHbaConfiguration: |
