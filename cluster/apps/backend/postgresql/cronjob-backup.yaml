@@ -1,0 +1,95 @@
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: role-postgresql-backup
+  namespace: postgresql
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/exec
+    verbs:
+      - "*"
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rbac-postgresql-backup
+  namespace: postgresql
+subjects:
+  - kind: ServiceAccount
+    name: sa-postgresql-backup
+    namespace: postgresql
+roleRef:
+  kind: Role
+  name: role-postgresql-backup
+  apiGroup: ""
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sa-postgresql-backup
+  namespace: postgresql
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-postgresql-backup
+  namespace: postgresql
+spec:
+  # Kubernetes uses UTC exclusively - adjust from local time!
+  # Local is (UTC - 4) // UTC is (local + 4)
+  schedule: "20 4 * */ *"
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        spec:
+          serviceAccountName: sa-postgresql-backup-monthly
+          containers:
+            - name: backup
+              image: bitnami/kubectl:latest
+              env:
+                - name: TZ
+                  value: "America/New_York"
+                - name: SECRET_DB_ROOT_PWD
+                  value: ${SECRET_DB_ROOT_PWD}
+                  # valueFrom:
+                  #   secretKeyRef:
+                  #     name: secret-postgresql
+                  #     key: postgresql-root-password
+              command:
+                - "/bin/bash"
+                - "-c"
+                - |
+                  echo 'Making .pgpass file...'
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash '\
+                  cat > /bitnami/postgresql/.pgpass << EOF
+                  *:*:replication:postgres:${SECRET_DB_ROOT_PWD}
+                  EOF
+                  chmod 0600 /bitnami/postgresql/.pgpass
+                  '
+
+                  echo 'Making monthly backup directory...'
+                  BASEDIR='/mnt/backup/backup-$(date +'%Y-%m-%d)'
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p $BASEDIR
+
+                  echo "Running monthly backup..."
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D /mnt/backup/backup.d
+
+                  echo 'Backup process completed.'
+                  exit
+
+              volumeMounts:
+                - name: backup
+                  mountPath: /mnt/backup
+          restartPolicy: Never
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: backup-postgresql
