@@ -44,7 +44,7 @@ metadata:
 spec:
   # Kubernetes uses UTC exclusively - adjust from local time!
   # Local is (UTC - 4) // UTC is (local + 4)
-  schedule: "20 4 * */ *"
+  schedule: "20 4 1 * *"
   jobTemplate:
     spec:
       backoffLimit: 3
