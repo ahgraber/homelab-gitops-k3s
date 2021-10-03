@@ -3,7 +3,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: role-postgresql-backup
-  namespace: postgresql
+  namespace: backend
 rules:
   - apiGroups:
       - ""
@@ -18,11 +18,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: rbac-postgresql-backup
-  namespace: postgresql
+  namespace: backend
 subjects:
   - kind: ServiceAccount
     name: sa-postgresql-backup
-    namespace: postgresql
+    namespace: backend
 roleRef:
   kind: Role
   name: role-postgresql-backup
@@ -33,14 +33,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: sa-postgresql-backup
-  namespace: postgresql
+  namespace: backend
 
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: cronjob-postgresql-backup
-  namespace: postgresql
+  namespace: backend
 spec:
   # Kubernetes uses UTC exclusively - adjust from local time!
   # Local is (UTC - 4) // UTC is (local + 4)

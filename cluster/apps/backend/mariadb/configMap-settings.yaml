@@ -2,7 +2,7 @@ apiVersion: v1
 metadata:
   annotations:
     meta.helm.sh/release-name: mariadb
-    meta.helm.sh/release-namespace: mariadb
+    meta.helm.sh/release-namespace: backend
   name: configmap-mariadb-settings
 kind: ConfigMap
 data:
