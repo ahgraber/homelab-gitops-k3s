@@ -47,7 +47,7 @@ data:
     chmod 0600 /bitnami/postgresql/.pgpass
 
     echo 'Making backup directories if they do not exist...'
-    kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p /mnt/backup/{backup.d,incremental.d}
+    mkdir -p /mnt/backup/{backup.d,incremental.d}
 
     echo 'Checking backup directory...'
     if [ -z "$(ls -A /mnt/backup/backup.d)" ]; then
