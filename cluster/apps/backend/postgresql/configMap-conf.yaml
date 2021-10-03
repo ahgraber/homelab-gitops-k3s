@@ -2,9 +2,9 @@ apiVersion: v1
 metadata:
   annotations:
     meta.helm.sh/release-name: postgresql
-    meta.helm.sh/release-namespace: postgresql
+    meta.helm.sh/release-namespace: backend
   name: configmap-postgresql-conf
-  namespace: postgresql
+  namespace: backend
 kind: ConfigMap
 data:
   postgres.conf: |
