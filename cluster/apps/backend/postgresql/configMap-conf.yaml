@@ -235,7 +235,8 @@ data:
                                     # placeholders: %p = path of file to archive
                                     #               %f = file name only
                                     # e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'
-    archive_timeout = 120           # force a logfile segment switch after this
+    archive_timeout = 900
+                                    # force a logfile segment switch after this
                                     # number of seconds; 0 disables
 
 
