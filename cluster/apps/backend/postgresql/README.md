@@ -63,7 +63,7 @@ To do this, we have to create a file called “recovery.conf” in the restored 
 
 ```sh
 # stop the server
-pg_ctl -D postgresql-postgresql-0 stop
+pg_ctl -D /bitnami/postgres/data stop
 ```
 
 ```ini
@@ -79,7 +79,7 @@ Postgres fetches WAL files and applies them until the recovery target (in this c
 
 ```sh
 # start the server; will start in recovery mode
-pg_ctl -D postgresql-postgresql-0 start
+pg_ctl -D /bitnami/postgres/data start
 ```
 
 When the target is achieved, the server by default pauses WAL replay (other actions are possible).
