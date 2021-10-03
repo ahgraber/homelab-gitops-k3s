@@ -206,7 +206,7 @@ data:
                                             #   fsync_writethrough
                                             #   open_sync
     #full_page_writes = on                  # recover from partial page writes
-    #wal_compression = off                  # enable compression of full-page writes
+    wal_compression = on                    # enable compression of full-page writes
     #wal_log_hints = off                    # also do full page writes of non-critical updates
                                             # (change requires restart)
     #wal_buffers = -1                       # min 32kB, -1 sets based on shared_buffers
@@ -702,3 +702,18 @@ data:
 
     # Add settings for extensions here
     pgaudit.log_catalog = 'off'
+
+  pg_hba.conf: |
+      host     all             all         0.0.0.0/0          md5
+      host     all             all         ::/0               md5
+      local    all             all                            md5
+      host     all             all         127.0.0.1/32       md5
+      host     all             all         ::1/128            md5
+      host     all             all         0.0.0.0/0          md5
+
+      host     replication     postgres    0.0.0.0/0          md5
+      host     replication     postgres    ::/0               md5
+      local    replication     postgres                       md5
+      host     replication     postgres    127.0.0.1/32       md5
+      host     replication     postgres    ::1/128            md5
+      host     replication     postgres    0.0.0.0/0          md5
