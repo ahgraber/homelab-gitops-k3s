@@ -50,8 +50,17 @@ Configuration files are found in `/opt/bitnami/postgresql/conf/`
 ## Backups
 
 [Postgresql backup reference](https://www.postgresql.org/docs/14/continuous-archiving.html)
+[Postgresql WAL archive debug](https://blog.dbi-services.com/__trashed-3/)
 
-Backups are handled by a [CronJob](cronjob-backup.yaml) that runs an incremental backup once per day.
+Incremental backups are managed by postgresql's integrated WAL archive.
+
+> Test archive_command with to force the current WAL segment to be closed and a new one to be created
+>
+> ```sh
+> psql -c "select pg_switch_wal()" -U postgres
+> ```
+
+Incremental backups supplemented by a monthly backup that is handled by a [CronJob](cronjob-backup.yaml).
 Backups are saved in a distinct [PVC](pvc.yaml) so Velero can run restic against the backups only.
 
 ### Restore
