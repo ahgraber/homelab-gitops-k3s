@@ -37,6 +37,7 @@ data:
   backup.sh: |
     #!/bin/bash
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
+    export USER_PWD="${SECRET_DB_USER_PWD}"
 
     echo 'Making .pgpass file...'
     cat > /bitnami/postgresql/.pgpass << EOF
