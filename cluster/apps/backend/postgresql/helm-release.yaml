@@ -39,7 +39,7 @@ spec:
     # existingSecret: "secret-postgresql"
 
     configurationConfigMap: "configmap-postgresql-conf"
-    initdbScriptsConfigMap: "configmap-postgresql-init"
+    # initdbScriptsConfigMap: "configmap-postgresql-init"
 
     service:
       ## Kubernetes service type and port number
