@@ -68,6 +68,3 @@ data:
     echo 'Removing .pgpass file...'
     rm -rf /bitnami/postgresql/.pgpass
     unset ROOT_PWD
-
-
-export POSTGRES_ADMIN_PASSWORD=$(kubectl get secret --namespace backend secret-postgresql -o jsonpath="{.data.postgresql-postgres-password}" | base64 --decode)
