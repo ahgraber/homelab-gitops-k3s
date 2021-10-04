@@ -7,7 +7,7 @@ metadata:
   namespace: backend
 kind: ConfigMap
 data:
-  init_db.sh: |
+  01-init_db.sh: |
     #!/bin/bash
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
@@ -34,7 +34,7 @@ data:
     unset ROOT_PWD
     unset USER_PWD
 
-  backup.sh: |
+  99-backup.sh: |
     #!/bin/bash
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
@@ -54,6 +54,7 @@ data:
       echo "Base backup location /mnt/backup/backup.d is empty, running full backup..."
       PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D /mnt/backup/backup.d
       echo "Base backup successful"
+    fi
 
     echo 'Removing .pgpass file...'
     rm -rf /bitnami/postgresql/.pgpass
