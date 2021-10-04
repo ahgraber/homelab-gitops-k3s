@@ -2,14 +2,13 @@ apiVersion: v1
 metadata:
   annotations:
     meta.helm.sh/release-name: postgresql
-    meta.helm.sh/release-namespace: backend
+    meta.helm.sh/release-namespace: postgresql
   name: configmap-postgresql-init
-  namespace: backend
+  namespace: postgresql
 kind: ConfigMap
 data:
   01-init_db.sh: |
     #!/bin/bash
-    sleep 60
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
     # echo "ROOT_PWD=$ROOT_PWD"
@@ -44,7 +43,6 @@ data:
 
   99-backup.sh: |
     #!/bin/bash
-    sleep 10
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
 
