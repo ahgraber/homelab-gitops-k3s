@@ -38,7 +38,7 @@ spec:
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
     # existingSecret: "secret-postgresql"
 
-    configurationConfigMap: "configmap-postgresql-conf"
+    # configurationConfigMap: "configmap-postgresql-conf"
     # initdbScriptsConfigMap: "configmap-postgresql-init"
 
     service:
