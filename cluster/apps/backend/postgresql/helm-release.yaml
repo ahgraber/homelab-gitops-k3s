@@ -20,16 +20,16 @@ spec:
     image:
       debug: true
 
-    replication:
-      enabled: false
-      # user: repl_user
-      # password: ${SECRET_DB_ROOT_PWD}
-
     global:
       postgresql:
         # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
         # replicationPassword: ${SECRET_DB_ROOT_PWD}
         existingSecret: "secret-postgresql"
+
+    replication:
+      enabled: false
+      # user: repl_user
+      # password: ${SECRET_DB_ROOT_PWD}
 
     # postgresqlUsername: postgres
     # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
@@ -38,8 +38,15 @@ spec:
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
     existingSecret: "secret-postgresql"
 
+    ## An array to add extra environment variables
+    extraEnv:
+      - name: TZ
+        value: "America/New_York"
+
     configurationConfigMap: "configmap-postgresql-conf"
     initdbScriptsConfigMap: "configmap-postgresql-init"
+    initdbUser: postgresql
+    initdbPassword: ${SECRET_DB_ROOT_PWD}
 
     service:
       ## Kubernetes service type and port number
@@ -54,14 +61,10 @@ spec:
       # storageClass: "csi-truenas-iscsi"
       # size: 8Gi
 
-    ## An array to add extra environment variables
-    extraEnv:
-      - name: TZ
-        value: "America/New_York"
 
     primary:
-      # podAnnotations:
-      #   secret.reloader.stakater.com/reload: "secret-postgresql"
+      podAnnotations:
+        secret.reloader.stakater.com/reload: "secret-postgresql"
 
       extraVolumes:
         - name: backup
@@ -70,7 +73,6 @@ spec:
       extraVolumeMounts:
         - name: backup
           mountPath: /mnt/backup
-          # mountPath: /bitnami/mariadb/backup
 
     serviceAccount:
       create: true
