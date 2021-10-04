@@ -45,7 +45,7 @@ spec:
 
     configurationConfigMap: "configmap-postgresql-conf"
     initdbScriptsConfigMap: "configmap-postgresql-init"
-    initdbUser: postgresql
+    initdbUser: postgres
     initdbPassword: ${SECRET_DB_ROOT_PWD}
 
     service:
