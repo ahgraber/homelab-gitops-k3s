@@ -27,9 +27,9 @@ spec:
 
     global:
       postgresql:
-        # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
-        # replicationPassword: ${SECRET_DB_ROOT_PWD}
-        existingSecret: "secret-postgresql"
+        postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+        replicationPassword: ${SECRET_DB_ROOT_PWD}
+        # existingSecret: "secret-postgresql"
 
     # postgresqlUsername: postgres
     # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
@@ -59,10 +59,9 @@ spec:
       - name: TZ
         value: "America/New_York"
 
-
     primary:
-      podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-postgresql"
+      # podAnnotations:
+      #   secret.reloader.stakater.com/reload: "secret-postgresql"
 
       extraVolumes:
         - name: backup

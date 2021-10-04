@@ -37,7 +37,7 @@ data:
 
   99-backup.sh: |
     #!/bin/bash
-    sleep 60
+    sleep 10
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
 
