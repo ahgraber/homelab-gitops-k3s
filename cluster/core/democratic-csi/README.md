@@ -95,3 +95,7 @@ iSCSI PVs will 'retain' on deletion of PVC.  Will have to manually delete from k
 ### NFS
 
 NFS PVs will 'delete' on deletion of PVC.
+
+## Debug
+
+If get `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`, restart NFS service on NAS
