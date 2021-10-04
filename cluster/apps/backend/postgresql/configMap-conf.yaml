@@ -7,7 +7,7 @@ metadata:
   namespace: postgresql
 kind: ConfigMap
 data:
-  postgres.conf: |
+  postgresql.conf: |
     # -----------------------------
     # PostgreSQL configuration file
     # -----------------------------
@@ -235,7 +235,7 @@ data:
                                     # placeholders: %p = path of file to archive
                                     #               %f = file name only
                                     # e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'
-    archive_timeout = 900
+    archive_timeout = 900s
                                     # force a logfile segment switch after this
                                     # number of seconds; 0 disables
 
