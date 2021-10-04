@@ -15,6 +15,13 @@ data:
     # echo "ROOT_PWD=$ROOT_PWD"
     # echo "USER_PWD=$USER_PWD"
 
+    echo 'Making .pgpass file...'
+    cat > /bitnami/postgresql/.pgpass << EOF
+    # hostname:port:database:username:password
+    *:*:replication:postgres:$ROOT_PWD
+    EOF
+    chmod 0600 /bitnami/postgresql/.pgpass
+
     function initdb {
       echo "Creating \"$1\" user and database"
 
@@ -61,3 +68,6 @@ data:
     echo 'Removing .pgpass file...'
     rm -rf /bitnami/postgresql/.pgpass
     unset ROOT_PWD
+
+
+export POSTGRES_ADMIN_PASSWORD=$(kubectl get secret --namespace backend secret-postgresql -o jsonpath="{.data.postgresql-postgres-password}" | base64 --decode)
