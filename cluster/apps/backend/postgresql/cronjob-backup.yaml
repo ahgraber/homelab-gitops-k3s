@@ -39,12 +39,12 @@ metadata:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: cronjob-postgresql-backup
+  name: cronjob-postgresql-backup-monthly
   namespace: postgresql
 spec:
   # Kubernetes uses UTC exclusively - adjust from local time!
   # Local is (UTC - 4) // UTC is (local + 4)
-  schedule: "20 4 1 * *"
+  schedule: "44 4 1 * *"
   jobTemplate:
     spec:
       backoffLimit: 3
