@@ -27,19 +27,19 @@ spec:
 
     global:
       postgresql:
-        postgresqlPassword: ${SECRET_DB_ROOT_PWD}
-        replicationPassword: ${SECRET_DB_ROOT_PWD}
-        # existingSecret: "secret-postgresql"
+        # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+        # replicationPassword: ${SECRET_DB_ROOT_PWD}
+        existingSecret: "secret-postgresql"
 
     # postgresqlUsername: postgres
     # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
     # postgresqlPostgresPassword: ${SECRET_DB_ROOT_PWD}
     ## NOTE: When it's set the other auth/password parameters are ignored.
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
-    # existingSecret: "secret-postgresql"
+    existingSecret: "secret-postgresql"
 
-    # configurationConfigMap: "configmap-postgresql-conf"
-    # initdbScriptsConfigMap: "configmap-postgresql-init"
+    configurationConfigMap: "configmap-postgresql-conf"
+    initdbScriptsConfigMap: "configmap-postgresql-init"
 
     service:
       ## Kubernetes service type and port number
