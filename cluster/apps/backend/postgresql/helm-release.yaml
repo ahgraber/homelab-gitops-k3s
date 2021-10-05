@@ -45,8 +45,8 @@ spec:
 
     configurationConfigMap: "configmap-postgresql-conf"
     initdbScriptsConfigMap: "configmap-postgresql-init"
-    # initdbUser: postgres
-    # initdbPassword: ${SECRET_DB_ROOT_PWD}
+    initdbUser: postgres
+    initdbPassword: ${SECRET_DB_ROOT_PWD}
 
     service:
       ## Kubernetes service type and port number
