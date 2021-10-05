@@ -230,7 +230,7 @@ data:
 
     archive_mode = on               # enables archiving; off, on, or always
                                     # (change requires restart)
-    archive_command = 'test ! -f /mnt/backup/incremental.d/%f && cp %p /mnt/backup/incremental.d/%f'
+    archive_command = 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
                                     # command to use to archive a logfile segment
                                     # placeholders: %p = path of file to archive
                                     #               %f = file name only
