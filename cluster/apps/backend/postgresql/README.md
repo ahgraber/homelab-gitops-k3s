@@ -55,11 +55,20 @@ Configuration files are found in `/opt/bitnami/postgresql/conf/`
 
 Incremental backups are managed by postgresql's integrated WAL archive.
 
-> Test archive_command with to force the current WAL segment to be closed and a new one to be created
+> We can check archive settings with:
 >
 > ```sh
-> psql -c "select pg_switch_wal()" -U postgres
-> ```
+> kubectl exec -it postgresql-postgresql-0 -n postgresql -- /bin/bash
+> # get archive settings
+> psql -U postgres -c "SHOW archive_mode"
+> psql -U postgres -c "SHOW archive_command"
+> psql -U postgres -c "SHOW archive_timeout"
+> # get archive stats
+> psql -U postgres -c "SELECT * FROM pg_stat_archiver"
+>
+># Test archive_command with to force the current WAL segment to be closed and a new one to be created
+> psql -U postgres -c "SELECT pg_switch_wal()"
+> ````
 
 Incremental backups supplemented by a monthly backup that is handled by a [CronJob](cronjob-backup.yaml).
 Backups are saved in a distinct [PVC](pvc.yaml) so Velero can run restic against the backups only.
