@@ -76,11 +76,15 @@ spec:
                   '
 
                   echo 'Making monthly backup directory...'
-                  BASEDIR='/mnt/backup/backup-$(date +'%Y-%m-%d)'
-                  kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p $BASEDIR
+                  BACKUPDIR='/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d)'
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p $BACKUPDIR
 
                   echo "Running monthly backup..."
-                  kubectl exec postgresql-postgresql-0 -n postgresql -- PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D /mnt/backup/backup.d
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
+
+                  echo "Trimming old WAL files..."
+                  # ref: https://www.zimmi.cz/posts/2018/postgresql-backup-and-recovery-orchestration-wal-archiving/
+
 
                   echo 'Backup process completed.'
                   exit

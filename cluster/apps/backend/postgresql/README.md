@@ -51,6 +51,7 @@ Configuration files are found in `/opt/bitnami/postgresql/conf/`
 
 [Postgresql backup reference](https://www.postgresql.org/docs/14/continuous-archiving.html)
 [Postgresql WAL archive debug](https://blog.dbi-services.com/__trashed-3/)
+[Postgresql WAL archive / backup](https://www.zimmi.cz/posts/2018/postgresql-backup-and-recovery-orchestration-wal-archiving/)
 
 Incremental backups are managed by postgresql's integrated WAL archive.
 
