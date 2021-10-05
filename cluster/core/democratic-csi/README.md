@@ -98,4 +98,6 @@ NFS PVs will 'delete' on deletion of PVC.
 
 ## Debug
 
-If get `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`, restart NFS service on NAS
+* If get `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`, restart NFS service on NAS
+
+* iSCSI volumes require deleting the target and extent on the server; new PVCs/PVs on k8s side will reuse the same extent on the NAS.
