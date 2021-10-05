@@ -20,14 +20,14 @@ spec:
     image:
       debug: true
 
-    # global:
-    #   postgresql:
-    #     ## specifying globally should override non-globally declared values
-    #     # postgresqlUsername: postgres
-    #     # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
-    #     # replicationPassword: ${SECRET_DB_ROOT_PWD}
-    #     ## Using existingSecret ignores global postgresqlUsername, postgresqlPassword, and replicationPassword
-    #     existingSecret: "secret-postgresql"
+    global:
+      postgresql:
+        ## specifying globally should override non-globally declared values
+        # postgresqlUsername: postgres
+        postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+        # replicationPassword: ${SECRET_DB_ROOT_PWD}
+        ## Using existingSecret ignores global postgresqlUsername, postgresqlPassword, and replicationPassword
+        # existingSecret: "secret-postgresql"
 
     replication:
       enabled: false
@@ -39,7 +39,7 @@ spec:
     # postgresqlPostgresPassword: ${SECRET_DB_ROOT_PWD}
     ## NOTE: When it's set the other auth/password parameters are ignored.
     ## Use existing secret (ignores postgresqlUsername, postgresqlPassword, and replication.password)
-    existingSecret: "secret-postgresql"
+    # existingSecret: "secret-postgresql"
 
     ## An array to add extra environment variables
     extraEnv:
@@ -48,8 +48,8 @@ spec:
 
     configurationConfigMap: "configmap-postgresql-conf"
     initdbScriptsConfigMap: "configmap-postgresql-init"
-    initdbUser: postgres
-    initdbPassword: ${SECRET_DB_ROOT_PWD}
+    # initdbUser: postgres
+    # initdbPassword: ${SECRET_DB_ROOT_PWD}
 
     service:
       ## Kubernetes service type and port number
