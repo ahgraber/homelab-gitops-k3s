@@ -53,12 +53,14 @@ data:
     chmod 0600 /bitnami/postgresql/.pgpass
 
     echo 'Making backup directories if they do not exist...'
-    mkdir -p /mnt/backup/{backup.d,incremental.d}
+    BACKUPDIR='/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d)'
+    mkdir -p $BACKUPDIR
 
     echo 'Checking backup directory...'
-    if [ -z "$(ls -A /mnt/backup/backup.d)" ]; then
-      echo "Base backup location /mnt/backup/backup.d is empty, running full backup..."
-      PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D /mnt/backup/backup.d
+    if [ -z "$(ls -A $BACKUPDIR)" ]; then
+      echo "Base backup location $BACKUPDIR is empty, running full backup..."
+
+      PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
       echo "Base backup successful"
     fi
 

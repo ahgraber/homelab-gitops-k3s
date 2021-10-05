@@ -20,11 +20,14 @@ spec:
     image:
       debug: true
 
-    global:
-      postgresql:
-        # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
-        # replicationPassword: ${SECRET_DB_ROOT_PWD}
-        existingSecret: "secret-postgresql"
+    # global:
+    #   postgresql:
+    #     ## specifying globally should override non-globally declared values
+    #     # postgresqlUsername: postgres
+    #     # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
+    #     # replicationPassword: ${SECRET_DB_ROOT_PWD}
+    #     ## Using existingSecret ignores global postgresqlUsername, postgresqlPassword, and replicationPassword
+    #     existingSecret: "secret-postgresql"
 
     replication:
       enabled: false
