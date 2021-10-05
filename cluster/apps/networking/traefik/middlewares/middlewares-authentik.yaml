@@ -5,8 +5,17 @@ metadata:
   namespace: networking
 spec:
   forwardAuth:
-    address: http://authentik-outpost:4180
+    address: http://authentik-outpost-example-outpost:9000/akprox/auth?traefik
+    trustForwardHeader: true
     authResponseHeaders:
-      - Authorization
       - Set-Cookie
+      - X-Auth-Username
+      - X-Auth-Groups
+      - X-Forwarded-Email
+      - X-Forwarded-Preferred-Username
       - X-Forwarded-User
+
+spec:
+  chain:
+    middlewares:
+    - name: security-ak-outpost-traefik@kubernetescrd

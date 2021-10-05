@@ -4,11 +4,22 @@
 
 [BackBlaze B2](https://help.backblaze.com/hc/en-us/articles/360047425453) now supports an S3-compatible API, so we should be able to push directly.
 
+## Bucket prefixes
+
+Velero can mount sub-paths within the bucket as different `BackupStorageLocations` using the `prefix` modifier.
+Velero assumes it has control over the location you provide so you should use a dedicated bucket or prefix. If you provide a prefix, then the rest of the bucket is safe to use for multiple purposes.
+
 ## Prerequisites
 
 * [Velero CLI](https://velero.io/docs/v1.6/basic-install/#install-the-cli)
 <!-- * [MinIO on BackBlaze](../minio/README.md) -->
 * Bucket named `${SECRET_DOMAIN}-velero` created on BackBlaze B2 <!-- and fronted by MinIO -->
+
+## Backup/Snapshot providers
+
+* [Restic integration](https://velero.io/docs/v1.6/restic)
+* [Velero Plugin for CSI](https://velero.io/docs/v1.6/csi/) and [source](https://github.com/vmware-tanzu/velero-plugin-for-csi)
+
 
 ## Backup
 
@@ -30,7 +41,20 @@ Backups can be created several ways:
      --wait
    ```
 
-> See specifics for [restic integration](https://velero.io/docs/v1.6/restic/#how-backup-and-restore-work-with-restic) for additional pre/post-backup hooks
+### Restic integration
+
+* Restic requires `opt-in` labels on pods.
+
+   > `VOLUME_NAME` can be found by running `kubectl describe po {PODNAME} -n {NAMESPACE}` and looking under `Volumes`
+
+  ```yaml
+  podAnnotations:
+    backup.velero.io/backup-volumes: VOLUME_NAME
+  ```
+* See specifics for [restic integration](https://velero.io/docs/v1.6/restic/#how-backup-and-restore-work-with-restic) for additional pre/post-backup hooks
+*
+
+
 
 ## Restore
 
