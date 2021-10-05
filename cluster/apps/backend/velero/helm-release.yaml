@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: velero
-  namespace: velero
+  namespace: backend
 spec:
   interval: 5m
   chart:
@@ -35,12 +35,12 @@ spec:
         volumeMounts:
           - mountPath: /target
             name: plugins
-      - name: velero-plugin-for-csi
-        image: velero/velero-plugin-for-csi:v0.1.2
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - mountPath: /target
-            name: plugins
+      # - name: velero-plugin-for-csi
+      #   image: velero/velero-plugin-for-csi:v0.1.2
+      #   imagePullPolicy: IfNotPresent
+      #   volumeMounts:
+      #     - mountPath: /target
+      #       name: plugins
 
     metrics:
       enabled: true
@@ -48,7 +48,6 @@ spec:
         enabled: true
 
     upgradeCRDs: true
-
     # WARNING -- This job is meant primarily for cleaning up CRDs on CI systems.
     # Using this on production systems, especially those that have multiple releases of Velero, will be destructive.
     cleanUpCRDs: false
@@ -60,57 +59,28 @@ spec:
         name: default
         provider: aws
         bucket: ninerealmlabs-velero
-        # # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
-        # prefix:
+        # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
+        prefix: default
         # default indicates this location is the default backup storage location. Optional.
         default: true
         config:
           region: us-west-002
           s3ForcePathStyle: true
-          # kmsKeyId:
-          # resourceGroup:
-          # The ID of the subscription containing the storage account, if different from the cluster’s subscription. (Azure only)
-          # subscriptionId:
-          # storageAccount:
           s3Url: https://s3.us-west-002.backblazeb2.com
+          # # The name of the server-side encryption algorithm to use for uploading objects, e.g. "AES256".
+          # serverSideEncryption: AES256
+          # # Set this to "true" if you do NOT want to verify the TLS certificate when connecting to the object store
+          # insecureSkipTLSVerify: "false"
 
-      volumeSnapshotLocation:
-        name: velero
-        provider: csi
-        # config:
-        #   region: us-west-002
-        #   apiTimeout:
-        #   resourceGroup:
-        #   The ID of the subscription where volume snapshots should be stored, if different from the cluster’s subscription. If specified, also requires `configuration.volumeSnapshotLocation.config.resourceGroup`to be set. (Azure only)
-        #   subscriptionId:
-        #   incremental:
-        #   snapshotLocation:
-        #   project:
+      # volumeSnapshotLocation:
+      #   name: velero
+      #   provider: csi
+      #   config:
+      #     region: us-west-002
+      #     profile: "default"
 
-      # # These are server-level settings passed as CLI flags to the `velero server` command. Velero
-      # # uses default values if they're not passed in, so they only need to be explicitly specified
-      # # here if using a non-default value. The `velero server` default values are shown in the
-      # # comments below.
-      # # --------------------
-      # # `velero server` default: 1m
-      # backupSyncPeriod:
-      # # `velero server` default: 1h
-      # resticTimeout:
-      # # `velero server` default: namespaces,persistentvolumes,persistentvolumeclaims,secrets,configmaps,serviceaccounts,limitranges,pods
-      # restoreResourcePriorities:
-      # # `velero server` default: false
-      # restoreOnlyMode:
-      # # `velero server` default: 20.0
-      # clientQPS:
-      # # `velero server` default: 30
-      # clientBurst:
-      # # `velero server` default: empty
-      # disableControllers:
-      # #
-
-      # # resticTimeout: 6h
-
-      features: EnableCSI
+      # enable CSI plugin volume snapshot: https://velero.io/blog/csi-integration/
+      # features: EnableCSI
 
     credentials:
       useSecret: true
@@ -119,38 +89,19 @@ spec:
     # Whether to create backupstoragelocation crd, if false => do not create a default backup location
     backupsEnabled: true
     # Whether to create volumesnapshotlocation crd, if false => disable snapshot feature
-    snapshotsEnabled: true
+    snapshotsEnabled: false
 
     ### Don't need restic since `democratic-csi` can use snapshots (assuming `external-snapshotter` is installed)
-    # deployRestic: true
-    # restic:
-    #   podVolumePath: /var/lib/kubelet/pods
-    #   privileged: false
-    #   tolerations:
-    #     - key: "node-role.kubernetes.io/master"
-    #       operator: "Exists"
+    deployRestic: true
+    restic:
+      podVolumePath: /var/lib/kubelet/pods
+      privileged: false
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
 
     schedules:
       daily-backup:
         schedule: "0 5 * * *"
         template:
           ttl: 168h0m0s
-
-      # daily4-mariadb:
-      #   schedule: "0 */6 * * *"
-      #   template:
-      #     labelSelector:
-      #       matchLabels:
-      #         app.kubernetes.io/name: mariadb
-      #     ttl: 168h0m0s
-      #     includedNamespaces:
-      #       - mariadb
-      # daily4-postgresql:
-      #   schedule: "0 */6 * * *"
-      #   template:
-      #     labelSelector:
-      #       matchLabels:
-      #         app.kubernetes.io/name: postgresql
-      #     ttl: 168h0m0s
-      #     includedNamespaces:
-      #       - postgresql

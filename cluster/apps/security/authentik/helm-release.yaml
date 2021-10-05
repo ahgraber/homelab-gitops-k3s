@@ -1,0 +1,72 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: security
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.goauthentik.io
+      chart: authentik
+      version: 3.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: authentik-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      repository: ghcr.io/goauthentik/server
+      tag: 2021.9.2
+
+    ingress:
+      enabled: false
+      # tls:
+      #   - secretName: tls.authentik
+      #     hosts:
+      #       - id.${SECRET_DOMAIN}
+
+    authentik:
+      log_level: debug
+      secret_key: ${SECRET_AUTHENTIK_SECRET_KEY}
+
+      geoip: /geoip/GeoLite2-City.mmdb
+
+      email:
+        host: "in-v3.mailjet.com"
+        port: 587
+        username: ${SECRET_SMTP_USER}
+        password: ${SECRET_SMTP_PWD}
+        use_ssl: true
+        from: "noreply@mail.${SECRET_DOMAIN}"
+
+      outposts:
+        docker_image_base: ghcr.io/goauthentik/%(type)s:%(version)s
+
+      postgresql:
+        # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/authentik"
+        host: postgresql.postgresql
+        name: authentik
+        user: authentik
+        password: ${SECRET_DB_USER_PWD}
+        port: 5432
+      redis:
+        host: '{{ .Release.Name }}-redis-master'
+        password: ${SECRET_DB_USER_PWD}
+
+      geoip:
+        enabled: true
+        accountid: ${SECRET_MAXMIND_ACCOUNT_ID}
+        licenseKey: ${SECRET_MAXMIND_LICENSE_KEY}
+
+    # use bundled dbs?
+    postgresql:
+      enabled: false
+
+    redis:
+      enabled: true
+      auth:
+        enabled: true
+        password: ${SECRET_DB_USER_PWD}

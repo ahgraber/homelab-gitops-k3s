@@ -1,0 +1,42 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mealie
+  namespace: default
+spec:
+  releaseName: mealie
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: mealie
+      version: 3.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      repository: hkotel/mealie
+      tag: v0.5.2
+    env:
+      TZ: "America/New_York"
+      DEFAULT_EMAIL: admin@${SECRET_DOMAIN}
+      BASE_URL: https://mealie.${SECRET_DOMAIN}
+      DB_ENGINE: postgres # sqlite
+      ## postgresql://mealie:${DB_USER_PWD}@postgresql.postgresql:5432/mealie
+      POSTGRES_USER: mealie
+      POSTGRES_PASSWORD: ${SECRET_DB_USER_PWD}
+      POSTGRES_SERVER: postgresql.postgresql
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: mealie
+    ingress:
+      main:
+        enabled: false
+    persistence:
+      config:
+        enabled: true
+        storageClass: 'csi-truenas-nfs'
+        existingClaim: mealie-pvc
