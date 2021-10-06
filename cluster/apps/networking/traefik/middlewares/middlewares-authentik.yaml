@@ -15,7 +15,6 @@ spec:
       - X-Forwarded-Preferred-Username
       - X-Forwarded-User
 
-spec:
   chain:
     middlewares:
     - name: security-ak-outpost-traefik@kubernetescrd
