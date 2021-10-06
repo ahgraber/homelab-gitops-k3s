@@ -97,3 +97,9 @@
   ```sh
   kubectl taint nodes {NODENAME} node.kubernetes.io/disk-pressure-
   ```
+
+### Delete released PVs
+
+```sh
+kubectl get pv | grep "Released" | awk '{print $1}' | while read vol; do kubectl delete pv/${vol}; done
+```
