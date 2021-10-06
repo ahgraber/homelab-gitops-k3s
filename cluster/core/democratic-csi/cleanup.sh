@@ -15,20 +15,19 @@ export PVs=(${local_PVs[*]})
 echo "Current PVs:"
 printf '%s\n' "\${PVs[@]}"
 
-PREFIX=(
-  "ssdpool/csi/ixi/v/"
-  "ssdpool/csi/nfs/v/"
-)
+PREFIX=("ssdpool/csi/ixi/v/" "ssdpool/csi/nfs/v/")
 
 for PFX in \${PREFIX[@]}; do
   echo "PREFIX: \${PFX}"
 
   # get list of current zvols with PFX prefix
   VOLs=(\$(zfs list | grep "\${PFX}" | awk '{print \$1}' | sed "s|\${PFX}||"))
+  # echo "VOLs: \${VOLs[*]}"
 
   # get differences (OLD are VOLs that exist but that are not in current PVs)
   # ref: https://unix.stackexchange.com/questions/104837/intersection-of-two-arrays-in-bash
   OLD=(\$(comm -13 <(printf '%s\n' "\${PVs[@]}" | LC_ALL=C sort) <(printf '%s\n' "\${VOLs[@]}" | LC_ALL=C sort)))
+  # echo "OLD: \${OLD[*]}"
 
   if [[ \${#OLD[@]} -eq \${#VOLs[@]} ]]; then
     echo "No difference between OLD and VOLs, skipping removal"
