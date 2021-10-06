@@ -32,8 +32,6 @@ spec:
       log_level: debug
       secret_key: ${SECRET_AUTHENTIK_SECRET_KEY}
 
-      geoip: /geoip/GeoLite2-City.mmdb
-
       email:
         host: "in-v3.mailjet.com"
         port: 587
@@ -56,6 +54,7 @@ spec:
         host: '{{ .Release.Name }}-redis-master'
         password: ${SECRET_DB_USER_PWD}
 
+      # geoip: /geoip/GeoLite2-City.mmdb
       geoip:
         enabled: true
         accountid: ${SECRET_MAXMIND_ACCOUNT_ID}
