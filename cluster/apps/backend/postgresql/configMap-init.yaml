@@ -41,13 +41,16 @@ data:
 
     debug "\n$(cat $POSTGRESQL_PGHBA_FILE)"
 
+    info "Reloading configuration"
+    echo "SELECT pg_reload_conf();" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+
   # 02-init-conf.sh: |
   #   # update postgresql.conf
   #   postgresql_set_property "archive_mode" "on"
   #   postgresql_set_property "archive_command" 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
   #   postgresql_set_property "archive_timeout" "900s"
 
-  #   info "Reloading configurations"
+  #   info "Reloading configuration"
   #   echo "SELECT pg_reload_conf();" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
 
   10-init_db.sh: |
