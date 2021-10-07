@@ -62,13 +62,13 @@ data:
       local -r NAME="$1"
       local -r PWD="$2"
 
-        info "Creating \"$1\" user and database"
+      info "Creating \"$1\" user and database"
 
-        psql "postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432" -e <<EOSQL
-      CREATE USER $NAME WITH LOGIN PASSWORD '${PWD}';
-      CREATE DATABASE "$NAME";
-      GRANT ALL PRIVILEGES ON DATABASE "$NAME" TO "$NAME";
-      EOSQL
+      psql "postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432" -e <<EOSQL
+    CREATE USER $NAME WITH LOGIN PASSWORD '${PWD}';
+    CREATE DATABASE "$NAME";
+    GRANT ALL PRIVILEGES ON DATABASE "$NAME" TO "$NAME";
+    EOSQL
 
       # info "Creating \"$NAME\" user
       # postgresql_ensure_user_exists "$NAME" -p "$PWD"
