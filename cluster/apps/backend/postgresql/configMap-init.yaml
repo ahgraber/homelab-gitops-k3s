@@ -42,7 +42,7 @@ data:
     postgresql_set_property "archive_mode" "on"
 
     sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-    postgresql_set_property "archive_command" "\'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f\'"
+    postgresql_set_property "archive_command" '\''test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'\''
 
     sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
     postgresql_set_property "archive_timeout" "900s"
@@ -59,17 +59,18 @@ data:
     # . /opt/bitnami/scripts/postgresql-env.sh
 
     # export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
-    export USER_PASSWORD="${SECRET_DB_USER_PWD}"
+    # export USER_PASSWORD="${SECRET_DB_USER_PWD}"
 
     function initdb {
-      local -r escaped_password="${USER_PASSWORD//\'/\'\'}"
-      local -r create_new="$1"
+      # local -r escaped_password="${USER_PASSWORD//\'/\'\'}"
+      local -r USER_PASSWORD="${SECRET_DB_USER_PWD}"
+      local -r NEW=$1
 
-      info "Creating \"$create_new\" user and database"
-      echo "CREATE ROLE \"${create_new}\" WITH LOGIN PASSWORD '${escaped_password}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      echo "CREATE DATABASE \"${create_new}\"" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      info "Granting access to \"${create_new}\" to the database \"${create_new}\""
-      echo "GRANT ALL PRIVILEGES ON DATABASE \"${1}\" TO \"${create_new}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Creating \"${NEW}\" user and database"
+      echo "CREATE ROLE \"${NEW}\" WITH LOGIN PASSWORD '${USER_PASSWORD}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      echo "CREATE DATABASE \"${NEW}\";" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Granting access to \"${NEW}\" to the database \"${NEW}\""
+      echo "GRANT ALL PRIVILEGES ON DATABASE \"${NEW}\" TO \"${NEW}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
     }
 
     # initialize users + databases
@@ -79,7 +80,7 @@ data:
     initdb "nextcloud"
 
     # unset ROOT_PWD
-    unset USER_PASSWORD
+    # unset USER_PASSWORD
 
   99-backup.sh: |
     #!/bin/bash
