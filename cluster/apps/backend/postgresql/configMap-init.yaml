@@ -39,10 +39,6 @@ data:
 
   # 02-init-conf.sh: |
   #   # update postgresql.conf
-  #   # sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
-  #   # sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-  #   # sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
-
   #   postgresql_set_property "archive_mode" "on"
   #   postgresql_set_property "archive_command" 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
   #   postgresql_set_property "archive_timeout" "900s"
@@ -69,14 +65,6 @@ data:
     CREATE DATABASE "$NAME";
     GRANT ALL PRIVILEGES ON DATABASE "$NAME" TO "$NAME";
     EOSQL
-
-      # info "Creating \"$NAME\" user
-      # postgresql_ensure_user_exists "$NAME" -p "$PWD"
-      # info "Creating \"$NAME\" database
-      # postgresql_ensure_database_exists "$NAME" -u "$NAME"
-      # # info "Granting access to \"$NAME\" to the database \"$NAME\""
-      # # postgresql_ensure_user_has_database_privileges "$NAME" "$NAME"
-
     }
 
     initdb "vaultwarden" "${SECRET_DB_USER_PWD}"
@@ -84,32 +72,32 @@ data:
     initdb "mealie" "${SECRET_DB_USER_PWD}"
     initdb "nextcloud" "${SECRET_DB_USER_PWD}"
 
-  # 99-backup.sh: |
-  #   #!/bin/bash
+  99-backup.sh: |
+    #!/bin/bash
 
-  #   # import functions
-  #   # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
-  #   . /opt/bitnami/scripts/libpostgresql.sh
-  #   # . /opt/bitnami/scripts/postgresql-env.sh
+    # import functions
+    # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
+    . /opt/bitnami/scripts/libpostgresql.sh
+    # . /opt/bitnami/scripts/postgresql-env.sh
 
-  #   info 'Making .pgpass file...'
-  #   cat > /bitnami/postgresql/.pgpass << EOF
-  #   # hostname:port:database:username:password
-  #   *:*:replication:postgres:$POSTGRESQL_PASSWORD
-  #   EOF
-  #   chmod 0600 /bitnami/postgresql/.pgpass
+    info 'Making .pgpass file...'
+    cat > /bitnami/postgresql/.pgpass << EOF
+    # hostname:port:database:username:password
+    *:*:replication:postgres:$POSTGRESQL_PASSWORD
+    EOF
+    chmod 0600 /bitnami/postgresql/.pgpass
 
-  #   info 'Making backup directories if they do not exist...'
-  #   BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
-  #   mkdir -p $BACKUPDIR
+    info 'Making backup directories if they do not exist...'
+    BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
+    mkdir -p $BACKUPDIR
 
-  #   info 'Checking backup directory...'
-  #   if [ -z "$(ls -A $BACKUPDIR)" ]; then
-  #     echo "Base backup location $BACKUPDIR is empty, running full backup..."
+    info 'Checking backup directory...'
+    if [ -z "$(ls -A $BACKUPDIR)" ]; then
+      echo "Base backup location $BACKUPDIR is empty, running full backup..."
 
-  #     PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
-  #     echo "Base backup successful"
-  #   fi
+      PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
+      echo "Base backup successful"
+    fi
 
-  #   echo 'Removing .pgpass file...'
-  #   rm -f /bitnami/postgresql/.pgpass
+    echo 'Removing .pgpass file...'
+    rm -f /bitnami/postgresql/.pgpass
