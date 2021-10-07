@@ -50,7 +50,7 @@ spec:
       backoffLimit: 3
       template:
         spec:
-          serviceAccountName: sa-postgresql-backup-monthly
+          serviceAccountName: sa-postgresql-backup
           containers:
             - name: backup
               image: bitnami/kubectl:latest
