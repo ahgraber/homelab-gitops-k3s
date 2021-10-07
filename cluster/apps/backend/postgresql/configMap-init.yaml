@@ -7,32 +7,68 @@ metadata:
   namespace: postgresql
 kind: ConfigMap
 data:
-  01-init_db.sh: |
+  01-init-server.sh: |
     #!/bin/bash
 
-    sleep 45  # runs on container init; allow other init to finish
+    # import functions
+    # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
+    . /opt/bitnami/scripts/libpostgresql.sh
+    # . /opt/bitnami/scripts/postgresql-env.sh
 
-    export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
-    export USER_PWD="${SECRET_DB_USER_PWD}"
-    # echo "ROOT_PWD=$ROOT_PWD"
-    # echo "USER_PWD=$USER_PWD"
-
-    echo 'Making .pgpass file...'
-    cat > /bitnami/postgresql/.pgpass << EOF
-    # hostname:port:database:username:password
-    *:*:replication:postgres:$ROOT_PWD
+    # update pg_hba.conf
+    cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    host      replication     postgres        0.0.0.0/0               md5
+    host      replication     postgres        ::/0                    md5
+    local     replication     postgres                                md5
+    host      replication     postgres        127.0.0.1/32            md5
+    host      replication     postgres        ::1/128                 md5
     EOF
-    chmod 0600 /bitnami/postgresql/.pgpass
+
+    if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
+      postgresql_create_replication_user
+      cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    host      replication     ${POSTGRES_REPLICATION_USER}       0.0.0.0/0               md5
+    host      replication     ${POSTGRES_REPLICATION_USER}       ::/0                    md5
+    local     replication     ${POSTGRES_REPLICATION_USER}                               md5
+    host      replication     ${POSTGRES_REPLICATION_USER}       127.0.0.1/32            md5
+    host      replication     ${POSTGRES_REPLICATION_USER}       ::1/128                 md5
+    EOF
+    fi
+
+    postgresql_restrict_pghba
+
+    # update postgresql.conf
+    sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
+    postgresql_set_property "archive_mode" "on"
+
+    sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
+    postgresql_set_property "archive_command" "'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'"
+
+    sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
+    postgresql_set_property "archive_timeout" "900s"
+
+    info "Reloading configurations"
+    echo "SELECT pg_reload_conf();" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+
+  10-init_db.sh: |
+    #!/bin/bash
+
+    # import functions
+    # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
+    . /opt/bitnami/scripts/libpostgresql.sh
+    # . /opt/bitnami/scripts/postgresql-env.sh
+
+    # export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
+    export USER_PASSWORD="${SECRET_DB_USER_PWD}"
 
     function initdb {
-      echo "Creating \"$1\" user and database"
+      local -r escaped_password="${USER_PASSWORD//\'/\'\'}"
 
-      # note: if this presents problems in the future, look into heredoc indentations
-      psql "postgresql://postgres:$ROOT_PWD@localhost:5432" -e <<EOSQL
-    CREATE USER $1 WITH LOGIN PASSWORD '$USER_PWD';
-    CREATE DATABASE "$1";
-    GRANT ALL PRIVILEGES ON DATABASE "$1" TO "$1";
-    EOSQL
+      info "Creating \"$1\" user and database"
+      echo "CREATE ROLE \"${1}\" WITH LOGIN PASSWORD '${escaped_password}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      echo "CREATE DATABASE \"${1}\"" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Granting access to \"${1}\" to the database \"${1}\""
+      echo "GRANT ALL PRIVILEGES ON DATABASE \"${1}\" TO \"${1}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
     }
 
     # initialize users + databases
@@ -41,28 +77,29 @@ data:
     initdb "mealie"
     initdb "nextcloud"
 
-    unset ROOT_PWD
-    unset USER_PWD
+    # unset ROOT_PWD
+    unset USER_PASSWORD
 
   99-backup.sh: |
     #!/bin/bash
 
-    sleep 30  # allow other processes to finish
-
-    export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
+    # import functions
+    # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
+    . /opt/bitnami/scripts/libpostgresql.sh
+    # . /opt/bitnami/scripts/postgresql-env.sh
 
     echo 'Making .pgpass file...'
     cat > /bitnami/postgresql/.pgpass << EOF
     # hostname:port:database:username:password
-    *:*:replication:postgres:$ROOT_PWD
+    *:*:replication:postgres:$POSTGRESQL_PASSWORD
     EOF
     chmod 0600 /bitnami/postgresql/.pgpass
 
-    echo 'Making backup directories if they do not exist...'
+    info 'Making backup directories if they do not exist...'
     BACKUPDIR='/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d)'
     mkdir -p $BACKUPDIR
 
-    echo 'Checking backup directory...'
+    info 'Checking backup directory...'
     if [ -z "$(ls -A $BACKUPDIR)" ]; then
       echo "Base backup location $BACKUPDIR is empty, running full backup..."
 
@@ -71,5 +108,4 @@ data:
     fi
 
     echo 'Removing .pgpass file...'
-    rm -rf /bitnami/postgresql/.pgpass
-    unset ROOT_PWD
+    rm -f /bitnami/postgresql/.pgpass
