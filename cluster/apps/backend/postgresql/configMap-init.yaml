@@ -39,7 +39,7 @@ data:
 
     postgresql_restrict_pghba
 
-    debug "$(cat $POSTGRESQL_PGHBA_FILE)"
+    debug "\n$(cat $POSTGRESQL_PGHBA_FILE)"
 
   # 02-init-conf.sh: |
   #   # update postgresql.conf
@@ -97,11 +97,13 @@ data:
 
     info 'Checking backup directory...'
     if [ -z "$(ls -A $BACKUPDIR)" ]; then
-      echo "Base backup location $BACKUPDIR is empty, running full backup..."
+      info "Base backup location $BACKUPDIR is empty, running full backup..."
+
+      debug "\n$(cat $POSTGRESQL_PGHBA_FILE)"
 
       PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
-      echo "Base backup successful"
+      info "Base backup successful"
     fi
 
-    echo 'Removing .pgpass file...'
+    info 'Removing .pgpass file...'
     rm -f /bitnami/postgresql/.pgpass
