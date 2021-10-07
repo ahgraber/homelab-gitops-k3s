@@ -9,6 +9,9 @@ kind: ConfigMap
 data:
   01-init_db.sh: |
     #!/bin/bash
+
+    sleep 45  # runs on container init; allow other init to finish
+
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
     export USER_PWD="${SECRET_DB_USER_PWD}"
     # echo "ROOT_PWD=$ROOT_PWD"
@@ -43,6 +46,9 @@ data:
 
   99-backup.sh: |
     #!/bin/bash
+
+    sleep 30  # allow other processes to finish
+
     export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
 
     echo 'Making .pgpass file...'
