@@ -7,7 +7,7 @@ metadata:
   namespace: postgresql
 kind: ConfigMap
 data:
-  01-init-server.sh: |
+  01-init-hba.sh: |
     #!/bin/bash
 
     # import functions
@@ -37,17 +37,18 @@ data:
 
     postgresql_restrict_pghba
 
-    # update postgresql.conf
-    # sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
-    # sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-    # sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
+  # 02-init-conf.sh: |
+  #   # update postgresql.conf
+  #   # sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
+  #   # sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
+  #   # sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
 
-    postgresql_set_property "archive_mode" "on"
-    postgresql_set_property "archive_command" 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
-    postgresql_set_property "archive_timeout" "900s"
+  #   postgresql_set_property "archive_mode" "on"
+  #   postgresql_set_property "archive_command" 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
+  #   postgresql_set_property "archive_timeout" "900s"
 
-    info "Reloading configurations"
-    echo "SELECT pg_reload_conf();" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+  #   info "Reloading configurations"
+  #   echo "SELECT pg_reload_conf();" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
 
   10-init_db.sh: |
     #!/bin/bash
