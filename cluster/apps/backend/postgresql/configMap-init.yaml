@@ -42,7 +42,7 @@ data:
     postgresql_set_property "archive_mode" "on"
 
     sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-    postgresql_set_property "archive_command" "'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'"
+    postgresql_set_property "archive_command" "\'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f\'"
 
     sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
     postgresql_set_property "archive_timeout" "900s"
@@ -63,12 +63,13 @@ data:
 
     function initdb {
       local -r escaped_password="${USER_PASSWORD//\'/\'\'}"
+      local -r create_new="$1"
 
-      info "Creating \"$1\" user and database"
-      echo "CREATE ROLE \"${1}\" WITH LOGIN PASSWORD '${escaped_password}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      echo "CREATE DATABASE \"${1}\"" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      info "Granting access to \"${1}\" to the database \"${1}\""
-      echo "GRANT ALL PRIVILEGES ON DATABASE \"${1}\" TO \"${1}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Creating \"$create_new\" user and database"
+      echo "CREATE ROLE \"${create_new}\" WITH LOGIN PASSWORD '${escaped_password}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      echo "CREATE DATABASE \"${create_new}\"" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Granting access to \"${create_new}\" to the database \"${create_new}\""
+      echo "GRANT ALL PRIVILEGES ON DATABASE \"${1}\" TO \"${create_new}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
     }
 
     # initialize users + databases
