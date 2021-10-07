@@ -65,7 +65,7 @@ data:
       info "Creating \"$NAME\" user
       postgresql_ensure_user_exists "$NAME" "$PWD"
       info "Creating \"$NAME\" database
-      postgresql_ensure_database_exists "$NAME" "$NAME"
+      postgresql_ensure_database_exists "$NAME"
       info "Granting access to \"$NAME\" to the database \"$NAME\""
       postgresql_ensure_user_has_database_privileges "$NAME" "$NAME"
     }
