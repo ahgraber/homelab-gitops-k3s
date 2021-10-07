@@ -24,27 +24,26 @@ data:
     host      replication     postgres        ::1/128                 md5
     EOF
 
-    # if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
-    #   postgresql_create_replication_user
-    #   cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
-    # host      replication     ${POSTGRES_REPLICATION_USER}       0.0.0.0/0               md5
-    # host      replication     ${POSTGRES_REPLICATION_USER}       ::/0                    md5
-    # local     replication     ${POSTGRES_REPLICATION_USER}                               md5
-    # host      replication     ${POSTGRES_REPLICATION_USER}       127.0.0.1/32            md5
-    # host      replication     ${POSTGRES_REPLICATION_USER}       ::1/128                 md5
-    # EOF
-    # fi
+    if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
+      postgresql_create_replication_user
+      cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    host      replication     $POSTGRES_REPLICATION_USER       0.0.0.0/0               md5
+    host      replication     $POSTGRES_REPLICATION_USER       ::/0                    md5
+    local     replication     $POSTGRES_REPLICATION_USER                               md5
+    host      replication     $POSTGRES_REPLICATION_USER       127.0.0.1/32            md5
+    host      replication     $POSTGRES_REPLICATION_USER       ::1/128                 md5
+    EOF
+    fi
 
     postgresql_restrict_pghba
 
     # update postgresql.conf
-    sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
+    # sed -i 's/#archive_mode/archive_mode/' "$POSTGRESQL_CONF_FILE"
+    # sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
+    # sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
+
     postgresql_set_property "archive_mode" "on"
-
-    sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-    postgresql_set_property "archive_command" "'test \! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'"
-
-    sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
+    postgresql_set_property "archive_command" 'test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'
     postgresql_set_property "archive_timeout" "900s"
 
     info "Reloading configurations"
@@ -58,56 +57,49 @@ data:
     . /opt/bitnami/scripts/libpostgresql.sh
     # . /opt/bitnami/scripts/postgresql-env.sh
 
-    # export ROOT_PWD="${SECRET_DB_ROOT_PWD}"
-    # export USER_PASSWORD="${SECRET_DB_USER_PWD}"
-
     function initdb {
-      # local -r escaped_password="${USER_PASSWORD//\'/\'\'}"
-      local -r USER_PASSWORD="${SECRET_DB_USER_PWD}"
-      local -r NEW=$1
+      local -r NAME="$1"
+      local -r PWD="$2"
 
-      info "Creating \"${NEW}\" user and database"
-      echo "CREATE ROLE \"${NEW}\" WITH LOGIN PASSWORD '${USER_PASSWORD}';" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      echo "CREATE DATABASE \"${NEW}\";" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
-      info "Granting access to \"${NEW}\" to the database \"${NEW}\""
-      echo "GRANT ALL PRIVILEGES ON DATABASE \"${NEW}\" TO \"${NEW}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+      info "Creating \"$NAME\" user
+      postgresql_ensure_user_exists "$NAME" "$PWD"
+      info "Creating \"$NAME\" database
+      postgresql_ensure_database_exists "$NAME" "$NAME"
+      info "Granting access to \"$NAME\" to the database \"$NAME\""
+      postgresql_ensure_user_has_database_privileges "$NAME" "$NAME"
     }
 
-    # initialize users + databases
-    initdb "vaultwarden"
-    initdb "authentik"
-    initdb "mealie"
-    initdb "nextcloud"
+    initdb "vaultwarden" "${SECRET_DB_USER_PWD}"
+    initdb "authentik" "${SECRET_DB_USER_PWD}"
+    initdb "mealie" "${SECRET_DB_USER_PWD}"
+    initdb "nextcloud" "${SECRET_DB_USER_PWD}"
 
-    # unset ROOT_PWD
-    # unset USER_PASSWORD
+  # 99-backup.sh: |
+  #   #!/bin/bash
 
-  99-backup.sh: |
-    #!/bin/bash
+  #   # import functions
+  #   # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
+  #   . /opt/bitnami/scripts/libpostgresql.sh
+  #   # . /opt/bitnami/scripts/postgresql-env.sh
 
-    # import functions
-    # ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/12/debian-10/rootfs/opt/bitnami/scripts/libpostgresql.sh#L468
-    . /opt/bitnami/scripts/libpostgresql.sh
-    # . /opt/bitnami/scripts/postgresql-env.sh
+  #   info 'Making .pgpass file...'
+  #   cat > /bitnami/postgresql/.pgpass << EOF
+  #   # hostname:port:database:username:password
+  #   *:*:replication:postgres:$POSTGRESQL_PASSWORD
+  #   EOF
+  #   chmod 0600 /bitnami/postgresql/.pgpass
 
-    echo 'Making .pgpass file...'
-    cat > /bitnami/postgresql/.pgpass << EOF
-    # hostname:port:database:username:password
-    *:*:replication:postgres:$POSTGRESQL_PASSWORD
-    EOF
-    chmod 0600 /bitnami/postgresql/.pgpass
+  #   info 'Making backup directories if they do not exist...'
+  #   BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
+  #   mkdir -p $BACKUPDIR
 
-    info 'Making backup directories if they do not exist...'
-    BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
-    mkdir -p $BACKUPDIR
+  #   info 'Checking backup directory...'
+  #   if [ -z "$(ls -A $BACKUPDIR)" ]; then
+  #     echo "Base backup location $BACKUPDIR is empty, running full backup..."
 
-    info 'Checking backup directory...'
-    if [ -z "$(ls -A $BACKUPDIR)" ]; then
-      echo "Base backup location $BACKUPDIR is empty, running full backup..."
+  #     PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
+  #     echo "Base backup successful"
+  #   fi
 
-      PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
-      echo "Base backup successful"
-    fi
-
-    echo 'Removing .pgpass file...'
-    rm -f /bitnami/postgresql/.pgpass
+  #   echo 'Removing .pgpass file...'
+  #   rm -f /bitnami/postgresql/.pgpass
