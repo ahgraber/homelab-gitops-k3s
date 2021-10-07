@@ -29,14 +29,10 @@ for PFX in \${PREFIX[@]}; do
   OLD=(\$(comm -13 <(printf '%s\n' "\${PVs[@]}" | LC_ALL=C sort) <(printf '%s\n' "\${VOLs[@]}" | LC_ALL=C sort)))
   # echo "OLD: \${OLD[*]}"
 
-  if [[ \${#OLD[@]} -eq \${#VOLs[@]} ]]; then
-    echo "No difference between OLD and VOLs, skipping removal"
-  else
-    for OLDVOL in \${OLD[@]}; do
-      echo "Removing vol: \${PFX}\${OLDVOL}"
-      zfs destroy -rf "\${PFX}\${OLDVOL}"
-    done
-  fi
+  for OLDVOL in \${OLD[@]}; do
+    echo "Removing vol: \${PFX}\${OLDVOL}"
+    zfs destroy -rf "\${PFX}\${OLDVOL}"
+  done
 done
 unset PVs
 unset PREFIX
