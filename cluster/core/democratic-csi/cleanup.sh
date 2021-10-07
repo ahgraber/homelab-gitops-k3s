@@ -32,6 +32,7 @@ for PFX in \${PREFIX[@]}; do
   for OLDVOL in \${OLD[@]}; do
     echo "Removing vol: \${PFX}\${OLDVOL}"
     zfs destroy -rf "\${PFX}\${OLDVOL}"
+    sleep 1
   done
 done
 unset PVs
