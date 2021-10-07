@@ -16,6 +16,7 @@ data:
     # . /opt/bitnami/scripts/postgresql-env.sh
 
     # update pg_hba.conf
+    info "Updating $POSTGRESQL_PGHBA_FILE with postgres replication permissions"
     cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
     host      replication     postgres        0.0.0.0/0               md5
     host      replication     postgres        ::/0                    md5
@@ -25,6 +26,7 @@ data:
     EOF
 
     # if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
+    #   info "Updating $POSTGRESQL_PGHBA_FILE with $POSTGRES_REPLICATION_USER replication permissions"
     #   postgresql_create_replication_user
     #   cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
     # host      replication     $POSTGRES_REPLICATION_USER       0.0.0.0/0               md5
@@ -36,6 +38,8 @@ data:
     # fi
 
     postgresql_restrict_pghba
+
+    debug "$(cat $POSTGRESQL_PGHBA_FILE)"
 
   # 02-init-conf.sh: |
   #   # update postgresql.conf
