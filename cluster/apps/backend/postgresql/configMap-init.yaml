@@ -42,7 +42,7 @@ data:
     postgresql_set_property "archive_mode" "on"
 
     sed -i 's/#archive_command/archive_command/' "$POSTGRESQL_CONF_FILE"
-    postgresql_set_property "archive_command" '\''test ! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'\''
+    postgresql_set_property "archive_command" "'test \! -f /mnt/backup/incremental.d/%f && mkdir -p /mnt/backup/incremental.d/ && cp %p /mnt/backup/incremental.d/%f'"
 
     sed -i 's/#archive_timeout/archive_timeout/' "$POSTGRESQL_CONF_FILE"
     postgresql_set_property "archive_timeout" "900s"
