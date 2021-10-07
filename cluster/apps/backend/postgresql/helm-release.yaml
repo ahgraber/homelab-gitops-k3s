@@ -30,7 +30,7 @@ spec:
         existingSecret: "secret-postgresql"
 
     replication:
-      enabled: true
+      enabled: false
       # user: repl_user
       # password: ${SECRET_DB_ROOT_PWD}
 

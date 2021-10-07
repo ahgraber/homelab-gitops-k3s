@@ -24,16 +24,16 @@ data:
     host      replication     postgres        ::1/128                 md5
     EOF
 
-    if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
-      postgresql_create_replication_user
-      cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
-    host      replication     $POSTGRES_REPLICATION_USER       0.0.0.0/0               md5
-    host      replication     $POSTGRES_REPLICATION_USER       ::/0                    md5
-    local     replication     $POSTGRES_REPLICATION_USER                               md5
-    host      replication     $POSTGRES_REPLICATION_USER       127.0.0.1/32            md5
-    host      replication     $POSTGRES_REPLICATION_USER       ::1/128                 md5
-    EOF
-    fi
+    # if [[ -n "$POSTGRES_REPLICATION_USER" ]]; then
+    #   postgresql_create_replication_user
+    #   cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    # host      replication     $POSTGRES_REPLICATION_USER       0.0.0.0/0               md5
+    # host      replication     $POSTGRES_REPLICATION_USER       ::/0                    md5
+    # local     replication     $POSTGRES_REPLICATION_USER                               md5
+    # host      replication     $POSTGRES_REPLICATION_USER       127.0.0.1/32            md5
+    # host      replication     $POSTGRES_REPLICATION_USER       ::1/128                 md5
+    # EOF
+    # fi
 
     postgresql_restrict_pghba
 
