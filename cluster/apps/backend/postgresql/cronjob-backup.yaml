@@ -68,11 +68,14 @@ spec:
                 - "-c"
                 - |
                   echo 'Making monthly backup directory...'
-                  BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
-                  kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p $BACKUPDIR
+                  # BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
+                  export BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
+                  "mkdir -p $BACKUPDIR"
+                  '
 
                   echo "Running monthly backup..."
-                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash '\
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
                   cat > /bitnami/postgresql/.pgpass << EOF
                   *:*:replication:postgres:${SECRET_DB_ROOT_PWD}
                   EOF
