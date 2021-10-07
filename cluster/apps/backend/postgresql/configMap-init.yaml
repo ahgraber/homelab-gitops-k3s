@@ -65,7 +65,7 @@ data:
       info "Creating \"$1\" user and database"
 
       psql "postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432" -e <<EOSQL
-    CREATE USER $NAME WITH LOGIN PASSWORD '${PWD}';
+    CREATE USER $NAME WITH LOGIN PASSWORD '$PWD';
     CREATE DATABASE "$NAME";
     GRANT ALL PRIVILEGES ON DATABASE "$NAME" TO "$NAME";
     EOSQL
