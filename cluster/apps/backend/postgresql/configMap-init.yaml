@@ -97,7 +97,7 @@ data:
     chmod 0600 /bitnami/postgresql/.pgpass
 
     info 'Making backup directories if they do not exist...'
-    BACKUPDIR='/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d)'
+    BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
     mkdir -p $BACKUPDIR
 
     info 'Checking backup directory...'
