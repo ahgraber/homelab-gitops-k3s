@@ -76,7 +76,7 @@ spec:
                   '
 
                   echo 'Making monthly backup directory...'
-                  BACKUPDIR='/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d)'
+                  BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
                   kubectl exec postgresql-postgresql-0 -n postgresql -- mkdir -p $BACKUPDIR
 
                   echo "Running monthly backup..."
