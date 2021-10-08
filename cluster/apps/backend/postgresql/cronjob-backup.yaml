@@ -68,9 +68,9 @@ spec:
                 - "-c"
                 - |
                   echo 'Making monthly backup directory...'
-                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '$(cat <<EOF)
                   BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
-                  "mkdir -p $BACKUPDIR"
+                  mkdir -p $BACKUPDIR
                   '
 
                   echo "Running monthly backup..."
@@ -106,7 +106,7 @@ spec:
                   pg_archivecleanup -d $INCREMENTALDIR $OLDEST_BASE_BACKUP;
                   '
 
-                  echo "Backup process completed.""
+                  echo "Backup process completed."
                   exit
 
               volumeMounts:
