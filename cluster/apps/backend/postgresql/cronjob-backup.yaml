@@ -68,9 +68,8 @@ spec:
                 - "-c"
                 - |
                   echo 'Making monthly backup directory...'
-                  # BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
                   kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
-                  export BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
+                  BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
                   "mkdir -p $BACKUPDIR"
                   '
 
@@ -81,13 +80,33 @@ spec:
                   EOF
                   chmod 0600 /bitnami/postgresql/.pgpass
 
+                  BACKUPDIR="/mnt/backup/backup.d/backup-$(date +'%Y-%m-%d')"
                   PGPASSFILE=/bitnami/postgresql/.pgpass pg_basebackup -U postgres --no-password -D $BACKUPDIR
                   '
 
-                  # echo "Trimming old WAL files..."
+                  echo "Trimming old basebackup directories..."
                   # ref: https://www.zimmi.cz/posts/2018/postgresql-backup-and-recovery-orchestration-wal-archiving/
 
-                  echo 'Backup process completed.'
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
+                  # clean up backup.d
+                  # Find directories more than 100 days old, remove
+                  BACKUPDIR="/mnt/backup/backup.d/"
+                  find $BACKUPDIR/* -maxdepth 0 -type d -mtime +100 -print0 | xargs -0 rm -rfv
+                  '
+
+                  echo "Trimming old WAL files..."
+                  # ref: https://www.zimmi.cz/posts/2018/postgresql-backup-and-recovery-orchestration-wal-archiving/
+
+                  kubectl exec postgresql-postgresql-0 -n postgresql -- /bin/bash -c '\
+                  # clean up incremental.d
+                  # Of WAL files less than 100 days old, find successful backup,
+                  # sort by date, use the oldest (100-day) one as a reference to clean up older
+                  INCREMENTALDIR="/mnt/backup/incremental.d/"
+                  OLDEST_BASE_BACKUP=$(basename $(find $INCREMENTALDIR -type f -iname "*.backup" -mtime -100 -print0 | xargs -0 ls -t | tail -n 1))
+                  pg_archivecleanup -d $INCREMENTALDIR $OLDEST_BASE_BACKUP;
+                  '
+
+                  echo "Backup process completed.""
                   exit
 
               volumeMounts:
