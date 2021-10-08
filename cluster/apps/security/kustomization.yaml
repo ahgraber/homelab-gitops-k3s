@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   # - authentik
   # - keycloak
-  - vaultwarden
