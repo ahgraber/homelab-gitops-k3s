@@ -3,7 +3,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: mariadb
     meta.helm.sh/release-namespace: backend
-  name: configmap-mariadb-settings
+  name: configmap-mariadb-conf
 kind: ConfigMap
 data:
   my.cnf: |-

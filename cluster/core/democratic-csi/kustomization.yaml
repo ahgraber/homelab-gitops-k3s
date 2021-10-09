@@ -5,4 +5,4 @@ resources:
   - helm-release-nfs.yaml
   - secret-iscsi.yaml
   - secret-nfs.yaml
-  - snapshot-controller
+  - snapshot-controller.d
