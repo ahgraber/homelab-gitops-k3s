@@ -1,9 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - dashboard
-  - middlewares
+  - dashboard.d
+  - middlewares.d
   # - templates  # these are for reference, not for use
-  - tls-store
+  - tls-store.d
   - helm-release.yaml
   - service-monitor.yaml
