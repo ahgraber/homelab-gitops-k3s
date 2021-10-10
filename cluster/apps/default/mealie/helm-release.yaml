@@ -40,3 +40,6 @@ spec:
         enabled: true
         storageClass: 'csi-truenas-nfs'
         existingClaim: mealie-pvc
+
+    # podAnnotations:
+    #   backup.velero.io/backup-volumes: "backup" #, data"

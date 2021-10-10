@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: velero
-  namespace: backend
+  namespace: velero
 spec:
   interval: 5m
   chart:
@@ -56,13 +56,13 @@ spec:
       # use AWS S3 interface
       provider: aws
       backupStorageLocation:
-        name: default
+        name: default-storagelocation
         provider: aws
+        # default indicates this location is the default backup storage location. Optional.
+        default: true
         bucket: ninerealmlabs-velero
         # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
         prefix: default
-        # default indicates this location is the default backup storage location. Optional.
-        default: true
         config:
           region: us-west-002
           s3ForcePathStyle: true
@@ -100,8 +100,8 @@ spec:
         - key: "node-role.kubernetes.io/master"
           operator: "Exists"
 
-    schedules:
-      daily-backup:
-        schedule: "0 5 * * *"
-        template:
-          ttl: 168h0m0s
+    # schedules:
+    #   daily-backup:
+    #     schedule: "0 5 * * *"
+    #     template:
+    #       ttl: 168h0m0s
