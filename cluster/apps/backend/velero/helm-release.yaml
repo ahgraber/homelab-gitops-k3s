@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://vmware-tanzu.github.io/helm-charts
       chart: velero
-      version: 2.23.8
+      version: 2.23.12
       sourceRef:
         kind: HelmRepository
         name: vmware-tanzu-charts
@@ -23,7 +23,7 @@ spec:
   values:
     image:
       repository: velero/velero
-      tag: v1.6.3
+      tag: v1.7.0
 
     podAnnotations:
       secret.reloader.stakater.com/reload: "secret-velero"
@@ -35,12 +35,12 @@ spec:
         volumeMounts:
           - mountPath: /target
             name: plugins
-      # - name: velero-plugin-for-csi
-      #   image: velero/velero-plugin-for-csi:v0.1.2
-      #   imagePullPolicy: IfNotPresent
-      #   volumeMounts:
-      #     - mountPath: /target
-      #       name: plugins
+      - name: velero-plugin-for-csi
+        image: velero/velero-plugin-for-csi:v0.2.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
 
     metrics:
       enabled: true
@@ -79,7 +79,7 @@ spec:
           region: us-west-002
 
       # enable CSI plugin volume snapshot: https://velero.io/blog/csi-integration/
-      # features: EnableCSI
+      features: EnableCSI
 
     credentials:
       useSecret: true
@@ -88,7 +88,7 @@ spec:
     # Whether to create backupstoragelocation crd, if false => do not create a default backup location
     backupsEnabled: true
     # Whether to create volumesnapshotlocation crd, if false => disable snapshot feature
-    snapshotsEnabled: false
+    snapshotsEnabled: true
 
     resources:
       requests:
