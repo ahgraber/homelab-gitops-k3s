@@ -18,11 +18,12 @@ spec:
     excludedNamespaces:
       - 'mariadb'
       - 'postgresql'
-    # Array of resources to include in the scheduled backup. If unspecified, all resources are included. Optional.
-    includedResources:
-      # - '*'
-      - 'pvc'
-      - 'pv'
+    # # Array of resources to include in the scheduled backup. If unspecified, all resources are included. Optional.
+    # includedResources:
+    #   # - '*'
+    #   - 'po'
+    #   - 'pv'
+    #   - 'pvc'
     # # Array of resources to exclude from the scheduled backup.
     # # Resources may be shortcuts (for example 'po' for 'pods') or fully-qualified. Optional.
     # excludedResources:
