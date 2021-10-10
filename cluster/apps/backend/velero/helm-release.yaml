@@ -72,12 +72,11 @@ spec:
           # # Set this to "true" if you do NOT want to verify the TLS certificate when connecting to the object store
           # insecureSkipTLSVerify: "false"
 
-      # volumeSnapshotLocation:
-      #   name: velero
-      #   provider: csi
-      #   config:
-      #     region: us-west-002
-      #     profile: "default"
+      volumeSnapshotLocation:
+        name: default-snapshotlocation
+        provider: aws
+        config:
+          region: us-west-002
 
       # enable CSI plugin volume snapshot: https://velero.io/blog/csi-integration/
       # features: EnableCSI
@@ -91,6 +90,13 @@ spec:
     # Whether to create volumesnapshotlocation crd, if false => disable snapshot feature
     snapshotsEnabled: false
 
+    resources:
+      requests:
+        memory: 300Mi
+        cpu: 25m
+      limits:
+        memory: 1500Mi
+
     ### Don't need restic since `democratic-csi` can use snapshots (assuming `external-snapshotter` is installed)
     deployRestic: true
     restic:
@@ -99,6 +105,12 @@ spec:
       tolerations:
         - key: "node-role.kubernetes.io/master"
           operator: "Exists"
+      resources:
+        requests:
+          memory: 200Mi
+          cpu: 15m
+        limits:
+          memory: 3000Mi
 
     # schedules:
     #   daily-backup:
