@@ -66,7 +66,11 @@ spec:
 
     primary:
       podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-postgresql"
+        secret.reloader.stakater.com/reload: "configmap-postgresql-conf, configmap-postgresql-init, secret-postgresql"
+        backup.velero.io/backup-volumes: "backup" #, data"
+        # backup.velero.io/backup-volumes-excludes: "data"
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/mnt/backup"]'
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/mnt/backup"]'
 
       extraVolumes:
         - name: backup

@@ -5,3 +5,6 @@ resources:
   - helm-release.yaml
   # - configMap-change-storageclass-config.yaml
   - secret.yaml
+  - schedules.d
+  # - snapshotlocations.d
+  - storagelocations.d

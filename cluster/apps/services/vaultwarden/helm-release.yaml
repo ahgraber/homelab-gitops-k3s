@@ -134,3 +134,4 @@ spec:
 
     podAnnotations:
       secret.reloader.stakater.com/reload: "secret-vaultwarden"
+      backup.velero.io/backup-volumes: "vaultwarden"
