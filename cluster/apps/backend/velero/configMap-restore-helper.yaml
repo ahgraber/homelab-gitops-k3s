@@ -5,16 +5,13 @@ metadata:
   # to identify it rather than the name
   name: restic-restore-action-config
   # must be in the velero namespace
-  namespace: backend
-  # the below labels should be used verbatim in your
-  # ConfigMap.
+  namespace: velero
+  # the below labels should be used verbatim in your ConfigMap.
   labels:
-    # this value-less label identifies the ConfigMap as
-    # config for a plugin (i.e. the built-in restic restore
-    # item action plugin)
+    # this value-less label identifies the ConfigMap as config for a plugin
+    # (i.e. the built-in restic restore item action plugin)
     velero.io/plugin-config: ""
-    # this label identifies the name and kind of plugin
-    # that this ConfigMap is for.
+    # this label identifies the name and kind of plugin that this ConfigMap is for.
     velero.io/restic: RestoreItemAction
 data:
   # The value for "image" can either include a tag or not;

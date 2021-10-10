@@ -62,8 +62,11 @@ spec:
           # mountPath: /bitnami/mariadb/backup
 
       podAnnotations:
+        secret.reloader.stakater.com/reload: "configmap-mariadb-conf, configmap-mariadb-init, secret-mariadb"
         backup.velero.io/backup-volumes: backup #, data
-        secret.reloader.stakater.com/reload: "secret-mariadb"
+        # backup.velero.io/backup-volumes-excludes: "data"
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/mnt/backup"]'
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/mnt/backup"]'
 
     # ## Mariadb Secondary parameters
     # secondary:
