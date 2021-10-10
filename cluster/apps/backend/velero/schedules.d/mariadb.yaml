@@ -20,10 +20,11 @@ spec:
     #   - ''
     # Array of resources to include in the scheduled backup. If unspecified, all resources are included. Optional.
     includedResources:
-      # - '*'
-      - 'po'
+      # - 'po'
       - 'pv'
       - 'pvc'
+      # - 'volumesnapshotcontents'
+      # - 'volumesnapshots'
     # # Array of resources to exclude from the scheduled backup.
     # excludedResources:
     #   - storageclasses.storage.k8s.io
