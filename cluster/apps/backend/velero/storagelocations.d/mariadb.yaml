@@ -5,9 +5,7 @@ apiVersion: velero.io/v1
 kind: BackupStorageLocation
 # Standard Kubernetes metadata. Required.
 metadata:
-  # Schedule name. May be any valid Kubernetes object name. Required.
   name: mariadb-storagelocation
-  # Schedule namespace. Must be the namespace of the Velero server. Required.
   namespace: velero
 spec:
   provider: aws
