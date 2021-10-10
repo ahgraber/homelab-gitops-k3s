@@ -13,7 +13,7 @@ spec:
   provider: aws
   # default indicates this location is the default backup storage location. Optional.
   default: true
-  objectstorage:
+  objectStorage:
     bucket: ninerealmlabs-velero
     # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
     prefix: mariadb
