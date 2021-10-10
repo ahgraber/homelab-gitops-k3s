@@ -133,5 +133,7 @@ spec:
         deletionPolicy: Retain # Delete, Retain
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
+        labels:
+          velero.io/csi-volumesnapshot-class: "true"
         # secrets:
         #   snapshotter-secret:
