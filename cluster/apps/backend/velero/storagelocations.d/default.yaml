@@ -19,7 +19,7 @@ spec:
     prefix: default
   config:
     region: us-west-002
-    s3ForcePathStyle: true
+    s3ForcePathStyle: "true"
     # storageAccount:
     s3Url: https://s3.us-west-002.backblazeb2.com
     # The name of the server-side encryption algorithm to use for uploading objects, e.g. "AES256".

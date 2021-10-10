@@ -12,14 +12,14 @@ metadata:
 spec:
   provider: aws
   # default indicates this location is the default backup storage location. Optional.
-  default: true
+  default: false
   objectStorage:
     bucket: ninerealmlabs-velero
     # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
     prefix: mariadb
   config:
     region: us-west-002
-    s3ForcePathStyle: true
+    s3ForcePathStyle: "true"
     # storageAccount:
     s3Url: https://s3.us-west-002.backblazeb2.com
     # The name of the server-side encryption algorithm to use for uploading objects, e.g. "AES256".
