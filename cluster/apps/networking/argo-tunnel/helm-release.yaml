@@ -1,0 +1,53 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: argo-tunnel
+  namespace: networking
+  # annotations:
+  #   metallb.universe.tf/address-pool: frontend
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://helm.traefik.io/traefik
+      chart: argo-tunnel
+      version: v0.6.5
+      sourceRef:
+        kind: HelmRepository
+        name: cloudflare-charts
+        namespace: flux-system
+  values:
+    # Default values for cloudflare argo-tunnel ingress.
+    controller:
+      name: controller
+      image:
+        repository: gcr.io/cloudflare-registry/argo-tunnel
+        tag: "0.6.5"
+        pullPolicy: Always
+      ingressClass: argo-tunnel
+      logLevel: 3
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256Mi
+    # Enable load balancing
+    # requires load balancing enabled on the cloudflare account.
+    loadBalancing:
+      enabled: false
+
+    # Enable rbac
+    rbac:
+      create: true
+      name:
+
+    serviceAccount:
+      create: true
+      name:
+
+    # Enable secret mapping file
+    secretMapping:
+      create: false
+      content:
+        {}
