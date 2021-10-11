@@ -27,8 +27,8 @@ spec:
       PGID: 1000
 
       DEFAULT_EMAIL: admin@${SECRET_DOMAIN}
-      # BASE_URL: https://mealie.${SECRET_DOMAIN}
-      BASE_URL: https://recipes.${SECRET_DOMAIN}
+      BASE_URL: https://mealie.${SECRET_DOMAIN}
+      # BASE_URL: https://recipes.${SECRET_DOMAIN}
 
       DB_ENGINE: postgres # sqlite
       ## postgresql://mealie:${DB_USER_PWD}@postgresql.postgresql:5432/mealie
