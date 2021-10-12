@@ -6,7 +6,7 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
-    - web
+    # - web
     - websecure
   routes:
     - match: Host(`dashboard.${SECRET_DOMAIN}`)
