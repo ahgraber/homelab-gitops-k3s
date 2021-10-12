@@ -24,9 +24,9 @@ spec:
     #   - --enable-insecure-login
     #   # - --system-banner="Welcome to Kubernetes"
     service:
-      # type: ClusterIP
-      type: LoadBalancer
-      loadBalancerIP: "${METALLB_GUI}"
+      type: ClusterIP
+      # type: LoadBalancer
+      # loadBalancerIP: "${METALLB_GUI}"
       port: 443
 
     ingress:
