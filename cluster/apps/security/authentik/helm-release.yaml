@@ -29,7 +29,7 @@ spec:
 
     authentik:
       log_level: debug
-      secret_key: ${SECRET_AUTHENTIK_SECRET_KEY}
+      secret_key: ${SECRET_AUTHENTIK_KEY}
       error_reporting:
         enabled: false
 
