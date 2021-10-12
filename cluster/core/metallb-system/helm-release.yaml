@@ -26,10 +26,10 @@ spec:
           protocol: layer2
           addresses:
             - ${METALLB_FRONTEND}/32
-        - name: rancher
+        - name: gui
           protocol: layer2
           addresses:
-            - ${METALLB_RANCHER}/32
+            - ${METALLB_GUI}/32
         - name: mariadb
           protocol: layer2
           addresses:
