@@ -4,13 +4,15 @@ kind: HelmRelease
 metadata:
   name: kubernetes-dashboard
   namespace: monitoring
+  annotations:
+    metallb.universe.tf/address-pool: gui
 spec:
   interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://kubernetes.github.io/dashboard/
       chart: kubernetes-dashboard
-      version: 5.0.0
+      version: 5.0.2
       sourceRef:
         kind: HelmRepository
         name: dashboard-charts
@@ -22,8 +24,11 @@ spec:
     #   - --enable-insecure-login
     #   # - --system-banner="Welcome to Kubernetes"
     service:
-      type: ClusterIP
+      # type: ClusterIP
+      type: LoadBalancer
+      loadBalancerIP: "${METALLB_FRONTEND}"
       port: 443
+
     ingress:
       enabled: false
     metrics-server:
