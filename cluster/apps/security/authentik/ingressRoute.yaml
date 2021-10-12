@@ -20,7 +20,7 @@ spec:
         - name: authentik
           namespace: authentik
           port: 80
-    - match: Host(`auth.${SECRET_DOMAIN`) && PathPrefix(`/akprox/`)"
+    - match: Host(`auth.${SECRET_DOMAIN}`) && PathPrefix(`/akprox/`)"
       kind: Rule
       priority: 15
       services:
