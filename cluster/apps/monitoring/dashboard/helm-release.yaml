@@ -18,6 +18,12 @@ spec:
         name: dashboard-charts
         namespace: flux-system
   values:
+    image:
+      ## Repository for container
+      repository: kubernetesui/dashboard
+      tag: v2.3.1
+      # pullPolicy: IfNotPresent
+
     replicaCount: 1
     # extraArgs:
     #   - --enable-skip-login
@@ -31,6 +37,8 @@ spec:
 
     ingress:
       enabled: false
+
+    ## Enable this if you don't already have metrics-server enabled on your cluster
     metrics-server:
       enabled: false
       # args:
