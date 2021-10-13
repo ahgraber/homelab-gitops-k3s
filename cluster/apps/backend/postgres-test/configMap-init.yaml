@@ -3,7 +3,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: postgres-test
     meta.helm.sh/release-namespace: postgresql
-  name: configmap-postgresql-init
+  name: configmap-postgres-test-init
   namespace: postgresql
 kind: ConfigMap
 data:
