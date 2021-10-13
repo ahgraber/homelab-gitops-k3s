@@ -22,10 +22,12 @@ spec:
 
     ingress:
       enabled: false
-      # tls:
-      #   - secretName: tls.authentik
-      #     hosts:
-      #       - id.${SECRET_DOMAIN}
+      hosts:
+        - host: auth.${SECRET_DOMAIN}
+          paths:
+            - path: "/"
+              pathType: Prefix
+
 
     authentik:
       log_level: debug
