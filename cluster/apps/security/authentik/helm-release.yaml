@@ -59,7 +59,7 @@ spec:
 
     geoip:
       enabled: true
-      accountid: ${SECRET_MAXMIND_ACCOUNT_ID}
+      accountId: ${SECRET_MAXMIND_ACCOUNT_ID}
       licenseKey: ${SECRET_MAXMIND_LICENSE_KEY}
 
     # use bundled dbs?
