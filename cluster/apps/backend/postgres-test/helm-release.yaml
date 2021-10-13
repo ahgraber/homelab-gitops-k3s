@@ -27,7 +27,7 @@ spec:
         # postgresqlPassword: ${SECRET_DB_ROOT_PWD}
         # replicationPassword: ${SECRET_DB_ROOT_PWD}
         ## Using existingSecret ignores global postgresqlUsername, postgresqlPassword, and replicationPassword
-        existingSecret: "secret-postgresql"
+        existingSecret: "secret-postgres-test"
 
     replication:
       enabled: false
