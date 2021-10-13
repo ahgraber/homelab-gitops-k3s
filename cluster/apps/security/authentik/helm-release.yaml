@@ -28,7 +28,6 @@ spec:
             - path: "/"
               pathType: Prefix
 
-
     authentik:
       log_level: debug
       secret_key: ${SECRET_AUTHENTIK_KEY}
