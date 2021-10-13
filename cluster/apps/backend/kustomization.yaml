@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   # - mariadb
   - postgresql
+  - postgres-test
   - velero
