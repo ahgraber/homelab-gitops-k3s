@@ -15,7 +15,20 @@ subjects:
   - kind: ServiceAccount
     name: dashboard-admin
     namespace: monitoring
+  - kind: User
+    name: admin@${SECRET_DOMAIN}
 roleRef:
   kind: ClusterRole
   name: cluster-admin
   apiGroup: ""
+
+# ---
+# kind: ClusterRole
+# apiVersion: rbac.authorization.k8s.io/v1alpha1
+# metadata:
+#   name: admin-role
+# rules:
+# - apiGroups: ["*"]
+#   resources: ["*"]
+#   verbs: ["*"]
+#   nonResourceURLs: ["*"]
