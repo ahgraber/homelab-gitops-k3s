@@ -18,9 +18,9 @@ data:
     # update pg_hba.conf
     info "Updating $POSTGRESQL_PGHBA_FILE with postgres replication permissions"
     cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    local     replication     postgres                                md5
     host      replication     postgres        0.0.0.0/0               md5
     host      replication     postgres        ::/0                    md5
-    local     replication     postgres                                md5
     host      replication     postgres        127.0.0.1/32            md5
     host      replication     postgres        ::1/128                 md5
     EOF
@@ -29,9 +29,9 @@ data:
     #   info "Updating $POSTGRESQL_PGHBA_FILE with $POSTGRES_REPLICATION_USER replication permissions"
     #   postgresql_create_replication_user
     #   cat <<EOF >>"$POSTGRESQL_PGHBA_FILE"
+    # local     replication     $POSTGRES_REPLICATION_USER                               md5
     # host      replication     $POSTGRES_REPLICATION_USER       0.0.0.0/0               md5
     # host      replication     $POSTGRES_REPLICATION_USER       ::/0                    md5
-    # local     replication     $POSTGRES_REPLICATION_USER                               md5
     # host      replication     $POSTGRES_REPLICATION_USER       127.0.0.1/32            md5
     # host      replication     $POSTGRES_REPLICATION_USER       ::1/128                 md5
     # EOF
