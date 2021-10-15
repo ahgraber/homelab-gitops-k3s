@@ -8,7 +8,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://charts.goauthentik.io
+      # renovate: registryUrl=https://charts.goauthentik.io/
       chart: authentik
       version: 3.0.0
       sourceRef:
