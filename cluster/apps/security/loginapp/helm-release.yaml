@@ -10,11 +10,11 @@ spec:
   chart:
     spec:
       # renovate: registryUrl=https://charts.fydrah.com
-      chart: ./charts/fydrah-charts
+      chart: loginapp
       version: v1.2.1
       sourceRef:
-        kind: GitRepository
-        name: loginapp
+        kind: HelmRepository
+        name: fydrah-charts
         namespace: flux-system
       interval: 5m
   values:
