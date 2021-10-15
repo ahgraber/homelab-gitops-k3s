@@ -4,6 +4,12 @@ Vaultwarden is a lightweight Bitwarden client written in Rust.
 
 ## Prerequisites
 
+Vaultwarden requires a preexisting token for admin authorization.  Generate with
+
+```sh
+openssl rand -base64 48
+```
+
 To use an existing sql server:
 
 1. Create 'vaultwarden' database and account on server.

@@ -1,0 +1,103 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: loginapp
+  namespace: security
+spec:
+  releaseName: loginapp
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.fydrah.com
+      chart: ./charts/fydrah-charts
+      version: v1.2.1
+      sourceRef:
+        kind: GitRepository
+        name: loginapp
+        namespace: flux-system
+      interval: 5m
+  values:
+    serviceAccount:
+      create: true
+
+    podSecurityContext: {}
+      # fsGroup: 2000
+
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+
+    service:
+      type: ClusterIP
+      port: 5555
+
+    ingress:
+      enabled: false
+
+    config:
+      # Use an existing secret for the loginapp secret and OIDC secret
+      existingSecret: secret-loginapp
+      # # if empty, generate a random string
+      # # please setup a real secret otherwise helm will generate a new secret at each deployment
+      # secret: ""
+      # # OIDC Client secret
+      # clientSecret: ""
+      # OIDC Client ID
+      clientID: "k8s-loginapp"
+      # OIDC Client redirect URL -- This must end with /callback
+      clientRedirectURL: https://loginapp.${SECRET_DOMAIN}/callback
+      # Issuer root CA configMap
+      # ConfigMap containing the root CA
+      # and key to use inside the configMap.
+      # This configMap must exist
+      issuerRootCA: # +doc-gen:break
+        configMap: kube-root-ca.crt
+        key: ca.crt
+      # Skip issuer certificate validation
+      # This is usefull for testing purpose, but
+      # not recommended in production
+      issuerInsecureSkipVerify: false
+      # Issuer url
+      issuerURL: "https://auth.${SECRET_DOMAIN}"
+      # Include refresh token in request
+      refreshToken: true
+      tls:
+        # Enable TLS for deployment
+        enabled: true
+        # Secret name where certificates are stored
+        # if empty and 'tls.enabled: true', generate self signed certificates
+        # if not empty, use the kubernetes secret 'secretName' (type: kubernetes.io/tls)
+        # NOTE: this is copied into the namespace with kubed
+        secretName: ${SECRET_DOMAIN/./-}-tls
+
+      # List of kubernetes clusters to add on web frontend
+      clusters: []
+      #  - name: myfakecluster
+      #    server: https://myfakecluster.org
+      #    certificate-authority: |
+      #      -----BEGIN CERTIFICATE-----
+      #      MIIC/zCCAeegAwIBAgIULkYvGJPRl50tMoVE4BNM0laRQncwDQYJKoZIhvcNAQEL
+      #      BQAwDzENMAsGA1UEAwwEbXljYTAeFw0xOTAyMTgyMjA5NTJaFw0xOTAyMjgyMjA5
+      #      NTJaMA8xDTALBgNVBAMMBG15Y2EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+      #      -----END CERTIFICATE-----
+      #    insecure-skip-tls-verify: false
+      #    # Alternative context name for this cluster
+      #    contextName: altcontextname
+
+    # Configuration overrides, this is a free configuration merged
+    # with the previous generated configuration 'config'. Use this
+    # to add or overwrites values.
+    # Example:
+    #
+    #  oidc:
+    #    scopes: [openid,profile,email]
+    configOverwrites: {}
+
+    # Enable dex deployment
+    dex:
+      enabled: false
