@@ -8,7 +8,7 @@ spec:
   secretName: '${SECRET_DOMAIN/./-}-tls'
   secretTemplate:
     annotations:
-      kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=security" # Sync certificate to matching namespaces
+      kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
@@ -16,7 +16,9 @@ spec:
   dnsNames:
     - '${SECRET_DOMAIN}'
     - '*.${SECRET_DOMAIN}'
+
 # ---
+# # define blank secret to be filled/used by Cert
 # apiVersion: v1
 # data:
 #   ca.crt: ''
@@ -27,5 +29,5 @@ spec:
 #   name: ${SECRET_DOMAIN/./-}-tls
 #   namespace: networking
 #   annotations:
-#     kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=security" # Sync certificate to matching namespaces
+#     kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
 # type: kubernetes.io/tls
