@@ -3,3 +3,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: networking
+  labels:
+    # # Define namespace label for kubed for secrets-sharing
+    ${SECRET_DOMAIN/./-}-tls: security
+    ${SECRET_DOMAIN/./-}-stage-tls: security
