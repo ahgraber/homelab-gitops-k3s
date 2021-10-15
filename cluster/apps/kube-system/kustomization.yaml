@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - descheduler
   - kube-cleanup-operator
+  - kubed
   # - kured
   - metrics-server
   - node-feature-discovery
