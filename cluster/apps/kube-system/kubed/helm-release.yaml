@@ -43,10 +43,10 @@ spec:
     # If true, sends usage analytics
     enableAnalytics: false
 
-    config:
-      # Set cluster-name to something meaningful to you, say, prod, prod-us-east, qa, etc.
-      # so that you can distinguish notifications sent by kubed
-      clusterName: default
+    # config:
+    #   # Set cluster-name to something meaningful to you, say, prod, prod-us-east, qa, etc.
+    #   # so that you can distinguish notifications sent by kubed
+    #   clusterName: ""
     #   # If set, configmaps and secrets from only this namespace will be synced
     #   configSourceNamespace: ""
     #   # kubeconfig file content for configmap and secret syncer
