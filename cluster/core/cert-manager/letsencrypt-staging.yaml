@@ -10,6 +10,7 @@ spec:
     email: '${SECRET_CLOUDFLARE_EMAIL}'
     privateKeySecretRef:
       name: letsencrypt-staging
+      namespace: cert-manager
     solvers:
       - dns01:
           cloudflare:
