@@ -6,6 +6,9 @@ metadata:
   namespace: networking
 spec:
   secretName: '${SECRET_DOMAIN/./-}-tls'
+  secretTemplate:
+    annotations:
+      kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=security" # Sync certificate to matching namespaces
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
@@ -13,3 +16,16 @@ spec:
   dnsNames:
     - '${SECRET_DOMAIN}'
     - '*.${SECRET_DOMAIN}'
+# ---
+# apiVersion: v1
+# data:
+#   ca.crt: ''
+#   tls.crt: ''
+#   tls.key: ''
+# kind: Secret
+# metadata:
+#   name: ${SECRET_DOMAIN/./-}-tls
+#   namespace: networking
+#   annotations:
+#     kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=security" # Sync certificate to matching namespaces
+# type: kubernetes.io/tls
