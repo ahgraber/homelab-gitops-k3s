@@ -8,7 +8,7 @@ spec:
   secretName: '${SECRET_DOMAIN/./-}-stage-tls'
   secretTemplate:
     annotations:
-      kubed.appscode.com/sync: "security" # Sync certificate to matching namespaces
+      kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-stage-tls=security" # Sync certificate to matching namespaces
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
