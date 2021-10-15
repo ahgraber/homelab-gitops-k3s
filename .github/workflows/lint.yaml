@@ -27,6 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: markdownlint
-        uses: reviewdog/action-markdownlint@v0.2
+        uses: reviewdog/action-markdownlint@v0.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
