@@ -11,6 +11,6 @@ resources:
   - monitoring.yaml
   - networking.yaml
   - postgresql.yaml
-  - security
+  - security.yaml
   - vaultwarden.yaml
   - velero.yaml
