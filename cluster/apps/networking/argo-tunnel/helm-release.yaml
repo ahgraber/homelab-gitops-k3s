@@ -10,7 +10,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://helm.traefik.io/traefik
+      # renovate: registryUrl=https://cloudflare.github.io/helm-charts
       chart: argo-tunnel
       version: v0.6.5
       sourceRef:
