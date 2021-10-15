@@ -1,7 +1,6 @@
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
-scope: Cluster
 metadata:
   name: letsencrypt-production
 spec:
