@@ -9,11 +9,12 @@ spec:
     - web
     - websecure
   routes:
-    - match: "Host(`oauth2.${SECRET_DOMAIN}`)"
+    - match: Host(`oauth2.${SECRET_DOMAIN}`)
       kind: Rule
       middlewares:
+        # - name: headers-default
         - name: oauth2-proxy-headers
-       services:
+      services:
         - name: oauth2-proxy
           namespace: security
           port: 80
@@ -28,7 +29,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: oauth2-proxy-headers
-  namespace: oauth2-proxy
+  namespace: networking
 spec:
   headers:
     sslRedirect: false
