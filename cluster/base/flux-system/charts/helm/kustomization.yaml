@@ -23,6 +23,7 @@ resources:
   - metrics-server-charts.yaml
   - nfs-subdir-external-provisioner-charts.yaml
   - node-feature-discovery-charts.yaml
+  - oauth2-proxy-charts.yaml
   - prometheus-community-charts.yaml
   - rancher-charts.yaml
   - runix-charts.yaml
