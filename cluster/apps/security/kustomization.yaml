@@ -4,5 +4,6 @@ resources:
   - authentik
   # - dex
   # - dex-k8s-authenticator
-  - loginapp
+  # - loginapp
+  - oauth2-proxy
   # - keycloak
