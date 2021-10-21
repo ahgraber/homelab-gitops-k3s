@@ -1,0 +1,21 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth2-dashboard
+  namespace: networking
+spec:
+  forwardAuth:
+    address: https://auth.${SECRET_DOMAIN}/application/o/k8s/
+    trustForwardHeader: true
+    authResponseHeaders:
+      # - Set-Cookie
+      # - X-Auth-Username
+      # - X-Auth-Groups
+      # - X-Forwarded-Email
+      # - X-Forwarded-Preferred-Username
+      # - X-Forwarded-User
+      # - X-Forwarded-Access-Token
+      # - X-Auth-Request-User
+      # - X-Auth-Request-Email
+      - X-Auth-Request-Access-Token
+      - Authorization
