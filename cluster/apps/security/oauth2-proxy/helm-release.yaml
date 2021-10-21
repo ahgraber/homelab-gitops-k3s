@@ -8,12 +8,12 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://charts.bitnami.com/bitnami
+      # renovate: registryUrl=https://oauth2-proxy.github.io/manifests
       chart: oauth2-proxy
       version: 1.0.2
       sourceRef:
         kind: HelmRepository
-        name: bitnami-charts
+        name: oauth2-proxy-charts
         namespace: flux-system
   values:
     service:
@@ -25,19 +25,22 @@ spec:
       hostname: oauth2-proxy.${SECRET_DOMAIN}
       path: /
 
-    configuration:
-      # clientID: "XXXXXXX"
-      # clientSecret: "XXXXXXXX"
-      # # Create a new secret with `openssl rand -base64 32 | head -c 32 | base64`
-      # cookieSecret: "XXXXXXXXXXXXXXXX"
+    proxyVarsAsSecrets: true
+    config:
+      ## ConfigMap with the configuration
+      # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
       existingSecret: "secret-oauth2proxy"
+      configFile: |-
+        email_domains = [ "*" ]
+        upstreams = [ "static://202" ]
 
       google:
         enabled: false
 
     extraArgs:
       provider: oidc
+      provider-display-name: "Authentik"
       login-url: "https://auth.${SECRET_DOMAIN}.com/application/o/authorize/"
       oidc-issuer-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/"
       oidc-jwks-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/jwks/"
@@ -50,10 +53,11 @@ spec:
       reverse-proxy: true
       pass-basic-auth: true
       pass-authorization-header: true
-      pass-access-token: true
-      set-basic-auth: true
-      set-authorization-header: true
-      set-xauthrequest: true
+      # pass-access-token: true
+      # set-basic-auth: true
+      # set-authorization-header: true
+      # set-xauthrequest: true
       email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
       whitelist-domain: ".${SECRET_DOMAIN}"
+      silence-ping-logging: true
