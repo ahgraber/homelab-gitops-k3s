@@ -38,10 +38,10 @@ spec:
 
     extraArgs:
       provider: oidc
-      login-url: https://auth.${SECRET_DOMAIN}.com/application/o/authorize/
-      oidc-issuer-url: https://auth.${SECRET_DOMAIN}.com/application/o/k8s/
-      oidc-jwks-url: https://auth.${SECRET_DOMAIN}.com/application/o/k8s/jwks/
-      redirect-url: http://oauth2.${SECRET_DOMAIN}/oauth2/callback
+      login-url: "https://auth.${SECRET_DOMAIN}.com/application/o/authorize/"
+      oidc-issuer-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/"
+      oidc-jwks-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/jwks/"
+      redirect-url: "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
       upstream: static://202
       # insecure-oidc-skip-issuer-verification: false
       # oidc-email-claim: "email"
@@ -55,5 +55,5 @@ spec:
       set-authorization-header: true
       set-xauthrequest: true
       email-domain: "*"
-      cookie-domain: .${SECRET_DOMAIN}
-      whitelist-domain: .${SECRET_DOMAIN}
+      cookie-domain: ".${SECRET_DOMAIN}"
+      whitelist-domain: ".${SECRET_DOMAIN}"
