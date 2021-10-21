@@ -37,3 +37,26 @@
     jq  '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) |
     "kubectl delete po \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
   ```
+
+## Checking node logs (from node)
+
+```sh
+journalctl -u k3s -n 20
+```
+
+> If `journalctl -u k3s` has many "" entries, remove the offending pod volume
+>
+> ```sh
+> sudo rm -rf /var/lib/kubelet/pods/<POD VOLUME ID>
+> ```
+
+## Check node configuration (from node)
+
+* check k3s configuration:
+
+  ```sh
+  cat /etc/rancher/k3s/config.yaml
+  ```
+
+* Other important file locations:
+  * `/var/lib/rancher/k3s`
