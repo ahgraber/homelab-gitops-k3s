@@ -14,15 +14,11 @@ unset NAMESPACE
 ``` -->
 
 ```sh
-# Get the Secret name
 NAMESPACE=monitoring  # kube-system
-SECRETNAME=$(kubectl -n ${NAMESPACE} get secrets | grep dashboard-admin | awk '{print $1}')
-# Get the Token
-kubectl -n ${NAMESPACE} describe secret ${SECRETNAME}
+kubectl -n ${NAMESPACE} describe secret dashboard-admin-token | grep '^token' | awk '{ print $2 }'
 unset NAMESPACE
-unset SECRETNAME
 ```
 
 ## OpenID Connect (OIDC/OAuth2)
 
-Providers like Authentik (and Dex, optional) can be used to provide an authentication flow without requiring the RBAC token.
+Providers like Authentik (or Keycloak, Dex, etc) can be used to provide an authentication flow without requiring the RBAC token.  See [authentik](../../security/authentik/README.md) for additional information.
