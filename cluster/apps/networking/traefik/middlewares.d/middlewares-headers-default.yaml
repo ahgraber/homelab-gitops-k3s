@@ -16,3 +16,12 @@ spec:
     customFrameOptionsValue: SAMEORIGIN
     customRequestHeaders:
       X-Forwarded-Proto: https
+
+    # sslRedirect: false
+    # browserXssFilter: true
+    # contentTypeNosniff: true
+    # forceSTSHeader: true
+    # stsIncludeSubdomains: true
+    # stsPreload: true
+    # stsSeconds: 315360000
+    # frameDeny: true
