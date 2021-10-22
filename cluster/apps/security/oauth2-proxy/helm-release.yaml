@@ -27,17 +27,18 @@ spec:
 
     proxyVarsAsSecrets: true
     config:
+      clientID: k8s
+      clientSecret: ${SECRET_OAUTH2PROXY_SECRET}
+      cookieSecret: ${SECRET_OAUTH2PROXY_COOKIE}
       ## ConfigMap with the configuration
       # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
-      existingSecret: "secret-oauth2proxy"
+      # existingSecret: "secret-oauth2proxy"
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "static://202" ]
 
-      google:
-        enabled: false
-
+    # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
       provider: oidc
       provider-display-name: "Authentik"
