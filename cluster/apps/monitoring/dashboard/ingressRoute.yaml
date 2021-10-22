@@ -15,6 +15,7 @@ spec:
       middlewares:
         - name: rfc1918
         # - name: basicauth
+        - name: oauth2-dashboard
       services:
         - name: kubernetes-dashboard
           namespace: monitoring
