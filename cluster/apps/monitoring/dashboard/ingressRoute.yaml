@@ -9,13 +9,13 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`dashboard.${SECRET_DOMAIN}`)
+    - match: Host(`k8s-dashboard.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
         - name: rfc1918
         # - name: basicauth
-        - name: oauth2-dashboard
+        # - name: oauth2-dashboard
       services:
         - name: kubernetes-dashboard
           namespace: monitoring
