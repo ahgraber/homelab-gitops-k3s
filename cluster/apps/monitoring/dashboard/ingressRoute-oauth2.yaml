@@ -1,0 +1,45 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubernetes-dashboard
+  namespace: networking
+spec:
+  routes:
+    - match: Host(`dashboard.${SECRET_DOMAIN}`)
+      kind: Rule
+      middlewares:
+        - name: dashboard-forward
+      services:
+        - name: kubernetes-dashboard
+          namespace: monitoring
+          port: 443
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubernetes-dashboard-callback
+  namespace: networking
+spec:
+  routes:
+    - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2/`)"
+      kind: Rule
+      middlewares:
+        - name: oauth2-proxy-headers
+      services:
+        - name: oauth2-proxy
+          namespace: security
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: dashboard-forward
+  namespace: networking
+spec:
+  forwardAuth:
+    address: https://oauth2.${SECRET_DOMAIN}
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization

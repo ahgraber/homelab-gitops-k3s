@@ -11,16 +11,18 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: dashboard-admin
   namespace: monitoring
-subjects:
-  - kind: ServiceAccount
-    name: dashboard-admin
-    namespace: monitoring
-  - kind: User
-    name: admin@${SECRET_DOMAIN}
 roleRef:
   kind: ClusterRole
   name: cluster-admin
   apiGroup: ""
+subjects:
+  # for token login
+  - kind: ServiceAccount
+    name: dashboard-admin
+    namespace: monitoring
+  # for SSO login with OIDC
+  - kind: Group
+    name: /admin
 
 # ---
 # kind: ClusterRole
