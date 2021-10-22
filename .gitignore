@@ -23,3 +23,5 @@ kubeconfig
 .task/
 # Local archives
 **/archive
+
+!**.gitkeep
