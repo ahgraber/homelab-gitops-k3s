@@ -42,9 +42,9 @@ spec:
     extraArgs:
       provider: oidc
       provider-display-name: "Authentik"
-      login-url: "https://auth.${SECRET_DOMAIN}.com/application/o/authorize/"
-      oidc-issuer-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/"
-      oidc-jwks-url: "https://auth.${SECRET_DOMAIN}.com/application/o/k8s/jwks/"
+      login-url: "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
+      oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
+      oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
       redirect-url: "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
       upstream: static://202
       # insecure-oidc-skip-issuer-verification: false
