@@ -27,9 +27,9 @@ spec:
 
     proxyVarsAsSecrets: true
     config:
-      clientID: k8s
-      clientSecret: ${SECRET_OAUTH2PROXY_SECRET}
-      cookieSecret: ${SECRET_OAUTH2PROXY_COOKIE}
+      clientID: ${SECRET_O2P_DASHBOARD_ID}
+      clientSecret: ${SECRET_O2P_DASHBOARD_SECRET}
+      cookieSecret: ${SECRET_O2P_DASHBOARD_COOKIE}
       ## ConfigMap with the configuration
       # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
