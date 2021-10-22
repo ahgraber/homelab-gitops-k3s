@@ -18,7 +18,7 @@ spec:
   values:
     service:
       type: ClusterIP
-      port: 80
+      portNumber: 80
 
     ingress:
       enabled: false
