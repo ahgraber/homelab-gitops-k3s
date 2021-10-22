@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: kubernetes-dashboard
+  name: kubernetes-dashboard-forward
   namespace: networking
 spec:
   routes:
