@@ -27,16 +27,31 @@ spec:
 
     proxyVarsAsSecrets: true
     config:
-      clientID: ${SECRET_O2P_DASHBOARD_ID}
-      clientSecret: ${SECRET_O2P_DASHBOARD_SECRET}
-      cookieSecret: ${SECRET_O2P_DASHBOARD_COOKIE}
+      # clientID: ${SECRET_O2P_DASHBOARD_ID}
+      # clientSecret: ${SECRET_O2P_DASHBOARD_SECRET}
+      # cookieSecret: ${SECRET_O2P_DASHBOARD_COOKIE}
       ## ConfigMap with the configuration
       # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
-      # existingSecret: "secret-oauth2proxy"
-      configFile: |-
-        email_domains = [ "*" ]
-        upstreams = [ "static://202" ]
+      existingSecret: "secret-oauth2proxy"
+      # configFile: |-
+      #   provider = oidc
+      #   provider-display-name = "Authentik"
+      #   login-url = "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
+      #   oidc-issuer-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
+      #   oidc-jwks-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
+      #   redirect-url = "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
+      #   cookie_secure = false
+      #   reverse_proxy = true
+      #   email_domains = [ "*" ]
+      #   upstreams = [ "file:///dev/null" ]
+      #   pass_access_token = true
+      #   pass_authorization_header = true
+      #   set_authorization_header = true
+      #   set_xauthrequest = true
+      #   pass_user_headers = true
+      #   cookie_domain = ".${SECRET_DOMAIN}"
+      #   whitelist_domains= [ ".${SECRET_DOMAIN}" ]
 
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
@@ -46,17 +61,18 @@ spec:
       oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
       oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
       redirect-url: "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
-      upstream: static://202
+      # upstream: static://202
       # insecure-oidc-skip-issuer-verification: false
       # oidc-email-claim: "email"
       # oidc-groups-claim: "groups"
+      allowed-group: kube-admins
       skip-provider-button: true
       reverse-proxy: true
       pass-basic-auth: true
-      pass-authorization-header: true
+      # pass-authorization-header: true
       # pass-access-token: true
       # set-basic-auth: true
-      # set-authorization-header: true
+      set-authorization-header: true
       # set-xauthrequest: true
       email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
