@@ -66,7 +66,6 @@ spec:
       # oidc-email-claim: "email"
       # oidc-groups-claim: "groups"
       allowed-group: kube-admins
-      skip-provider-button: true
       reverse-proxy: true
       pass-basic-auth: true
       # pass-authorization-header: true
@@ -78,3 +77,4 @@ spec:
       cookie-domain: ".${SECRET_DOMAIN}"
       whitelist-domain: ".${SECRET_DOMAIN}"
       silence-ping-logging: true
+      skip-provider-button: true
