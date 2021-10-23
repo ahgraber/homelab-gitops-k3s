@@ -41,5 +41,6 @@ spec:
     address: https://oauth2.${SECRET_DOMAIN}
     trustForwardHeader: true
     authResponseHeaders:
+      # - X-Auth-Forward-Access-Token
       - X-Auth-Request-Access-Token
       - Authorization
