@@ -22,7 +22,7 @@ subjects:
     namespace: monitoring
   # for SSO login with OIDC
   - kind: Group
-    name: kube-admin
+    name: /kube-admin
 
 # ---
 # kind: ClusterRole
