@@ -34,24 +34,10 @@ spec:
       # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
       existingSecret: "secret-oauth2proxy"
-      # configFile: |-
-      #   provider = oidc
-      #   provider-display-name = "Authentik"
-      #   login-url = "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
-      #   oidc-issuer-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
-      #   oidc-jwks-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
-      #   redirect-url = "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
-      #   cookie_secure = false
-      #   reverse_proxy = true
-      #   email_domains = [ "*" ]
-      #   upstreams = [ "file:///dev/null" ]
-      #   pass_access_token = true
-      #   pass_authorization_header = true
-      #   set_authorization_header = true
-      #   set_xauthrequest = true
-      #   pass_user_headers = true
-      #   cookie_domain = ".${SECRET_DOMAIN}"
-      #   whitelist_domains= [ ".${SECRET_DOMAIN}" ]
+      configFile: |-
+        email_domains = [ "*" ]
+        upstreams = [ "file:///dev/null" ]
+
 
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
@@ -61,7 +47,6 @@ spec:
       oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
       oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
       redirect-url: "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
-      # upstream: static://202
       # insecure-oidc-skip-issuer-verification: false
       # oidc-email-claim: "email"
       # oidc-groups-claim: "groups"
@@ -73,7 +58,10 @@ spec:
       # set-basic-auth: true
       set-authorization-header: true
       # set-xauthrequest: true
-      email-domain: "*"
+      cookie-secure: false
+      cookie-name: "_oauth2_proxy"
+      # upstream: static://202
+      # email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
       whitelist-domain: ".${SECRET_DOMAIN}"
       silence-ping-logging: true

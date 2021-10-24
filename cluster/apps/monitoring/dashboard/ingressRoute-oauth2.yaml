@@ -1,5 +1,36 @@
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth-forward
+  namespace: networking
+spec:
+  forwardAuth:
+    # address: https://oauth2.${SECRET_DOMAIN}
+    address: security.oauth2-proxy
+    trustForwardHeader: true
+    authResponseHeaders:
+      # - X-Auth-Forward-Access-Token
+      - X-Auth-Request-Access-Token
+      - Authorization
+
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: oauth-errors
+#   namespace: networking
+# spec:
+#   errors:
+#     status:
+#       - "401-403"
+#     service:
+#       name: oauth2-proxy
+#       port: 80
+#     query: "/oauth2/sign_in"
+
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: kubernetes-dashboard-forward
@@ -9,7 +40,7 @@ spec:
     - match: Host(`dashboard.${SECRET_DOMAIN}`)
       kind: Rule
       middlewares:
-        - name: dashboard-forward
+        - name: oauth-forward
       services:
         - name: kubernetes-dashboard
           namespace: monitoring
@@ -30,19 +61,4 @@ spec:
       services:
         - name: oauth2-proxy
           namespace: security
-          port: 80
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: dashboard-forward
-  namespace: networking
-spec:
-  forwardAuth:
-    address: https://oauth2.${SECRET_DOMAIN}
-    trustForwardHeader: true
-    authResponseHeaders:
-      # - X-Auth-Forward-Access-Token
-      - X-Auth-Request-Access-Token
-      - Authorization
+          port: 443
