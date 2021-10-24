@@ -6,28 +6,16 @@ metadata:
   namespace: networking
 spec:
   forwardAuth:
-    # address: https://oauth2.${SECRET_DOMAIN}
-    address: security.oauth2-proxy
+    address: https://oauth2.${SECRET_DOMAIN}
+    # address: security.oauth2-proxy
     trustForwardHeader: true
     authResponseHeaders:
       # - X-Auth-Forward-Access-Token
       - X-Auth-Request-Access-Token
+      # - X-Auth-Request-Email
+      # - X-Auth-Request-User
       - Authorization
-
-# ---
-# apiVersion: traefik.containo.us/v1alpha1
-# kind: Middleware
-# metadata:
-#   name: oauth-errors
-#   namespace: networking
-# spec:
-#   errors:
-#     status:
-#       - "401-403"
-#     service:
-#       name: oauth2-proxy
-#       port: 80
-#     query: "/oauth2/sign_in"
+      - Set-Cookie
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
