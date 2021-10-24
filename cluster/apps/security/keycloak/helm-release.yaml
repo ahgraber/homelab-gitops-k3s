@@ -69,6 +69,39 @@ spec:
       serviceMonitor:
         enabled: false
 
+    startupProbe:
+      enabled: false
+      httpGet:
+        path: /auth/
+        port: http
+      initialDelaySeconds: 30
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 60
+      successThreshold: 1
+
+    livenessProbe:
+      enabled: true
+      httpGet:
+        path: /auth/
+        port: http
+      initialDelaySeconds: 300
+      periodSeconds: 1
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+
+    readinessProbe:
+      enabled: true
+      httpGet:
+        path: /auth/realms/master
+        port: http
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+      successThreshold: 1
+
     postgresql:
       enabled: false
 
