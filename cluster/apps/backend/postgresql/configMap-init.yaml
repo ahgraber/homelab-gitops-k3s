@@ -76,6 +76,7 @@ data:
 
     initdb "vaultwarden" "${SECRET_DB_USER_PWD}"
     initdb "authentik" "${SECRET_DB_USER_PWD}"
+    initdb "keycloak" "${SECRET_DB_USER_PWD}"
     initdb "mealie" "${SECRET_DB_USER_PWD}"
     initdb "nextcloud" "${SECRET_DB_USER_PWD}"
 

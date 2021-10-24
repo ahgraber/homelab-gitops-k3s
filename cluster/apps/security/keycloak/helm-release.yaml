@@ -1,0 +1,132 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: security
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.bitnami.com/bitnami
+      chart: keyclaok
+      version: 5.1.3
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+  values:
+    auth:
+      ## @param auth.createAdminUser Create administrator user on boot
+      createAdminUser: true
+      ## @param auth.adminUser Keycloak administrator user
+      adminUser: user
+      ## @param auth.adminPassword Keycloak administrator password for the new user
+      adminPassword: ""
+      ## @param auth.managementUser Wildfly management user
+      managementUser: manager
+      ## @param auth.managementPassword Wildfly management password
+      managementPassword: ""
+      ## @param auth.existingSecret An already existing secret containing auth info
+      ## e.g:
+      ## existingSecret:
+      ##   name: mySecret
+      ##   keyMapping:
+      ##     admin-password: myPasswordKey
+      ##     management-password: myManagementPasswordKey
+      ##     database-password: myDatabasePasswordKey
+      ##     tls-keystore-password: myTlsKeystorePasswordKey
+      ##     tls-truestore-password: myTlsTruestorePasswordKey
+      ##
+      existingSecret: ""
+
+      ## ref: https://github.com/bitnami/bitnami-docker-keycloak#tls-encryption
+      tls:
+        enabled: false
+
+    ## ref: https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy
+    proxyAddressForwarding: false
+
+    configuration: ""
+    ## @param existingConfigmap Name of existing ConfigMap with Keycloak configuration
+    ## NOTE: When it's set the configuration parameter is ignored
+    ##
+    existingConfigmap: ""
+    ## @param extraStartupArgs Extra default startup args
+    ##
+    extraStartupArgs: ""
+    ## @param initdbScripts Dictionary of initdb scripts
+    ## Specify dictionary of scripts to be run at first boot
+    ## ref: https://github.com/bitnami/bitnami-docker-keycloak#initializing-a-new-instance
+    ## Example:
+    ## initdbScripts:
+    ##   my_init_script.sh: |
+    ##      #!/bin/bash
+    ##      echo "Do something."
+    ##
+    initdbScripts: {}
+    ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
+    ##
+    initdbScriptsConfigMap: ""
+    ## @param command Override default container command (useful when using custom images)
+    ##
+    command: []
+    ## @param args Override default container args (useful when using custom images)
+    ##
+    args: []
+    ## @param extraEnvVars Extra environment variables to be set on Keycloak container
+    ## Example:
+    ## extraEnvVars:
+    ##   - name: FOO
+    ##     value: "bar"
+    ##
+    extraEnvVars: []
+    ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
+    ##
+    extraEnvVarsCM: ""
+    ## @param extraEnvVarsSecret Name of existing Secret containing extra env vars
+    ##
+    extraEnvVarsSecret: ""
+
+    ## Configuration for keycloak-config-cli
+    ## ref: https://github.com/adorsys/keycloak-config-cli
+    keycloakConfigCli:
+      enabled: false
+
+    tolerations: []
+
+    service:
+      type: ClusterIP
+      port: 80
+      httpsPort: 443
+
+
+    ingress:
+      enabled: false
+      hostname: auth.${SECRET_DOMAIN}
+
+
+    ## Metrics configuration
+    metrics:
+      ## ref: https://github.com/bitnami/bitnami-docker-keycloak#enabling-statistics
+      enabled: false
+      service:
+        port: 9990
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "{{ .Values.metrics.service.port }}"
+      ## Prometheus Operator ServiceMonitor configuration
+      serviceMonitor:
+        enabled: false
+
+    postgresql:
+      enabled: false
+
+    externalDatabase:
+    # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/keycloak"
+      host: postgresql.postgresql
+      port: 5432
+      user: keycloak
+      password: ${SECRET_DB_USER_PWD}
+      database: keycloak
+      # existingSecret: ""
