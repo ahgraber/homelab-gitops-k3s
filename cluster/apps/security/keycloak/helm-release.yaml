@@ -16,6 +16,9 @@ spec:
         name: bitnami-charts
         namespace: flux-system
   values:
+    image:
+      debug: true
+
     auth:
       # createAdminUser: true
       # adminUser: user
@@ -36,41 +39,6 @@ spec:
     ## NOTE: When it's set the configuration parameter is ignored
     ##
     existingConfigmap: ""
-    ## @param extraStartupArgs Extra default startup args
-    ##
-    extraStartupArgs: ""
-    ## @param initdbScripts Dictionary of initdb scripts
-    ## Specify dictionary of scripts to be run at first boot
-    ## ref: https://github.com/bitnami/bitnami-docker-keycloak#initializing-a-new-instance
-    ## Example:
-    ## initdbScripts:
-    ##   my_init_script.sh: |
-    ##      #!/bin/bash
-    ##      echo "Do something."
-    ##
-    initdbScripts: {}
-    ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
-    ##
-    initdbScriptsConfigMap: ""
-    ## @param command Override default container command (useful when using custom images)
-    ##
-    command: []
-    ## @param args Override default container args (useful when using custom images)
-    ##
-    args: []
-    ## @param extraEnvVars Extra environment variables to be set on Keycloak container
-    ## Example:
-    ## extraEnvVars:
-    ##   - name: FOO
-    ##     value: "bar"
-    ##
-    extraEnvVars: []
-    ## @param extraEnvVarsCM Name of existing ConfigMap containing extra env vars
-    ##
-    extraEnvVarsCM: ""
-    ## @param extraEnvVarsSecret Name of existing Secret containing extra env vars
-    ##
-    extraEnvVarsSecret: ""
 
     ## Configuration for keycloak-config-cli
     ## ref: https://github.com/adorsys/keycloak-config-cli
@@ -84,11 +52,9 @@ spec:
       port: 80
       httpsPort: 443
 
-
     ingress:
       enabled: false
       hostname: auth.${SECRET_DOMAIN}
-
 
     ## Metrics configuration
     metrics:
