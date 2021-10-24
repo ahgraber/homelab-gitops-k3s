@@ -1,5 +1,22 @@
 ---
 apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: oauth2-proxy-headers
+  namespace: networking
+spec:
+  headers:
+    sslRedirect: false
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 315360000
+    frameDeny: true
+
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: route-oauth2-proxy
@@ -23,20 +40,3 @@ spec:
   tls:
     secretName: '${SECRET_DOMAIN/./-}-tls'
     # secretName: '${SECRET_DOMAIN/./-}-stage-tls'
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: oauth2-proxy-headers
-  namespace: networking
-spec:
-  headers:
-    sslRedirect: false
-    browserXssFilter: true
-    contentTypeNosniff: true
-    forceSTSHeader: true
-    stsIncludeSubdomains: true
-    stsPreload: true
-    stsSeconds: 315360000
-    frameDeny: true
