@@ -49,4 +49,4 @@ spec:
       services:
         - name: oauth2-proxy
           namespace: security
-          port: 443
+          port: 80
