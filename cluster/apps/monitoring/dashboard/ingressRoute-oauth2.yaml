@@ -7,7 +7,7 @@ metadata:
 spec:
   forwardAuth:
     address: https://oauth2.${SECRET_DOMAIN}
-    # address: security.oauth2-proxy
+    # address: oauth2-proxy.security
     trustForwardHeader: true
     authResponseHeaders:
       # - X-Auth-Forward-Access-Token
@@ -15,7 +15,7 @@ spec:
       # - X-Auth-Request-Email
       # - X-Auth-Request-User
       - Authorization
-      - Set-Cookie
+      # - Set-Cookie
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
