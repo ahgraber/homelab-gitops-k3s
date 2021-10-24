@@ -34,9 +34,9 @@ spec:
       # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
       existingSecret: "secret-oauth2proxy"
-      configFile: |-
-        email_domains = [ "*" ]
-        upstreams = [ "file:///dev/null" ]
+      # configFile: |-
+      #   email_domains = [ "*" ]
+      #   upstreams = [ "file:///dev/null" ]
 
 
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
@@ -46,7 +46,7 @@ spec:
       login-url: "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
       oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
       oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
-      redirect-url: "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
+      redirect-url: "https://oauth2.${SECRET_DOMAIN}/oauth2/callback"
       # insecure-oidc-skip-issuer-verification: false
       # oidc-email-claim: "email"
       # oidc-groups-claim: "groups"
@@ -58,11 +58,11 @@ spec:
       # set-basic-auth: true
       set-authorization-header: true
       # set-xauthrequest: true
-      cookie-secure: false
-      cookie-name: "_oauth2_proxy"
       # upstream: static://202
-      # email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
+      cookie-secure: true
+      cookie-name: "_oauth2_proxy"
+      email-domain: "*"
       whitelist-domain: ".${SECRET_DOMAIN}"
       silence-ping-logging: true
       skip-provider-button: true
