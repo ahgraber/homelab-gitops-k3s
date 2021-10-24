@@ -27,10 +27,10 @@ If additional databases are required after install, run below commands:
    DB=""
 
    function initdb {
-   echo "Creating \"$1\" user and database"
+      echo "Creating \"$1\" user and database"
 
-   # note: if this presents problems in the future, look into heredoc indentations
-   psql "postgresql://postgres:$ROOT_PWD@localhost:5432" -e <<EOSQL
+      # note: if this presents problems in the future, look into heredoc indentations
+      psql "postgresql://postgres:$ROOT_PWD@localhost:5432" -e <<EOSQL
    CREATE USER $1 WITH LOGIN PASSWORD '$USER_PWD';
    CREATE DATABASE "$1";
    GRANT ALL PRIVILEGES ON DATABASE "$1" TO "$1";
