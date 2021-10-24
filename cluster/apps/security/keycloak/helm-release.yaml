@@ -20,8 +20,8 @@ spec:
       debug: true
 
     auth:
-      # createAdminUser: true
-      # adminUser: user
+      createAdminUser: true
+      adminUser: admin
       # adminPassword: ""
       # managementUser: manager
       # managementPassword: ""
