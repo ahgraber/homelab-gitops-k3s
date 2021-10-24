@@ -2,14 +2,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: authentik
+  name: keycloak
   namespace: security
 spec:
   interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://charts.bitnami.com/bitnami
-      chart: keyclaok
+      chart: keycloak
       version: 5.1.3
       sourceRef:
         kind: HelmRepository
@@ -17,28 +17,12 @@ spec:
         namespace: flux-system
   values:
     auth:
-      ## @param auth.createAdminUser Create administrator user on boot
-      createAdminUser: true
-      ## @param auth.adminUser Keycloak administrator user
-      adminUser: user
-      ## @param auth.adminPassword Keycloak administrator password for the new user
-      adminPassword: ""
-      ## @param auth.managementUser Wildfly management user
-      managementUser: manager
-      ## @param auth.managementPassword Wildfly management password
-      managementPassword: ""
-      ## @param auth.existingSecret An already existing secret containing auth info
-      ## e.g:
-      ## existingSecret:
-      ##   name: mySecret
-      ##   keyMapping:
-      ##     admin-password: myPasswordKey
-      ##     management-password: myManagementPasswordKey
-      ##     database-password: myDatabasePasswordKey
-      ##     tls-keystore-password: myTlsKeystorePasswordKey
-      ##     tls-truestore-password: myTlsTruestorePasswordKey
-      ##
-      existingSecret: ""
+      # createAdminUser: true
+      # adminUser: user
+      # adminPassword: ""
+      # managementUser: manager
+      # managementPassword: ""
+      existingSecret: "secret-keycloak"
 
       ## ref: https://github.com/bitnami/bitnami-docker-keycloak#tls-encryption
       tls:
