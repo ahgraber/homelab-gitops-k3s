@@ -64,3 +64,4 @@ cat /etc/rancher/k3s/config.yaml
 Ref:
 * https://docs.google.com/document/d/10Zk8odxH52TiTcbcjWuCZAW9xeudZAtDVWyRFhLD6X4/edit
 * https://github.com/sleighzy/k3s-traefik-forward-auth-openid-connect
+* https://homelab.blog/blog/devops/Istio-OIDC-Config/
