@@ -5,4 +5,4 @@ resources:
   # - configMap-config.yaml
   - ingressRoute.yaml
   # - middlewares-authentik-oauth2-k8s.yaml
-  # - secret.yaml
+  - secret.yaml
