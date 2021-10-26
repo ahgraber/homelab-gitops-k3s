@@ -9,7 +9,7 @@ refs:
 
 Assuming that you already configured Keycloak for identity brokering or identity source. Let’s configure it for our Dashboard!
 
-1. Create a new scope in “Client scopes”. Name it groups (you can use a custom name, remember to change it in the rest of the config). This name will be a new openid-connect protocol client scope.
+1. Create a new scope in `Client scopes`. Name it groups (you can use a custom name, remember to change it in the rest of the config). This name will be a new openid-connect protocol client scope.
 2. Add a new mapper in “Mappers” for the new groups scope. The new mapper should have these settings:
    * Name: `groups`
    * Mapper type: `Group Membership`
@@ -20,7 +20,7 @@ Assuming that you already configured Keycloak for identity brokering or identity
    * Add to ID token: `ON`
    * Add to access token: `ON`
    * Add to userinfo: `ON`
-3. Add a new client for the oauth2-proxy. Use these settings:
+3. Add a new `client` for the oauth2-proxy. Use these settings:
    * Client-protocol: `openid-connect`
    * Access type: `confidential`
    * Valid redirect URIs: `https://<oauth2-host>/oauth2/callback` (where <oauth2-host> is the oauth2-proxy public FQDN)
@@ -35,7 +35,7 @@ The Kubernetes API has different security configurations for both authentication
 
 ### OIDC Authentication
 
-First, we need to tell the Kubernetes cluster to accept OIDC tokens from our Keycloak installation. To do so, `apiserver` must be started using the following options:
+First, we need to tell the Kubernetes cluster to accept OIDC tokens from our Keycloak installation. The kubernetes api-server allows the integration of 3rd party OIDC providers -- `apiserver` must be started using the following options:
 
 > This is the base URL for the realm
 > e.g. if the realm is "test1", the URL will be http://keycloak-server/auth/realms/test1
@@ -58,16 +58,22 @@ First, we need to tell the Kubernetes cluster to accept OIDC tokens from our Key
 > `--oidc-groups-claim=groups`
 > `--oidc-groups-prefix=oidc:`
 
+k3s bundles `api-server` into the `server` agent.  Arguments to configure `api-server` can be passed using `--kube-apiserver-arg` command line flags [per ref](https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/) or cluster leader config file at `/etc/rancher/k3s/config.yaml`:
+
+```yaml
+# add to k3s.yaml config file
+# note: oidc server does NOT have to be up to launch k3s
+kube-apiserver-arg:
+  - "oidc-issuer-url=https://keycloak.{SECRET_DOMAIN}/auth/realms/<MY REALM>"
+  - "oidc-client-id=<CLIENT NAME IN KEYCLOAK>"
+  - "oidc-username-claim=email"
+  - "oidc-groups-claim=groups"
+```
+
+Check the config has been updated on each server node:
+
 ```sh
-# The ExecStart command should be something like:
-ExecStart=/usr/local/bin/k3s \
-    server \
-        '--kube-apiserver-arg' \
-        'oidc-issuer-url=https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_DOMAIN}' \
-        '--kube-apiserver-arg' \
-        'oidc-client-id=...' \
-        '--kube-apiserver-arg' \
-        'oidc-username-claim=...' \
+cat /etc/rancher/k3s/config.yaml
 ```
 
 ### RBAC Authorization
@@ -78,20 +84,24 @@ To assign one or more Role or ClusterRole to users and groups, Kubernetes uses R
 
 You can find roles documentation and example in the official Kubernetes documentation for RBAC.
 
-Assuming that you started the server using RBAC, you can assign cluster roles to OIDC groups as follow:
+Assuming that you started the server using RBAC, you can assign cluster roles to OIDC groups as follows:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  namespace: default
-  name: read-namespaces
+  name: dashboard-admin
+  namespace: monitoring
 roleRef:
   kind: ClusterRole
-  name: list-namespaces
-  apiGroup: rbac.authorization.k8s.io
+  name: cluster-admin
+  apiGroup: ""
 subjects:
-- kind: Group
-  name: oidc:Group1
-  apiGroup: rbac.authorization.k8s.io
+  # for token login with service account
+  - kind: ServiceAccount
+    name: dashboard-admin
+    namespace: monitoring
+  # for SSO login with OIDC
+  - kind: Group
+    name: /kube-admin
 ```

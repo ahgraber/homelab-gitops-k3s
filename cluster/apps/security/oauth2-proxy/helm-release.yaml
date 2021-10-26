@@ -50,7 +50,7 @@ spec:
       # insecure-oidc-skip-issuer-verification: false
       # oidc-email-claim: "email"
       # oidc-groups-claim: "groups"
-      allowed-group: kube-admins
+      allowed-group: kube-admin
       reverse-proxy: true
       pass-basic-auth: true
       # pass-authorization-header: true
