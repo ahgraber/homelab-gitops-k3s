@@ -69,15 +69,15 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - Introduction: index.md  # symlink of ../README.md
+  - Introduction: index.md  # hardlink of ../README.md
   - Installation:
-      - Prerequisites: "1 - prerequisites.md"
-      - Install k3s with ansible: "2 - install k3s with ansible.md"
-      - Install k3s with k3sup: "2 - install k3s with k3sup.md"
-      - kube-vip: "2a - kube-vip.md"
-  - gitops with flux: "3 - gitops with flux.md"
-  - new service creation: "4 - new service creation.md"
+      - Prerequisites: 1-prerequisites.md
+      - Install k3s with ansible: 2-install_k3s_with_ansible.md
+      - Install k3s with k3sup: 2-install_k3s_with_k3sup.md
+      - kube-vip: 2a-kube-vip.md
+  - gitops with flux: 3-gitops_with_flux.md
+  - new service creation: 4-new_service_creation.md
   - Troubleshooting:
-      - Troubleshooting flux: "troubleshooting/troubleshooting flux.md"
-      - Troubleshooting nodes: "troubleshooting/troubleshooting nodes.md"
-      - Troubleshooting services: "troubleshooting/troubleshooting services.md"
+      - Troubleshooting flux: troubleshooting/troubleshooting_flux.md
+      - Troubleshooting nodes: troubleshooting/troubleshooting_nodes.md
+      - Troubleshooting services: troubleshooting/troubleshooting_services.md
