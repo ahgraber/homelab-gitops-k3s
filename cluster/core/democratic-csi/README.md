@@ -101,3 +101,14 @@ NFS PVs will 'delete' on deletion of PVC.
 * If get `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`, restart NFS service on NAS
 
 * iSCSI volumes require deleting the target and extent on the server; new PVCs/PVs on k8s side will reuse the same extent on the NAS.
+
+* [cleanup old/broken snapshots](https://serverfault.com/questions/340837/how-to-delete-all-but-last-n-zfs-snapshots) with:
+
+  ```sh
+  # remove empty snapshots
+  zfs list -t snapshot | awk ' $2 == "0B" { print $1 }' | xargs -n1 echo
+  # zfs list -t snapshot | awk ' $2 == "0B" ' | xargs -n1 zfs destroy
+
+  zfs list -t snapshot -H -o name | grep "<SEARCH STRING TO MATCH>" | xargs -n1 echo
+  # zfs list -t snapshot -H -o name | grep "201509[0-9].*" | xargs -n1 zfs destroy
+  ```

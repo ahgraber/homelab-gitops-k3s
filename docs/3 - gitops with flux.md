@@ -195,7 +195,7 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 [optional] Add alias for update
 
 ```sh
-cat >> ~/.aliases << EOF
+cat >> ~/.local_aliases << EOF
 alias flux-update="
 flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
 sleep 60

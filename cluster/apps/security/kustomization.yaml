@@ -4,3 +4,4 @@ resources:
   - authentik
   - keycloak
   - oauth2-proxy
+  # - traefik-forward-auth
