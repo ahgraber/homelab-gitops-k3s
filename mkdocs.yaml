@@ -1,0 +1,83 @@
+---
+# Project information
+site_name: ahgraber | Home Cluster
+site_description: My home Kubernetes (k3s) cluster managed by GitOps (Flux2)
+site_author: Alex Graber
+site_url: https://ahgraber.github.io/homelab-gitops-k3s/
+
+# Repository
+repo_name: ahgraber/homelab-gitops-k3s
+repo_url: https://github.com/ahgraber/homelab-gitops-k3s
+edit_uri: "edit/main/docs/"
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github-alt
+  language: en
+  features:
+    - navigation.sections
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+docs_dir: ./docs
+
+# # Customization
+# extra_css:
+#   - _static/custom.css
+
+# extra:
+#   social:
+#     - icon: fontawesome/brands/github
+#       link: https://github.com/ahgraber
+#     - icon: fontawesome/brands/twitter
+#       link: https://twitter.com/namnnumbr
+
+# # Plugins
+# plugins:
+#   - search:
+#       lang: en
+#   - minify:
+#       minify_html: true
+#   - macros:
+#       include_dir: docs/_snippets
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - attr_list
+  - toc:
+      permalink: true
+
+# Navigation structure
+nav:
+  - Introduction: ../README.md
+  - Installation:
+      - Prerequisites: "1 - prerequisites.md"
+      - Install k3s with ansible: "2 - install k3s with ansible.md"
+      - Install k3s with k3sup: "2 - install k3s with k3sup.md"
+      - kube-vip: "2a - kube-vip.md"
+  - gitops with flux: "3 - gitops with flux.md"
+  - new service creation: "4 - new service creation.md"
+  - Troubleshooting:
+      - Troubleshooting flux: "troubleshooting flux.md"
+      - Troubleshooting nodes: "troubleshooting nodes.md"
+      - Troubleshooting services: "troubleshooting services.md"
