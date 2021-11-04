@@ -51,12 +51,12 @@ docs_dir: ./docs
 #     - icon: fontawesome/brands/twitter
 #       link: https://twitter.com/namnnumbr
 
-# # Plugins
-# plugins:
-#   - search:
-#       lang: en
-#   - minify:
-#       minify_html: true
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
 #   - macros:
 #       include_dir: docs/_snippets
 
@@ -69,7 +69,7 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - Introduction: ../README.md
+  - Introduction: ./README.md
   - Installation:
       - Prerequisites: "1 - prerequisites.md"
       - Install k3s with ansible: "2 - install k3s with ansible.md"
