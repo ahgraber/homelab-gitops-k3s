@@ -57,6 +57,27 @@
   flux get hr traefik -n networking
   ```
 
+## Debug namespaces
+
+- Get all resources in a given namespace
+
+  ```sh
+  kubectl get all -n <namespace>
+  ```
+
+- Force delete namespace
+
+  ```sh
+  kubectl delete ns <namespace> --force
+  ```
+
+- Overwrite finalizers if namespace stuck `terminating`
+
+  ```sh
+  namespace=<namespace>
+  kubectl get ns $namespace  -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/$namespace/finalize" -f -
+  ```
+
 ## Debug Pods
 
 - Identify pods with
