@@ -78,17 +78,24 @@ Backups are saved in a distinct [PVC](pvc.yaml) so Velero can run restic against
 ***Point-In-Time-Recovery (PITR)***
 PITR refers to PostgreSQL’s ability to start from the restore of a full backup, then progressively fetch and apply archived WAL files up to a specified timestamp.
 
-To do this, we have to create a file called “recovery.conf” in the restored cluster data directory and start up a Postgres server for that data directory. The recovery.conf file contains the target timestamp, and looks like this:
+To do this, we have to create a file called “recovery.conf” in the restored cluster data directory and start up a Postgres server for that data directory.
 
 ```sh
 # stop the server
-pg_ctl -D /bitnami/postgres/data stop
+pg_ctl -D /bitnami/postgresql/data stop
 ```
 
-```ini
-restore_command = 'cp /mnt/backup/backup.d/pg_wal/%f "%p"'
-recovery_target_time = '2021-010-01 20:00:00'
+The recovery.conf file contains the target timestamp, and looks like this:
+
+```sh
+cat > /bitnami/postgresql/data/recovery.conf <<EOF
+restore_command = 'cp /mnt/backup/incremental.d/%f "%p"'
+recovery_target_time = '2021-011-01 20:00:00'
+EOF
 ```
+
+> Our `pg_wal` data gets copied to `/mnt/backup/incremental.d/`
+> Review process in `cronjob-backup.yaml`
 
 The restore_command specifies how to fetch a WAL file required by PostgreSQL. It is the inverse of archive_command. The recovery_target_time specifies the time until when we need the changes.
 
@@ -98,7 +105,7 @@ Postgres fetches WAL files and applies them until the recovery target (in this c
 
 ```sh
 # start the server; will start in recovery mode
-pg_ctl -D /bitnami/postgres/data start
+pg_ctl -D /bitnami/postgresql/data start
 ```
 
 When the target is achieved, the server by default pauses WAL replay (other actions are possible).
