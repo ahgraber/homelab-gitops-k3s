@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   - ingressRoute.yaml
-  - ingressRoute-oauth2.yaml
+  # - ingressRoute-oauth2.yaml
   - rbac.yaml
