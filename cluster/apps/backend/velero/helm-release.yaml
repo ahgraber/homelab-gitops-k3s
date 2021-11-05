@@ -79,7 +79,7 @@ spec:
           region: us-west-002
 
       # enable CSI plugin volume snapshot: https://velero.io/blog/csi-integration/
-      features: EnableCSI
+      # features: EnableCSI
 
     credentials:
       useSecret: true

@@ -14,9 +14,9 @@ unset NAMESPACE
 ``` -->
 
 ```sh
-NAMESPACE=monitoring  # kube-system
-kubectl -n ${NAMESPACE} describe secret dashboard-admin-token | grep '^token' | awk '{ print $2 }'
-unset NAMESPACE
+namespace=monitoring  # kube-system
+kubectl -n ${namespace} describe secret dashboard-admin-token | grep '^token' | awk '{ print $2 }'
+unset namespace
 ```
 
 ## OpenID Connect (OIDC/OAuth2)
