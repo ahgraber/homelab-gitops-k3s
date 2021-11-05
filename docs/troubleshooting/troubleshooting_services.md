@@ -92,6 +92,14 @@
     "kubectl delete po \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
   ```
 
+- Force delete stalled pods
+
+```sh
+kubectl delete pods <pod> --grace-period=0 --force
+# if pod is stuck on `Unknown` state, run:
+kubectl patch pod <pod> -p '{"metadata":{"finalizers":null}}'
+```
+
 - Remove disk pressure taint
 
   ```sh
