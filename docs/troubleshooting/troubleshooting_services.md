@@ -76,6 +76,7 @@
   ```sh
   namespace=<namespace>
   kubectl get ns $namespace  -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/$namespace/finalize" -f -
+  unset namespace
   ```
 
 ## Debug Pods
