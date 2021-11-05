@@ -77,10 +77,10 @@ spec:
       extraVolumes:
         - name: backup
           persistentVolumeClaim:
-            claimName: backup-postgresql
+            claimName: "backup-postgresql"
       extraVolumeMounts:
         - name: backup
-          mountPath: /mnt/backup
+          mountPath: "/mnt/backup"
 
       sidecars:
         fsfreeze:
@@ -88,7 +88,7 @@ spec:
           image: "ghcr.io/k8s-at-home/fsfreeze:v2.37-r0"
           volumeMounts:
             - name: data
-              mountPath: /bitnami/postgresql
+              mountPath: "/bitnami/postgresql"
           securityContext:
             privileged: true
 
