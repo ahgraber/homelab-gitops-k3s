@@ -22,10 +22,10 @@ GPG encrypted secrets can be committed to this public repo.
 ## Overview
 
 - [Introduction](https://github.com/k8s-at-home/template-cluster-k3s#wave-introduction)
-- [Prerequisites](./docs/1%20-%20prerequisites.md)
+- [Prerequisites](./docs/1-prerequisites.md)
 - [Repository structure](https://github.com/k8s-at-home/template-cluster-k3s#open_file_folder-repository-structure)
-- [Install k3s](./docs/2%20-%20install%20k3s.md) and [kube-vip](docs/2a%20-%20kube-vip.md)
-- [GitOps with Flux](./docs/3%20-%20gitops%20with%20flux.md)
+- [Install k3s](./docs/2-install_k3s_with_ansible.md) and [kube-vip](docs/2a-kube-vip.md)
+- [GitOps with Flux](./docs/3-gitops_with_flux.md)
 
 ## :wave:&nbsp; Introduction
 
