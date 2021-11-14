@@ -19,6 +19,16 @@ kubectl -n ${namespace} describe secret dashboard-admin-token | grep '^token' | 
 unset namespace
 ```
 
+or alias with
+
+```sh
+dashboard-token() {
+    echo "$(kubectl describe secret dashboard-admin-token -n monitoring | grep '^token' | awk '{ print $2 }')"
+}
+alias dbt='dashboard-token | pbcopy; echo "Copied to clipboard"'
+# assuming you have `pbcopy`, this will copy to clipboard
+```
+
 ## OpenID Connect (OIDC/OAuth2)
 
 Providers like Authentik (or Keycloak, Dex, etc) can be used to provide an authentication flow without requiring the RBAC token.  See [authentik](../../security/authentik/README.md) for additional information.
