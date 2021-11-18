@@ -1,9 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  # - helm-release.yaml
-  - helm-release-kah.yaml
+  - helm-release.yaml
   - ingressRoute.yaml
   - pvc.yaml
-  # - secret.yaml
-  - secret-kah.yaml
+  - secret.yaml

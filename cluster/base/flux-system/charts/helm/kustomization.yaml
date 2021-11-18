@@ -11,7 +11,7 @@ resources:
   - dex-charts.yaml
   - falco-security-charts.yaml
   - fydrah-charts.yaml
-  - gissilabs-charts.yaml
+  # - gissilabs-charts.yaml
   - grafana-charts.yaml
   - infracloudio-charts.yaml
   # - ingress-nginx-charts.yaml
