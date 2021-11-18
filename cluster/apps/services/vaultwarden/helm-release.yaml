@@ -9,7 +9,7 @@ spec:
   timeout: 10m  # extended period because of lengthy startup
   chart:
     spec:
-      # renovate: registryUrl=https://gissilabs.github.io/charts/
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: vaultwarden
       version:
       sourceRef:
