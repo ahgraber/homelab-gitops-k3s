@@ -23,20 +23,21 @@ spec:
       tag: v0.5.3
     env:
       TZ: "America/New_York"
-      PUID: 1000
-      PGID: 1000
+      # PUID: 1000
+      # PGID: 1000
 
       DEFAULT_EMAIL: admin@${SECRET_DOMAIN}
       BASE_URL: https://mealie.${SECRET_DOMAIN}
       # BASE_URL: https://recipes.${SECRET_DOMAIN}
 
-      DB_ENGINE: postgres # sqlite
+      DB_ENGINE: sqlite
+      # DB_ENGINE: postgres # sqlite
       ## postgresql://mealie:${DB_USER_PWD}@postgresql.postgresql:5432/mealie
-      POSTGRES_USER: mealie
-      POSTGRES_PASSWORD: ${SECRET_DB_USER_PWD}
-      POSTGRES_SERVER: postgresql.postgresql
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: mealie
+      # POSTGRES_USER: mealie
+      # POSTGRES_PASSWORD: ${SECRET_DB_USER_PWD}
+      # POSTGRES_SERVER: postgresql.postgresql
+      # POSTGRES_PORT: 5432
+      # POSTGRES_DB: mealie
     ingress:
       main:
         enabled: false
