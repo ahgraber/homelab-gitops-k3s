@@ -17,7 +17,8 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    kind: deployment
+    # kind: deployment
+    cronJobApiVersion: batch/v1beta1
     deschedulerPolicy:
       strategies:
         RemoveDuplicates:
