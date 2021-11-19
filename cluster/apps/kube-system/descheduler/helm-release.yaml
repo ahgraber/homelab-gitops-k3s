@@ -17,12 +17,10 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    podAnnotations:
-      botkube.io/disable: "true"
     deschedulerPolicy:
       strategies:
         RemoveDuplicates:
-          enabled: false
+          enabled: true
         RemovePodsViolatingNodeAffinity:
           enabled: true
           params:
@@ -32,3 +30,13 @@ spec:
           enabled: false
         LowNodeUtilization:
           enabled: false
+          params:
+            nodeResourceUtilizationThresholds:
+              thresholds:
+                cpu: 20
+                memory: 20
+                pods: 20
+              targetThresholds:
+                cpu: 50
+                memory: 50
+                pods: 50
