@@ -5,5 +5,4 @@ resources:
   - helm-release.yaml
   - secret.yaml
   - schedules.d
-  - snapshotlocations.d
   - storagelocations.d
