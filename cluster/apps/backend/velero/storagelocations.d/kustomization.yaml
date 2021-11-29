@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   # - default.yaml  # provided in helm chart
   # - mariadb.yaml
-  - postgresql.yaml
+  # - postgresql.yaml
   - vaultwarden.yaml

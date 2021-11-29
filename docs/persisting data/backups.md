@@ -29,13 +29,22 @@
    sudo ln -rs /opt/restic/restic_0.12.1_linux_amd64 /usr/local/bin/restic
    ```
 
-2. Check for restic update
+2. Install [autorestic](https://github.com/cupcakearmy/autorestic)
+
+   ```sh
+   sudo mkdir /opt/autorestic
+   sudo wget -P /opt/autorestic https://github.com/cupcakearmy/autorestic/releases/download/v1.5.0/autorestic_1.5.0_linux_amd64.bz2
+   sudo bzip2 -d /opt/autorestic/autorestic_1.5.0_linux_amd64.bz2
+   sudo chmod 755 /opt/autorestic/autorestic_1.5.0_linux_amd64
+   sudo ln -rs /opt/autorestic/autorestic_1.5.0_linux_amd64 /usr/local/bin/autorestic
+   ```
+
+3. Check for updates
 
    ```sh
    restic self-update
+   autorestic upgrade
    ```
-
-3. a
 
 ## References
 
