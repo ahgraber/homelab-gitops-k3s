@@ -5,16 +5,16 @@ apiVersion: velero.io/v1
 kind: BackupStorageLocation
 # Standard Kubernetes metadata. Required.
 metadata:
-  name: default-storagelocation
+  name: vaultwarden-storagelocation
   namespace: velero
 spec:
   provider: aws
   # default indicates this location is the default backup storage location. Optional.
-  default: true
+  default: false
   objectStorage:
     bucket: ninerealmlabs-velero
     # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
-    prefix: default
+    prefix: vaultwarden
   config:
     region: us-west-002
     s3ForcePathStyle: "true"
@@ -28,7 +28,7 @@ spec:
 apiVersion: velero.io/v1
 kind: VolumeSnapshotLocation
 metadata:
-  name: default-snapshotlocation
+  name: vaultwarden-snapshotlocation
   namespace: velero
 spec:
   provider: aws
