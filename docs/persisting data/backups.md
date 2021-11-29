@@ -17,6 +17,26 @@
 3. Annotate pods with volumes to be backed up by restic: `backup.velero.io/backup-volumes=YOUR_VOLUME_NAME_1,YOUR_VOLUME_NAME_2`
 4. Configure backup schedules, storage locations, snapshot locations
 
+## TrueNAS SCALE
+
+1. Install [Restic](https://github.com/restic/restic) binary
+
+   ```sh
+   sudo mkdir /opt/restic
+   sudo wget -P /opt/restic https://github.com/restic/restic/releases/download/v0.12.1/restic_0.12.1_linux_amd64.bz2
+   sudo bzip2 -d /opt/restic/restic_0.12.1_linux_amd64.bz2
+   sudo chmod 755 /opt/restic/restic_0.12.1_linux_amd64
+   sudo ln -rs /opt/restic/restic_0.12.1_linux_amd64 /usr/local/bin/restic
+   ```
+
+2. Check for restic update
+
+   ```sh
+   restic self-update
+   ```
+
+3. a
+
 ## References
 
 ## Future Scope
