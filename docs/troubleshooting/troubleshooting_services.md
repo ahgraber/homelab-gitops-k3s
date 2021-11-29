@@ -74,9 +74,16 @@
 - Overwrite finalizers if namespace stuck `terminating`
 
   ```sh
-  namespace=<namespace>
-  kubectl get ns $namespace  -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/$namespace/finalize" -f -
-  unset namespace
+  terminating=$(kubectl get ns $namespace  -o json | \
+    jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
+    xargs -n 1)
+  for ns in "${terminating[@]}"; do
+    echo $ns
+    kubectl get ns $ns  -o json | \
+      jq '.spec.finalizers = []' | \
+      kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
+  done
+  unset terminating
   ```
 
 ## Debug Pods
@@ -132,4 +139,12 @@ kubectl patch pod <pod> -p '{"metadata":{"finalizers":null}}'
 
 ```sh
 kubectl get pv | grep "Released" | awk '{print $1}' | while read vol; do kubectl delete pv/${vol}; done
+```
+
+## Clean up empty replicasets
+
+```sh
+kubectl get rs --all-namespaces -o json | \
+  jq '.items[] | select((.spec.replicas==0) and (.status.replicas==0)) |
+  "kubectl delete rs \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
 ```

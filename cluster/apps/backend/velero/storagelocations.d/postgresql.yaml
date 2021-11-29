@@ -24,3 +24,13 @@ spec:
     # serverSideEncryption: AES256
     # Set this to "true" if you do NOT want to verify the TLS certificate when connecting to the object store
     # insecureSkipTLSVerify: "false"
+---
+apiVersion: velero.io/v1
+kind: VolumeSnapshotLocation
+metadata:
+  name: postgresql-snapshotlocation
+  namespace: velero
+spec:
+  provider: aws
+  config:
+    region: us-west-2
