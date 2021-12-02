@@ -100,7 +100,7 @@ spec:
 
       driver:
         # image: docker.io/democraticcsi/democratic-csi:latest
-        image: docker.io/democraticcsi/democratic-csi:v1.4.2
+        image: docker.io/democraticcsi/democratic-csi:v1.4.3
         # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         logLevel: info
 
