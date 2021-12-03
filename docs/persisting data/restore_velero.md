@@ -18,12 +18,32 @@
 
 3. Restore namespace with Velero
 
-   ```sh
+   <!-- ```sh
    # restore pod
    velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --wait
    # restore volumes
    velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --include-resources persistentvolumeclaims,persistentvolumes --wait
+   ``` -->
+
+   ```sh
+   # this should simply recreate the namespace
+   velero restore create <restore_name> --from-backup <backup_name>
    ```
+
+   > We can test by creating a duplicate namespace:
+   >
+   > ```sh
+   > velero restore create <restore_name> --from-backup <backup_name> --namespace-mappings <old_ns>:<new_ns>
+   > ```
+   >
+   > Connect to replicated namespace with `kubectl proxy`
+   >
+   > ```sh
+   > # in terminal
+   > kubectl proxy --port=8080
+   > # access url from web page
+   > # http://localhost:8080/api/v1/namespaces/<new_ns>/services/<service_name>:<service_port>/proxy/
+   > ```
 
 4. Resume Flux
 
