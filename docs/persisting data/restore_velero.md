@@ -1,6 +1,6 @@
 # Data Restoration with Velero
 
-> [Velero Documentation](https://velero.io/docs/main/)
+Refer to [Velero Documentation](https://velero.io/docs/main/)
 
 1. Suspend Flux
 
@@ -18,16 +18,14 @@
 
 3. Restore namespace with Velero
 
-   <!-- ```sh
-   # restore pod
-   velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --wait
-   # restore volumes
-   velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --include-resources persistentvolumeclaims,persistentvolumes --wait
-   ``` -->
-
    ```sh
    # this should simply recreate the namespace
    velero restore create <restore_name> --from-backup <backup_name>
+   ### or restore specific resources only
+   # # restore pod
+   # velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --wait
+   # # restore volumes
+   # velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --include-resources persistentvolumeclaims,persistentvolumes --wait
    ```
 
    > We can test by creating a duplicate namespace:
