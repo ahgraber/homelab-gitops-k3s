@@ -12,7 +12,7 @@ _In OPNsense, set Unbound DNS overrides to IP address and node name of terraform
    > - `--tls-san` adds the LoadBalancer’s virtual ip to the cert
 
    ```sh
-   echo "export USER='username'" >> .envrc
+   echo "export NODE_USER='username'" >> .envrc
    echo "export KEYPATH='~/.ssh/id_rsa'" >> .envrc
    echo "export KVIP='10.42.42.42'" >> .envrc
    echo "export K3S_VERSION='v1.21.3+k3s1'" >> .envrc
@@ -21,7 +21,7 @@ _In OPNsense, set Unbound DNS overrides to IP address and node name of terraform
 
    k3sup install \
      --host="${CTRL[0]}" \
-     --user="${USER}" \
+     --user="${NODE_USER}" \
      --ssh-key="${KEYPATH}" \
      --k3s-version="${K3S_VERSION}" \
      --cluster \
