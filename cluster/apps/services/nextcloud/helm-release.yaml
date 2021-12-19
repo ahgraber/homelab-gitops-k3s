@@ -75,6 +75,12 @@ spec:
             'trusted_proxies' => array('10.0.0.0/8')
           );
 
+      extraSecurityContext:
+        # runAsUser: "1001"
+        runAsGroup: "33"
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+
       mail:
         enabled: true
         fromAddress: "noreply@mail.${SECRET_DOMAIN}"
