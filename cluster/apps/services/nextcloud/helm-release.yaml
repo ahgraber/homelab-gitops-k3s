@@ -72,7 +72,7 @@ spec:
         proxy.config.php: |-
           <?php
           $CONFIG = array (
-            'trusted_proxies' => array('${NETWORK_K8S_POD_CIDR}')
+            'trusted_proxies' => array('10.0.0.0/8')
           );
 
       mail:
