@@ -7,21 +7,21 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi
-  # storageClassName: csi-truenas-nfs
+  # storageClassName: csi-truenas-iscsi
+  storageClassName: csi-truenas-nfs
   resources:
     requests:
       storage: 12Gi
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: nextcloud-db
-#   namespace: nextcloud
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: csi-truenas-iscsi
-#   resources:
-#     requests:
-#       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-db
+  namespace: nextcloud
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-truenas-iscsi
+  resources:
+    requests:
+      storage: 5Gi
