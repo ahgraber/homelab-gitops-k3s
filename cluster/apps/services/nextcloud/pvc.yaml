@@ -7,8 +7,8 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  # storageClassName: csi-truenas-iscsi
-  storageClassName: csi-truenas-nfs
+  storageClassName: csi-truenas-iscsi
+  # storageClassName: csi-truenas-nfs  # cannot use NFS due to permissions isuse: https://github.com/nextcloud/server/issues/13277
   resources:
     requests:
       storage: 12Gi
