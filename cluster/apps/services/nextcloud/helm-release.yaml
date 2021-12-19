@@ -87,6 +87,9 @@ spec:
           name: ${SECRET_SMTP_USER}
           password: ${SECRET_SMTP_PASS}
 
+    cronjob:
+      enabled: true
+
     internalDatabase:
       enabled: false
 
@@ -129,9 +132,6 @@ spec:
         limits:
           memory: 1024Mi
 
-    cronjob:
-      enabled: true
-
     redis:
       enabled: true
 
@@ -150,40 +150,6 @@ spec:
           limits:
             memory: 256Mi
 
-    postgresql:
-      enabled: true
-
-      postgresqlUsername: nextcloud
-      # postgresqlPassword: set by valuesFrom
-      postgresqlDatabase: nextcloud
-
-      persistence:
-        enabled: true
-        existingClaim: nextcloud-postgresql
-
-      primary:
-        podAnnotations:
-          backup.velero.io/backup-volumes: data
-          pre.hook.backup.velero.io/container: fsfreeze
-          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
-          post.hook.backup.velero.io/container: fsfreeze
-          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
-
-        sidecars:
-          - name: fsfreeze
-            image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-            volumeMounts:
-              - name: data
-                mountPath: /data
-            securityContext:
-              privileged: true
-
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 1024Mi
-
   postRenderers:
     - kustomize:
         patchesJson6902:
@@ -201,15 +167,3 @@ spec:
                 value:
                   annotations:
                     botkube.io/disable: "true"
-
-  valuesFrom:
-    - kind: Secret
-      name: nextcloud
-      valuesKey: postgresql_password
-      targetPath: postgresql.postgresqlPassword
-      optional: false
-    - kind: Secret
-      name: nextcloud
-      valuesKey: postgresql_password
-      targetPath: externalDatabase.password
-      optional: false
