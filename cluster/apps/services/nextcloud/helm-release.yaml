@@ -57,6 +57,9 @@ spec:
         securityContext:
           privileged: true
 
+    lifecycle:
+      postStartCommand: ["/bin/sh", "-c", "echo \"ServerName cloud.${SECRET_DOMAIN}\" | tee -a /etc/apache2/apache2.conf"]
+
     livenessProbe:
       enabled: true
     readinessProbe:
@@ -75,11 +78,11 @@ spec:
             'trusted_proxies' => array('10.0.0.0/8')
           );
 
-      extraSecurityContext:
-        # runAsUser: "1001"
-        runAsGroup: "33"
-        runAsNonRoot: true
-        readOnlyRootFilesystem: true
+      # extraSecurityContext:
+      #   # runAsUser: "1001"
+      #   runAsGroup: "33"
+      #   runAsNonRoot: true
+      #   readOnlyRootFilesystem: true
 
       mail:
         enabled: true
