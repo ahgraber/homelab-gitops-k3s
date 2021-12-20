@@ -4,5 +4,6 @@ resources:
   - cert-manager
   - external-snapshotter
   - kube-prometheus-stack
+  - system-upgrade
   - traefik
   - velero
