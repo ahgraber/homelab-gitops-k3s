@@ -13,8 +13,10 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
-          - name: rfc1918
-      #   # - name: basicauth
+        # - name: basicauth
+        - name: headers-sts
+        - name: nextcloud
+        # - name: rfc1918
       services:
         - name: nextcloud
           namespace: nextcloud
