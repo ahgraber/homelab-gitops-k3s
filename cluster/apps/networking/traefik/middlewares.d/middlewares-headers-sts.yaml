@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: headers-default
+  name: headers-sts
   namespace: networking
 spec:
   headers:
