@@ -72,10 +72,20 @@ spec:
       password: ${SECRET_DEFAULT_PWD}
       datadir: /var/www/html/data
       configs:
-        proxy.config.php: |-
+        # proxy.config.php: |-
+        #   <?php
+        #   $CONFIG = array (
+        #     'trusted_proxies' => array('10.0.0.0/8')
+        #   );
+        # protocol.config.php: |-
+        #   <?php
+        #   $CONFIG = array (
+        #     'overwriteprotocol' => 'https'
+        #   );
+        phone_region.config.php: |-
           <?php
           $CONFIG = array (
-            'trusted_proxies' => array('10.0.0.0/8')
+            'default_phone_region' => 'US'
           );
 
       # extraSecurityContext:
@@ -105,7 +115,10 @@ spec:
     externalDatabase:
       enabled: true
       type: 'postgresql'
+      host: nextcloud-postgresql.nextcloud
+      user: nextcloud
       password: ${SECRET_DB_USER_PWD}
+      database: nextcloud
 
     postgresql:
       enabled: true
