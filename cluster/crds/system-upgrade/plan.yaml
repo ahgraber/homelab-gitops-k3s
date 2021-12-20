@@ -10,11 +10,14 @@ spec:
   nodeSelector:
     matchExpressions:
     - key: node-role.kubernetes.io/master
-      operator: Exists
+      operator: "Exists"
       # operator: In
       # values:
       # - "true"
   serviceAccountName: system-upgrade
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    operator: "Exists"
   upgrade:
     image: rancher/k3s-upgrade
   # version: v1.21.7+k3s1
