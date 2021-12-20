@@ -4,7 +4,8 @@ resources:
   - middlewares-basicauth.yaml
   - middlewares-cloudflare.yaml
   - middlewares-headers-default.yaml
-  # - middlewares-nextcloud.yaml
+  - middlewares-headers-sts.yaml
+  - middlewares-nextcloud.yaml
   - middlewares-oauth2-dashboard.yaml
   - middlewares-redirect-path.yaml
   - middlewares-rfc1918.yaml
