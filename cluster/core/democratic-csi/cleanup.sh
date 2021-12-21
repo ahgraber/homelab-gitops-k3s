@@ -9,7 +9,8 @@ printf '%s\n' "${local_PVs[@]}"
 # The solution is to use an escaped or single-quoted heredoc, <<\EOF or <<'EOF'
 # or only escape the variables in the heredoc that should *not* be expanded locally
 # Thus, 'local_PVs' does NOT get escaped; all other variables DO get escaped
-ssh root@truenas.ninerealmlabs.com 'bash -s' << EOF
+# NOTE: Assumes truenas user has been added to sudoers file as NOPASSWD
+ssh admin@truenas.ninerealmlabs.com 'bash -s' << EOF
 # transfer variable data
 export PVs=(${local_PVs[*]})
 echo "Current PVs:"
@@ -21,7 +22,7 @@ for PFX in \${PREFIX[@]}; do
   echo "PREFIX: \${PFX}"
 
   # get list of current zvols with PFX prefix
-  VOLs=(\$(zfs list | grep "\${PFX}" | awk '{print \$1}' | sed "s|\${PFX}||"))
+  VOLs=(\$(sudo zfs list | grep "\${PFX}" | awk '{print \$1}' | sed "s|\${PFX}||"))
   # echo "VOLs: \${VOLs[*]}"
 
   # get differences (OLD are VOLs that exist but that are not in current PVs)
@@ -31,7 +32,7 @@ for PFX in \${PREFIX[@]}; do
 
   for OLDVOL in \${OLD[@]}; do
     echo "Removing vol: \${PFX}\${OLDVOL}"
-    zfs destroy -rf "\${PFX}\${OLDVOL}"
+    sudo zfs destroy -rf "\${PFX}\${OLDVOL}"
     sleep 1
   done
 done
@@ -39,4 +40,5 @@ unset PVs
 unset PREFIX
 unset VOLs
 unset OLD
+exit
 EOF
