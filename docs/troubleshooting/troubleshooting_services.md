@@ -74,7 +74,7 @@
 - Overwrite finalizers if namespace stuck `terminating`
 
   ```sh
-  declare -a terminating=( $(kubectl get ns $namespace  -o json | \
+  declare -a terminating=( $(kubectl get ns -o json | \
     jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
     xargs -n1) )
   for ns in "${terminating[@]}"; do
