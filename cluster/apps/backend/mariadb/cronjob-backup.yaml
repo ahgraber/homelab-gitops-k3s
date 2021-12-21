@@ -36,7 +36,7 @@ metadata:
   namespace: backend
 
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cronjob-mariadb-backup-incr
@@ -103,7 +103,7 @@ spec:
                 claimName: backup-mariadb
 
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: cronjob-mariadb-backup-monthly
