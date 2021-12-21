@@ -23,22 +23,22 @@ spec:
 
     env:
       PHP_MEMORY_LIMIT: 256M
+      NEXTCLOUD_DOMAIN_NAME: cloud.${SECRET_DOMAIN}
 
     ingress:
-      main:
-        enabled: false
+      enabled: false
 
     persistence:
       enabled: true
       existingClaim: nextcloud-data
 
-    podAnnotations:
-      backup.velero.io/backup-volumes: nextcloud-data
-      pre.hook.backup.velero.io/container: fsfreeze
-      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
-      post.hook.backup.velero.io/container: fsfreeze
-      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
-      # secret.reloader.stakater.com/reload: "vaultwarden"
+    # podAnnotations:
+    #   backup.velero.io/backup-volumes: nextcloud-data
+    #   pre.hook.backup.velero.io/container: fsfreeze
+    #   pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
+    #   post.hook.backup.velero.io/container: fsfreeze
+    #   post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
+    #   # secret.reloader.stakater.com/reload: "vaultwarden"
 
     resources:
       requests:
@@ -47,36 +47,36 @@ spec:
       limits:
         memory: 1024Mi
 
-    additionalContainers:
-      fsfreeze:
-        name: fsfreeze
-        image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        volumeMounts:
-          - name: config
-            mountPath: /config
-        securityContext:
-          privileged: true
+    # additionalContainers:
+    #   fsfreeze:
+    #     name: fsfreeze
+    #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+    #     volumeMounts:
+    #       - name: config
+    #         mountPath: /config
+    #     securityContext:
+    #       privileged: true
 
-    lifecycle:
-      postStartCommand: ["/bin/sh", "-c", "echo \"ServerName cloud.${SECRET_DOMAIN}\" | tee -a /etc/apache2/apache2.conf"]
+    # lifecycle:
+    #   postStartCommand: ["/bin/sh", "-c", "echo \"ServerName cloud.${SECRET_DOMAIN}\" | tee -a /etc/apache2/apache2.conf"]
 
-    livenessProbe:
-      enabled: false
-    readinessProbe:
-      enabled: false
-    startupProbe:
-      enabled: false
+    # livenessProbe:
+    #   enabled: false
+    # readinessProbe:
+    #   enabled: false
+    # startupProbe:
+    #   enabled: false
 
     nextcloud:
       host: cloud.${SECRET_DOMAIN}
       password: ${SECRET_DEFAULT_PWD}
-      datadir: /var/www/html/data
+      # datadir: /var/www/html/data
       configs:
-        # proxy.config.php: |-
-        #   <?php
-        #   $CONFIG = array (
-        #     'trusted_proxies' => array('10.0.0.0/8')
-        #   );
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' => array('10.0.0.0/8')
+          );
         # protocol.config.php: |-
         #   <?php
         #   $CONFIG = array (
@@ -115,7 +115,7 @@ spec:
     externalDatabase:
       enabled: true
       type: 'postgresql'
-      host: nextcloud-postgresql.nextcloud
+      # host: nextcloud-postgresql.nextcloud
       user: nextcloud
       password: ${SECRET_DB_USER_PWD}
       database: nextcloud
@@ -131,61 +131,61 @@ spec:
         enabled: true
         existingClaim: nextcloud-db
 
-      primary:
-        podAnnotations:
-          backup.velero.io/backup-volumes: data
-          pre.hook.backup.velero.io/container: fsfreeze
-          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
-          post.hook.backup.velero.io/container: fsfreeze
-          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
+      # primary:
+      #   podAnnotations:
+      #     backup.velero.io/backup-volumes: data
+      #     pre.hook.backup.velero.io/container: fsfreeze
+      #     pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
+      #     post.hook.backup.velero.io/container: fsfreeze
+      #     post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
 
-        sidecars:
-          - name: fsfreeze
-            image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-            volumeMounts:
-              - name: data
-                mountPath: /data
-            securityContext:
-              privileged: true
+      #   sidecars:
+      #     - name: fsfreeze
+      #       image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+      #       volumeMounts:
+      #         - name: data
+      #           mountPath: /data
+      #       securityContext:
+      #         privileged: true
 
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 1024Mi
+      # resources:
+      #   requests:
+      #     memory: 256Mi
+      #   limits:
+      #     memory: 1024Mi
 
     redis:
       enabled: true
 
-      master:
-        resources:
-          requests:
-            memory: 128Mi
-          limits:
-            memory: 256Mi
+      # master:
+      #   resources:
+      #     requests:
+      #       memory: 128Mi
+      #     limits:
+      #       memory: 256Mi
 
-      replica:
-        replicaCount: 1
-        resources:
-          requests:
-            memory: 128Mi
-          limits:
-            memory: 256Mi
+      # replica:
+      #   replicaCount: 1
+      #   resources:
+      #     requests:
+      #       memory: 128Mi
+      #     limits:
+      #       memory: 256Mi
 
-  postRenderers:
-    - kustomize:
-        patchesJson6902:
-          - target:
-              kind: CronJob
-              name: nextcloud-cron
-            patch:
-              - op: add
-                path: /spec/jobTemplate/metadata
-                value:
-                  annotations:
-                    botkube.io/disable: "true"
-              - op: add
-                path: /spec/jobTemplate/spec/template/metadata
-                value:
-                  annotations:
-                    botkube.io/disable: "true"
+  # postRenderers:
+  #   - kustomize:
+  #       patchesJson6902:
+  #         - target:
+  #             kind: CronJob
+  #             name: nextcloud-cron
+  #           patch:
+  #             - op: add
+  #               path: /spec/jobTemplate/metadata
+  #               value:
+  #                 annotations:
+  #                   botkube.io/disable: "true"
+  #             - op: add
+  #               path: /spec/jobTemplate/spec/template/metadata
+  #               value:
+  #                 annotations:
+  #                   botkube.io/disable: "true"
