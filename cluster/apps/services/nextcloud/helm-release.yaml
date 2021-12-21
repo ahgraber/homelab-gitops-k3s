@@ -60,12 +60,14 @@ spec:
     # lifecycle:
     #   postStartCommand: ["/bin/sh", "-c", "echo \"ServerName cloud.${SECRET_DOMAIN}\" | tee -a /etc/apache2/apache2.conf"]
 
-    # livenessProbe:
-    #   enabled: false
-    # readinessProbe:
-    #   enabled: false
-    # startupProbe:
-    #   enabled: false
+    livenessProbe:
+      enabled: false
+      initialDelaySeconds: 300
+    readinessProbe:
+      enabled: false
+      initialDelaySeconds: 240
+    startupProbe:
+      enabled: false
 
     nextcloud:
       host: cloud.${SECRET_DOMAIN}
