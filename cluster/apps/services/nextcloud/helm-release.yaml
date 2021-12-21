@@ -26,7 +26,7 @@ spec:
       NEXTCLOUD_DOMAIN_NAME: cloud.${SECRET_DOMAIN}
 
     ingress:
-      enabled: true
+      enabled: false
 
     persistence:
       enabled: true
@@ -73,12 +73,14 @@ spec:
       host: cloud.${SECRET_DOMAIN}
       password: ${SECRET_DEFAULT_PWD}
       # datadir: /var/www/html/data
-      # configs:
-        # proxy.config.php: |-
-        #   <?php
-        #   $CONFIG = array (
-        #     'trusted_proxies' => array('10.0.0.0/8')
-        #   );
+      configs:
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'loglevel" => 0'
+            'trusted_proxies' => array('10.42.0.0/16'),
+            'trusted_domains' => '${SECRET_DOMAIN}'
+          );
         # protocol.config.php: |-
         #   <?php
         #   $CONFIG = array (
