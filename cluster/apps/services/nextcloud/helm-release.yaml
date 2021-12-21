@@ -26,7 +26,7 @@ spec:
       NEXTCLOUD_DOMAIN_NAME: cloud.${SECRET_DOMAIN}
 
     ingress:
-      enabled: false
+      enabled: true
 
     persistence:
       enabled: true
@@ -73,22 +73,22 @@ spec:
       host: cloud.${SECRET_DOMAIN}
       password: ${SECRET_DEFAULT_PWD}
       # datadir: /var/www/html/data
-      configs:
-        proxy.config.php: |-
-          <?php
-          $CONFIG = array (
-            'trusted_proxies' => array('10.0.0.0/8')
-          );
+      # configs:
+        # proxy.config.php: |-
+        #   <?php
+        #   $CONFIG = array (
+        #     'trusted_proxies' => array('10.0.0.0/8')
+        #   );
         # protocol.config.php: |-
         #   <?php
         #   $CONFIG = array (
         #     'overwriteprotocol' => 'https'
         #   );
-        phone_region.config.php: |-
-          <?php
-          $CONFIG = array (
-            'default_phone_region' => 'US'
-          );
+        # phone_region.config.php: |-
+        #   <?php
+        #   $CONFIG = array (
+        #     'default_phone_region' => 'US'
+        #   );
 
       # extraSecurityContext:
       #   # runAsUser: "1001"
