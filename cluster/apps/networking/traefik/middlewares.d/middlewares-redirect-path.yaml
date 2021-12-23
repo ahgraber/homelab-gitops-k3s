@@ -6,8 +6,8 @@ metadata:
   namespace: networking
 spec:
   redirectRegex:
-    regex: '^(https?://[^/]+/[a-z0-9_]+)$'
-    replacement: '${1}/'
+    regex: "^(https?://[^/]+/[a-z0-9_]+)$"
+    replacement: "${1}/"
     permanent: true
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -18,7 +18,7 @@ metadata:
 spec:
   stripPrefixRegex:
     regex:
-      - '/[a-z0-9_]+'
+      - "/[a-z0-9_]+"
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware

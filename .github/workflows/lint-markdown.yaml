@@ -25,4 +25,5 @@ jobs:
         uses: reviewdog/action-shellcheck@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          markdownlint_flags: "-c '.github/lint/.markdownlint.yaml' ${{ steps.filter.outputs.markdown_files }}"
+          markdownlint_flags:
+            "-c '.github/lint/.markdownlint.yaml' ${{ steps.filter.outputs.markdown_files }}"

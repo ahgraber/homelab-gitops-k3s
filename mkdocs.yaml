@@ -69,7 +69,7 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - Introduction: index.md  # hardlink of ../README.md
+  - Introduction: index.md # hardlink of ../README.md
   - Installation:
       - Prerequisites: 1-prerequisites.md
       - Install k3s with ansible: 2-install_k3s_with_ansible.md
