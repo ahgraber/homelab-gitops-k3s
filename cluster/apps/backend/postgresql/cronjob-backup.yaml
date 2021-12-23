@@ -34,7 +34,6 @@ kind: ServiceAccount
 metadata:
   name: sa-postgresql-backup
   namespace: postgresql
-
 ---
 apiVersion: batch/v1
 kind: CronJob

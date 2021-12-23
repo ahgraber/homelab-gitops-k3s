@@ -14,7 +14,6 @@ spec:
     stsPreload: true
     stsSeconds: 315360000
     frameDeny: true
-
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

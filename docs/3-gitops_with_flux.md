@@ -1,7 +1,7 @@
 # :small_blue_diamond:&nbsp; GitOps (with Flux)
 
-:round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/)
-after some quick bootstrap steps.
+:round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/) after some quick
+bootstrap steps.
 
 ## 1. Verify Flux can be installed
 
@@ -16,7 +16,8 @@ flux --kubeconfig=$(pwd)/kubeconfig check --pre
 ## 2. Pre-create the `flux-system` namespace
 
 ```sh
-kubectl --kubeconfig=${KUBECONFIG} create namespace flux-system --dry-run=client -o yaml | kubectl --kubeconfig=./kubeconfig apply -f -
+kubectl --kubeconfig=${KUBECONFIG} create namespace flux-system --dry-run=client -o yaml | \
+  kubectl --kubeconfig=./kubeconfig apply -f -
 ```
 
 ## 3. Add the Flux GPG key in-order for Flux to decrypt SOPS secrets
@@ -30,9 +31,11 @@ gpg --export-secret-keys --armor "${FLUX_KEY_FP}" \
 
 ## 4. Export more environment variables for application configuration
 
-> _Note: Exported variables go into `./tmpl/...`, where there are exported to settings and secrets in the next step_
+> _Note:_ Exported variables go into `./tmpl/...`, where there are exported to settings and secrets
+> in the next step
 
-Here is a code blurb to quickly copy environmental variables into your .envrc. If using, **edit before running or copying exports into .envrc**
+Here is a code blurb to quickly copy environmental variables into your .envrc. If using, **edit
+before running or copying exports into .envrc**
 
 ```sh
 cat >> .envrc << EOF
@@ -67,9 +70,9 @@ EOF
 
 ## 5. Create required files based on ALL exported environment variables
 
-> If additional customization is needed via variable exports, export variables,
-> create templates in `./tmpl`, and add to export code below
-> If recreating secrets, may have to delete 'real' files outside of `./tmpl` > `>!` allows replacing of files on zsh. In other shells, may use `>`
+> If additional customization is needed via variable exports, export variables, create templates in
+> `./tmpl`, and add to export code below If recreating secrets, may have to delete 'real' files
+> outside of `./tmpl` > `>!` allows replacing of files on zsh. In other shells, may use `>`
 
 ```zsh
 # reload all env variables
@@ -97,9 +100,8 @@ sops --encrypt --in-place ./cluster/base/cluster-secrets.sops.yaml
 sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/secret-basicauth.sops.yaml
 ```
 
-:round_pushpin: Variables defined in `cluster-secrets.yaml` and
-`cluster-settings.yaml` will be usable anywhere in your YAML manifests
-under `./cluster`
+:round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
+usable anywhere in your YAML manifests under `./cluster`
 
 ## 8. :mag:&nbsp; **Verify** all the above files are **encrypted** with SOPS
 
@@ -113,7 +115,8 @@ git push
 
 ## 10. Install Flux
 
-- [ ] Generate a new Github Personal Access Token with all `repository` permissions and add/update .envrc
+- [ ] Generate a new Github Personal Access Token with all `repository` permissions and add/update
+      .envrc
 - [ ] Sync local repo with github
 - [ ] Bootstrap flux integration:
 
@@ -130,8 +133,8 @@ flux bootstrap github \
 
 _**Note**: When using k3s @onedr0p found that the network-policy flag has to be set to false, or Flux will not work_ -->
 
-:round_pushpin: Due to race conditions with the Flux CRDs you will have to
-\_*run the below command twice*. There should be no errors on this second run.
+:round*pushpin: Due to race conditions with the Flux CRDs you will have to _run the below command_
+_**twice**_. There should be no errors on this second run.
 
 ```sh
 kubectl --kubeconfig=${KUBECONFIG} apply --kustomize=./cluster/base/flux-system
@@ -167,8 +170,8 @@ kubectl --kubeconfig=${KUBECONFIG} apply --kustomize=./cluster/base/flux-system
 # unable to recognize "./cluster/base/flux-system": no matches for kind "HelmRepository" in version "source.toolkit.fluxcd.io/v1beta1"
 ```
 
-:tada: **Congratulations** you have a Kubernetes cluster managed by Flux,
-your Git repository is driving the state of your cluster.
+:tada: **Congratulations** you have a Kubernetes cluster managed by Flux, your Git repository is
+driving the state of your cluster.
 
 ## Verify Flux
 
@@ -218,5 +221,4 @@ file to verify the ingress controller is working.
 echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
 ``` -->
 
-Head over to your browser and you _should_ be able to access
-`https://homer.${BOOTSTRAP_DOMAIN}`
+Head over to your browser and you _should_ be able to access `https://homer.${BOOTSTRAP_DOMAIN}`

@@ -1,17 +1,6 @@
 ---
 fail_fast: false
 repos:
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: '' # Use the sha or tag you want to point at
-    hooks:
-      - id: prettier
-  - repo: https://github.com/adrienverge/yamllint
-    rev: v1.26.3
-    hooks:
-      - args:
-          - --config-file
-          - .github/lint/.yamllint.yaml
-        id: yamllint
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
     hooks:
@@ -23,11 +12,34 @@ repos:
     hooks:
       - id: remove-crlf
       - id: remove-tabs
-  - repo: https://github.com/sirosen/fix-smartquotes
-    rev: 0.2.0
+  - repo: https://github.com/sirosen/texthooks
+    rev: 0.2.2
     hooks:
       - id: fix-smartquotes
+      - id: fix-ligatures
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.5.1   # Use the sha or tag you want to point at
+    hooks:
+      - id: prettier
+        # args: ["--ignore-path '**/*.md'", "--ignore-path '**/*.y*ml'"]
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.30.0   # v0.30.0
+    hooks:
+      - id: markdownlint
+        args: [--fix, --config=.markdownlint.yaml]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.26.3
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint.yaml]
+  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+    rev: 0.1.0
+    hooks:
+      - id: yamlfmt
+        args: [--mapping, '2', --sequence, '4', --offset, '2', --preserve-quotes]
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.0.3
     hooks:
       - id: forbid-secrets
+        args: [-h, "**/*.sops.yaml"]
+        # note: this only checks specific files for secrets!

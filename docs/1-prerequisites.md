@@ -2,13 +2,12 @@
 
 ## :computer:&nbsp; Nodes
 
-Already provisioned Bare metal or VMs with any modern operating system like
-Ubuntu, Debian or CentOS.
+Already provisioned Bare metal or VMs with any modern operating system like Ubuntu, Debian or
+CentOS.
 
 ## :wrench:&nbsp; Tools
 
-:round_pushpin: You need to install the required CLI tools listed below
-on your workstation.
+:round_pushpin: You need to install the required CLI tools listed below on your workstation.
 
 | Tool                                                               | Purpose                                                             | Minimum version | Required |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- | :-------------: | :------: |
@@ -39,8 +38,9 @@ brew install gnupg
 
 ## :warning:&nbsp; pre-commit
 
-It is advisable to install [pre-commit](https://pre-commit.com/) and the pre-commit hooks that come with this repository.
-[sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit) will check to make sure you are not by accident commiting your secrets un-encrypted.
+It is advisable to install [pre-commit](https://pre-commit.com/) and the pre-commit hooks that come
+with this repository. [sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit) will check
+to make sure you are not by accident commiting your secrets un-encrypted.
 
 After pre-commit is installed on your machine run:
 
@@ -50,8 +50,8 @@ pre-commit install-hooks
 
 ## :bulb:&nbsp; direnv
 
-It is advisable to install [direnv](https://github.com/direnv/direnv)
-to persist environmental variables to a hidden `.envrc` file.
+It is advisable to install [direnv](https://github.com/direnv/direnv) to persist environmental
+variables to a hidden `.envrc` file.
 
 After direnv is installed, set up on the local repo path:
 
@@ -84,16 +84,18 @@ direnv reload
 
 ## :bulb:&nbsp; SOPS
 
-The [SOPS VSCode Extension](https://github.com/signageos/vscode-sops)
-will automatically decrypt you SOPS secrets when you click on the file
-in the editor and encrypt them when you save and exit the file.
+The [SOPS VSCode Extension](https://github.com/signageos/vscode-sops) will automatically decrypt you
+SOPS secrets when you click on the file in the editor and encrypt them when you save and exit the
+file.
 
 ## :closed_lock_with_key:&nbsp; Set up GnuPG keys
 
-:round_pushpin: Here we will create a personal and a Flux GPG key.
-Using SOPS with GnuPG allows us to encrypt and decrypt secrets.
+:round_pushpin: Here we will create a personal and a Flux GPG key. Using SOPS with GnuPG allows us
+to encrypt and decrypt secrets.
 
-## 1. Create a Personal GPG Key, password protected, and export the fingerprint. It's **strongly encouraged** to back up this key somewhere safe so you don't lose it
+## 1. Create a Personal GPG Key, password protected, and export the fingerprint
+
+It's **strongly encouraged** to back up this key somewhere safe so you don't lose it
 
 ```sh
 # add environmental variables to .envrc for direnv

@@ -25,7 +25,10 @@ Refer to [Velero Documentation](https://velero.io/docs/main/)
    # # restore pod
    # velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --wait
    # # restore volumes
-   # velero restore create <restore_name> --from-backup <backup_name> --selector app.kubernetes.io/instance=<app_name> --include-resources persistentvolumeclaims,persistentvolumes --wait
+   # velero restore create <restore_name> --from-backup <backup_name> \
+   #   --selector app.kubernetes.io/instance=<app_name> \
+   #   --include-resources persistentvolumeclaims,persistentvolumes \
+   #   --wait
    ```
 
    > We can test by creating a duplicate namespace:

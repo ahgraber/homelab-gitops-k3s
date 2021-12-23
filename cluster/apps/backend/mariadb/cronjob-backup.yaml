@@ -34,7 +34,6 @@ kind: ServiceAccount
 metadata:
   name: sa-mariadb-backup
   namespace: backend
-
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -101,7 +100,6 @@ spec:
             - name: backup
               persistentVolumeClaim:
                 claimName: backup-mariadb
-
 ---
 apiVersion: batch/v1
 kind: CronJob
