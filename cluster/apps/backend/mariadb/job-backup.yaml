@@ -34,7 +34,6 @@ kind: ServiceAccount
 metadata:
   name: sa-mariadb-backup
   namespace: backend
-
 ---
 apiVersion: batch/v1
 kind: Job

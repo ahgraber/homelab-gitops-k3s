@@ -1,10 +1,13 @@
 # Democratic-CSI
 
-`democratic-csi` implements the `csi` (container storage interface) spec providing storage for various container orchestration systems (ie: Kubernetes).
+`democratic-csi` implements the `csi` (container storage interface) spec providing storage for
+various container orchestration systems (ie: Kubernetes).
 
-The current focus is providing storage via iscsi/nfs from zfs-based storage systems, predominantly `FreeNAS / TrueNAS` and `ZoL` on `Ubuntu`.
+The current focus is providing storage via iscsi/nfs from zfs-based storage systems, predominantly
+`FreeNAS / TrueNAS` and `ZoL` on `Ubuntu`.
 
-The current drivers implement the depth and breadth of the `csi` spec, providing access to resizing, snapshots, clones, etc functionality.
+The current drivers implement the depth and breadth of the `csi` spec, providing access to resizing,
+snapshots, clones, etc functionality.
 
 ## Prerequisites
 
@@ -12,6 +15,7 @@ The current drivers implement the depth and breadth of the `csi` spec, providing
 
 - `nfs`: Ensure that `nfs-common` has been installed on nodes
 - `iscsi`:
+
   - Ensure that `open-iscsi lsscsi sg3-utils multipath-tools scsitools` are installed on nodes
 
     ```sh
@@ -50,8 +54,7 @@ The current drivers implement the depth and breadth of the `csi` spec, providing
   - provide `id_rsa` public key for passwordless login
   - ensure part of `www-data` group
   - note `uid` and `gid` of user
-- Provide passwordless sudo priviledges:
-  _Normally, you'd do this:_
+- Provide passwordless sudo priviledges: _Normally, you'd do this:_
 
   ```sh
   nano /etc/sudoers
@@ -59,8 +62,7 @@ The current drivers implement the depth and breadth of the `csi` spec, providing
   csi ALL=(ALL) NOPASSWD:ALL
   ```
 
-  _Note: But this **WILL** get reset by truenas_
-  _instead, use truenas `cli`:_
+  _Note: But this **WILL** get reset by truenas_ _instead, use truenas `cli`:_
 
   ```sh
   # at the command prompt
@@ -82,15 +84,26 @@ The current drivers implement the depth and breadth of the `csi` spec, providing
 
 ## Configuration
 
-`democratic-csi` uses config secrets to hold sensitive information and those configmaps are passed into the helm values.
+`democratic-csi` uses config secrets to hold sensitive information and those configmaps are passed
+into the helm values.
 
-- See [generic nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/nfs-client.yaml) using [nfs driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/nfs-client.yaml)
-- See [truenas nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-nfs.yaml) using [freenas driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-nfs.yaml)
-- See [truenas iscsi configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-iscsi.yaml) using [iscsi driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-iscsi.yaml)
+- See
+  [generic nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/nfs-client.yaml)
+  using
+  [nfs driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/nfs-client.yaml)
+- See
+  [truenas nfs configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-nfs.yaml)
+  using
+  [freenas driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-nfs.yaml)
+- See
+  [truenas iscsi configuration](https://github.com/democratic-csi/charts/blob/master/stable/democratic-csi/examples/freenas-iscsi.yaml)
+  using
+  [iscsi driver](https://github.com/democratic-csi/democratic-csi/blob/master/examples/freenas-iscsi.yaml)
 
 ### iSCSI
 
-iSCSI PVs will 'retain' on deletion of PVC.  Will have to manually delete from kubernetes cluster _and_ delete both `targets` and `extents` from truenas iscsi share.
+iSCSI PVs will 'retain' on deletion of PVC. Will have to manually delete from kubernetes cluster
+_and_ delete both `targets` and `extents` from truenas iscsi share.
 
 ### NFS
 
@@ -98,11 +111,15 @@ NFS PVs will 'delete' on deletion of PVC.
 
 ## Debug
 
-* If get `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`, restart NFS service on NAS
+- If get
+  `message: '{"code":32,"stdout":"","stderr":"mount.nfs: access denied by server while mounting 10.2.1.1:/mnt/ssdpool/csi/nfs/v/pvc-...}`,
+  restart NFS service on NAS
 
-* iSCSI volumes require deleting the target and extent on the server; new PVCs/PVs on k8s side will reuse the same extent on the NAS.
+- iSCSI volumes require deleting the target and extent on the server; new PVCs/PVs on k8s side will
+  reuse the same extent on the NAS.
 
-* [cleanup old/broken snapshots](https://serverfault.com/questions/340837/how-to-delete-all-but-last-n-zfs-snapshots) with:
+- [cleanup old/broken snapshots](https://serverfault.com/questions/340837/how-to-delete-all-but-last-n-zfs-snapshots)
+  with:
 
   ```sh
   # remove empty snapshots

@@ -1,10 +1,10 @@
 # Share secrets across namespaces
 
-Cluster can use `kubed` to copy secrets across namespaces.
-In particular, this can share the tls certificates from `networking` to `security`.
+Cluster can use `kubed` to copy secrets across namespaces. In particular, this can share the tls
+certificates from `networking` to `security`.
 
-* Cert-manager's [faq](https://cert-manager.io/docs/faq/kubed/)
-* Kubed's[reference](https://appscode.com/products/kubed/v0.12.0/guides/config-syncer/intra-cluster/)
+- Cert-manager's [faq](https://cert-manager.io/docs/faq/kubed/)
+- Kubed's[reference](https://appscode.com/products/kubed/v0.12.0/guides/config-syncer/intra-cluster/)
 
 ## Process
 
@@ -18,10 +18,10 @@ In particular, this can share the tls certificates from `networking` to `securit
      namespace: <SECRET_NAMESPACE>
      annotations:
        kubed.appscode.com/sync: "<SECRET_NAME>=kubed"
-   ...
    ```
 
-2. If `kubed` identifies a namespace with a label matching the secret annotation, it will copy and sync the secret from the source namespace
+2. If `kubed` identifies a namespace with a label matching the secret annotation, it will copy and
+   sync the secret from the source namespace
 
    ```yaml
    apiVersion: v1
@@ -54,7 +54,7 @@ metadata:
     kubed.appscode.com/sync: "secret_to_copy=kubed" # Sync certificate to matching namespaces
 # type: kubernetes.io/tls
 data:
-  key: 'value'
+  key: "value"
 
 ---
 apiVersion: v1
@@ -64,5 +64,5 @@ metadata:
   labels:
     # Define namespace label for kubed for secrets-sharing -->
     # secret_name: kubed
-    secret_to_copy : kubed
+    secret_to_copy: kubed
 ```

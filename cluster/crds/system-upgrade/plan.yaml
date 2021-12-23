@@ -1,3 +1,4 @@
+---
 # Server plan
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
@@ -9,15 +10,15 @@ spec:
   cordon: true
   nodeSelector:
     matchExpressions:
-    - key: node-role.kubernetes.io/master
-      operator: "Exists"
+      - key: node-role.kubernetes.io/master
+        operator: "Exists"
       # operator: In
       # values:
       # - "true"
   serviceAccountName: system-upgrade
   tolerations:
-  - key: node-role.kubernetes.io/master
-    operator: "Exists"
+    - key: node-role.kubernetes.io/master
+      operator: "Exists"
   upgrade:
     image: rancher/k3s-upgrade
   # version: v1.21.7+k3s1
@@ -34,12 +35,12 @@ spec:
   cordon: true
   nodeSelector:
     matchExpressions:
-    - key: node-role.kubernetes.io/master
-      operator: DoesNotExist
+      - key: node-role.kubernetes.io/master
+        operator: DoesNotExist
   prepare:
     args:
-    - prepare
-    - server-plan
+      - prepare
+      - server-plan
     image: rancher/k3s-upgrade
   serviceAccountName: system-upgrade
   upgrade:

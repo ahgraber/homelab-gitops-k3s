@@ -29,7 +29,7 @@ spec:
     # excludedResources:
     #   - storageclasses.storage.k8s.io
     # Whether or not to include cluster-scoped resources. [true, false, and null/unset].
-    includeClusterResources: null
+    includeClusterResources:
     # # Individual objects must match this label selector to be included in the scheduled backup. Optional.
     # labelSelector:
     #   matchLabels:
@@ -39,7 +39,7 @@ spec:
     # This only applies to PersistentVolumes for Azure, GCE, and AWS.
     # Valid values are true, false, and null/unset.
     # If unset, Velero performs snapshots as long as a persistent volume provider is configured for Velero.
-    snapshotVolumes: null
+    snapshotVolumes:
     # Where to store the tarball and logs.
     storageLocation: vaultwarden-storagelocation
     # The list of locations in which to store volume snapshots created for backups under this schedule.
