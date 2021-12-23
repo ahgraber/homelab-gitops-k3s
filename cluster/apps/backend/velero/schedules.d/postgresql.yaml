@@ -14,15 +14,15 @@ spec:
     # Array of namespaces to include in the scheduled backup. If unspecified, all namespaces are included.
     # Optional.
     includedNamespaces:
-      - 'postgresql'
+      - "postgresql"
     # # Array of namespaces to exclude in the scheduled backup. If unspecified, all namespaces are included.
     # excludedNamespaces:
     #   - ''
     # Array of resources to include in the scheduled backup. If unspecified, all resources are included. Optional.
     includedResources:
       # - 'po'
-      - 'pv'
-      - 'pvc'
+      - "pv"
+      - "pvc"
       # - 'volumesnapshotcontents'
       # - 'volumesnapshots'
     # # Array of resources to exclude from the scheduled backup.

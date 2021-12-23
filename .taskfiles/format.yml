@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: "3"
 
 tasks:
   all:
@@ -9,25 +9,15 @@ tasks:
     desc: Format Markdown
     cmds:
       - >-
-        prettier
-        --ignore-path '.github/lint/.prettierignore'
-        --config '.github/lint/.prettierrc.yaml'
-        --list-different
-        --ignore-unknown
-        --parser=markdown
-        --write '*.md' '**/*.md'
+        prettier --ignore-path '.github/lint/.prettierignore' --config
+        '.github/lint/.prettierrc.yaml' --list-different --ignore-unknown --parser=markdown --write
+        '*.md' '**/*.md'
     ignore_error: true
   yaml:
     desc: Format YAML
     cmds:
       - >-
-        prettier
-        --ignore-path '.github/lint/.prettierignore'
-        --config
-        '.github/lint/.prettierrc.yaml'
-        --list-different
-        --ignore-unknown
-        --parser=yaml
-        --write '*.y*ml'
-        '**/*.y*ml'
+        prettier --ignore-path '.github/lint/.prettierignore' --config
+        '.github/lint/.prettierrc.yaml' --list-different --ignore-unknown --parser=yaml --write
+        '*.y*ml' '**/*.y*ml'
     ignore_error: true

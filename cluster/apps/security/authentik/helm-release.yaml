@@ -53,7 +53,7 @@ spec:
         password: ${SECRET_DB_USER_PWD}
         port: 5432
       redis:
-        host: '{{ .Release.Name }}-redis-master'
+        host: "{{ .Release.Name }}-redis-master"
         password: ${SECRET_DB_USER_PWD}
 
       # geoip: /geoip/GeoLite2-City.mmdb

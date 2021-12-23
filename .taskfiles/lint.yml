@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: "3"
 
 tasks:
   all:
@@ -22,5 +22,6 @@ tasks:
   format:
     desc: Lint general formatting
     cmds:
-      - prettier --ignore-path '.github/lint/.prettierignore' --config '.github/lint/.prettierrc.yaml' --check .
+      - prettier --ignore-path '.github/lint/.prettierignore' --config
+        '.github/lint/.prettierrc.yaml' --check .
     ignore_errors: true

@@ -49,7 +49,7 @@ spec:
     persistence:
       config:
         enabled: true
-        storageClass: 'csi-truenas-nfs'
+        storageClass: "csi-truenas-nfs"
         existingClaim: mealie-pvc
         mountPath: /app/data/
     podAnnotations:

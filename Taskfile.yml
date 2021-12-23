@@ -1,13 +1,13 @@
 ---
-version: '3'
+version: "3"
 
 vars:
   PROJECT_DIR:
-    sh: 'git rev-parse --show-toplevel'
-  CLUSTER_DIR: '{{.PROJECT_DIR}}/cluster'
+    sh: "git rev-parse --show-toplevel"
+  CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
 
 env:
-  KUBECONFIG: '{{.PROJECT_DIR}}/kubeconfig'
+  KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"
 
 includes:
   flux: .taskfiles/flux.yml

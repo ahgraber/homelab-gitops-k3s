@@ -41,7 +41,7 @@ metadata:
   name: job-mariadb-backup
   namespace: backend
 spec:
-  backoffLimit: 3  # retry only once
+  backoffLimit: 3 # retry only once
   template:
     spec:
       serviceAccountName: sa-mariadb-backup
