@@ -118,6 +118,14 @@ NFS PVs will 'delete' on deletion of PVC.
 - iSCSI volumes require deleting the target and extent on the server; new PVCs/PVs on k8s side will
   reuse the same extent on the NAS.
 
+- clean up old/unused volumes with [cleanup.sh](cleanup.sh)
+
+  > This requires that `admin` user have NOPASSWD:ALL permissions (hint: `sudo visudo`)
+
+  ```sh
+  bash ./cleanup.sh
+  ```
+
 - [cleanup old/broken snapshots](https://serverfault.com/questions/340837/how-to-delete-all-but-last-n-zfs-snapshots)
   with:
 

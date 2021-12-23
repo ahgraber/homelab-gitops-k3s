@@ -8,8 +8,6 @@ for pv in "$pvs[@]"; do kubectl delete pv "$pv"; done;
 unset pvcs
 unset pvs
 
-bash ./cluster/core/democratic-csi/cleanup.sh
-
 kubectl delete ns nextcloud
 # declare -a terminating=( $(kubectl get ns -o json | \
 # jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
@@ -21,6 +19,8 @@ kubectl delete ns nextcloud
 #     kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
 # done
 # unset terminating
+
+bash ./cluster/core/democratic-csi/cleanup.sh
 
 flux resume kustomization core && flux reconcile kustomization core
 flux resume kustomization apps && flux reconcile kustomization apps
