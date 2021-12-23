@@ -1,14 +1,16 @@
 # postgresql
 
-PostgreSQL is a powerful, open source object-relational database system that uses and extends the SQL language combined with many features that safely store and scale the most complicated data workloads
+PostgreSQL is a powerful, open source object-relational database system that uses and extends the
+SQL language combined with many features that safely store and scale the most complicated data
+workloads
 
 ## Installation
 
-Install using Helm chart.
-Modify [configMap-conf.yaml](configMap-conf.yaml) to update postgresql.conf parameters.
-Modify [configMap-init.yaml](configMap-init.yaml) to include any databases/users that need to be create on initial install (see `initdb` command at end).
+Install using Helm chart. Modify [configMap-conf.yaml](configMap-conf.yaml) to update
+postgresql.conf parameters. Modify [configMap-init.yaml](configMap-init.yaml) to include any
+databases/users that need to be create on initial install (see `initdb` command at end).
 
-----------
+---
 
 If additional databases are required after install, run below commands:
 
@@ -66,19 +68,21 @@ Incremental backups are managed by postgresql's integrated WAL archive.
 > # get archive stats
 > psql -U postgres -c "SELECT * FROM pg_stat_archiver"
 >
-># Test archive_command with to force the current WAL segment to be closed and a new one to be created
+> # Test archive_command with to force the current WAL segment to be closed and a new one to be created
 > psql -U postgres -c "SELECT pg_switch_wal()"
-> ````
+> ```
 
-Incremental backups supplemented by a monthly backup that is handled by a [CronJob](cronjob-backup.yaml).
-Backups are saved in a distinct [PVC](pvc.yaml) so Velero can run restic against the backups only.
+Incremental backups supplemented by a monthly backup that is handled by a
+[CronJob](cronjob-backup.yaml). Backups are saved in a distinct [PVC](pvc.yaml) so Velero can run
+restic against the backups only.
 
 ### Restore
 
-***Point-In-Time-Recovery (PITR)***
-PITR refers to PostgreSQL’s ability to start from the restore of a full backup, then progressively fetch and apply archived WAL files up to a specified timestamp.
+**_Point-In-Time-Recovery (PITR)_** PITR refers to PostgreSQL's ability to start from the restore of
+a full backup, then progressively fetch and apply archived WAL files up to a specified timestamp.
 
-To do this, we have to create a file called “recovery.conf” in the restored cluster data directory and start up a Postgres server for that data directory.
+To do this, we have to create a file called "recovery.conf" in the restored cluster data directory
+and start up a Postgres server for that data directory.
 
 ```sh
 # stop the server
@@ -94,14 +98,16 @@ recovery_target_time = '2021-011-01 20:00:00'
 EOF
 ```
 
-> Our `pg_wal` data gets copied to `/mnt/backup/incremental.d/`
-> Review process in `cronjob-backup.yaml`
+> Our `pg_wal` data gets copied to `/mnt/backup/incremental.d/` Review process in
+> `cronjob-backup.yaml`
 
-The restore_command specifies how to fetch a WAL file required by PostgreSQL. It is the inverse of archive_command. The recovery_target_time specifies the time until when we need the changes.
+The restore_command specifies how to fetch a WAL file required by PostgreSQL. It is the inverse of
+archive_command. The recovery_target_time specifies the time until when we need the changes.
 
-When a PostgreSQL server process starts up and discovers a `recovery.conf` file in the data directory,
-it starts up in a special mode called “recovery mode”. When in recovery mode, client connections are refused.
-Postgres fetches WAL files and applies them until the recovery target (in this case, changes up to the specified timestamp) is achieved.
+When a PostgreSQL server process starts up and discovers a `recovery.conf` file in the data
+directory, it starts up in a special mode called "recovery mode". When in recovery mode, client
+connections are refused. Postgres fetches WAL files and applies them until the recovery target (in
+this case, changes up to the specified timestamp) is achieved.
 
 ```sh
 # start the server; will start in recovery mode

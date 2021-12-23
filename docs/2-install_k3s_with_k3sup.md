@@ -1,15 +1,17 @@
 # :sailboat:&nbsp; Installing k3s with k3sup
 
-:round_pushpin: Here we will be install [k3s](https://k3s.io/) with [k3sup](https://github.com/alexellis/k3sup).
-After completion, k3sup will drop a `kubeconfig` in your present working directory for use with interacting with your cluster with `kubectl`.
+:round_pushpin: Here we will be install [k3s](https://k3s.io/) with
+[k3sup](https://github.com/alexellis/k3sup). After completion, k3sup will drop a `kubeconfig` in
+your present working directory for use with interacting with your cluster with `kubectl`.
 
-1. Ensure you are able to SSH into you nodes with using your private ssh key. This is how k3sup is able to connect to your remote node.
-_In OPNsense, set Unbound DNS overrides to IP address and node name of terraform'd nodes_
+1. Ensure you are able to SSH into you nodes with using your private ssh key. This is how k3sup is
+   able to connect to your remote node. _In OPNsense, set Unbound DNS overrides to IP address and_
+   _node name of terraform'd nodes_
 
 2. Install the master node
 
    > - `--cluster` creates a HA cluster with embedded etcd db
-   > - `--tls-san` adds the LoadBalancer’s virtual ip to the cert
+   > - `--tls-san` adds the LoadBalancer's virtual ip to the cert
 
    ```sh
    echo "export NODE_USER='username'" >> .envrc

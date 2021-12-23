@@ -49,5 +49,4 @@ spec:
     # Enable secret mapping file
     secretMapping:
       create: false
-      content:
-        {}
+      content: {}

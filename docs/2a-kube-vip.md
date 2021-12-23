@@ -1,9 +1,12 @@
 # :computer:&nbsp; High-Availability VirtualIP with kube-vip
 
-`kube-vip` is a Kubernetes Virtual IP and Load-Balancer for both control plane and Kubernetes services
+`kube-vip` is a Kubernetes Virtual IP and Load-Balancer for both control plane and Kubernetes
+services
 
-_`kube-vip` creates a virtual IP for the control plane for high availability (and acts as a loadBalancer for services), whereas `metallb` **only** acts a loadBalancer for services_
-However, most of `kube-vip`'s development is currently going to ensuring the VIP works, so we'll use it for control plane vIP and also use `metallb` for service load balancing.
+_`kube-vip` creates a virtual IP for the control plane for high availability (and acts as a_
+_loadBalancer for services), whereas `metallb` **only** acts a loadBalancer for services_ However,
+most of `kube-vip`'s development is currently going to ensuring the VIP works, so we'll use it for
+control plane vIP and also use `metallb` for service load balancing.
 
 [kube-vip reference](https://kube-vip.io/hybrid/daemonset/)
 
@@ -16,7 +19,8 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
    ssh ${USER}@${HOST}
    ```
 
-2. Download RBAC (Rule-Based Access Control) for kube-vip and save to control node's `manifiests` folder
+2. Download RBAC (Rule-Based Access Control) for kube-vip and save to control node's `manifiests`
+   folder
 
    ```sh
    sudo su - # may have to act as root
@@ -47,7 +51,8 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
    kube-vip version
    ```
 
-   > If you get an error like _"ctr: image "docker.io/plndr/kube-vip:0.3.7": not found"_, edit alias:
+   > If you get an error like _"ctr: image "docker.io/plndr/kube-vip:0.3.7": not found"_, edit
+   > alias:
    > `alias kube-vip="k3s ctr run --rm --net-host docker.io/plndr/kube-vip:${VERSION} vip /kube-vip"`
 
 5. Create `kube-vip` manifest
@@ -66,7 +71,8 @@ However, most of `kube-vip`'s development is currently going to ensuring the VIP
      --inCluster | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
    ```
 
-   View/Edit the `kube-vip` manifest to ensure that the following toleration is present to allow it to run on control-plane nodes (if we tainted the control-plane)
+   View/Edit the `kube-vip` manifest to ensure that the following toleration is present to allow it
+   to run on control-plane nodes (if we tainted the control-plane)
 
    ```yml
    tolerations:

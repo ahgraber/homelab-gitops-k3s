@@ -16,7 +16,8 @@
 
 ## General instructions
 
-- Create folder/subfolder in ./cluster/apps (the difference between `apps` and `core` is that `core` does not prune)
+- Create folder/subfolder in ./cluster/apps (the difference between `apps` and `core` is that `core`
+  does not prune)
   - Include required `helm-release.yaml` or other configuration specifications
   - Include `kustomization.yaml`
 - Add pointers to `kustomization.yaml` files in parent dir

@@ -2,7 +2,8 @@
 
 ## Service Account token
 
-Dashboard uses role-based account control (RBAC) to determine whether and how users can access resources. This means that the recommended way to log in is to use a Service Account token.
+Dashboard uses role-based account control (RBAC) to determine whether and how users can access
+resources. This means that the recommended way to log in is to use a Service Account token.
 
 <!-- ```sh
 # Create Service Account
@@ -31,4 +32,6 @@ alias dbt='dashboard-token | pbcopy; echo "Copied to clipboard"'
 
 ## OpenID Connect (OIDC/OAuth2)
 
-Providers like Authentik (or Keycloak, Dex, etc) can be used to provide an authentication flow without requiring the RBAC token.  See [authentik](../../security/authentik/README.md) for additional information.
+Providers like Authentik (or Keycloak, Dex, etc) can be used to provide an authentication flow
+without requiring the RBAC token. See [authentik](../../security/authentik/README.md) for additional
+information.

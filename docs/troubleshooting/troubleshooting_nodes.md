@@ -13,7 +13,8 @@
   kubectl get nodes -o json | jq '.items[].spec.taints'
   ```
 
-- Add or overwrite a taint (see [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
+- Add or overwrite a taint (see
+  [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/))
 
   ```sh
   # add/overwrite
@@ -52,11 +53,11 @@ journalctl -u k3s -n 20
 
 ## Check node configuration (from node)
 
-* check k3s configuration:
+- check k3s configuration:
 
   ```sh
   cat /etc/rancher/k3s/config.yaml
   ```
 
-* Other important file locations:
-  * `/var/lib/rancher/k3s`
+- Other important file locations:
+  - `/var/lib/rancher/k3s`

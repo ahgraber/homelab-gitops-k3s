@@ -13,7 +13,6 @@ spec:
       # - X-Auth-Forward-Access-Token
       - X-Auth-Request-Access-Token
       - Authorization
-
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -30,7 +29,6 @@ spec:
         - name: kubernetes-dashboard
           namespace: monitoring
           port: 443
-
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
