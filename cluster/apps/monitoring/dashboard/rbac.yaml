@@ -22,7 +22,6 @@ subjects:
   # for SSO login with OIDC
   - kind: Group
     name: /kube-admin
-
 # ---
 # kind: ClusterRole
 # apiVersion: rbac.authorization.k8s.io/v1alpha1

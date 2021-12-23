@@ -23,9 +23,9 @@ spec:
     ingress:
       enabled: false
       tls:
-        source: rancher  # if `tls-rancher-ingress` cert has been created, otherwise delete
+        source: rancher # if `tls-rancher-ingress` cert has been created, otherwise delete
         secretName: tls-rancher-ingress
-    tls: external  # if using ingress with tls/ssl termination
+    tls: external # if using ingress with tls/ssl termination
     tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master

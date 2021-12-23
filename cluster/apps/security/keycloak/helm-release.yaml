@@ -106,7 +106,7 @@ spec:
       enabled: false
 
     externalDatabase:
-    # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/keycloak"
+      # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/keycloak"
       host: postgresql.postgresql
       port: 5432
       user: keycloak

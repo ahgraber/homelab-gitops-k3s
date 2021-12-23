@@ -14,7 +14,7 @@ spec:
     # Array of namespaces to include in the scheduled backup. If unspecified, all namespaces are included.
     # Optional.
     includedNamespaces:
-      - 'nextcloud'
+      - "nextcloud"
     # # Array of namespaces to exclude in the scheduled backup. If unspecified, all namespaces are included.
     # excludedNamespaces:
     #   - ''

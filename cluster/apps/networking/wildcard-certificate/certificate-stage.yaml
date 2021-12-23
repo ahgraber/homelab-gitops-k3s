@@ -2,21 +2,20 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: '${SECRET_DOMAIN/./-}-stage'
+  name: "${SECRET_DOMAIN/./-}-stage"
   namespace: networking
 spec:
-  secretName: '${SECRET_DOMAIN/./-}-stage-tls'
+  secretName: "${SECRET_DOMAIN/./-}-stage-tls"
   secretTemplate:
     annotations:
       kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-stage-tls=kubed" # Sync certificate to matching namespaces
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: '${SECRET_DOMAIN}'
+  commonName: "${SECRET_DOMAIN}"
   dnsNames:
-    - '${SECRET_DOMAIN}'
-    - '*.${SECRET_DOMAIN}'
-
+    - "${SECRET_DOMAIN}"
+    - "*.${SECRET_DOMAIN}"
 # ---
 # # define blank secret to be filled/used by Cert
 # apiVersion: v1

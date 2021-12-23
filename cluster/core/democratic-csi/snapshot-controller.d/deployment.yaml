@@ -31,7 +31,6 @@ spec:
             - "--v=5"
             - "--leader-election=true"
           imagePullPolicy: IfNotPresent
-
 ### validating webhook
 # ---
 # kind: Deployment

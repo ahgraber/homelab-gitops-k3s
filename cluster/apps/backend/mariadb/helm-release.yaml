@@ -6,7 +6,7 @@ metadata:
   namespace: backend
 spec:
   interval: 10m
-  timeout: 10m  # extended period because of lengthy startup
+  timeout: 10m # extended period because of lengthy startup
   chart:
     spec:
       # renovate: registryUrl=https://charts.bitnami.com/bitnami
@@ -62,7 +62,8 @@ spec:
           # mountPath: /bitnami/mariadb/backup
 
       podAnnotations:
-        secret.reloader.stakater.com/reload: "configmap-mariadb-conf, configmap-mariadb-init, secret-mariadb"
+        secret.reloader.stakater.com/reload:
+          "configmap-mariadb-conf, configmap-mariadb-init, secret-mariadb"
         backup.velero.io/backup-volumes: backup #, data
         # backup.velero.io/backup-volumes-excludes: "data"
         # pre.hook.backup.velero.io/container: fsfreeze
