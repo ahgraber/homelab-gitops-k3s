@@ -57,13 +57,13 @@ spec:
         securityContext:
           privileged: true
 
-    lifecycle:
-      postStartCommand:
-        [
-          "/bin/sh",
-          "-c",
-          'echo "ServerName cloud.${SECRET_DOMAIN}" | tee -a /etc/apache2/apache2.conf',
-        ]
+    # lifecycle:
+    #   postStartCommand:
+    #     [
+    #       "/bin/sh",
+    #       "-c",
+    #       'echo "ServerName cloud.${SECRET_DOMAIN}" | tee -a /etc/apache2/apache2.conf',
+    #     ]
 
     livenessProbe:
       enabled: false
@@ -78,24 +78,28 @@ spec:
       host: cloud.${SECRET_DOMAIN}
       password: ${SECRET_DEFAULT_PWD}
       # datadir: /var/www/html/data
-      configs:
-        proxy.config.php: |-
-          <?php
-          $CONFIG = array (
-            'loglevel' => 0,
-            'trusted_proxies' => array('10.42.0.0/16'),
-            'trusted_domains' => '${SECRET_DOMAIN}'
-          );
-        # protocol.config.php: |-
-        #   <?php
-        #   $CONFIG = array (
-        #     'overwriteprotocol' => 'https'
-        #   );
-        # phone_region.config.php: |-
-        #   <?php
-        #   $CONFIG = array (
-        #     'default_phone_region' => 'US'
-        #   );
+      # configs:
+      #   proxy.config.php: |-
+      #     <?php
+      #     $CONFIG = array (
+      #       'trusted_proxies' => array('10.42.0.0/16')
+      #     );
+      #   protocol.config.php: |-
+      #     <?php
+      #     $CONFIG = array (
+      #       'overwriteprotocol' => 'https'
+      #     );
+      #   phone_region.config.php: |-
+      #     <?php
+      #     $CONFIG = array (
+      #       'default_phone_region' => 'US'
+      #     );
+
+      extraEnv:
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          value: ${SECRET_DOMAIN}
+        # - name: NEXTCLOUD_TRUSTED_PROXIES
+        #   value: '10.42.0.0/16, 10.43.0.0/16'
 
       # extraSecurityContext:
       #   # runAsUser: "1001"
