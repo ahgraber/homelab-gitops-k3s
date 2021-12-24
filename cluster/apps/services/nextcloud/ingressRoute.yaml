@@ -14,7 +14,7 @@ spec:
       # Enable auth middleware
       middlewares:
         # - name: basicauth
-        - name: headers-sts
+        # - name: headers-sts
         - name: nextcloud
         # - name: rfc1918
       services:
