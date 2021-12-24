@@ -90,7 +90,7 @@ spec:
     storageClasses:
       - name: csi-truenas-iscsi
         defaultClass: false
-        reclaimPolicy: Retain # Delete, Retain
+        reclaimPolicy: Delete # Delete, Retain
         volumeBindingMode: Immediate
         allowVolumeExpansion: true
         parameters:
@@ -106,7 +106,7 @@ spec:
 
     volumeSnapshotClasses:
       - name: csi-truenas-iscsi
-        deletionPolicy: Retain # Delete, Retain
+        deletionPolicy: Delete # Delete, Retain
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
