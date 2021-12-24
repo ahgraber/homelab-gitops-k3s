@@ -1,6 +1,7 @@
 flux suspend kustomization core
 flux suspend kustomization apps && sleep 10
 flux delete hr nextcloud -n nextcloud -s && sleep 60
+
 declare -a pvcs=($(kubectl get pvc -n nextcloud --no-headers | awk '{print $1}'))
 declare -a pvs=($(kubectl get pvc -n nextcloud --no-headers | awk '{print $3}'))
 for pvc in "$pvcs[@]"; do kubectl delete pvc "$pvc" -n nextcloud; done;
