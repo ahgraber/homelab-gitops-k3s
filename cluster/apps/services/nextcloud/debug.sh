@@ -9,16 +9,15 @@ unset pvcs
 unset pvs
 
 kubectl delete ns nextcloud
-# declare -a terminating=( $(kubectl get ns -o json | \
-# jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
-# xargs -n1) )
-# for ns in "${terminating[@]}"; do
-# echo $ns
-# kubectl get ns $ns  -o json | \
-#     jq '.spec.finalizers = []' | \
-#     kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
-# done
-# unset terminating
+function ns_cleanup {
+  declare -a terminating=( $(kubectl get ns -o json | jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | xargs -n1) )
+  for ns in "${terminating[@]}"; do
+    echo $ns
+    kubectl get ns $ns  -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
+  done
+  unset terminating
+}
+ns_cleanup
 
 bash ./cluster/core/democratic-csi/cleanup.sh
 
