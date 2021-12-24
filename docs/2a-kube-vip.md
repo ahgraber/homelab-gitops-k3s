@@ -45,7 +45,7 @@ control plane vIP and also use `metallb` for service load balancing.
 4. Fetch `kube-vip` container & create alias
 
    ```sh
-   VERSION="v0.3.7"
+   VERSION="v0.4.1"  # "v0.3.7"
    crictl pull docker.io/plndr/kube-vip:${VERSION}
    alias kube-vip="k3s ctr run --rm --net-host docker.io/plndr/kube-vip:${VERSION} vip /kube-vip"
    kube-vip version
@@ -62,13 +62,15 @@ control plane vIP and also use `metallb` for service load balancing.
    export INTERFACE=ens192  # standard network interface
 
    kube-vip manifest daemonset \
-     --arp \
      --interface ${INTERFACE} \
      --address ${KVIP} \
-     --controlplane \
-     --leaderElection \
+     --inCluster \
      --taint \
-     --inCluster | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
+     --controlplane \
+     --arp \
+     --leaderElection \
+     --enableLoadBalancer \
+      | tee /var/lib/rancher/k3s/server/manifests/kube-vip.yaml
    ```
 
    View/Edit the `kube-vip` manifest to ensure that the following toleration is present to allow it
