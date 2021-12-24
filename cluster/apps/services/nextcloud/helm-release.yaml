@@ -32,13 +32,13 @@ spec:
       enabled: true
       existingClaim: nextcloud-data
 
-    # podAnnotations:
-    #   backup.velero.io/backup-volumes: nextcloud-data
-    #   pre.hook.backup.velero.io/container: fsfreeze
-    #   pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
-    #   post.hook.backup.velero.io/container: fsfreeze
-    #   post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
-    #   # secret.reloader.stakater.com/reload: "vaultwarden"
+    podAnnotations:
+      backup.velero.io/backup-volumes: nextcloud-data
+      pre.hook.backup.velero.io/container: fsfreeze
+      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
+      post.hook.backup.velero.io/container: fsfreeze
+      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
+      # secret.reloader.stakater.com/reload: "nextcloud"
 
     resources:
       requests:
@@ -47,18 +47,23 @@ spec:
       limits:
         memory: 1024Mi
 
-    # additionalContainers:
-    #   fsfreeze:
-    #     name: fsfreeze
-    #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-    #     volumeMounts:
-    #       - name: config
-    #         mountPath: /config
-    #     securityContext:
-    #       privileged: true
+    additionalContainers:
+      fsfreeze:
+        name: fsfreeze
+        image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+        volumeMounts:
+          - name: config
+            mountPath: /config
+        securityContext:
+          privileged: true
 
-    # lifecycle:
-    #   postStartCommand: ["/bin/sh", "-c", "echo \"ServerName cloud.${SECRET_DOMAIN}\" | tee -a /etc/apache2/apache2.conf"]
+    lifecycle:
+      postStartCommand:
+        [
+          "/bin/sh",
+          "-c",
+          'echo "ServerName cloud.${SECRET_DOMAIN}" | tee -a /etc/apache2/apache2.conf',
+        ]
 
     livenessProbe:
       enabled: false
@@ -135,46 +140,46 @@ spec:
         enabled: true
         existingClaim: nextcloud-db
 
-      # primary:
-      #   podAnnotations:
-      #     backup.velero.io/backup-volumes: data
-      #     pre.hook.backup.velero.io/container: fsfreeze
-      #     pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
-      #     post.hook.backup.velero.io/container: fsfreeze
-      #     post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
+      primary:
+        podAnnotations:
+          backup.velero.io/backup-volumes: data
+          pre.hook.backup.velero.io/container: fsfreeze
+          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
+          post.hook.backup.velero.io/container: fsfreeze
+          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
 
-      #   sidecars:
-      #     - name: fsfreeze
-      #       image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-      #       volumeMounts:
-      #         - name: data
-      #           mountPath: /data
-      #       securityContext:
-      #         privileged: true
+        sidecars:
+          - name: fsfreeze
+            image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+            volumeMounts:
+              - name: data
+                mountPath: /data
+            securityContext:
+              privileged: true
 
-      # resources:
-      #   requests:
-      #     memory: 256Mi
-      #   limits:
-      #     memory: 1024Mi
+      resources:
+        requests:
+          memory: 256Mi
+        limits:
+          memory: 1024Mi
 
     redis:
       enabled: true
 
-      # master:
-      #   resources:
-      #     requests:
-      #       memory: 128Mi
-      #     limits:
-      #       memory: 256Mi
+      master:
+        resources:
+          requests:
+            memory: 128Mi
+          limits:
+            memory: 256Mi
 
-      # replica:
-      #   replicaCount: 1
-      #   resources:
-      #     requests:
-      #       memory: 128Mi
-      #     limits:
-      #       memory: 256Mi
+      replica:
+        replicaCount: 1
+        resources:
+          requests:
+            memory: 128Mi
+          limits:
+            memory: 256Mi
 
   # postRenderers:
   #   - kustomize:
