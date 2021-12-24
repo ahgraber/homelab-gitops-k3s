@@ -55,8 +55,6 @@ spec:
         enabled: true
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
-        # image: docker.io/democraticcsi/democratic-csi:v1.3.2
-        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         logLevel: info
         # ### for the controller, manually mount from the remote NFS server on start,
         # ### so it can dynamically create PVC (the "crude" part)
@@ -88,10 +86,8 @@ spec:
       kubeletHostPath: /var/lib/kubelet
       podAnnotations:
         secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
-
       livenessProbe:
         enabled: true
-
       mount:
         # should fsck be executed before mounting the fs
         checkFilesystem:
@@ -102,10 +98,7 @@ spec:
 
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
-        # image: docker.io/democraticcsi/democratic-csi:v1.4.4
-        # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         logLevel: info
-
         tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
