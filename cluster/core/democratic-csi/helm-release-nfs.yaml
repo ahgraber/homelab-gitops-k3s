@@ -24,6 +24,7 @@ spec:
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
         driver: freenas-api-nfs
+      # installCRD: false
 
     csiDriver:
       name: "org.democratic-csi.truenas-nfs"
@@ -46,6 +47,7 @@ spec:
         enabled: true
         # 1.20+ should use v4.0.0+
         # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
+        # renovate: registryUrl=https://github.com/kubernetes-csi/external-snapshotter
         image: k8s.gcr.io/sig-storage/csi-snapshotter:v4.2.1
       externalHealthMonitorController:
         enabled: false
@@ -99,8 +101,8 @@ spec:
             enabled: true
 
       driver:
-        # image: docker.io/democraticcsi/democratic-csi:latest
-        image: docker.io/democraticcsi/democratic-csi:v1.4.4
+        image: docker.io/democraticcsi/democratic-csi:latest
+        # image: docker.io/democraticcsi/democratic-csi:v1.4.4
         # image: docker.io/democraticcsi/democratic-csi:v1.3.0
         logLevel: info
 
