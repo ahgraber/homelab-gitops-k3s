@@ -40,13 +40,6 @@ spec:
       post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
       # secret.reloader.stakater.com/reload: "nextcloud"
 
-    resources:
-      requests:
-        cpu: 100m
-        memory: 512Mi
-      limits:
-        memory: 1024Mi
-
     additionalContainers:
       fsfreeze:
         name: fsfreeze
@@ -78,34 +71,19 @@ spec:
       host: cloud.${SECRET_DOMAIN}
       password: ${SECRET_DEFAULT_PWD}
       # datadir: /var/www/html/data
-      # configs:
-      #   proxy.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'trusted_proxies' => array('10.42.0.0/16')
-      #     );
-      #   protocol.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'overwriteprotocol' => 'https'
-      #     );
-      #   phone_region.config.php: |-
-      #     <?php
-      #     $CONFIG = array (
-      #       'default_phone_region' => 'US'
-      #     );
-
-      extraEnv:
-        - name: NEXTCLOUD_TRUSTED_DOMAINS
-          value: ${SECRET_DOMAIN}
-        # - name: NEXTCLOUD_TRUSTED_PROXIES
-        #   value: '10.42.0.0/16, 10.43.0.0/16'
-
-      # extraSecurityContext:
-      #   # runAsUser: "1001"
-      #   runAsGroup: "33"
-      #   runAsNonRoot: true
-      #   readOnlyRootFilesystem: true
+      configs:
+        custom.config.php: |-
+          <?php
+          $CONFIG = array (
+            'default_phone_region' => 'US',
+            'enable_previews' => 'true',
+            'filelocking.enabled' => 'true',
+            'loglevel' => '2',
+            'overwriteprotocol' => 'https',
+            'overwrite.cli.url' => 'https://cloud.${SECRET_DOMAIN}',
+            'trusted_domains' => array('${SECRET_DOMAIN}')
+            'trusted_proxies' => array('10.42.0.0/16')
+          );
 
       mail:
         enabled: true
@@ -151,7 +129,6 @@ spec:
           pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
           post.hook.backup.velero.io/container: fsfreeze
           post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
-
         sidecars:
           - name: fsfreeze
             image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
@@ -161,44 +138,6 @@ spec:
             securityContext:
               privileged: true
 
-      resources:
-        requests:
-          memory: 256Mi
-        limits:
-          memory: 1024Mi
-
     redis:
       enabled: true
-
-      master:
-        resources:
-          requests:
-            memory: 128Mi
-          limits:
-            memory: 256Mi
-
-      replica:
-        replicaCount: 1
-        resources:
-          requests:
-            memory: 128Mi
-          limits:
-            memory: 256Mi
-
-  # postRenderers:
-  #   - kustomize:
-  #       patchesJson6902:
-  #         - target:
-  #             kind: CronJob
-  #             name: nextcloud-cron
-  #           patch:
-  #             - op: add
-  #               path: /spec/jobTemplate/metadata
-  #               value:
-  #                 annotations:
-  #                   botkube.io/disable: "true"
-  #             - op: add
-  #               path: /spec/jobTemplate/spec/template/metadata
-  #               value:
-  #                 annotations:
-  #                   botkube.io/disable: "true"
+      password: ${SECRET_DB_USER_PWD}
