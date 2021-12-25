@@ -78,7 +78,7 @@ spec:
             'default_phone_region' => 'US',
             'enable_previews' => 'true',
             'filelocking.enabled' => 'true',
-            'loglevel' => '2',
+            'loglevel' => '0',
             'overwriteprotocol' => 'https',
             'overwrite.cli.url' => 'https://cloud.${SECRET_DOMAIN}',
             'trusted_domains' => array('${SECRET_DOMAIN}'),
