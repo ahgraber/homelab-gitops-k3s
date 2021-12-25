@@ -81,8 +81,8 @@ spec:
             'loglevel' => '2',
             'overwriteprotocol' => 'https',
             'overwrite.cli.url' => 'https://cloud.${SECRET_DOMAIN}',
-            'trusted_domains' => array('${SECRET_DOMAIN}')
-            'trusted_proxies' => array('10.42.0.0/16')
+            'trusted_domains' => array('${SECRET_DOMAIN}'),
+            'trusted_proxies' => array('10.42.0.0/16'),
           );
 
       mail:
