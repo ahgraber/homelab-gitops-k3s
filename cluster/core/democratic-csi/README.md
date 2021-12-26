@@ -70,10 +70,10 @@ snapshots, clones, etc functionality.
   # after you enter the truenas cli and are at that prompt
   account user query id,username,uid,sudo_nopasswd
   # find the `id` of the user you want to update (note, this is distinct from the `uid`)
-  account user update id= < id > sudo_nopasswd=true
+  account user update uid_or_username=<uid> sudo_nopasswd=true
   # exit cli by hitting ctrl-d
   # confirm sudoers file is appropriate
-  cat /usr/local/etc/sudoers
+  cat /etc/sudoers # formerly /usr/local/etc/sudoers
   ```
 
 - Generate API key `csi` and save to text file for k8s secret
