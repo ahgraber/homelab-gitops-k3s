@@ -9,7 +9,7 @@ for pv in "$pvs[@]"; do kubectl delete pv "$pv"; done;
 unset pvcs
 unset pvs
 
-kubectl delete ns nextcloud
+kubectl delete ns nextcloud && sleep 30
 function ns_cleanup {
   declare -a terminating=( $(kubectl get ns -o json | jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | xargs -n1) )
   for ns in "${terminating[@]}"; do
