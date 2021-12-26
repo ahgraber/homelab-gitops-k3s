@@ -21,6 +21,10 @@ spec:
       repository: nextcloud
       tag: "23.0.0" # https://hub.docker.com/_/nextcloud/?tab=tags
 
+    env:
+      PHP_MEMORY_LIMIT: 256M
+      NEXTCLOUD_DOMAIN_NAME: cloud.${SECRET_DOMAIN}
+
     ingress:
       enabled: false
 
@@ -104,7 +108,7 @@ spec:
     externalDatabase:
       enabled: true
       type: "postgresql"
-      # host: nextcloud-postgresql.nextcloud
+      host: nextcloud-postgresql.nextcloud
       user: nextcloud
       password: ${SECRET_DB_USER_PWD}
       database: nextcloud
