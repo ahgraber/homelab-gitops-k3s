@@ -13,7 +13,7 @@ spec:
       kind: Rule
       middlewares:
         # - name: basicauth
-        # - name: headers-sts
+        - name: headers-sts
         - name: nextcloud
         # - name: rfc1918
 
@@ -32,6 +32,8 @@ kind: Middleware
 metadata:
   name: nextcloud
   namespace: networking
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   redirectRegex:
     regex: https://(.*)/.well-known/(card|cal)dav
