@@ -84,7 +84,7 @@ spec:
             'loglevel' => '0',
             'overwriteprotocol' => 'https',
             'overwrite.cli.url' => 'https://cloud.${SECRET_DOMAIN}',
-            # 'trusted_domains' => array('localhost', '${SECRET_DOMAIN}', 'cloud.${SECRET_DOMAIN}'),
+            'trusted_domains' => array('nextcloud', 'cloud.${SECRET_DOMAIN}'),
             'trusted_proxies' => array('10.42.0.0/16', '10.43.0.0/16'),
             'forwarded_for_headers' => array('HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'),
           );
@@ -95,7 +95,7 @@ spec:
         domain: "mail.${SECRET_DOMAIN}"
         smtp:
           host: in-v3.mailjet.com
-          secure: ssl
+          secure: tls
           port: 587
           authtype: LOGIN
           name: ${SECRET_SMTP_USER}
