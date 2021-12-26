@@ -21,9 +21,9 @@ spec:
       repository: nextcloud
       tag: "23.0.0" # https://hub.docker.com/_/nextcloud/?tab=tags
 
-    # env:
-    #   PHP_MEMORY_LIMIT: 256M
-    #   NEXTCLOUD_DOMAIN_NAME: cloud.${SECRET_DOMAIN}
+    env:
+      PHP_MEMORY_LIMIT: 256M
+      NEXTCLOUD_DOMAIN_NAME: ${SECRET_DOMAIN}
 
     ingress:
       enabled: false
@@ -84,9 +84,9 @@ spec:
             'loglevel' => '0',
             'overwriteprotocol' => 'https',
             'overwrite.cli.url' => 'https://cloud.${SECRET_DOMAIN}',
-            'trusted_domains' => ['localhost', '${SECRET_DOMAIN}'],
-            'trusted_proxies' => ['10.42.0.0/16', '10.43.0.0/16'],
-            'forwarded_for_headers' => ['HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'],
+            # 'trusted_domains' => array('localhost', '${SECRET_DOMAIN}', 'cloud.${SECRET_DOMAIN}'),
+            'trusted_proxies' => array('10.42.0.0/16', '10.43.0.0/16'),
+            'forwarded_for_headers' => array('HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'),
           );
 
       mail:
