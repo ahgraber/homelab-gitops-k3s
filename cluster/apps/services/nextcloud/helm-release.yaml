@@ -33,22 +33,23 @@ spec:
       existingClaim: nextcloud-data
 
     podAnnotations:
-      backup.velero.io/backup-volumes: nextcloud-data
-      pre.hook.backup.velero.io/container: fsfreeze
-      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
-      post.hook.backup.velero.io/container: fsfreeze
-      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
+      backup.velero.io/backup-volumes: nextcloud-main # nextcloud-data
+      # pre.hook.backup.velero.io/container: fsfreeze
+      # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/www/"]'
+      # post.hook.backup.velero.io/container: fsfreeze
+      # post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/www/"]'
       # secret.reloader.stakater.com/reload: "nextcloud"
 
-    additionalContainers:
-      fsfreeze:
-        name: fsfreeze
-        image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        volumeMounts:
-          - name: config
-            mountPath: /config
-        securityContext:
-          privileged: true
+    # ## Currently no additonalContainers or sidecars enabled in helm chart
+    # additionalContainers:
+    #   fsfreeze:
+    #     name: fsfreeze
+    #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+    #     volumeMounts:
+    #       - name: config
+    #         mountPath: /config
+    #     securityContext:
+    #       privileged: true
 
     # lifecycle:
     #   postStartCommand:
