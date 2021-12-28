@@ -47,17 +47,15 @@ spec:
 
       postgresql:
         # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/authentik"
-        host: postgresql.postgresql
+        host: "{{ .Release.Name }}-postgresql"
         name: authentik
         user: authentik
-        password: ${SECRET_DB_USER_PWD}
-        port: 5432
+        password: ${SECRET_AUTHENTIK_POSTGRES_PASSWORD}
       redis:
         host: "{{ .Release.Name }}-redis-master"
-        password: ${SECRET_DB_USER_PWD}
+        password: ${SECRET_AUTHENTIK_REDIS_PASSWORD}
 
-      # geoip: /geoip/GeoLite2-City.mmdb
-
+    # geoip: /geoip/GeoLite2-City.mmdb
     geoip:
       enabled: true
       accountId: ${SECRET_MAXMIND_ACCOUNT_ID}
@@ -65,10 +63,32 @@ spec:
 
     # use bundled dbs?
     postgresql:
-      enabled: false
+      enabled: true
+
+      postgresqlUsername: authentik
+      postgresqlPassword: ${SECRET_DB_USER_PWD}
+      postgresqlDatabase: authentik
+
+      persistence:
+        enabled: true
+        existingClaim: authentik-db
+
+      primary:
+        podAnnotations:
+          backup.velero.io/backup-volumes: data
+          pre.hook.backup.velero.io/container: fsfreeze
+          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
+          post.hook.backup.velero.io/container: fsfreeze
+          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
+        sidecars:
+          - name: fsfreeze
+            image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+            volumeMounts:
+              - name: data
+                mountPath: /data
+            securityContext:
+              privileged: true
 
     redis:
       enabled: true
-      auth:
-        enabled: true
-        password: ${SECRET_DB_USER_PWD}
+      password: ${SECRET_DB_USER_PWD}
