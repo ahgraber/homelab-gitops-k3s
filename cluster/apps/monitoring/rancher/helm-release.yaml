@@ -22,9 +22,9 @@ spec:
     hostname: rancher.${SECRET_DOMAIN}
     ingress:
       enabled: false
-      tls:
-        source: rancher # if `tls-rancher-ingress` cert has been created, otherwise delete
-        secretName: tls-rancher-ingress
+      # tls:
+      #   source: rancher # if `tls-rancher-ingress` cert has been created, otherwise delete
+      #   secretName: tls-rancher-ingress
     tls: external # if using ingress with tls/ssl termination
     tolerations:
       - effect: NoSchedule
