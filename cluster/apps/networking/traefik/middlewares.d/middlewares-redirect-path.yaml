@@ -17,6 +17,8 @@ kind: Middleware
 metadata:
   name: strip-prefix-regex
   namespace: networking
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   stripPrefixRegex:
     regex:
@@ -27,6 +29,8 @@ kind: Middleware
 metadata:
   name: redirect-path
   namespace: networking
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   chain:
     middlewares:
