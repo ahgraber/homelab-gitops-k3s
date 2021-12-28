@@ -74,16 +74,21 @@
 - Overwrite finalizers if namespace stuck `terminating`
 
   ```sh
-  declare -a terminating=( $(kubectl get ns -o json | \
-    jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
-    xargs -n1) )
-  for ns in "${terminating[@]}"; do
-    echo $ns
-    kubectl get ns $ns  -o json | \
-      jq '.spec.finalizers = []' | \
-      kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
-  done
-  unset terminating
+  function ns_cleanup {
+    declare -a terminating=( \
+      $(kubectl get ns -o json | \
+        jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
+        xargs -n1) \
+        )
+    for ns in "${terminating[@]}"; do
+      echo "$ns"
+      kubectl get ns "$ns"  -o json | \
+        jq '.spec.finalizers = []' | \
+        kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
+    done
+    unset terminating
+  }
+  ns_cleanup
   ```
 
 ## Debug Pods
@@ -126,7 +131,7 @@
 ```sh
 kubectl delete pods <pod> --grace-period=0 --force
 # if pod is stuck on `Unknown` state, run:
-kubectl patch pod <pod> -p '{"metadata":{"finalizers":null}}'
+kubectl patch pod <pod> -p '{"metadata":{"finalizers":[]]}}' --type=merge
 ```
 
 - Remove disk pressure taint
@@ -139,6 +144,7 @@ kubectl patch pod <pod> -p '{"metadata":{"finalizers":null}}'
 
 ```sh
 kubectl get pv | grep "Released" | awk '{print $1}' | while read vol; do kubectl delete pv/${vol}; done
+kubectl patch pv/c <pv/c name> -p '{"metadata":{"finalizers": []}}' --type=merge
 ```
 
 ## Clean up empty replicasets
