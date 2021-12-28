@@ -1,17 +1,19 @@
 #!/bin/zsh
 
+debug_hr="nextcloud"
+debug_ns="nextcloud"
 flux suspend kustomization core
 flux suspend kustomization apps && sleep 10
-flux delete hr nextcloud -n nextcloud -s && sleep 30
+flux delete hr "$debug_hr" -n "$debug_ns" -s && sleep 30
 
-declare -a pvcs=($(kubectl get pvc -n nextcloud --no-headers | awk '{print $1}'))
-declare -a pvs=($(kubectl get pvc -n nextcloud --no-headers | awk '{print $3}'))
-for pvc in "${pvcs[@]}"; do kubectl delete pvc "$pvc" -n nextcloud; done;
+declare -a pvcs=($(kubectl get pvc -n "$debug_ns" --no-headers | awk '{print $1}'))
+declare -a pvs=($(kubectl get pvc -n "$debug_ns" --no-headers | awk '{print $3}'))
+for pvc in "${pvcs[@]}"; do kubectl delete pvc "$pvc" -n "$debug_ns"; done;
 for pv in "${pvs[@]}"; do kubectl delete pv "$pv"; done;
 unset pvcs
 unset pvs
 
-kubectl delete ns nextcloud && sleep 30
+kubectl delete ns "$debug_ns" && sleep 30
 function ns_cleanup {
   declare -a terminating=( $(kubectl get ns -o json | jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | xargs -n1) )
   for ns in "${terminating[@]}"; do
