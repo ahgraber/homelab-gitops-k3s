@@ -47,12 +47,13 @@ spec:
 
       postgresql:
         # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/authentik"
-        host: "{{ .Release.Name }}-postgresql"
+        # host: "{{ .Release.Name }}-postgresql"
         name: authentik
         user: authentik
         password: ${SECRET_DB_USER_PWD}
+
       redis:
-        host: "{{ .Release.Name }}-redis-master"
+        # host: "{{ .Release.Name }}-redis-master"
         password: ${SECRET_DB_USER_PWD}
 
     # geoip: /geoip/GeoLite2-City.mmdb
@@ -64,10 +65,9 @@ spec:
     # use bundled dbs?
     postgresql:
       enabled: true
-
+      postgresqlDatabase: authentik
       postgresqlUsername: authentik
       postgresqlPassword: ${SECRET_DB_USER_PWD}
-      postgresqlDatabase: authentik
 
       persistence:
         enabled: true
