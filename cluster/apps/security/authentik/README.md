@@ -4,15 +4,15 @@ Authentik is an open-source Identity Provider focused on flexibility and versati
 
 ## Installation
 
-See [helm-release](helm-release.yaml) Once running, access the admin page at
-<https://auth.${SECRET_DOMAIN}/if/flow/initial-setup/>
+See [helm-release](helm-release.yaml)
+Once running, access the admin page at <https://auth.${SECRET_DOMAIN}/if/flow/initial-setup/>
 
 ## Configuration
 
 ### Identities
 
-To use Authentik as an Identity Provider (IdP), we must have identities. Identities (i.e., end
-users) can be configured in
+To use Authentik as an Identity Provider (IdP), we must have identities.
+Identities (i.e., end users) can be configured in
 
 ```txt
 `Identity & Cryptography`
@@ -26,7 +26,7 @@ Authentik must be aware of end applications/services to provide access. **Applic
 configured in
 
 ```txt
-`Resources`
+`Applications`
   └ `Applications`
 ```
 
