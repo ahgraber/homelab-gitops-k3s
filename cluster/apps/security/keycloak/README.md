@@ -6,6 +6,7 @@ refs:
 - <https://stackoverflow.com/questions/69102035/oauth2-proxy-and-traefik-too-many-redirect> -->
   <https://github.com/codeaprendiz/devops-essentials/tree/main/kubernetes/aws/task-004-oauth2-proxy>
 - <https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik-forward-auth/keycloak/>
+- <https://github.com/stevegroom/traefikGateway/blob/master/traefik/docker-compose.yaml>
 
 ## Keycloak configuration
 
