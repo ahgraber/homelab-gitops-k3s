@@ -5,4 +5,5 @@ resources:
   - helm-release.yaml
   - ingressRoute-admin.yaml
   # - ingressRoute-forwardauth.yaml
+  - pvc.yaml
   - secret.yaml
