@@ -31,14 +31,22 @@ spec:
       tls:
         enabled: false
 
-    ## ref: https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy
-    proxyAddressForwarding: false
-
     configuration: ""
     ## @param existingConfigmap Name of existing ConfigMap with Keycloak configuration
     ## NOTE: When it's set the configuration parameter is ignored
     ##
     existingConfigmap: ""
+
+    ## ref: https://www.keycloak.org/docs/latest/server_installation/#_setting-up-a-load-balancer-or-proxy
+    proxyAddressForwarding: true
+
+    extraEnvVars:
+      # - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+      #   value: "true"
+      - name: KEYCLOAK_FRONTEND_URL
+        value: "https://keycloak.{SECRET_DOMAIN}"
+      - name: KEYCLOAK_LOG_LEVEL
+        value: DEBUG
 
     ## Configuration for keycloak-config-cli
     ## ref: https://github.com/adorsys/keycloak-config-cli
@@ -50,7 +58,7 @@ spec:
     service:
       type: ClusterIP
       port: 8080
-      httpsPort: 8443
+      # httpsPort: 8443
 
     ingress:
       enabled: false
@@ -68,6 +76,41 @@ spec:
       ## Prometheus Operator ServiceMonitor configuration
       serviceMonitor:
         enabled: false
+
+    # use bundled dbs?
+    postgresql:
+      enabled: true
+      postgresqlDatabase: keycloak
+      postgresqlUsername: keycloak
+      postgresqlPassword: ${SECRET_DB_USER_PWD}
+
+      persistence:
+        enabled: true
+        existingClaim: keycloak-db
+
+      primary:
+        podAnnotations:
+          backup.velero.io/backup-volumes: data
+          pre.hook.backup.velero.io/container: fsfreeze
+          pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
+          post.hook.backup.velero.io/container: fsfreeze
+          post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
+        sidecars:
+          - name: fsfreeze
+            image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+            volumeMounts:
+              - name: data
+                mountPath: /data
+            securityContext:
+              privileged: true
+
+    externalDatabase:
+      # host: "{{ .Release.Name }}-postgresql"
+      # port: 5432
+      database: keycloak
+      user: keycloak
+      password: ${SECRET_DB_USER_PWD}
+      # existingSecret: ""
 
     startupProbe:
       enabled: false
@@ -101,15 +144,3 @@ spec:
       timeoutSeconds: 1
       failureThreshold: 3
       successThreshold: 1
-
-    postgresql:
-      enabled: false
-
-    externalDatabase:
-      # host: "postgresql://authentik:${SECRET_DB_USER_PWD}@postgresql.postgresql:5432/keycloak"
-      host: postgresql.postgresql
-      port: 5432
-      user: keycloak
-      password: ${SECRET_DB_USER_PWD}
-      database: keycloak
-      # existingSecret: ""
