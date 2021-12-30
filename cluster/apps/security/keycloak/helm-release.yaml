@@ -45,8 +45,8 @@ spec:
       #   value: "true"
       - name: KEYCLOAK_FRONTEND_URL
         value: "https://keycloak.{SECRET_DOMAIN}"
-      - name: KEYCLOAK_LOG_LEVEL
-        value: DEBUG
+      # - name: KEYCLOAK_LOG_LEVEL
+      #   value: DEBUG
 
     ## Configuration for keycloak-config-cli
     ## ref: https://github.com/adorsys/keycloak-config-cli
