@@ -6,4 +6,5 @@ resources:
   # - mariadb.yaml
   - nextcloud.yaml
   # - postgresql.yaml
+  - security.yaml
   - vaultwarden.yaml
