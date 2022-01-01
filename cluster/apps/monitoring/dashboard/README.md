@@ -32,6 +32,38 @@ alias dbt='dashboard-token | pbcopy; echo "Copied to clipboard"'
 
 ## OpenID Connect (OIDC/OAuth2)
 
+[Authorization header](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/README.md#authorization-header)
+
+[K8s SSO with OIDC](https://medium.com/@hbceylan/deep-dive-kubernetes-single-sign-on-sso-with-openid-connection-via-g-suite-a4f01bd4a48f)
+
 Providers like Authentik (or Keycloak, Dex, etc) can be used to provide an authentication flow
-without requiring the RBAC token. See [authentik](../../security/authentik/README.md) for additional
+without requiring the RBAC token. See [authentik](../../security/authentik/README.md)
+or [keycloak](../../security/keycloak/README.md) for additional
 information.
+
+### Verify OIDC Token
+
+Fill out the variables below, then copy the encoded output, open [jwt.io/debugger](https://jwt.io#debugger-io)
+and paste it into the left box. On the right side you should find the decoded JSON output
+
+```sh
+KEYCLOAK_DOMAIN='keycloak.ninerealmlabs.com'
+KEYCLOAK_REALM='NineRealmLabs'
+KEYCLOAK_USERNAME='admin'
+KEYCLOAK_PASSWORD='***REMOVED***'
+KEYCLOAK_CLIENT_ID='kubernetes'
+KEYCLOAK_CLIENT_SECRET='TAbzECDXde5SWca3NPqc8ibaI0Cna4t0'
+
+curl -s \
+-d "client_id=$KEYCLOAK_CLIENT_ID" \
+-d "client_secret=$KEYCLOAK_CLIENT_SECRET" \
+-d "username=$KEYCLOAK_USERNAME" \
+-d "password=$KEYCLOAK_PASSWORD" \
+-d "grant_type=password" \
+"https://$KEYCLOAK_DOMAIN/auth/realms/$KEYCLOAK_REALM/protocol/openid-connect/token" | jq -r '.access_token'
+```
+
+### Prerequisites
+
+1. RBAC-manager
+2. [oauth2-proxy sidecar](https://www.reddit.com/r/kubernetes/comments/nk0mss/kubernetes_dashboard_with_keycloak/gzb1o1t/)

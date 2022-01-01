@@ -21,7 +21,7 @@ subjects:
     namespace: monitoring
   # for SSO login with OIDC
   - kind: Group
-    name: /kube-admin
+    name: /${SECRET_DOMAIN/.com/-}admin
 # ---
 # kind: ClusterRole
 # apiVersion: rbac.authorization.k8s.io/v1alpha1
