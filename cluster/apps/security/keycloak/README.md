@@ -7,6 +7,7 @@ refs:
   <https://github.com/codeaprendiz/devops-essentials/tree/main/kubernetes/aws/task-004-oauth2-proxy>
 - <https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik-forward-auth/keycloak/>
 - <https://github.com/stevegroom/traefikGateway/blob/master/traefik/docker-compose.yaml>
+- <https://oleg-pershin.medium.com/kubernetes-from-scratch-oidc-and-api-server-f3af0d84c4dc>
 
 ## Keycloak configuration
 
@@ -48,29 +49,11 @@ group has access to what" (the "group" from Keycloak will be our "role" in the K
 
 ### OIDC Authentication
 
-First, we need to tell the Kubernetes cluster to accept OIDC tokens from our Keycloak installation.
+First, we need to tell the Kubernetes cluster to accept OIDC tokens from our Keycloak installation ([ref](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)).
 The kubernetes api-server allows the integration of 3rd party OIDC providers -- `apiserver` must be
-started using the following options:
+configured to allow/trust.
 
-> This is the base URL for the realm e.g. if the realm is "test1", the URL will be
-> <http://keycloak-server/auth/realms/test1> >
-> `--oidc-issuer-url=https://keycloak-server/auth/realms/test1`
->
-> This is the client ID provided by the OIDC provider `--oidc-client-id=kubernetes`
->
-> If the OIDC provider is using a certificate signed by an internal authority, use this option to
-> inject the CA certificate `--oidc-ca-file=/etc/kubernetes/ssl/dex-ca.pem`
->
-> This is the claim used for identifying the user inside Kubernetes Note that everything except
-> email claim will be considered only if they have a prefix (see below)
-> `--oidc-username-claim=email`
->
-> Prefix (inside the Kubernetes cluster) for the claim above `--oidc-username-prefix=oidc:`
->
-> Group claim settings (same as the username claim, but for groups) `--oidc-groups-claim=groups` >
-> `--oidc-groups-prefix=oidc:`
-
-k3s bundles `api-server` into the `server` agent. Arguments to configure `api-server` can be passed
+`k3s` bundles `api-server` into the `server` agent. Arguments to configure `api-server` can be passed
 using `--kube-apiserver-arg` command line flags
 [per ref](https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/) or
 cluster leader config file at `/etc/rancher/k3s/config.yaml`:
@@ -83,6 +66,11 @@ kube-apiserver-arg:
   - "oidc-client-id=<CLIENT NAME IN KEYCLOAK>"
   - "oidc-username-claim=email"
   - "oidc-groups-claim=groups"
+  - "oidc-groups-prefix=oidc:"
+  # - "oidc-ca-file=/etc/kubernetes/ssl/kc-ca.pem"
+  #                 /etc/kubernetes/ca-bundle.crt
+  #                 /var/lib/rancher/k3s/server/tls/server-ca.crt
+  #                 /var/lib/rancher/k3s/server/tls/client-ca.crt
 ```
 
 Check the config has been updated on each server node:
@@ -122,5 +110,5 @@ subjects:
     namespace: monitoring
   # for SSO login with OIDC
   - kind: Group
-    name: /kube-admin
+    name: /admin
 ```
