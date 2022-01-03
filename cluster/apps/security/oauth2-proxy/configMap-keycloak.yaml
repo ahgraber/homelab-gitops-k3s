@@ -9,12 +9,14 @@ data:
     ## OAuth2 Proxy Config File
     ## https://github.com/oauth2-proxy/oauth2-proxy
 
-    provider = oidc
-    provider-display-name = "Authentik"
-    login-url = "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
-    oidc-issuer-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
-    oidc-jwks-url = "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
-    redirect-url = "http://oauth2.${SECRET_DOMAIN}/oauth2/callback"
+    provider = keycloak-oidc
+    provider-display-name = "Keycloak"
+    client-secret=${SECRET_KEYCLOAK_CLIENT_SECRET}
+    redirect-url=https://myapp.com/oauth2/callback
+    oidc-issuer-url=https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
+    # allowed-role=<realm role name> // Optional, required realm role
+    # allowed-role=kubernetes:admin // Optional, required client role
+
     cookie_secure = false
     reverse_proxy = true
     email_domains = [ "*" ]
