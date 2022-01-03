@@ -12,7 +12,7 @@ spec:
     - match: Host(`keycloak.${SECRET_DOMAIN}`)
       kind: Rule
       middlewares:
-        - name: rfc1918
+        # - name: rfc1918
         # - name: authentik
         # - name: proxy-headers
       services:

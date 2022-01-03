@@ -30,38 +30,38 @@ spec:
       # clientID: ${SECRET_O2P_DASHBOARD_ID}
       # clientSecret: ${SECRET_O2P_DASHBOARD_SECRET}
       # cookieSecret: ${SECRET_O2P_DASHBOARD_COOKIE}
-      ## ConfigMap with the configuration
-      # existingConfig: "configmap-oauth2-proxy"
       ## Secret with the client ID, secret and cookie secret
       existingSecret: "secret-oauth2proxy"
+      ## ConfigMap with the configuration
+      existingConfig: "configmap-oauth2-proxy"
       # configFile: |-
       #   email_domains = [ "*" ]
       #   upstreams = [ "file:///dev/null" ]
 
-    # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
-    extraArgs:
-      provider: oidc
-      provider-display-name: "Authentik"
-      login-url: "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
-      oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
-      oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
-      redirect-url: "https://oauth2.${SECRET_DOMAIN}/oauth2/callback"
-      # insecure-oidc-skip-issuer-verification: false
-      # oidc-email-claim: "email"
-      # oidc-groups-claim: "groups"
-      allowed-group: kube-admin
-      reverse-proxy: true
-      pass-basic-auth: true
-      # pass-authorization-header: true
-      # pass-access-token: true
-      # set-basic-auth: true
-      set-authorization-header: true
-      # set-xauthrequest: true
-      # upstream: static://202
-      cookie-domain: ".${SECRET_DOMAIN}"
-      cookie-secure: true
-      cookie-name: "_oauth2_proxy"
-      email-domain: "*"
-      whitelist-domain: ".${SECRET_DOMAIN}"
-      silence-ping-logging: true
-      skip-provider-button: true
+    # # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
+    # extraArgs:
+    #   provider: oidc
+    #   provider-display-name: "Authentik"
+    #   login-url: "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
+    #   oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
+    #   oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
+    #   redirect-url: "https://oauth2.${SECRET_DOMAIN}/oauth2/callback"
+    #   # insecure-oidc-skip-issuer-verification: false
+    #   # oidc-email-claim: "email"
+    #   # oidc-groups-claim: "groups"
+    #   allowed-group: admin
+    #   reverse-proxy: true
+    #   pass-basic-auth: true
+    #   # pass-authorization-header: true
+    #   # pass-access-token: true
+    #   # set-basic-auth: true
+    #   set-authorization-header: true
+    #   # set-xauthrequest: true
+    #   # upstream: static://202
+    #   cookie-domain: ".${SECRET_DOMAIN}"
+    #   cookie-secure: true
+    #   cookie-name: "_oauth2_proxy"
+    #   email-domain: "*"
+    #   whitelist-domain: ".${SECRET_DOMAIN}"
+    #   silence-ping-logging: true
+    #   skip-provider-button: true
