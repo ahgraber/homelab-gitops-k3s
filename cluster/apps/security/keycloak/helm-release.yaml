@@ -18,8 +18,8 @@ spec:
   values:
     image:
       repository: bitnami/keycloak
-      # tag:15.1.1-debian-10-r10
-      tag: 16.1.0-debian-10-r2
+      tag: 15.1.1-debian-10-r10
+      # tag: 16.1.0-debian-10-r2
       debug: true
 
     auth:
