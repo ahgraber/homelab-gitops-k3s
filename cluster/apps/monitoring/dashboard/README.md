@@ -43,16 +43,16 @@ information.
 
 ### Verify OIDC Token
 
-Fill out the variables below, then copy the encoded output, open [jwt.io/debugger](https://jwt.io#debugger-io)
+Fill out the variables below, then copy the encoded output, open [jwt.io](https://jwt.io#debugger-io)
 and paste it into the left box. On the right side you should find the decoded JSON output
 
 ```sh
-KEYCLOAK_DOMAIN='keycloak.ninerealmlabs.com'
-KEYCLOAK_REALM='NineRealmLabs'
-KEYCLOAK_USERNAME='admin'
-KEYCLOAK_PASSWORD='MdfmeSsZrt54'
-KEYCLOAK_CLIENT_ID='kubernetes'
-KEYCLOAK_CLIENT_SECRET='TAbzECDXde5SWca3NPqc8ibaI0Cna4t0'
+KEYCLOAK_DOMAIN="keycloak.${SECRET_DOMAIN}"
+KEYCLOAK_REALM="${SECRET_KEYCLOAK_REALM}"
+KEYCLOAK_USERNAME="admin"
+KEYCLOAK_PASSWORD="${SECRET_DEFAULT_PASSWORD}"
+KEYCLOAK_CLIENT_ID="kubernetes"
+KEYCLOAK_CLIENT_SECRET="${SECRET_KEYCLOAK_CLIENT_SECRET}"  # From Keycloak Client
 
 curl -s \
 -d "client_id=$KEYCLOAK_CLIENT_ID" \
