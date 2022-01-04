@@ -84,7 +84,7 @@ envsubst < ./tmpl/.sops.yaml >! ./.sops.yaml
 envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
 envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
 envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
-envsubst < ./tmpl/secret-traefik-middlewares.sops.yaml >! ./cluster/apps/networking/traefik/middlewares/secret-basicauth.sops.yaml
+envsubst < ./tmpl/secret-traefik-middlewares.sops.yaml >! ./cluster/apps/networking/traefik/middlewares.d/secret-basicauth.sops.yaml
 ```
 
 ## 6. :mag:&nbsp; **Verify** all the above files have the correct information present
@@ -97,7 +97,7 @@ envsubst < ./tmpl/secret-traefik-middlewares.sops.yaml >! ./cluster/apps/network
 export GPG_TTY=$(tty)
 # Encrypt SOPS secrets
 sops --encrypt --in-place ./cluster/base/cluster-secrets.sops.yaml
-sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares/secret-basicauth.sops.yaml
+sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares.d/secret-basicauth.sops.yaml
 ```
 
 :round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
