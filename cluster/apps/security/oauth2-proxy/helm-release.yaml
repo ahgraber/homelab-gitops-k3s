@@ -50,7 +50,7 @@ spec:
       provider: keycloak-oidc
       provider-display-name: Keycloak
       oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth2/callback
+      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth/callback
       skip-provider-button: true
       reverse-proxy: true
       # pass-authorization-header: true
