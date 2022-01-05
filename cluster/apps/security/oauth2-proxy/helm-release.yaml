@@ -34,28 +34,28 @@ spec:
       existingSecret: "secret-oauth2proxy"
       # ## ConfigMap with the configuration
       # existingConfig: "configmap-oauth2-proxy"
-      configFile: |-
-        provider = keycloak-oidc
-        provider-display-name = "Keycloak"
-        oidc-issuer-url = https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-        redirect-url = https://dashboard.${SECRET_DOMAIN}/oauth2/callback
-        skip-provider-button = true
-        pass-authorization-header = true
-        email-domain = "*"
-        cookie_domain = ".${SECRET_DOMAIN}"
-        whitelist_domains = [ ".${SECRET_DOMAIN}" ]
+      # configFile: |-
+      #   provider = keycloak-oidc
+      #   provider-display-name = "Keycloak"
+      #   oidc-issuer-url = https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
+      #   redirect-url = https://dashboard.${SECRET_DOMAIN}/oauth2/callback
+      #   skip-provider-button = true
+      #   pass-authorization-header = true
+      #   email-domain = "*"
+      #   cookie_domain = ".${SECRET_DOMAIN}"
+      #   whitelist_domains = [ ".${SECRET_DOMAIN}" ]
 
-    # # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
-    # extraArgs:
-    #   provider: keycloak-oidc
-    #   provider-display-name: "Keycloak"
-    #   oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-    #   redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth2/callback
-    #   skip-provider-button:
-    #   pass-authorization-header:
-    #   email-domain: "*"
-    #   cookie_domain: ".${SECRET_DOMAIN}"
-    #   whitelist_domains: [ ".${SECRET_DOMAIN}" ]
+    # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
+    extraArgs:
+      provider: keycloak-oidc
+      provider-display-name: "Keycloak"
+      oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
+      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth2/callback
+      skip-provider-button:
+      pass-authorization-header:
+      email-domain: "*"
+      cookie_domain: ".${SECRET_DOMAIN}"
+      whitelist_domains: [".${SECRET_DOMAIN}"]
 
     # extraArgs:
     #   provider: oidc
