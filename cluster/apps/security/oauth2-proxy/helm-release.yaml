@@ -54,6 +54,7 @@ spec:
       skip-provider-button:
       reverse-proxy:
       pass-authorization-header:
+      pass-access-token:
       email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
       whitelist-domain: ".${SECRET_DOMAIN}"
