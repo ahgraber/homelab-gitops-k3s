@@ -52,6 +52,7 @@ spec:
       oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
       redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth2/callback
       skip-provider-button:
+      reverse-proxy:
       pass-authorization-header:
       email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
