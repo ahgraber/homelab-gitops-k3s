@@ -11,7 +11,7 @@ data:
 
     provider = keycloak-oidc
     provider-display-name = "Keycloak"
-    client-secret=${SECRET_KEYCLOAK_CLIENT_SECRET}
+    # client-secret=${SECRET_KEYCLOAK_CLIENT_SECRET}
     redirect-url=https://myapp.com/oauth2/callback
     oidc-issuer-url=https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
     # allowed-role=<realm role name> // Optional, required realm role
