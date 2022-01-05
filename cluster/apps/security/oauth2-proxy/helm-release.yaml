@@ -55,7 +55,7 @@ spec:
       pass-authorization-header:
       email-domain: "*"
       cookie-domain: ".${SECRET_DOMAIN}"
-      whitelist-domain: [".${SECRET_DOMAIN}"]
+      whitelist-domain: ".${SECRET_DOMAIN}"
 
     # extraArgs:
     #   provider: oidc
