@@ -48,16 +48,16 @@ spec:
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
       provider: keycloak-oidc
-      provider-display-name: "Keycloak"
+      provider-display-name: Keycloak
       oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth/callback
+      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth2/callback
       skip-provider-button:
       reverse-proxy:
       pass-authorization-header:
       pass-access-token:
       email-domain: "*"
-      cookie-domain: ".${SECRET_DOMAIN}"
-      whitelist-domain: ".${SECRET_DOMAIN}"
+      cookie-domain: .${SECRET_DOMAIN}
+      whitelist-domain: .${SECRET_DOMAIN}
 
     # extraArgs:
     #   provider: oidc
