@@ -131,7 +131,7 @@ spec:
       httpGet:
         path: /auth/
         port: http
-      initialDelaySeconds: 300
+      initialDelaySeconds: 240 # 300 may be needed on first start
       periodSeconds: 1
       timeoutSeconds: 5
       failureThreshold: 3

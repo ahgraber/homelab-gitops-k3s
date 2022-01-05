@@ -22,7 +22,7 @@ metadata:
   namespace: networking
 spec:
   routes:
-    - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2`)"
+    - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth`)"
       kind: Rule
       middlewares:
         - name: oauth2-proxy-headers
