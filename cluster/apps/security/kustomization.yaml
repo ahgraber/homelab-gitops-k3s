@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   # - authentik
   - keycloak
-  # - oauth2-proxy
+  - oauth2-proxy
   - rbac-manager
   # - traefik-forward-auth

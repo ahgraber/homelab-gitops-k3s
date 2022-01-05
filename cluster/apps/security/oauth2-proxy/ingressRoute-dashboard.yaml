@@ -1,20 +1,5 @@
 ---
 apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: kubernetes-dashboard-forward
-  namespace: networking
-spec:
-  forwardAuth:
-    address: https://oauth2.${SECRET_DOMAIN}
-    # address: oauth2-proxy.security
-    trustForwardHeader: true
-    authResponseHeaders:
-      # - X-Auth-Forward-Access-Token
-      - X-Auth-Request-Access-Token
-      - Authorization
----
-apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: kubernetes-dashboard-forward
@@ -45,4 +30,16 @@ spec:
         - name: oauth2-proxy
           namespace: security
           port: 80
-# https://auth.ninerealmlabs.com/if/flow/default-provider-authorization-implicit-consent/?approval_prompt=force&client_id=839305ef39356739289a2599d5edf7914e156cca&redirect_uri=https%3A%2F%2Foauth2.ninerealmlabs.com%2Foauth2%2Fcallback&response_type=code&scope=openid+email+profile+groups&state=UAAzkTqAVV-oDAdqmUHeV0JGKg2w5tLop0jgYf5CKj4%3Ahttps%3A%2F%2Fdashboard.ninerealmlabs.com%2F
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: kubernetes-dashboard-forward
+  namespace: networking
+spec:
+  forwardAuth:
+    address: https://oauth2.${SECRET_DOMAIN}
+    trustForwardHeader: true
+    authResponseHeaders:
+      - X-Auth-Request-Access-Token
+      - Authorization
