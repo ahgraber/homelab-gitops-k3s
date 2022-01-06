@@ -35,22 +35,16 @@ spec:
       # ## ConfigMap with the configuration
       # existingConfig: "configmap-oauth2-proxy"
       # configFile: |-
-      #   provider = keycloak-oidc
-      #   provider-display-name = "Keycloak"
-      #   oidc-issuer-url = https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-      #   redirect-url = https://dashboard.${SECRET_DOMAIN}/oauth2/callback
-      #   skip-provider-button = true
-      #   pass-authorization-header = true
-      #   email-domain = "*"
-      #   cookie-domain = ".${SECRET_DOMAIN}"
-      #   whitelist_domains = [ ".${SECRET_DOMAIN}" ]
+      #   email_domains = [ "*" ]
+      #   upstreams = [ "file:///dev/null" ]
 
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
       provider: keycloak-oidc
       provider-display-name: Keycloak
       oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-      redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth/callback
+      # redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth/callback
+      redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
       skip-provider-button: true
       reverse-proxy: true
       # pass-authorization-header: true
@@ -59,6 +53,7 @@ spec:
       email-domain: "*"
       cookie-domain: .${SECRET_DOMAIN}
       whitelist-domain: .${SECRET_DOMAIN}
+      silence-ping-logging: true
 
     # extraArgs:
     #   provider: oidc
