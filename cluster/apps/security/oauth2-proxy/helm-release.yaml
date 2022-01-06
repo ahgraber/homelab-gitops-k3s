@@ -47,11 +47,11 @@ spec:
       redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
       skip-provider-button: true
       reverse-proxy: true
-      pass_authorization_header: true
-      pass_access_token: true
-      pass_user_headers: true
-      set_authorization_header: true
-      set_xauthrequest: true
+      pass-authorization-header: true
+      pass-access-token: true
+      pass-user-headers: true
+      set-authorization-header: true
+      set-xauthrequest: true
       email-domain: "*"
       cookie-domain: .${SECRET_DOMAIN}
       whitelist-domain: .${SECRET_DOMAIN}
