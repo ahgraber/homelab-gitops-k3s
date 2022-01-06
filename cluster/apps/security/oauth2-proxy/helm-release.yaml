@@ -42,14 +42,16 @@ spec:
     extraArgs:
       provider: keycloak-oidc
       provider-display-name: Keycloak
-      oidc-issuer-url: https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}
-      # redirect-url: https://dashboard.${SECRET_DOMAIN}/oauth/callback
+      oidc-issuer-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}"
+      # redirect-url: "https://dashboard.${SECRET_DOMAIN}/oauth2/callback"
       redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
       skip-provider-button: true
       reverse-proxy: true
-      # pass-authorization-header: true
-      # pass-access-token: true
-      set-authorization-header: true
+      pass_authorization_header: true
+      pass_access_token: true
+      pass_user_headers: true
+      set_authorization_header: true
+      set_xauthrequest: true
       email-domain: "*"
       cookie-domain: .${SECRET_DOMAIN}
       whitelist-domain: .${SECRET_DOMAIN}
