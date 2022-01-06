@@ -22,7 +22,7 @@ metadata:
   namespace: networking
 spec:
   routes:
-    - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth`)"
+    - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2`)"
       kind: Rule
       middlewares:
         - name: oauth2-proxy-headers
@@ -38,8 +38,11 @@ metadata:
   namespace: networking
 spec:
   forwardAuth:
-    address: https://oauth2.${SECRET_DOMAIN}
+    address: https://oauth2.${SECRET_DOMAIN}/oauth2/sign_in?rd=https://dashboard.${SECRET_DOMAIN}
     trustForwardHeader: true
     authResponseHeaders:
+      - X-Auth-Request-User
+      - X-Auth-Request-Email
       - X-Auth-Request-Access-Token
       - Authorization
+      - Set-Cookie
