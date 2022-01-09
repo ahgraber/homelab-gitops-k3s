@@ -45,7 +45,7 @@ spec:
       # client-id: ${SECRET_KEYCLOAK_CLIENT_ID}
       # client-secret: ${SECRET_O2P_DASHBOARD_SECRET}
       # cookie-secret: ${SECRET_O2P_DASHBOARD_COOKIE}
-      oidc-issuer-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}"
+      oidc-issuer-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/"
       # redirect-url: "https://dashboard.${SECRET_DOMAIN}/oauth2/callback"
       redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
       # allowed-role: <realm role name> // Optional, required realm role
