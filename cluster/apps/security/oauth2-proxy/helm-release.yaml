@@ -22,7 +22,7 @@ spec:
 
     ingress:
       enabled: false
-      hostname: oauth2-proxy.${SECRET_DOMAIN}
+      hostname: oauth2.${SECRET_DOMAIN}
       path: /
 
     proxyVarsAsSecrets: true
