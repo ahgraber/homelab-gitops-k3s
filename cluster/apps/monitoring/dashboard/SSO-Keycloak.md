@@ -146,3 +146,4 @@ kubectl config set-credentials USER_NAME \
 - <https://geek-cookbook.funkypenguin.co.nz/ha-docker-swarm/traefik-forward-auth/keycloak/>
 - <https://github.com/stevegroom/traefikGateway/blob/master/traefik/docker-compose.yaml>
 - <https://oleg-pershin.medium.com/kubernetes-from-scratch-oidc-and-api-server-f3af0d84c4dc>
+- <https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/>

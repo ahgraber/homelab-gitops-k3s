@@ -7,3 +7,4 @@ using Providers (Google, GitHub, and others) to validate accounts by email, doma
 - [ref 1b](https://github.com/oauth2-proxy/oauth2-proxy/issues/46#issuecomment-687155032)
 - [ref 2](https://github.com/oauth2-proxy/oauth2-proxy/issues/1355#issuecomment-920853257)
 - [ref 3](https://github.com/goauthentik/authentik/issues/1626)
+- [ref 4](https://stackoverflow.com/questions/64595962/howto-use-keycloak-oauth2-and-dashboard-error-403-invalid-request-invalid-s)
