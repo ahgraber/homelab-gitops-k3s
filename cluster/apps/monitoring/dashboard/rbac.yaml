@@ -20,10 +20,10 @@ subjects:
     name: dashboard-admin
     namespace: monitoring
   # for SSO login with OIDC
-  # - kind: Group
-  #   name: /${SECRET_DOMAIN/.com/-}admin
   - kind: Group
-    name: admin
+    name: ${SECRET_DOMAIN}-admin
+  - kind: Group
+    name: kube-admin
 # ---
 # kind: ClusterRole
 # apiVersion: rbac.authorization.k8s.io/v1alpha1

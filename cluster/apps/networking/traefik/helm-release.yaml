@@ -55,6 +55,7 @@ spec:
       - "--api.debug=true"
       - "--api.insecure=true"
       - "--serverstransport.insecureskipverify=true"
+      # - "--entryPoints.websecure.forwardedHeaders.insecure"
       # - "--providers.kubernetesingress.ingressclass=traefik"
       # - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
       # - "--providers.kubernetescrd.endpoint=${METALLB_FRONTEND}"

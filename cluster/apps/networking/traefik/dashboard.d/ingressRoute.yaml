@@ -13,8 +13,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
-        - name: rfc1918
-        - name: basicauth
+        - name: traefik-forward
       services:
         # - name: api@internal
         #   kind: TraefikService
