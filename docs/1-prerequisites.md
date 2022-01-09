@@ -21,6 +21,8 @@ CentOS.
 | [pre-commit](https://github.com/pre-commit/pre-commit)             | Runs checks during `git commit`                                     |    `2.12.0`     |    ❌    |
 | [kustomize](https://kustomize.io/)                                 | Template-free way to customize application configuration            |     `4.1.0`     |    ❌    |
 | [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |     `3.5.4`     |    ❌    |
+| [k9s](https://k9scli.io/)                                          | CLI-GUI for k8s clusters                                            |    `0.25.18`    |    ❌    |
+| [popeye](https://popeyecli.io/)                                    | CLI-based scanner/finder for k8s clusters                           |     `0.9.8`     |    ❌    |
 
 ## :ballot_box_with_check:&nbsp; Installation
 
