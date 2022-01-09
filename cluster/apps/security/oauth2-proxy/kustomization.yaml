@@ -5,6 +5,7 @@ resources:
   - helm-release.yaml
   # - configMap-keycloak.yaml
   - ingressRoute.yaml
-  - ingressRoute-dashboard.yaml
+  - ingressRoute-k8s-dashboard.yaml
+  # - ingressRoute-traefik-dashboard.yaml
   # - middlewares-authentik-oauth2-k8s.yaml
   - secret.yaml
