@@ -27,9 +27,9 @@ spec:
 
     proxyVarsAsSecrets: true
     config:
-      clientID: ${SECRET_O2P_DASHBOARD_ID}
-      clientSecret: ${SECRET_O2P_DASHBOARD_SECRET}
-      cookieSecret: ${SECRET_O2P_DASHBOARD_COOKIE}
+      clientID: "${SECRET_DASHBOARD_CLIENT_ID}"
+      clientSecret: "${SECRET_DASHBOARD_CLIENT_SECRET}"
+      cookieSecret: "${SECRET_OAUTH_COOKIE_SECRET}"
       # ## Secret with the client ID, secret and cookie secret
       # existingSecret: "secret-oauth2proxy"
       # ## ConfigMap with the configuration
