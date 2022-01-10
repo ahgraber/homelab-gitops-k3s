@@ -40,13 +40,40 @@ spec:
 
     # https://oauth2-proxy.github.io/oauth2-proxy/docs/configuration/overview
     extraArgs:
-      provider: keycloak-oidc
-      provider-display-name: Keycloak
+      # provider: keycloak-oidc
+      # provider-display-name: Keycloak
+      # oidc-issuer-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}"
+      # # redirect-url: "https://dashboard.${SECRET_DOMAIN}/oauth2/callback"
+      # redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
+      # # allowed-role: <realm role name> // Optional, required realm role
+      # # allowed-role: <client id>:<client role name> // Optional, required client role
+      # skip-provider-button: true
+      # reverse-proxy: true
+      # pass-authorization-header: true
+      # pass-access-token: true
+      # # pass-basic-auth: true
+      # # pass-host-headers: true
+      # # pass-user-headers: true
+      # # set-authorization-header: true
+      # # set-xauthrequest: true
+      # email-domain: "*"
+      # cookie-domain: .${SECRET_DOMAIN}
+      # whitelist-domain: .${SECRET_DOMAIN}
+      # silence-ping-logging: true
+
+      provider: oidc
+      provider-display-name: "Keycloak"
       oidc-issuer-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}"
-      # redirect-url: "https://dashboard.${SECRET_DOMAIN}/oauth2/callback"
-      redirect-url: https://oauth2.${SECRET_DOMAIN}/oauth2/callback
-      # allowed-role: <realm role name> // Optional, required realm role
-      # allowed-role: <client id>:<client role name> // Optional, required client role
+      oidc-jwks-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/protocol/openid-connect/certs"
+      login-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/protocol/openid-connect/auth"
+      profile-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/protocol/openid-connect/userinfo"
+      redeem-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/protocol/openid-connect/token"
+      # validate-url: "https://keycloak.${SECRET_DOMAIN}/auth/realms/${SECRET_KEYCLOAK_REALM}/protocol/openid-connect/userinfo"
+      redirect-url: "https://oauth2.${SECRET_DOMAIN}/oauth2/callback"
+      # insecure-oidc-skip-issuer-verification: true
+      oidc-email-claim: "email"
+      oidc-groups-claim: "groups"
+      # allowed-group: admin
       skip-provider-button: true
       reverse-proxy: true
       pass-authorization-header: true
@@ -60,30 +87,3 @@ spec:
       cookie-domain: .${SECRET_DOMAIN}
       whitelist-domain: .${SECRET_DOMAIN}
       silence-ping-logging: true
-
-    # extraArgs:
-    #   provider: oidc
-    #   provider-display-name: "Authentik"
-    #   login-url: "https://auth.${SECRET_DOMAIN}/application/o/authorize/"
-    #   oidc-issuer-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/"
-    #   oidc-jwks-url: "https://auth.${SECRET_DOMAIN}/application/o/k8s/jwks/"
-    #   redirect-url: "https://oauth2.${SECRET_DOMAIN}/oauth2/callback"
-    #   # insecure-oidc-skip-issuer-verification: true
-    #   # oidc-email-claim: "email"
-    #   # oidc-groups-claim: "groups"
-    #   allowed-group: admin
-    #   reverse-proxy: true
-    #   pass-basic-auth: true
-    #   # pass-authorization-header: true
-    #   # pass-access-token: true
-    #   # set-basic-auth: true
-    #   set-authorization-header: true
-    #   # set-xauthrequest: true
-    #   # upstream: static://202
-    #   cookie-domain: ".${SECRET_DOMAIN}"
-    #   cookie-secure: true
-    #   cookie-name: "_oauth2_proxy"
-    #   email-domain: "*"
-    #   whitelist-domain: ".${SECRET_DOMAIN}"
-    #   silence-ping-logging: true
-    #   skip-provider-button: true
