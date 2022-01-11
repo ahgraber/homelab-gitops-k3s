@@ -30,7 +30,7 @@ spec:
     - match: "Host(`dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2`)"
       kind: Rule
       middlewares:
-        - name: oauth2-proxy-headers
+        - name: auth-proxy-headers
       services:
         - name: oauth2-proxy
           namespace: security
