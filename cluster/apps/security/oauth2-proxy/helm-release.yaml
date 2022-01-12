@@ -76,12 +76,12 @@ spec:
       # allowed-group: admin
       skip-provider-button: true
       reverse-proxy: true
-      pass-authorization-header: true
+      # pass-authorization-header: true
       pass-access-token: true
       # pass-basic-auth: true
       # pass-host-headers: true
       # pass-user-headers: true
-      # set-authorization-header: true
+      set-authorization-header: true
       # set-xauthrequest: true
       email-domain: "*"
       cookie-domain: .${SECRET_DOMAIN}
