@@ -5,6 +5,9 @@ metadata:
   name: route-traefik-dashboard
   namespace: networking
 spec:
+  entryPoints:
+    # - web
+    - websecure
   routes:
     - match: "Host(`traefik-dashboard.${SECRET_DOMAIN}`)" # && PathPrefix(`/`)"
       kind: Rule
@@ -27,10 +30,11 @@ metadata:
   namespace: networking
 spec:
   routes:
-    - match: "Host(`traefik-dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2`)"
+    - match: "Host(`traefik-dashboard.${SECRET_DOMAIN}`) && PathPrefix(`/oauth2/`)"
       kind: Rule
       middlewares:
         - name: auth-proxy-headers
+          namespace: networking
       services:
         - name: oauth2-proxy
           namespace: security
@@ -51,6 +55,7 @@ spec:
     address: https://oauth2.${SECRET_DOMAIN}
     trustForwardHeader: true
     authResponseHeaders:
-      - X-Auth-Request-Access-Token
-      - Authorization
-      # - Set-Cookie
+      # - X-Forwarded-User
+      # - X-Auth-Request-Access-Token
+      - Authorization # should be `Authorization: Bearer ...``
+      - Set-Cookie
