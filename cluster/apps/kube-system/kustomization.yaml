@@ -7,6 +7,6 @@ resources:
   - kubed
   # - kured
   - metrics-server
-  - node-feature-discovery
+  # - node-feature-discovery
   - node-problem-detector
   - reloader
