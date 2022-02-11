@@ -23,6 +23,7 @@ CentOS.
 | [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |     `3.5.4`     |    ❌    |
 | [k9s](https://k9scli.io/)                                          | CLI-GUI for k8s clusters                                            |    `0.25.18`    |    ❌    |
 | [popeye](https://popeyecli.io/)                                    | CLI-based scanner/finder for k8s clusters                           |     `0.9.8`     |    ❌    |
+| [kubetail](https://github.com/johanhaleby/kubetail)                | aggregate (tail/follow) logs from multiple pods into one            |    `1.6.13`     |    ❌    |
 
 ## :ballot_box_with_check:&nbsp; Installation
 
