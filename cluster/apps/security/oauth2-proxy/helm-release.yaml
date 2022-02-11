@@ -81,7 +81,7 @@ spec:
       # pass-basic-auth: true
       # pass-host-headers: true
       # pass-user-headers: true
-      set-authorization-header: true
+      set-authorization-header: true # required for k8s-dashboard
       # set-xauthrequest: true
       email-domain: "*"
       cookie-domain: .${SECRET_DOMAIN}
