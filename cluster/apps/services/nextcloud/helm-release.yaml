@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: nextcloud
-      tag: "23.0.1" # https://hub.docker.com/_/nextcloud/?tab=tags
+      tag: "23.0.2" # https://hub.docker.com/_/nextcloud/?tab=tags
 
     env:
       PHP_MEMORY_LIMIT: 256M
