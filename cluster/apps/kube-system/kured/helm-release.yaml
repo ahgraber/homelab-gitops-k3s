@@ -18,17 +18,11 @@ spec:
       interval: 5m
   values:
     image:
-      repository: ghcr.io/k8s-at-home/kured
+      repository: weaveworks/kured
     updateStrategy: RollingUpdate
-    extraEnvVars:
-      - name: notifyUrl
-        valueFrom:
-          secretKeyRef:
-            name: kured-discord
-            key: url
     configuration:
       timeZone: "America/New_York"
-      startTime: "12:00"
+      startTime: "0:00"
       endTime: "6:00"
       prometheusUrl: http://prometheus-prometheus.monitoring.svc.cluster.local:9090
       messageTemplateDrain: "⏳ Draining node %s"
