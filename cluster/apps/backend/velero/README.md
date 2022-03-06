@@ -71,6 +71,8 @@ Given a backup exists:
 1. Take required action to stop creation of new active data
 
    ```sh
+   # Suspend flux
+   flux suspend hr myservice -n mynamespace
    # Delete current resource
    kubectl delete hr myservice -n mynamespace
    # Allow the application to be redeployed and create the new resources
@@ -78,15 +80,25 @@ Given a backup exists:
    # Delete the unwanted new data & associated Deployment/StatefulSet/Daemonset
    kubectl delete deployment myservice -n mynamespace
    kubectl delete pvc myservice-datadir
+
+   ### delete all resources in namespace
+   # kubectl delete -n mynamespace \
+   #  "$(kubectl api-resources --namespaced=true --verbs=delete -o name | tr "\n" "," | sed -e 's/,$//')" --all
    ```
 
-2. Restore the backup from restic with only the label selector
+2. Identify backup to use
+
+   ```sh
+   velero backup get
+   ```
+
+3. Restore the backup from restic with only the label selector
 
    ```sh
    velero restore create \
      --from-backup velero-daily-backup-20201120020022 \
      --include-namespaces mynamespace \
-     --selector "app.kubernetes.io/instance=myservice" \
+     # --selector "app.kubernetes.io/instance=myservice" \
      --wait
    ```
 
