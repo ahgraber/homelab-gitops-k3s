@@ -16,8 +16,8 @@ your present working directory for use with interacting with your cluster with `
    ```sh
    echo "export NODE_USER='username'" >> .envrc
    echo "export KEYPATH='~/.ssh/id_rsa'" >> .envrc
-   echo "export KVIP='10.42.42.42'" >> .envrc
-   echo "export K3S_VERSION='v1.21.3+k3s1'" >> .envrc
+   echo "export KUBE_VIP_ADDRESS='10.42.42.42'" >> .envrc
+   echo "export K3S_VERSION='v1.22.5+k3s1'" >> .envrc
    echo "export CTRL=(k01 k02 k03)" >> .envrc
    direnv allow .
 
@@ -27,7 +27,7 @@ your present working directory for use with interacting with your cluster with `
      --ssh-key="${KEYPATH}" \
      --k3s-version="${K3S_VERSION}" \
      --cluster \
-     --tls-san "${KVIP}" \
+     --tls-san "${KUBE_VIP_ADDRESS}" \
      --k3s-extra-args="--disable servicelb --disable traefik --node-taint node-role.kubernetes.io/master=true:NoSchedule"
 
    # Test the cluster initialization:
@@ -41,7 +41,7 @@ your present working directory for use with interacting with your cluster with `
    Wait until VIP is live on both k3s node and local machine before proceeding
 
    ```sh
-   ping ${KVIP}
+   ping ${KUBE_VIP_ADDRESS}
    ```
 
 4. Add the remaining **server** nodes
@@ -51,7 +51,7 @@ your present working directory for use with interacting with your cluster with `
      k3sup join \
        --host="${HOST}" \
        --user="${USER}" \
-       --server-host="${KVIP}" \
+       --server-host="${KUBE_VIP_ADDRESS}" \
        --server-user="${USER}" \
        --ssh-key="${KEYPATH}" \
        --k3s-version="${K3S_VERSION}" \
@@ -74,7 +74,7 @@ your present working directory for use with interacting with your cluster with `
      k3sup join \
        --host="${HOST}" \
        --user="${USER}" \
-       --server-host="${KVIP}" \
+       --server-host="${KUBE_VIP_ADDRESS}" \
        --server-user="${USER}" \
        --ssh-key="${KEYPATH}" \
        --k3s-version="${K3S_VERSION}"
