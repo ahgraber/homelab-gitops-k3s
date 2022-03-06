@@ -1,6 +1,6 @@
-# Velero
+# [Velero](https://velero.io)
 
-[Velero](https://velero.io) is a cluster backup & restore solution. It can also leverage restic to
+Velero is a cluster backup & restore solution. It can also leverage restic to
 backup persistent volumes to S3 storage buckets.
 
 [BackBlaze B2](https://help.backblaze.com/hc/en-us/articles/360047425453) now supports an
