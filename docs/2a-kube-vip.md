@@ -58,12 +58,12 @@ control plane vIP and also use `metallb` for service load balancing.
 5. Create `kube-vip` manifest
 
    ```sh
-   export KVIP=10.2.113.1 # same IP provided to tls-san flag
-   export INTERFACE=ens192  # standard network interface
+   export KUBE_VIP_ADDRESS=10.2.113.1 # same IP provided to tls-san flag
+   export KUBE_VIP_INTERFACE=ens192  # standard network interface
 
    kube-vip manifest daemonset \
-     --interface ${INTERFACE} \
-     --address ${KVIP} \
+     --interface ${KUBE_VIP_INTERFACE} \
+     --address ${KUBE_VIP_ADDRESS} \
      --inCluster \
      --taint \
      --controlplane \
@@ -86,13 +86,13 @@ control plane vIP and also use `metallb` for service load balancing.
 6. Check that the VIP is live on both k3s node and local machine
 
    ```sh
-   ping ${KVIP}
+   ping ${KUBE_VIP_ADDRESS}
    ```
 
 7. Redirect kubeconfig to kube-vip on local machine
 
    ```sh
-   sed -i.bak 's|server: https://.*:6443|server: https://'${KVIP}':6443|g' kubeconfig
+   sed -i.bak 's|server: https://.*:6443|server: https://'${KUBE_VIP_ADDRESS}':6443|g' kubeconfig
    # test new kubeconfig
    kubectl --kubeconfig=${KUBECONFIG} get nodes -o wide
    # if works and looks good
