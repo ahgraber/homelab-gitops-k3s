@@ -1,0 +1,46 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: system-monitoring
+spec:
+  interval: 6h
+  maxHistory: 2
+  timeout: 20m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: 33.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+
+  values:
+    podAnnotations:
+      annotations:
+        configmap.reloader.stakater.com/reload:
+          "kps-values-general, kps-values-prometheus, kps-values-alertmanager"
+    fullnameOverride: prometheus
+
+    defaultRules:
+      create: true
+
+  valuesFrom:
+    - kind: ConfigMap
+      name: kps-values-general
+      valuesKey: values
+    - kind: ConfigMap
+      name: kps-values-prometheus
+      valuesKey: values
+    - kind: ConfigMap
+      name: kps-values-alertmanager
+      valuesKey: values
