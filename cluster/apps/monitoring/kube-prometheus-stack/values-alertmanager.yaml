@@ -14,13 +14,15 @@ alertmanager:
             auth_password: "${SECRET_SMTP_PWD}"
             # auth_identity: "${SECRET_SMTP_ADDRESS}"
             # auth_secret: "${SECRET_SMTP_PWD}"
+            require_tls: true
+            # prettier-ignore
             text: >-
+              [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+
               {{ range .Alerts -}}
-                *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity
-              }}`{{ end }} {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }}
-              {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else
-              if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end
-              }} *Details:*
+                *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+              {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
+              *Details:*
                 {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
                 {{ end }}
               {{ end }}
@@ -30,7 +32,7 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 6h
-      receiver: "discord"
+      receiver: "email"
       routes:
         - receiver: "null"
           match:

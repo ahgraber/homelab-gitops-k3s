@@ -20,16 +20,16 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     podMonitorSelectorNilUsesHelmValues: false
     probeSelectorNilUsesHelmValues: false
-    retention: 6h
+    retention: 7d
     enableAdminAPI: true
     walCompression: true
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: csi-truenas-iscsi
+          storageClassName: "csi-truenas-iscsi"
           resources:
             requests:
-              storage: 2Gi
+              storage: 10Gi
     # resources:
     #   requests:
     #     memory: 3072Mi
