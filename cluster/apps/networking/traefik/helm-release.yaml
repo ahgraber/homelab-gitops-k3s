@@ -74,6 +74,10 @@ spec:
     metrics:
       prometheus:
         entryPoint: metrics
+        addEntryPointsLabels: true
+        addRoutersLabels: true
+        addServicesLabels: true
+
     pilot:
       enabled: false
     ports:
