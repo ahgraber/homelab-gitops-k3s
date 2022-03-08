@@ -9,9 +9,9 @@ prometheus:
   # Thanos sidecar on prometheus nodes
   # (Please remember to change ${kube-prometheus-stack.fullname} and ${namespace}. Not just copy and paste!)
   thanosService:
-    enabled: true
+    enabled: false
   thanosServiceMonitor:
-    enabled: true
+    enabled: false
 
   prometheusSpec:
     replicas: 1
@@ -36,17 +36,17 @@ prometheus:
     #   limits:
     #     memory: 4096Mi
 
-    thanos:
-      image: quay.io/thanos/thanos:v0.23.1
-      version: v0.22.0
-      objectStorageConfig:
-        name: thanos-objstore-secret
-        key: objstore.yml
+    # thanos:
+    #   image: quay.io/thanos/thanos:v0.23.1
+    #   version: v0.22.0
+    #   objectStorageConfig:
+    #     name: thanos-objstore-secret
+    #     key: objstore.yml
 
-    additionalScrapeConfigs:
-      - job_name: "traefik"
-        static_configs:
-          - targets: ["traefik:8080"]
+    # additionalScrapeConfigs:
+    #   - job_name: "traefik"
+    #     static_configs:
+    #       - targets: ["traefik:8080"]
     #   - job_name: cadvisor
     #     honor_timestamps: true
     #     static_configs:
