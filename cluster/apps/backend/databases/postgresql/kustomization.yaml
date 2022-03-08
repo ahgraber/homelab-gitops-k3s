@@ -3,8 +3,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - helm-release.yaml
-  - configMap-conf.yaml
-  - configMap-init.yaml
+  - configmap-conf.yaml
+  - configmap-init.yaml
   - cronjob-backup.yaml
   # - ingresRoute.yaml
   - pvc.yaml
