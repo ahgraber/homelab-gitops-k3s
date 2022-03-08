@@ -62,9 +62,9 @@ spec:
     kubeControllerManager:
       enabled: true
       endpoints:
-        - 10.2.118.10
-        - 10.2.118.11
-        - 10.2.118.12
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
       service:
         enabled: true
         port: 10257
@@ -76,9 +76,9 @@ spec:
     kubeEtcd:
       enabled: true
       endpoints:
-        - 10.2.118.10
-        - 10.2.118.11
-        - 10.2.118.12
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
       service:
         enabled: true
         port: 2381
@@ -87,16 +87,16 @@ spec:
     kubeProxy:
       enabled: true
       endpoints:
-        - 10.2.118.10
-        - 10.2.118.11
-        - 10.2.118.12
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
 
     kubeScheduler:
       enabled: true
       endpoints:
-        - 10.2.118.10
-        - 10.2.118.11
-        - 10.2.118.12
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
 
     kubeStateMetrics:
       enabled: true
@@ -233,19 +233,19 @@ spec:
       ingress:
         enabled: false
 
-      # alertmanagerSpec:
-      #   storage:
-      #     volumeClaimTemplate:
-      #       spec:
-      #         storageClassName: csi-truenas-iscsi
-      #         resources:
-      #           requests:
-      #             storage: 2Gi
-      #   resources:
-      #     requests:
-      #       memory: 48Mi
-      #     limits:
-      #       memory: 96Mi
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: csi-truenas-iscsi
+              resources:
+                requests:
+                  storage: 1Gi
+        resources:
+          requests:
+            memory: 48Mi
+          limits:
+            memory: 96Mi
 
   # valuesFrom:
   #   - kind: ConfigMap
