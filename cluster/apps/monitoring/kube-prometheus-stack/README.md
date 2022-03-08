@@ -7,3 +7,9 @@ Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.
 Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud.
 Prometheus collects and stores _metrics_ as time series data, i.e. metrics information
 is stored with the timestamp at which it was recorded, alongside optional key-value pairs called labels.
+
+## Included
+
+### [Kube-State-Metrics](https://github.com/kubernetes/kube-state-metrics)
+
+### [Node Exporter](https://github.com/prometheus/node_exporter)

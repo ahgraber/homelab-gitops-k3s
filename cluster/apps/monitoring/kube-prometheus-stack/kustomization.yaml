@@ -10,11 +10,9 @@ configMapGenerator:
   - name: kps-values-general
     files:
       - values.yaml=values-general.yaml
-
-  - name: kps-values-alertmanager
-    files:
-      - values.yaml=values-alertmanager.yaml
-
   - name: kps-values-prometheus
     files:
       - values.yaml=values-prometheus.yaml
+  - name: kps-values-alertmanager
+    files:
+      - values.yaml=values-alertmanager.yaml
