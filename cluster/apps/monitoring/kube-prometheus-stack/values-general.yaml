@@ -74,6 +74,9 @@ prometheus-node-exporter:
           sourceLabels:
             - __meta_kubernetes_pod_node_name
           targetLabel: kubernetes_node
+  tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
 
 ## Manages Prometheus and Alertmanager components
 prometheusOperator:
