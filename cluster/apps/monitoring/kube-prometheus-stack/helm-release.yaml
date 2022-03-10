@@ -173,7 +173,6 @@ spec:
           volumeClaimTemplate:
             metadata:
               name: prometheus-data
-              namespace: monitoring
             spec:
               storageClassName: "csi-truenas-iscsi"
               resources:
@@ -254,7 +253,6 @@ spec:
           volumeClaimTemplate:
             metadata:
               name: alertmanager-data
-              namespace: monitoring
             spec:
               storageClassName: csi-truenas-iscsi
               resources:
