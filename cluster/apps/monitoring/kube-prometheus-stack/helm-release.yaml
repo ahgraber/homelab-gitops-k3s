@@ -171,10 +171,11 @@ spec:
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
-            metadata:
-              name: prometheus-data
+            # metadata:
+            #   name: prometheus-data
             spec:
-              storageClassName: "csi-truenas-iscsi"
+              volumeName: prometheus-data
+              # storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 10Gi
@@ -251,10 +252,11 @@ spec:
       alertmanagerSpec:
         storage:
           volumeClaimTemplate:
-            metadata:
-              name: alertmanager-data
+            # metadata:
+            #   name: alertmanager-data
             spec:
-              storageClassName: csi-truenas-iscsi
+              volumeName: alertmanager-data
+              # storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 1Gi

@@ -5,6 +5,8 @@ resources:
   - helm-release.yaml
   - ingressRoute-alertmanager.yaml
   - ingressRoute-prometheus.yaml
+  - pvc-alertmanager.yaml
+  - pvc-prometheus.yaml
 # namespace: monitoring
 # configurations:
 #   - kustomize-config.yaml
