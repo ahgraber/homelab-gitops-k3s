@@ -118,7 +118,7 @@ spec:
 
     livenessProbe:
       enabled: true
-      initialDelaySeconds: 300 # 300 may be needed on first start
+      initialDelaySeconds: 0 # 300 may be needed on first start
       periodSeconds: 1
       timeoutSeconds: 5
       failureThreshold: 3
@@ -126,7 +126,7 @@ spec:
 
     readinessProbe:
       enabled: true
-      initialDelaySeconds: 120
+      initialDelaySeconds: 0
       periodSeconds: 10
       timeoutSeconds: 1
       failureThreshold: 3
@@ -134,8 +134,8 @@ spec:
 
     startupProbe:
       ## When enabling this, make sure to set initialDelaySeconds to 0 for livenessProbe and readinessProbe
-      enabled: false
-      initialDelaySeconds: 30
+      enabled: true
+      initialDelaySeconds: 300
       periodSeconds: 5
       timeoutSeconds: 1
       failureThreshold: 60
