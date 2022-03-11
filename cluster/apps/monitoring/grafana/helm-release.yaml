@@ -75,13 +75,16 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://thanos-query.system-monitoring:9090/
+            url: http://prometheus-prometheus.monitoring:9090/
             access: proxy
             isDefault: true
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://loki.system-monitoring:3100
+            # url: http://thanos-query.monitoring:9090/
+            # access: proxy
+            # isDefault: true
+          # - name: Loki
+          #   type: loki
+          #   access: proxy
+          #   url: http://loki.monitoring:3100
 
     dashboards:
       default:
