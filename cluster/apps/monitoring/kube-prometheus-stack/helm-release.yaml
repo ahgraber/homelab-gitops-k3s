@@ -171,19 +171,19 @@ spec:
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
-            metadata:
-              name: prometheus-data
-              labels:
-                app.kubernetes.io/instance: prometheus-prometheus
-                app.kubernetes.io/name: prometheus
-                operator.prometheus.io/name: prometheus-prometheus
-                operator.prometheus.io/shard: "0"
-                prometheus: prometheus-prometheus
+            # metadata:
+            #   name: prometheus-data
+            #   labels:
+            #     app.kubernetes.io/instance: prometheus-prometheus
+            #     app.kubernetes.io/name: prometheus
+            #     operator.prometheus.io/name: prometheus-prometheus
+            #     operator.prometheus.io/shard: "0"
+            #     prometheus: prometheus-prometheus
             spec:
               # matchLabels:
               #   app.kubernetes.io/name: prometheus
-              # volumeName: prometheus-data
-              storageClassName: csi-truenas-iscsi
+              volumeName: prometheus-data
+              # storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 10Gi
@@ -261,17 +261,17 @@ spec:
         storage:
           retention: 120h
           volumeClaimTemplate:
-            metadata:
-              name: alertmanager-data
-              labels:
-                alertmanager: prometheus-alertmanager
-                app.kubernetes.io/instance: prometheus-alertmanager
-                app.kubernetes.io/name: alertmanager
+            # metadata:
+            #   name: alertmanager-data
+            #   labels:
+            #     alertmanager: prometheus-alertmanager
+            #     app.kubernetes.io/instance: prometheus-alertmanager
+            #     app.kubernetes.io/name: alertmanager
             spec:
               # matchLabels:
               #   app.kubernetes.io/name: alertmanager
-              # volumeName: alertmanager-data
-              storageClassName: csi-truenas-iscsi
+              volumeName: alertmanager-data
+              # storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 1Gi
