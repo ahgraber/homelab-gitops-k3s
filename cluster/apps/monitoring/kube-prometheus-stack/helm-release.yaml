@@ -171,11 +171,19 @@ spec:
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
-            # metadata:
-            #   name: prometheus-data
+            metadata:
+              name: prometheus-data
+              labels:
+                app.kubernetes.io/instance: prometheus-prometheus
+                app.kubernetes.io/name: prometheus
+                operator.prometheus.io/name: prometheus-prometheus
+                operator.prometheus.io/shard: "0"
+                prometheus: prometheus-prometheus
             spec:
-              volumeName: prometheus-data
-              # storageClassName: csi-truenas-iscsi
+              # matchLabels:
+              #   app.kubernetes.io/name: prometheus
+              # volumeName: prometheus-data
+              storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 10Gi
@@ -251,12 +259,19 @@ spec:
 
       alertmanagerSpec:
         storage:
+          retention: 120h
           volumeClaimTemplate:
-            # metadata:
-            #   name: alertmanager-data
+            metadata:
+              name: alertmanager-data
+              labels:
+                alertmanager: prometheus-alertmanager
+                app.kubernetes.io/instance: prometheus-alertmanager
+                app.kubernetes.io/name: alertmanager
             spec:
-              volumeName: alertmanager-data
-              # storageClassName: csi-truenas-iscsi
+              # matchLabels:
+              #   app.kubernetes.io/name: alertmanager
+              # volumeName: alertmanager-data
+              storageClassName: csi-truenas-iscsi
               resources:
                 requests:
                   storage: 1Gi
