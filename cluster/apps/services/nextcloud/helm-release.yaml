@@ -146,3 +146,4 @@ spec:
     redis:
       enabled: true
       password: ${SECRET_DB_USER_PWD}
+      storageClass: "local-path"
