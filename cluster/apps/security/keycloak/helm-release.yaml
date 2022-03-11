@@ -87,12 +87,15 @@ spec:
         databasae: keycloak
         username: keycloak
         password: ${SECRET_DB_USER_PWD}
-
       persistence:
         enabled: true
         existingClaim: keycloak-db
 
       primary:
+        persistence:
+          enabled: true
+          existingClaim: keycloak-db
+
         podAnnotations:
           backup.velero.io/backup-volumes: data
           pre.hook.backup.velero.io/container: fsfreeze
