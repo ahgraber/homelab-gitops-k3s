@@ -258,8 +258,8 @@ spec:
         enabled: false
 
       alertmanagerSpec:
+        retention: 120h
         storage:
-          retention: 120h
           volumeClaimTemplate:
             # metadata:
             #   name: alertmanager-data
