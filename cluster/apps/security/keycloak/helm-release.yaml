@@ -108,13 +108,13 @@ spec:
             securityContext:
               privileged: true
 
-    externalDatabase:
-      # host: "{{ .Release.Name }}-postgresql"
-      # port: 5432
-      database: keycloak
-      user: keycloak
-      password: ${SECRET_DB_USER_PWD}
-      # existingSecret: ""
+    # externalDatabase:
+    #   # host: "{{ .Release.Name }}-postgresql"
+    #   # port: 5432
+    #   database: keycloak
+    #   user: keycloak
+    #   password: ${SECRET_DB_USER_PWD}
+    #   # existingSecret: ""
 
     livenessProbe:
       enabled: true
