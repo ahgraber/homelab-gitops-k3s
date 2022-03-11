@@ -184,9 +184,9 @@ spec:
               #   app.kubernetes.io/name: prometheus
               volumeName: prometheus-data
               # storageClassName: csi-truenas-iscsi
-              resources:
-                requests:
-                  storage: 10Gi
+              # resources:
+              #   requests:
+              #     storage: 10Gi
         # resources:
         #   requests:
         #     memory: 3072Mi
@@ -272,9 +272,9 @@ spec:
               #   app.kubernetes.io/name: alertmanager
               volumeName: alertmanager-data
               # storageClassName: csi-truenas-iscsi
-              resources:
-                requests:
-                  storage: 1Gi
+              # resources:
+              #   requests:
+              #     storage: 1Gi
         resources:
           requests:
             memory: 48Mi
