@@ -182,11 +182,12 @@ spec:
             spec:
               # matchLabels:
               #   app.kubernetes.io/name: prometheus
-              volumeName: prometheus-data
+              # volumeName: prometheus-data
               # storageClassName: csi-truenas-iscsi
-              # resources:
-              #   requests:
-              #     storage: 10Gi
+              storageClassName: local-path
+              resources:
+                requests:
+                  storage: 3Gi
         # resources:
         #   requests:
         #     memory: 3072Mi
@@ -270,11 +271,12 @@ spec:
             spec:
               # matchLabels:
               #   app.kubernetes.io/name: alertmanager
-              volumeName: alertmanager-data
+              # volumeName: alertmanager-data
               # storageClassName: csi-truenas-iscsi
-              # resources:
-              #   requests:
-              #     storage: 1Gi
+              storageClassName: local-path
+              resources:
+                requests:
+                  storage: 1Gi
         resources:
           requests:
             memory: 48Mi
