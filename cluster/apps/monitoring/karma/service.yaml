@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: karma
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: karma
+    app.kubernetes.io/instance: karma
+spec:
+  selector:
+    app.kubernetes.io/name: karma
+    app.kubernetes.io/instance: karma
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
