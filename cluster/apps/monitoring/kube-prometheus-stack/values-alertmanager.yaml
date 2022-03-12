@@ -5,7 +5,7 @@ metadata:
   name: kps-values-alertmanager
   namespace: monitoring
 data:
-  values:
+  values: |
     ## Configuration for alertmanager
     ## ref: https://prometheus.io/docs/alerting/alertmanager/
     alertmanager:
