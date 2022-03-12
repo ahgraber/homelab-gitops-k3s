@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karma
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: karma
+    app.kubernetes.io/instance: karma
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: karma
+      app.kubernetes.io/instance: karma
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: karma
+        app.kubernetes.io/instance: karma
+    spec:
+      containers:
+        - name: karma
+          # renovate: registryUrl=https://github.com/prymitive/karma
+          image: ghcr.io/prymitive/karma:v0.99
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ALERTMANAGER_URI
+              value: http://prometheus-alertmanager:9093
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              cpu: 100m
+              memory: 200Mi
