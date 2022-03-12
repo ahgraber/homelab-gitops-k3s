@@ -1,121 +1,121 @@
 ---
-# apiVersion: v1
-# kind: ConfigMap
-# metadata:
-#   name: kps-values-general
-#   namespace: monitoring
-# data:
-#   values: |
-global:
-  rbac:
-    create: true
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kps-values-general
+  namespace: monitoring
+data:
+  values.yaml: |
+    global:
+      rbac:
+        create: true
 
-grafana:
-  enabled: false # manage by itself
-  forceDeployDashboards: true
-  sidecar:
-    dashboards:
-      multicluster:
-        global:
-          enabled: true
+    grafana:
+      enabled: false # manage by itself
+      forceDeployDashboards: true
+      sidecar:
+        dashboards:
+          multicluster:
+            global:
+              enabled: true
 
-kubeApiServer:
-  enabled: true
-
-kubelet:
-  enabled: true
-  serviceMonitor:
-    metricRelabelings:
-      - action: replace
-        sourceLabels:
-          - node
-        targetLabel: instance
-
-kubeControllerManager:
-  enabled: true
-  endpoints:
-    - 10.2.113.10
-    - 10.2.113.11
-    - 10.2.113.12
-  service:
-    enabled: true
-    port: 10257
-    targetPort: 10257
-  serviceMonitor:
-    enabled: true
-    https: true
-    insecureSkipVerify: true
-
-coreDns:
-  enabled: true
-
-kubeEtcd:
-  enabled: true
-  endpoints:
-    - 10.2.113.10
-    - 10.2.113.11
-    - 10.2.113.12
-  service:
-    enabled: true
-    port: 2381
-    targetPort: 2381
-
-kubeProxy:
-  enabled: true
-  endpoints:
-    - 10.2.113.10
-    - 10.2.113.11
-    - 10.2.113.12
-
-kubeScheduler:
-  enabled: true
-  endpoints:
-    - 10.2.113.10
-    - 10.2.113.11
-    - 10.2.113.12
-  service:
-    enabled: true
-    port: 10259
-    targetPort: 10259
-  serviceMonitor:
-    enabled: true
-    https: true
-    insecureSkipVerify: true
-
-kubeStateMetrics:
-  enabled: true
-  fullnameOverride: kube-state-metrics
-
-nodeExporter:
-  enabled: true
-
-prometheus-node-exporter:
-  fullnameOverride: node-exporter
-  prometheus:
-    monitor:
+    kubeApiServer:
       enabled: true
-      relabelings:
-        - action: replace
-          regex: (.*)
-          replacement: $1
-          sourceLabels:
-            - __meta_kubernetes_pod_node_name
-          targetLabel: kubernetes_node
-  tolerations:
-    - key: "node-role.kubernetes.io/master"
-      operator: "Exists"
 
-## Manages Prometheus and Alertmanager components
-prometheusOperator:
-  enabled: true
-  # Setting this option to 0 to disable cpu limits
-  # see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175
-  # configReloaderCpu: 0
-  prometheusConfigReloader:
-    resources:
-      requests:
-        cpu: 100m
-        memory: 50Mi
-      limits:
-        cpu: 200m
-        memory: 100Mi
+    kubelet:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          - action: replace
+            sourceLabels:
+              - node
+            targetLabel: instance
+
+    kubeControllerManager:
+      enabled: true
+      endpoints:
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
+      service:
+        enabled: true
+        port: 10257
+        targetPort: 10257
+      serviceMonitor:
+        enabled: true
+        https: true
+        insecureSkipVerify: true
+
+    coreDns:
+      enabled: true
+
+    kubeEtcd:
+      enabled: true
+      endpoints:
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
+      service:
+        enabled: true
+        port: 2381
+        targetPort: 2381
+
+    kubeProxy:
+      enabled: true
+      endpoints:
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
+
+    kubeScheduler:
+      enabled: true
+      endpoints:
+        - 10.2.113.10
+        - 10.2.113.11
+        - 10.2.113.12
+      service:
+        enabled: true
+        port: 10259
+        targetPort: 10259
+      serviceMonitor:
+        enabled: true
+        https: true
+        insecureSkipVerify: true
+
+    kubeStateMetrics:
+      enabled: true
+      fullnameOverride: kube-state-metrics
+
+    nodeExporter:
+      enabled: true
+
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels:
+                - __meta_kubernetes_pod_node_name
+              targetLabel: kubernetes_node
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+
+    ## Manages Prometheus and Alertmanager components
+    prometheusOperator:
+      enabled: true
+      # Setting this option to 0 to disable cpu limits
+      # see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175
+      # configReloaderCpu: 0
+      prometheusConfigReloader:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 50Mi
+          limits:
+            cpu: 200m
+            memory: 100Mi
