@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kps-values-general
+  namespace: monitoring
 data:
   values:
     global:

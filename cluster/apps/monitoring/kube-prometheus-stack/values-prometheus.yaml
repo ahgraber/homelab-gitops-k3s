@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kps-values-prometheus
+  namespace: monitoring
 data:
   values:
     prometheus:
