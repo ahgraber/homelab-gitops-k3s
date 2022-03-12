@@ -4,10 +4,11 @@ metadata:
   labels:
     app: kube-prometheus-stack
     release: prometheus
-  name: traefik
+  name: traefik-rules
+  namespace: networking
 spec:
   groups:
-    - name: traefik
+    - name: traefik.rules
       rules:
         - alert: TrafikIngressHigh5xxRate
           annotations:
