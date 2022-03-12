@@ -60,8 +60,9 @@ data:
 
         # additionalScrapeConfigs:
         #   - job_name: "traefik"
+        #     # metrics_path: /metrics
         #     static_configs:
-        #       - targets: ["traefik:8080"]
+        #       - targets: ["networking/traefik:9100"]
         #   - job_name: cadvisor
         #     honor_timestamps: true
         #     static_configs:
