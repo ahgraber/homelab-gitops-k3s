@@ -5,9 +5,9 @@ resources:
   - grafana
   - karma
   - kube-prometheus-stack
-  # - loki
+  - loki
   - node-problem-detector
-  # - promtail
+  - promtail
   # - speedtest-exporter
   # - thanos
   # - uptimerobot-prometheus
