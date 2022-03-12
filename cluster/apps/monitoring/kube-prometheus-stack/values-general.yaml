@@ -17,19 +17,27 @@ kubeApiServer:
 
 kubelet:
   enabled: true
-  # serviceMonitor:
-  #   metricRelabelings:
-  #     - action: replace
-  #       sourceLabels:
-  #         - node
-  #       targetLabel: instance
+  serviceMonitor:
+    metricRelabelings:
+      - action: replace
+        sourceLabels:
+          - node
+        targetLabel: instance
 
 kubeControllerManager:
   enabled: true
   endpoints:
-    - 10.2.118.10
-    - 10.2.118.11
-    - 10.2.118.12
+    - 10.2.113.10
+    - 10.2.113.11
+    - 10.2.113.12
+  service:
+    enabled: true
+    port: 10257
+    targetPort: 10257
+  serviceMonitor:
+    enabled: true
+    https: true
+    insecureSkipVerify: true
 
 coreDns:
   enabled: true
@@ -37,23 +45,35 @@ coreDns:
 kubeEtcd:
   enabled: true
   endpoints:
-    - 10.2.118.10
-    - 10.2.118.11
-    - 10.2.118.12
+    - 10.2.113.10
+    - 10.2.113.11
+    - 10.2.113.12
+  service:
+    enabled: true
+    port: 2381
+    targetPort: 2381
 
 kubeProxy:
   enabled: true
   endpoints:
-    - 10.2.118.10
-    - 10.2.118.11
-    - 10.2.118.12
+    - 10.2.113.10
+    - 10.2.113.11
+    - 10.2.113.12
 
 kubeScheduler:
   enabled: true
   endpoints:
-    - 10.2.118.10
-    - 10.2.118.11
-    - 10.2.118.12
+    - 10.2.113.10
+    - 10.2.113.11
+    - 10.2.113.12
+  service:
+    enabled: true
+    port: 10259
+    targetPort: 10259
+  serviceMonitor:
+    enabled: true
+    https: true
+    insecureSkipVerify: true
 
 kubeStateMetrics:
   enabled: true
