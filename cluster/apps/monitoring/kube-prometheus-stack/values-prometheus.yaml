@@ -5,7 +5,7 @@ metadata:
   name: kps-values-prometheus
   namespace: monitoring
 data:
-  values:
+  values: |
     prometheus:
       ingress:
         enabled: false
