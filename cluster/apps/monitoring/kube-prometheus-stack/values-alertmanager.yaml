@@ -1,89 +1,89 @@
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kps-values-alertmanager
-  namespace: monitoring
-data:
-  values: |
-    ## Configuration for alertmanager
-    ## ref: https://prometheus.io/docs/alerting/alertmanager/
-    alertmanager:
-      config:
-        receivers:
-          - name: "null"
-          - name: "email"
-            email_configs:
-              - to: "${SECRET_DEFAULT_EMAIL}"
-                from: "${SECRET_SMTP_ADDRESS}"
-                smarthost: in-v3.mailjet.com:587
-                auth_username: "${SECRET_SMTP_USER}"
-                auth_password: "${SECRET_SMTP_PWD}"
-                # auth_identity: "${SECRET_SMTP_ADDRESS}"
-                # auth_secret: "${SECRET_SMTP_PWD}"
-                require_tls: true
-                # prettier-ignore
-                text: >-
-                  [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: kps-values-alertmanager
+#   namespace: monitoring
+# data:
+#   values: |
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+alertmanager:
+  config:
+    receivers:
+      - name: "null"
+      - name: "email"
+        email_configs:
+          - to: "${SECRET_DEFAULT_EMAIL}"
+            from: "${SECRET_SMTP_ADDRESS}"
+            smarthost: in-v3.mailjet.com:587
+            auth_username: "${SECRET_SMTP_USER}"
+            auth_password: "${SECRET_SMTP_PWD}"
+            # auth_identity: "${SECRET_SMTP_ADDRESS}"
+            # auth_secret: "${SECRET_SMTP_PWD}"
+            require_tls: true
+            # prettier-ignore
+            text: >-
+              [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
 
-                  {{ range .Alerts -}}
-                    *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-                  {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
-                  *Details:*
-                    {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-                    {{ end }}
-                  {{ end }}
+              {{ range .Alerts -}}
+                *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+              {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
+              *Details:*
+                {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+                {{ end }}
+              {{ end }}
 
-        route:
-          group_by: ["alertname", "job"]
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 6h
-          receiver: "email"
-          routes:
-            - receiver: "null"
-              match:
-                alertname: InfoInhibitor
-            - receiver: "null"
-              match:
-                alertname: Watchdog
-            - receiver: "email"
-              match_re:
-                # severity: critical|warning
-                severity: critical
-              continue: true
+    route:
+      group_by: ["alertname", "job"]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 6h
+      receiver: "email"
+      routes:
+        - receiver: "null"
+          match:
+            alertname: InfoInhibitor
+        - receiver: "null"
+          match:
+            alertname: Watchdog
+        - receiver: "email"
+          match_re:
+            # severity: critical|warning
+            severity: critical
+          continue: true
 
-        inhibit_rules:
-          - source_match:
-              severity: "critical"
-            target_match:
-              severity: "warning"
-            equal: ["alertname", "namespace"]
+    inhibit_rules:
+      - source_match:
+          severity: "critical"
+        target_match:
+          severity: "warning"
+        equal: ["alertname", "namespace"]
 
-      ingress:
-        enabled: false
+  ingress:
+    enabled: false
 
-      alertmanagerSpec:
-        retention: 120h
-        storage:
-          volumeClaimTemplate:
-            # metadata:
-            #   name: alertmanager-data
-            #   labels:
-            #     alertmanager: prometheus-alertmanager
-            #     app.kubernetes.io/instance: prometheus-alertmanager
-            #     app.kubernetes.io/name: alertmanager
-            spec:
-              # matchLabels:
-              #   app.kubernetes.io/name: alertmanager
-              # volumeName: alertmanager-data
-              # storageClassName: csi-truenas-iscsi
-              storageClassName: local-path
-              resources:
-                requests:
-                  storage: 1Gi
-        resources:
-          requests:
-            memory: 48Mi
-          limits:
-            memory: 96Mi
+  alertmanagerSpec:
+    retention: 120h
+    storage:
+      volumeClaimTemplate:
+        # metadata:
+        #   name: alertmanager-data
+        #   labels:
+        #     alertmanager: prometheus-alertmanager
+        #     app.kubernetes.io/instance: prometheus-alertmanager
+        #     app.kubernetes.io/name: alertmanager
+        spec:
+          # matchLabels:
+          #   app.kubernetes.io/name: alertmanager
+          # volumeName: alertmanager-data
+          # storageClassName: csi-truenas-iscsi
+          storageClassName: local-path
+          resources:
+            requests:
+              storage: 1Gi
+    resources:
+      requests:
+        memory: 48Mi
+      limits:
+        memory: 96Mi
