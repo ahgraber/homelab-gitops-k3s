@@ -38,13 +38,10 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: kps-values-general
-      valuesKey: values
     - kind: ConfigMap
       name: kps-values-prometheus
-      valuesKey: values
     - kind: ConfigMap
       name: kps-values-alertmanager
-      valuesKey: values
 
     # global:
     #   rbac:
