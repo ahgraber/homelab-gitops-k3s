@@ -7,6 +7,9 @@ resources:
   - ingressRoute-prometheus.yaml
   - pvc-alertmanager.yaml
   - pvc-prometheus.yaml
+  - values-general.yaml
+  - values-alertmanager.yaml
+  - values-prometheus.yaml
 namespace: monitoring
 # configurations:
 #   - kustomize-config.yaml
