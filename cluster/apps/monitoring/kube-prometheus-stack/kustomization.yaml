@@ -2,14 +2,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  # - prometheus-rules
   - helm-release.yaml
   - ingressRoute-alertmanager.yaml
   - ingressRoute-prometheus.yaml
   - pvc-alertmanager.yaml
   - pvc-prometheus.yaml
-  - values-general.yaml
-  - values-alertmanager.yaml
-  - values-prometheus.yaml
+  # - values-alertmanager.yaml
+  # - values-general.yaml
+  # - values-prometheus.yaml
 namespace: monitoring
 configurations:
   - kustomize-config.yaml
