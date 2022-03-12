@@ -8,15 +8,15 @@ resources:
   - pvc-alertmanager.yaml
   - pvc-prometheus.yaml
 namespace: monitoring
-configurations:
-  - kustomize-config.yaml
-configMapGenerator:
-  - name: kps-values-general
-    files:
-      - values.yaml=values-general.yaml
-  - name: kps-values-prometheus
-    files:
-      - values.yaml=values-prometheus.yaml
-  - name: kps-values-alertmanager
-    files:
-      - values.yaml=values-alertmanager.yaml
+# configurations:
+#   - kustomize-config.yaml
+# configMapGenerator:
+#   - name: kps-values-general
+#     files:
+#       - values.yaml=values-general.yaml
+#   - name: kps-values-prometheus
+#     files:
+#       - values.yaml=values-prometheus.yaml
+#   - name: kps-values-alertmanager
+#     files:
+#       - values.yaml=values-alertmanager.yaml
