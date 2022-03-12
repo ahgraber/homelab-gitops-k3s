@@ -56,16 +56,27 @@ alertmanager:
   ingress:
     enabled: false
 
-  # alertmanagerSpec:
-  #   storage:
-  #     volumeClaimTemplate:
-  #       spec:
-  #         storageClassName: csi-truenas-iscsi
-  #         resources:
-  #           requests:
-  #             storage: 2Gi
-  #   resources:
-  #     requests:
-  #       memory: 48Mi
-  #     limits:
-  #       memory: 96Mi
+  alertmanagerSpec:
+    retention: 120h
+    storage:
+      volumeClaimTemplate:
+        # metadata:
+        #   name: alertmanager-data
+        #   labels:
+        #     alertmanager: prometheus-alertmanager
+        #     app.kubernetes.io/instance: prometheus-alertmanager
+        #     app.kubernetes.io/name: alertmanager
+        spec:
+          # matchLabels:
+          #   app.kubernetes.io/name: alertmanager
+          # volumeName: alertmanager-data
+          # storageClassName: csi-truenas-iscsi
+          storageClassName: local-path
+          resources:
+            requests:
+              storage: 1Gi
+    resources:
+      requests:
+        memory: 48Mi
+      limits:
+        memory: 96Mi

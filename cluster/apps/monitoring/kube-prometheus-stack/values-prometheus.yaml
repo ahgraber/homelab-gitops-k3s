@@ -21,11 +21,23 @@ prometheus:
     walCompression: true
     storageSpec:
       volumeClaimTemplate:
+        # metadata:
+        #   name: prometheus-data
+        #   labels:
+        #     app.kubernetes.io/instance: prometheus-prometheus
+        #     app.kubernetes.io/name: prometheus
+        #     operator.prometheus.io/name: prometheus-prometheus
+        #     operator.prometheus.io/shard: "0"
+        #     prometheus: prometheus-prometheus
         spec:
-          storageClassName: "csi-truenas-iscsi"
+          # matchLabels:
+          #   app.kubernetes.io/name: prometheus
+          # volumeName: prometheus-data
+          # storageClassName: csi-truenas-iscsi
+          storageClassName: local-path
           resources:
             requests:
-              storage: 10Gi
+              storage: 3Gi
     # resources:
     #   requests:
     #     memory: 3072Mi
