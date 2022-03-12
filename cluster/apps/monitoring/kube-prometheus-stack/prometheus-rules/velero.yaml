@@ -2,11 +2,11 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: velero
+  name: velero-rules
   namespace: velero
 spec:
   groups:
-    - name: velero
+    - name: velero.rules
       rules:
         - alert: VeleroBackupPartialFailures
           annotations:
