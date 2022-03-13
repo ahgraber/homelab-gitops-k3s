@@ -6,7 +6,7 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
-    - web
+    # - web
     - websecure
   routes:
     - match: Host(`baikal.${SECRET_DOMAIN}`)
@@ -30,6 +30,8 @@ kind: Middleware
 metadata:
   name: baikal
   namespace: networking
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 spec:
   redirectRegex:
     regex: https://(.*)/.well-known/(card|cal)dav
