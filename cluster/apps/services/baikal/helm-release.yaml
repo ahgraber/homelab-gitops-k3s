@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ckulka/baikal
-      tag: 0.9.1-nginx
+      tag: nginx
     env:
       TZ: "America/New_York"
 
