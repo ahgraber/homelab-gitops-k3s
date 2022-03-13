@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baikal
+  namespace: services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: baikal
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+        - name: baikal
+          image: ckulka/baikal:nginx
+          ports:
+            - containerPort: 80
+          env:
+            - name: TZ
+              value: America/New_York
+          volumeMounts:
+            - name: baikal-data
+              subPath: config
+              mountPath: /var/www/baikal/config
+            - name: baikal-data
+              subPath: data
+              mountPath: /var/www/baikal/Specific
+          resources:
+            limits:
+              memory: 2000Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 80
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 30
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      volumes:
+        - name: baikal-data
+          persistentVolumeClaim:
+            claimName: baikal-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baikal
+  namespace: services
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: baikal
+    app.kubernetes.io/name: baikal
+  # type: ClusterIP
+  # sessionAffinity: None
+  # ipFamilies:
+  #   - IPv4
+  # ipFamilyPolicy: SingleStack
+  # internalTrafficPolicy: Cluster
