@@ -4,11 +4,15 @@ kind: Deployment
 metadata:
   name: baikal
   namespace: services
+  labels:
+    app.kubernetes.io/instance: baikal
+    app.kubernetes.io/name: baikal
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: baikal
+      app.kubernetes.io/instance: baikal
+      app.kubernetes.io/name: baikal
   strategy:
     type: Recreate
   template:
