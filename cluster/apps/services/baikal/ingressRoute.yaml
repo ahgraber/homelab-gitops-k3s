@@ -15,6 +15,7 @@ spec:
       middlewares:
         - name: rfc1918
         - name: baikal
+        - name: headers-sts
         # - name: basicauth
       services:
         - name: baikal
