@@ -16,6 +16,10 @@ spec:
   strategy:
     type: Recreate
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: baikal
+        app.kubernetes.io/name: baikal
     spec:
       containers:
         - name: baikal
