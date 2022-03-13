@@ -31,11 +31,13 @@ spec:
       config:
         enabled: true
         existingClaim: baikal-data # baikal-data
-        mountPath: /var/www/baikal
-      # data:
-      #   enabled: true
-      #   existingClaim: baikal-data  # baikal-specific
-      #   mountPath: /var/www/baikal/Specific
+        mountPath: /var/www/baikal/config
+        subPath: /config
+      data:
+        enabled: true
+        existingClaim: baikal-data # baikal-specific
+        mountPath: /var/www/baikal/Specific
+        subPath: /data
     # podAnnotations:
     #   backup.velero.io/backup-volumes: config
     #   pre.hook.backup.velero.io/container: fsfreeze
