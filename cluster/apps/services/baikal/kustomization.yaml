@@ -6,3 +6,4 @@ resources:
   - ingressRoute.yaml
   - pvc.yaml
   # - secret.yaml
+  - service.yaml
