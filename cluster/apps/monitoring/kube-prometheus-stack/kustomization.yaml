@@ -6,6 +6,7 @@ resources:
   - helm-release.yaml
   - ingressRoute-alertmanager.yaml
   - ingressRoute-prometheus.yaml
+  - podmonitor.yaml
   # - pvc-alertmanager.yaml
   # - pvc-prometheus.yaml
   - values-alertmanager.yaml
