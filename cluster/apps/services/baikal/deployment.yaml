@@ -77,6 +77,10 @@ kind: Service
 metadata:
   name: baikal
   namespace: services
+  labels:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: baikal
+    app.kubernetes.io/name: baikal
 spec:
   ports:
     - name: http
@@ -84,6 +88,7 @@ spec:
       port: 80
       targetPort: http
   selector:
+    app.kubernetes.io/component: app
     app.kubernetes.io/instance: baikal
     app.kubernetes.io/name: baikal
   # type: ClusterIP
