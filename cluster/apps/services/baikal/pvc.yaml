@@ -4,6 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: baikal-data
   namespace: services
+  labels:
+    app.kubernetes.io/name: baikal
+    app.kubernetes.io/instance: baikal
 spec:
   accessModes:
     - ReadWriteOnce
