@@ -20,8 +20,15 @@ spec:
       labels:
         app.kubernetes.io/name: baikal
         app.kubernetes.io/instance: baikal
+      annotations:
+        backup.velero.io/backup-volumes: baikal-data
+        pre.hook.backup.velero.io/container: fsfreeze
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/www/baikal"]'
+        post.hook.backup.velero.io/container: fsfreeze
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/www/baikal"]'
     spec:
       containers:
+        # ref: https://github.com/ckulka/baikal-docker
         - name: baikal
           image: ckulka/baikal:nginx
           imagePullPolicy: IfNotPresent
