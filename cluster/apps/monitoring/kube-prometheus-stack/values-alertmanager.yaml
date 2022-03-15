@@ -47,6 +47,9 @@ data:
             - receiver: "null"
               match:
                 alertname: Watchdog
+            # - receiver: "null"
+            #   match:
+            #     alertname: etcdHighNumberOfFailedGRPCRequests
             - receiver: "email"
               match_re:
                 # severity: critical|warning
