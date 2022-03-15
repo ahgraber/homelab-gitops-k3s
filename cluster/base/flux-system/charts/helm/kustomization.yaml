@@ -6,6 +6,8 @@ resources:
   - appuio-charts.yaml
   - authentik-charts.yaml
   - bitnami-charts.yaml
+  - crowdsec-charts.yaml
+  - cloudflare-charts.yaml
   - dashboard-charts.yaml
   - deliveryhero-charts.yaml
   - democratic-csi-charts.yaml
