@@ -4,7 +4,7 @@ apiVersion: velero.io/v1
 kind: Schedule
 metadata:
   name: baikal-schedule
-  namespace: baikal
+  namespace: services
 spec:
   # Schedule is a Cron expression defining when to run the Backup
   # Kubernetes uses UTC exclusively - adjust from local time!
