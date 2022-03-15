@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   # - cloudflared
   # - cloudflare-ddns
-  - crowdsec
+  # - crowdsec
   - traefik
   - wildcard-certificate
