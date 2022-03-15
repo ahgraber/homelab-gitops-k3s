@@ -3,12 +3,12 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: crowdsec
-  namespace: networking
+  namespace: security
 spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
+      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts/
       chart: crowdsec
       version: 0.3.0
       sourceRef:
