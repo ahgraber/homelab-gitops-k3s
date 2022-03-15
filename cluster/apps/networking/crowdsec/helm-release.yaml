@@ -71,11 +71,6 @@ spec:
           storageClassName: "csi-truenas-iscsi"
           size: 100Mi
 
-      # -- nodeSelector for lapi
-      nodeSelector: {}
-      # -- tolerations for lapi
-      tolerations: {}
-
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
       metrics:
         enabled: true
@@ -167,8 +162,6 @@ spec:
         # - name: LEVEL_INFO
         #   value: "false"
 
-      # -- nodeSelector for agent
-      nodeSelector: {}
       # -- tolerations for agent
       tolerations:
         - key: "node-role.kubernetes.io/master"
