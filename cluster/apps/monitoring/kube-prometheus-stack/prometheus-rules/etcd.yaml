@@ -74,9 +74,7 @@ spec:
               taking {{ $value }}s on etcd instance {{ $labels.instance }}.
           expr: >-
             histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket{job=~".*etcd.*",
-            grpc_type="unary"}[5m])) by (job, instance, grpc_service, grpc_method, le))
-
-            > 0.15
+            grpc_type="unary"}[5m])) by (job, instance, grpc_service, grpc_method, le)) > 0.15
           for: 10m
           labels:
             severity: critical
