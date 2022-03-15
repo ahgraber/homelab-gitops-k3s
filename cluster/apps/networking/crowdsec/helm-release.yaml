@@ -1,0 +1,193 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: crowdsec
+  namespace: networking
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts/
+      chart: crowdsec
+      version: 0.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: crowdsec-charts
+        namespace: flux-system
+  values:
+    # -- for raw logs format: json or cri (docker|containerd)
+    container_runtime: containerd
+
+    image:
+      # -- docker image repository name
+      repository: crowdsecurity/crowdsec
+      # -- pullPolicy
+      pullPolicy: IfNotPresent
+      # -- docker image tag
+      tag: "latest"
+
+    # If you want to specify secrets that will be used for all your crowdsec-agents
+    # secrets can be provided be env variables
+    secrets:
+      # -- agent username (default is generated randomly)
+      username: ""
+      # -- agent password (default is generated randomly)
+      password: ""
+
+    # lapi (local api) will deploy pod with crowdsec lapi and dashboard as deployment
+    lapi:
+      # -- environment variables from crowdsecurity/crowdsec docker image
+      env:
+        # by default disable the agent because it only the local API.
+        - name: DISABLE_AGENT
+          value: "true"
+      dashboard:
+        # -- Enable Metabase Dashboard (by default disabled)
+        enabled: false
+        ingress:
+          enabled: false
+
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          cpu: 150m
+          memory: 100Mi
+      # -- Enable persistent volumes
+      persistentVolume:
+        # -- Persistent volume for data folder. Stores e.g. registered bouncer api keys
+        data:
+          enabled: true
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: "csi-truenas-iscsi"
+          size: 1Gi
+        # -- Persistent volume for config folder. Stores e.g. online api credentials
+        config:
+          enabled: true
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: "csi-truenas-iscsi"
+          size: 100Mi
+
+      # -- nodeSelector for lapi
+      nodeSelector: {}
+      # -- tolerations for lapi
+      tolerations: {}
+
+      # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+
+    # agent will deploy pod on every node as daemonSet to read wanted pods logs
+    agent:
+      acquisition:
+        # -- Specify each pod you want to process it logs (namespace, podName and program)
+        - namespace: networking
+          podName: traefik-*
+          program: traefik
+        - namespace: vaultwarden
+          podName: vaultwarden-*
+          program: vaultwarden
+        - namespace: nextcloud
+          podName: nextcloud-*-*
+          program: nextcloud
+        - namespace: nextcloud
+          podName: nextcloud-postgresql-*
+          program: pgsql
+        - namespace: security
+          podName: keycloak-postgresql-*
+          program: pgsql
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          cpu: 150m
+          memory: 100Mi
+      # -- Enable persistent volumes
+      persistentVolume:
+        # -- Persistent volume for config folder. Stores local config (parsers, scenarios etc.)
+        config:
+          enabled: true
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: "local-path"
+          size: 100Mi
+      # -- environment variables from crowdsecurity/crowdsec docker image
+      env:
+        # As we are running Traefik, we want to install the Traefik collection
+        - name: COLLECTIONS
+          value: "crowdsecurity/linux"
+        - name: COLLECTIONS
+          value: "crowdsecurity/traefik"
+        - name: COLLECTIONS
+          value: "crowdsecurity/base-http-scenarios"
+        - name: COLLECTIONS
+          value: "crowdsecurity/http-cve"
+        - name: COLLECTIONS
+          value: "crowdsecurity/vaultwarden"
+        - name: COLLECTIONS
+          value: "crowdsecurity/nextcloud"
+        # - name: COLLECTIONS
+        #   value: "crowdsecurity/mariadb"
+        - name: COLLECTIONS
+          value: "crowdsecurity/pgsql"
+        - name: COLLECTIONS
+          value: "crowdsecurity/sshd"
+
+        # by default we the docker-logs parser to be able to parse docker logs in k8s
+        # by default we disable local API on the agent pod
+        # - name: SCENARIOS
+        #   value: "scenario/name otherScenario/name"
+        # - name: PARSERS
+        #   value: "parser/name otherParser/name"
+        # - name: POSTOVERFLOWS
+        #   value: "postoverflow/name otherPostoverflow/name"
+        # - name: CONFIG_FILE
+        #   value: "/etc/crowdsec/config.yaml"
+        # - name: DSN
+        #   value: "file:///var/log/toto.log"
+        # - name: TYPE
+        #   value: "Labels.type_for_time-machine_mode"
+        # - name: TEST_MODE
+        #   value: "false"
+        - name: TZ
+          value: "America/New_York"
+        # - name: DISABLE_AGENT
+        #   value: "false"
+        - name: DISABLE_ONLINE_API
+          value: "false"
+        # - name: LEVEL_TRACE
+        #   value: "false"
+        # - name: LEVEL_DEBUG
+        #   value: "false"
+        # - name: LEVEL_INFO
+        #   value: "false"
+
+      # -- nodeSelector for agent
+      nodeSelector: {}
+      # -- tolerations for agent
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+
+      # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+
+      # -- wait-for-lapi init container
+      wait_for_lapi:
+        image:
+          # -- docker image repository name
+          repository: busybox
+          # -- pullPolicy
+          pullPolicy: IfNotPresent
+          # -- docker image tag
+          tag: "1.28"
+
+    #service: {}
