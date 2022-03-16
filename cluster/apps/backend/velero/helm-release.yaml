@@ -83,7 +83,7 @@ spec:
 
     credentials:
       useSecret: true
-      existingSecret: secret-velero
+      existingSecret: velero-secret
 
     # Whether to create backupstoragelocation crd, if false => do not create a default backup location
     backupsEnabled: true
