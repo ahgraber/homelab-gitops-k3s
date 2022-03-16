@@ -13,6 +13,9 @@ trim_trailing_whitespace = true
 [*.{bat,cmd,ps1}]
 end_of_line = crlf
 
+[*.csv]
+insert_final_newline = false
+
 [*.md]
 trim_trailing_whitespace = false
 
