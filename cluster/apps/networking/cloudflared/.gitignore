@@ -1,0 +1,7 @@
+# gitignore
+
+# ignore cloudflare credentials
+*.crt
+*.pem
+*.json
+**/creds

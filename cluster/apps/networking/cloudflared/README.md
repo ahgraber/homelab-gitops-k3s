@@ -24,33 +24,31 @@ connections to Cloudflare's edge.
 
 2. Create a tunnel, change example-tunnel to the name you want to assign to your tunnel.
 
-   <!-- markdownlint-disable -->
    ```sh
-   $ cloudflared tunnel create example-tunnel
-   INFO[2020-09-05T10:48:34+01:00] Writing tunnel credentials to /Users/cf000197/.cloudflared/ef824aef-7557-4b41-a398-4684585177ad.json. cloudflared chose this file based on where your origin certificate was found.
-   INFO[2020-09-05T10:48:34+01:00] Keep this file secret. To revoke these credentials, delete the tunnel.
-   INFO[2020-09-05T10:48:34+01:00] Created tunnel example-tunnel with id ef824aef-7557-4b41-a398-4684585177ad
+   cloudflared tunnel create example-tunnel
    ```
-   <!-- markdownlint-enable -->
 
 3. Upload the tunnel credentials file to your Kubernetes as a secret. You'll need to provide the filepath
    that the tunnel credentials file was created under.
    You can find that path in the output of cloudflared tunnel create above.
 
    ```sh
-   $ kubectl create secret generic tunnel-credentials \
-   --from-file=credentials.json=/Users/cf000197/.cloudflared/ef824aef-7557-4b41-a398-4684585177ad.json
+   # create secret locally
+   kubectl create secret generic tunnel-credentials \
+   --from-file=credentials.json=</path/to/credentials.json> \
+   --output=yaml \
+   --dry-run=client \
+   > </path/to/secret.sops.yaml>
+
+   # encrypt with sops
+   export GPG_TTY=$(tty)
+   sops --encrypt --in-place ./secret.sops.yaml
    ```
 
-4. Associate your Tunnel with a DNS record. Go to dashboard and create a CNAME targeting .cfargotunnel.com.
-   In this example the tunnel ID is ef824aef-7557-4b41-a398-4684585177ad, so I will create CNAME targeting
-   ef824aef-7557-4b41-a398-4684585177ad.cfargotunnel.com.
-   You can create multiple CNAME records targeting the same tunnel.
-
-   You can do this from the command line by running `cloudflared tunnel route dns <tunnel> <hostname>`. For example,
+4. Associate your Tunnel with a DNS record.
 
    ```sh
-   cloudflared tunnel route dns example-tunnel tunnel.example.com.
+   cloudflared tunnel route dns example-tunnel "<hostname>.${SECRET_DOMAIN}"
    ```
 
 5. Deploy cloudflared by applying its manifest.
