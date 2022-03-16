@@ -5,9 +5,5 @@ resources:
   # - helm-release.yaml
   - ingressRoute.yaml
   - pvc.yaml
-<<<<<<< HEAD
-  - secret.yaml
-=======
   - secret.sops.yaml
->>>>>>> 25a4719 (add hammond)
   - service.yaml
