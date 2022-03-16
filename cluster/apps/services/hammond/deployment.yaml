@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hammond
+  namespace: services
+  labels:
+    app.kubernetes.io/name: hammond
+    app.kubernetes.io/instance: hammond
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hammond
+      app.kubernetes.io/instance: hammond
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hammond
+        app.kubernetes.io/instance: hammond
+      annotations:
+        backup.velero.io/backup-volumes: hammond-data
+        # pre.hook.backup.velero.io/container: fsfreeze
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/www/hammond"]'
+        # post.hook.backup.velero.io/container: fsfreeze
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/www/hammond"]'
+    spec:
+      containers:
+        # ref: https://github.com/akhilrex/hammond
+        - name: hammond
+          image: akhilrex/hammond
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: TZ
+              value: America/New_York
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hammond-secret
+                  key: JWT_SECRET
+
+          volumeMounts:
+            - name: hammond-data
+              subPath: config
+              mountPath: /config
+            - name: hammond-data
+              subPath: data
+              mountPath: /assets
+          resources:
+            limits:
+              memory: 2000Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 30
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      volumes:
+        - name: hammond-data
+          persistentVolumeClaim:
+            claimName: hammond-data
