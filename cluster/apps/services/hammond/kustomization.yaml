@@ -5,5 +5,5 @@ resources:
   # - helm-release.yaml
   - ingressRoute.yaml
   - pvc.yaml
-  # - secret.yaml
+  - secret.yaml
   - service.yaml
