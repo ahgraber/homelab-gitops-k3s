@@ -12,6 +12,7 @@ spec:
     app.kubernetes.io/name: hammond
     app.kubernetes.io/instance: hammond
   ports:
-    - port: 3000
+    - name: "3000"
+      port: 3000
       protocol: TCP
       targetPort: 3000
