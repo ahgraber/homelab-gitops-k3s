@@ -14,8 +14,8 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: rfc1918
-        - name: hammond
-        - name: headers-sts
+        # - name: hammond
+        # - name: headers-sts
         # - name: basicauth
       services:
         - name: hammond
