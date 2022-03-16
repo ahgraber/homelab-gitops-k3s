@@ -59,7 +59,7 @@ data:
         #     key: objstore.yml
 
         additionalScrapeConfigs:
-          - job_name: node-exporter
+          - job_name: opnsense
             honor_timestamps: true
             static_configs:
               - targets:
