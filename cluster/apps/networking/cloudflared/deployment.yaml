@@ -56,7 +56,7 @@ spec:
         # Create a config.yaml file from the ConfigMap below.
         - name: config
           configMap:
-            name: cloudflared
+            name: k8s-argo-tunnel
             items:
               - key: config.yaml
                 path: config.yaml
