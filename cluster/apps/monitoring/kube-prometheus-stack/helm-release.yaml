@@ -28,8 +28,7 @@ spec:
   values:
     podAnnotations:
       annotations:
-        configmap.reloader.stakater.com/reload:
-          "kps-values-general, kps-values-prometheus, kps-values-alertmanager"
+        configmap.reloader.stakater.com/reload: "kps-values-general,kps-values-prometheus,kps-values-alertmanager"
     fullnameOverride: prometheus
 
     defaultRules:
