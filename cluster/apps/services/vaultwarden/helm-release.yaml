@@ -35,7 +35,7 @@ spec:
       WEBSOCKET_PORT: 3012
     envFrom:
       - secretRef:
-          name: secret-vaultwarden
+          name: vaultwarden-secret
     ingress:
       main:
         enabled: false
@@ -43,7 +43,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: config-vaultwarden
+        existingClaim: vaultwarden-config
     podAnnotations:
       backup.velero.io/backup-volumes: config
       pre.hook.backup.velero.io/container: fsfreeze
