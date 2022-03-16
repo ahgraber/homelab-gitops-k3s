@@ -8,7 +8,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts/
+      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
       chart: crowdsec
       version: 0.3.0
       sourceRef:
