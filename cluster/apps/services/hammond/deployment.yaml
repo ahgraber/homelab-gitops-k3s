@@ -22,10 +22,10 @@ spec:
         app.kubernetes.io/instance: hammond
       annotations:
         backup.velero.io/backup-volumes: hammond-data
-        # pre.hook.backup.velero.io/container: fsfreeze
-        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/var/www/hammond"]'
-        # post.hook.backup.velero.io/container: fsfreeze
-        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/var/www/hammond"]'
+        pre.hook.backup.velero.io/container: fsfreeze
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
+        post.hook.backup.velero.io/container: fsfreeze
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
     spec:
       containers:
         # ref: https://github.com/akhilrex/hammond
@@ -81,6 +81,17 @@ spec:
             failureThreshold: 30
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+        - name: fsfreeze
+          image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+          resources: {}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
       restartPolicy: Always
       volumes:
         - name: hammond-data
