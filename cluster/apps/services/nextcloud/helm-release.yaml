@@ -147,4 +147,5 @@ spec:
       enabled: true
       password: ${SECRET_DB_USER_PWD}
       storageClass: "local-path"
-      size: 2Gi
+      persistence:
+        size: 2Gi
