@@ -22,10 +22,10 @@ spec:
         app.kubernetes.io/instance: baikal
       annotations:
         backup.velero.io/backup-volumes: baikal-data
-        # pre.hook.backup.velero.io/container: fsfreeze
+        pre.hook.backup.velero.io/container: fsfreeze
         pre.hook.backup.velero.io/command:
           '["/sbin/fsfreeze", "--freeze", "/var/www/baikal/config", "/var/www/baikal/Specific"]'
-        # post.hook.backup.velero.io/container: fsfreeze
+        post.hook.backup.velero.io/container: fsfreeze
         post.hook.backup.velero.io/command:
           '["/sbin/fsfreeze", "--unfreeze", "/var/www/baikal", "/var/www/baikal/Specific"]'
     spec:
@@ -77,21 +77,21 @@ spec:
             failureThreshold: 30
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-        # - name: fsfreeze
-        #   image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        #   resources: {}
-        #   volumeMounts:
-        #     - name: baikal-data
-        #       subPath: config
-        #       mountPath: /var/www/baikal/config
-        #     - name: baikal-data
-        #       subPath: data
-        #       mountPath: /var/www/baikal/Specific
-        #   terminationMessagePath: /dev/termination-log
-        #   terminationMessagePolicy: File
-        #   imagePullPolicy: IfNotPresent
-        #   securityContext:
-        #     privileged: true
+        - name: fsfreeze
+          image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+          resources: {}
+          volumeMounts:
+            - name: baikal-data
+              subPath: config
+              mountPath: /var/www/baikal/config
+            - name: baikal-data
+              subPath: data
+              mountPath: /var/www/baikal/Specific
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
       restartPolicy: Always
       volumes:
         - name: baikal-data
