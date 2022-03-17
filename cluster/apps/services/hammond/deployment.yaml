@@ -22,10 +22,10 @@ spec:
         app.kubernetes.io/instance: hammond
       annotations:
         backup.velero.io/backup-volumes: hammond-data
-        pre.hook.backup.velero.io/container: fsfreeze
-        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
-        post.hook.backup.velero.io/container: fsfreeze
-        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
+        # pre.hook.backup.velero.io/container: fsfreeze
+        # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
+        # post.hook.backup.velero.io/container: fsfreeze
+        # post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
     spec:
       containers:
         # ref: https://github.com/akhilrex/hammond
@@ -81,21 +81,20 @@ spec:
             failureThreshold: 30
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-        - name: fsfreeze
-          image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-          resources: {}
-          volumeMounts:
-            - name: hammond-data
-              subPath: config
-              mountPath: /config
-            - name: hammond-data
-              subPath: data
-              mountPath: /assets
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            privileged: true
+        # - name: fsfreeze
+        #   image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
+        #   volumeMounts:
+        #     - name: hammond-data
+        #       subPath: config
+        #       mountPath: /config
+        #     - name: hammond-data
+        #       subPath: data
+        #       mountPath: /assets
+        #   terminationMessagePath: /dev/termination-log
+        #   terminationMessagePolicy: File
+        #   imagePullPolicy: IfNotPresent
+        #   securityContext:
+        #     privileged: true
       restartPolicy: Always
       volumes:
         - name: hammond-data
