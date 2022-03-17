@@ -8,7 +8,7 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts/
+      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
       chart: crowdsec
       version: 0.3.0
       sourceRef:
@@ -181,6 +181,6 @@ spec:
           # -- pullPolicy
           pullPolicy: IfNotPresent
           # -- docker image tag
-          tag: "1.28"
+          tag: "1.35"
 
     #service: {}

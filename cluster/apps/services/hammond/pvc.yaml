@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hammond-data
+  namespace: services
+  labels:
+    app.kubernetes.io/name: hammond
+    app.kubernetes.io/instance: hammond
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-truenas-iscsi
+  resources:
+    requests:
+      storage: 1Gi

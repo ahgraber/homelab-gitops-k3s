@@ -2,56 +2,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: baikal
+  name: hammond
   namespace: services
   labels:
-    app.kubernetes.io/name: baikal
-    app.kubernetes.io/instance: baikal
+    app.kubernetes.io/name: hammond
+    app.kubernetes.io/instance: hammond
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: baikal
-      app.kubernetes.io/instance: baikal
+      app.kubernetes.io/name: hammond
+      app.kubernetes.io/instance: hammond
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: baikal
-        app.kubernetes.io/instance: baikal
+        app.kubernetes.io/name: hammond
+        app.kubernetes.io/instance: hammond
       annotations:
-        backup.velero.io/backup-volumes: baikal-data
+        backup.velero.io/backup-volumes: hammond-data
         pre.hook.backup.velero.io/container: fsfreeze
-        pre.hook.backup.velero.io/command:
-          '["/bin/sh", "-c", "/sbin/fsfreeze --freeze /var/www/baikal/config && /sbin/fsfreeze
-          --freeze /var/www/baikal/Specific"]'
+        pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
         post.hook.backup.velero.io/container: fsfreeze
-        post.hook.backup.velero.io/command:
-          '["/bin/sh", "-c", "/sbin/fsfreeze --unfreeze /var/www/baikal/config && /sbin/fsfreeze
-          --freeze /var/www/baikal/Specific"]'
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
     spec:
       containers:
-        # ref: https://github.com/ckulka/baikal-docker
-        - name: baikal
-          image: ckulka/baikal:nginx
+        # ref: https://github.com/akhilrex/hammond
+        - name: hammond
+          image: akhilrex/hammond
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 3000
               protocol: TCP
           env:
             - name: TZ
               value: America/New_York
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hammond-secret
+                  key: JWT_SECRET
+
           volumeMounts:
-            - name: baikal-data
+            - name: hammond-data
               subPath: config
-              mountPath: /var/www/baikal/config
-              readOnly: false
-            - name: baikal-data
+              mountPath: /config
+            - name: hammond-data
               subPath: data
-              mountPath: /var/www/baikal/Specific
-              readOnly: false
+              mountPath: /assets
           resources:
             limits:
               memory: 2000Mi
@@ -60,21 +60,21 @@ spec:
               memory: 100Mi
           livenessProbe:
             tcpSocket:
-              port: 80
+              port: 3000
             timeoutSeconds: 1
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           readinessProbe:
             tcpSocket:
-              port: 80
+              port: 3000
             timeoutSeconds: 1
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           startupProbe:
             tcpSocket:
-              port: 80
+              port: 3000
             timeoutSeconds: 1
             periodSeconds: 5
             successThreshold: 1
@@ -85,14 +85,12 @@ spec:
           image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
           resources: {}
           volumeMounts:
-            - name: baikal-data
+            - name: hammond-data
               subPath: config
-              mountPath: /var/www/baikal/config
-              readOnly: false
-            - name: baikal-data
+              mountPath: /config
+            - name: hammond-data
               subPath: data
-              mountPath: /var/www/baikal/Specific
-              readOnly: false
+              mountPath: /assets
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
@@ -100,6 +98,6 @@ spec:
             privileged: true
       restartPolicy: Always
       volumes:
-        - name: baikal-data
+        - name: hammond-data
           persistentVolumeClaim:
-            claimName: baikal-data
+            claimName: hammond-data
