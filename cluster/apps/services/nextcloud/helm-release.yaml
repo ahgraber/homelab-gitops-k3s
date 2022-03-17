@@ -150,6 +150,8 @@ spec:
       master:
         persistence:
           size: 2Gi
+          storageClass: "local-path"
       replica:
         persistence:
           size: 2Gi
+          storageClass: "local-path"
