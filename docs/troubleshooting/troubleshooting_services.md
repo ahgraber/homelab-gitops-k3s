@@ -135,9 +135,12 @@
 - Force delete stalled pods
 
   ```sh
-  kubectl delete pods <pod> --grace-period=0 --force
+  pod="asd"
+  namespace="qwer"
+  kubectl delete pods "$pod" -n "$namespace" --grace-period=0 --force
   # if pod is stuck on `Unknown` state, run:
-  kubectl patch pod <pod> -p '{"metadata":{"finalizers":[]]}}' --type=merge
+  kubectl patch pod "$pod" -n "$namespace" -p '{"metadata":{"finalizers":[]]}}' --type=merge
+  unset pod namespace
   ```
 
 - Remove disk pressure taint
