@@ -24,10 +24,12 @@ spec:
         backup.velero.io/backup-volumes: baikal-data
         pre.hook.backup.velero.io/container: fsfreeze
         pre.hook.backup.velero.io/command:
-          '["/sbin/fsfreeze", "--freeze", "/var/www/baikal/config", "/var/www/baikal/Specific"]'
+          '["/bin/sh", "-c", "/sbin/fsfreeze --freeze /var/www/baikal/config && /sbin/fsfreeze
+          --freeze /var/www/baikal/Specific"]'
         post.hook.backup.velero.io/container: fsfreeze
         post.hook.backup.velero.io/command:
-          '["/sbin/fsfreeze", "--unfreeze", "/var/www/baikal", "/var/www/baikal/Specific"]'
+          '["/bin/sh", "-c", "/sbin/fsfreeze --unfreeze /var/www/baikal/config && /sbin/fsfreeze
+          --freeze /var/www/baikal/Specific"]'
     spec:
       containers:
         # ref: https://github.com/ckulka/baikal-docker
@@ -45,9 +47,11 @@ spec:
             - name: baikal-data
               subPath: config
               mountPath: /var/www/baikal/config
+              readOnly: false
             - name: baikal-data
               subPath: data
               mountPath: /var/www/baikal/Specific
+              readOnly: false
           resources:
             limits:
               memory: 2000Mi
@@ -84,9 +88,11 @@ spec:
             - name: baikal-data
               subPath: config
               mountPath: /var/www/baikal/config
+              readOnly: false
             - name: baikal-data
               subPath: data
               mountPath: /var/www/baikal/Specific
+              readOnly: false
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: IfNotPresent
