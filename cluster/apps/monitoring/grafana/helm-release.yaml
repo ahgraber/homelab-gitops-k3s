@@ -144,7 +144,9 @@ spec:
       enabled: false
 
     persistence:
-      enabled: false
+      enabled: true
+      size: 2Gi
+      storageClass: "csi-truenas-iscsi"
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: "grafana"
