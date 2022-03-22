@@ -149,9 +149,11 @@ spec:
       storageClass: "local-path"
       master:
         persistence:
-          size: 2Gi
-          storageClass: "local-path"
+          enabled: false
+          # size: 2Gi
+          # storageClass: "local-path"
       replica:
         persistence:
-          size: 2Gi
-          storageClass: "local-path"
+          enabled: false
+          # size: 2Gi
+          # storageClass: "local-path"
