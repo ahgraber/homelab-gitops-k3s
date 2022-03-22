@@ -45,11 +45,11 @@ data:
               resources:
                 requests:
                   storage: 3Gi
-        # resources:
-        #   requests:
-        #     memory: 3072Mi
-        #   limits:
-        #     memory: 4096Mi
+        resources:
+          requests:
+            memory: 3072Mi
+          limits:
+            memory: 4096Mi
 
         # thanos:
         #   image: quay.io/thanos/thanos:v0.23.1
