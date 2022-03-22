@@ -12,3 +12,14 @@ spec:
     customFrameOptionsValue: SAMEORIGIN
     customRequestHeaders:
       X-Forwarded-Proto: https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: headers-sts
+  namespace: networking
+spec:
+  headers:
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsSeconds: 15552000
