@@ -38,15 +38,3 @@ spec:
   redirectRegex:
     regex: https://(.*)/.well-known/(card|cal)dav
     replacement: https://${1}/remote.php/dav/
-
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: headers-sts
-  namespace: networking
-spec:
-  headers:
-    forceSTSHeader: true
-    stsIncludeSubdomains: true
-    stsSeconds: 15552000
