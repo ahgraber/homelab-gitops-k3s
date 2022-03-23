@@ -13,3 +13,12 @@ is stored with the timestamp at which it was recorded, alongside optional key-va
 ### [Kube-State-Metrics](https://github.com/kubernetes/kube-state-metrics)
 
 ### [Node Exporter](https://github.com/prometheus/node_exporter)
+
+## etcd alerts
+
+Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
+repeated etcd alerts may be raised.  To fix, manually apply the custom PrometheusRule:
+
+```sh
+kubectl apply -f ./prometheus-rules/etcd.yaml
+```
