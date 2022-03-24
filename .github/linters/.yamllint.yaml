@@ -13,7 +13,10 @@ rules:
     max-spaces-inside: 0
   comments:
     min-spaces-from-content: 1
-  indentation: enable
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+    check-multi-line-strings: false
   line-length: disable
   # quoted-strings:
   #   quote-type: any
