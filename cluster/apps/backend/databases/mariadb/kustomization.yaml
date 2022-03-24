@@ -8,4 +8,4 @@ resources:
   - cronjob-backup.yaml
   # - ingresRoute.yaml
   - pvc.yaml
-  - secret.yaml
+  - secret-mariadb.sops.yaml

@@ -8,6 +8,7 @@
 .vscode
 .**/
 dist/
-
+*.sops.*
+gotk-components.yaml
 *.md
 # *.y*ml

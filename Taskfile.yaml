@@ -10,7 +10,7 @@ env:
   KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"
 
 includes:
-  flux: .taskfiles/flux.yml
-  format: .taskfiles/format.yml
-  lint: .taskfiles/lint.yml
-  pre-commit: .taskfiles/pre-commit.yml
+  flux: .taskfiles/flux.yaml
+  format: .taskfiles/format.yaml
+  lint: .taskfiles/lint.yaml
+  pre-commit: .taskfiles/pre-commit.yaml

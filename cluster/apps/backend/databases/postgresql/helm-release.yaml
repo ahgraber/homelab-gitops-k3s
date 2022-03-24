@@ -66,15 +66,13 @@ spec:
 
     primary:
       podAnnotations:
-        secret.reloader.stakater.com/reload:
-          "configmap-postgresql-conf, configmap-postgresql-init, secret-postgresql"
+        secret.reloader.stakater.com/reload: "configmap-postgresql-conf, configmap-postgresql-init, secret-postgresql"
         backup.velero.io/backup-volumes: "data"
         backup.velero.io/backup-volumes-excludes: "backup"
         pre.hook.backup.velero.io/container: fsfreeze
         pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/bitnami/postgresql"]'
         post.hook.backup.velero.io/container: fsfreeze
-        post.hook.backup.velero.io/command:
-          '["/sbin/fsfreeze", "--unfreeze", "/bitnami/postgresql"]'
+        post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/bitnami/postgresql"]'
 
       extraVolumes:
         - name: backup

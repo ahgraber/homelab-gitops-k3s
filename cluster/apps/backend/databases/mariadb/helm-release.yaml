@@ -62,8 +62,7 @@ spec:
           # mountPath: /bitnami/mariadb/backup
 
       podAnnotations:
-        secret.reloader.stakater.com/reload:
-          "configmap-mariadb-conf, configmap-mariadb-init, secret-mariadb"
+        secret.reloader.stakater.com/reload: "configmap-mariadb-conf, configmap-mariadb-init, secret-mariadb"
         backup.velero.io/backup-volumes: backup #, data
         # backup.velero.io/backup-volumes-excludes: "data"
         # pre.hook.backup.velero.io/container: fsfreeze

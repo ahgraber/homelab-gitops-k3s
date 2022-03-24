@@ -1,5 +1,11 @@
 # New Service Creation
 
+- [New Service Creation](#new-service-creation)
+  - [Considerations](#considerations)
+  - [General instructions](#general-instructions)
+  - [Secret encryption](#secret-encryption)
+  - [References](#references)
+
 ## Considerations
 
 - If Custom Resources are required, add to ./cluster/crds
@@ -21,6 +27,23 @@
   - Include required `helm-release.yaml` or other configuration specifications
   - Include `kustomization.yaml`
 - Add pointers to `kustomization.yaml` files in parent dir
+
+## Secret encryption
+
+1. Create template file `secret-secretname.sops.yaml.tmpl` which relies on environmental variables from `.envrc`
+   to populate secret fields
+
+2. Transform template into yaml
+
+   ```sh
+   envsubst < ./path/to/secret-<secretname>.sops.yaml.tmpl >! ./path/to/secret-<secretname>.sops.yaml
+   ```
+
+3. Encrypt with sops
+
+   ```sh
+   sops --encrypt --in-place ./path/to/secret-<secretname>.sops.yaml
+   ```
 
 ## References
 
