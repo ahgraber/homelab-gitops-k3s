@@ -6,8 +6,8 @@ set -o pipefail
 # shellcheck disable=SC2155
 PROJECT_DIR=$(git rev-parse --show-toplevel)
 # shellcheck disable=SC2155
-SOPS_AGE_KEY_FILE="${HOME}/.config/sops/age/keys.txt"
-AGE_PUBLIC_KEY="$(grep public """${HOME}/.config/sops/age/keys.txt""" | awk '{ print $NF }')"
+SOPS_AGE_KEY_FILE="${HOME}/Library/Application Support/sops/age/keys.txt"
+AGE_PUBLIC_KEY="$(grep public """$SOPS_AGE_KEY_FILE""" | awk '{ print $NF }')"
 export PROJECT_DIR SOPS_AGE_KEY_FILE AGE_PUBLIC_KEY
 
 main() {
@@ -44,7 +44,7 @@ validate_age() {
         exit 1
     fi
 
-    if [[ ! -f ~/.config/sops/age/keys.txt ]]; then
+    if [[ ! -f "$SOPS_AGE_KEY_FILE" ]]; then
         _log "ERROR" "Unable to find Age file keys.txt in ~/.config/sops/age"
         exit 1
     fi
