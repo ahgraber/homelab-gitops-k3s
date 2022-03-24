@@ -21,7 +21,7 @@ main() {
     echo "${tmpl}"
     sops --encrypt --in-place "${tmpl}"
   done
-  exit 0
+
 }
 
 _has_envar() {

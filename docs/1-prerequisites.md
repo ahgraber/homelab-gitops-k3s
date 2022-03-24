@@ -114,14 +114,18 @@ age-keygen -o age.agekey
 ### 2. Set up the directory for the Age key and move the Age file to it
 
 ```sh
-mkdir -p ~/.config/sops/age
-mv age.agekey ~/.config/sops/age/keys.txt
+# for mac
+mkdir -p "${HOME}/Library/Application Support/sops/age"
+mv age.agekey "${HOME}/Library/Application Support/sops/age/keys.txt"
+# linux
+mkdir -p "${HOME}/.config/sops/age/keys.txt"
+mv age.agekey "${HOME}/.config/sops/age/keys.txt"
 ```
 
 ### 3. Add the Age key file and public key to the local `.envrc` and reload
 
 ```sh
-echo "export SOPS_AGE_KEY_FILE=\"${HOME}/.config/sops/age/keys.txt\"" >> .envrc
+echo "export SOPS_AGE_KEY_FILE=(expand_path ${HOME}/.config/sops/age/keys.txt) >> .envrc
 echo "export AGE_PUBLIC_KEY=\"$(grep public """${HOME}/.config/sops/age/keys.txt""" | awk '{ print $NF }')\"" >> .envrc
 direnv allow .
 ```
