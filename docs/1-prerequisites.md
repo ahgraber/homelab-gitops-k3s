@@ -114,7 +114,7 @@ age-keygen -o age.agekey
 ### 2. Set up the directory for the Age key and move the Age file to it
 
 ```sh
-# for mac
+# mac
 mkdir -p "${HOME}/Library/Application Support/sops/age"
 mv age.agekey "${HOME}/Library/Application Support/sops/age/keys.txt"
 # linux
