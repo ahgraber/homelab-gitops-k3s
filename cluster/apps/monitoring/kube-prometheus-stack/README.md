@@ -8,6 +8,11 @@ Prometheus is an open-source systems monitoring and alerting toolkit originally 
 Prometheus collects and stores _metrics_ as time series data, i.e. metrics information
 is stored with the timestamp at which it was recorded, alongside optional key-value pairs called labels.
 
+## Installation notes
+
+`./prometheus-rules` will need to be disable on first install due to race condition.
+Once `prometheus-operator` is up and running, `./prometheus-rules` can be added back
+
 ## Included
 
 ### [Kube-State-Metrics](https://github.com/kubernetes/kube-state-metrics)
