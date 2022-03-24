@@ -19,7 +19,7 @@ main() {
     envsubst < "${tmpl}" > "${rename}"
     echo "${tmpl} --> ${rename}"
   done
-  exit 0
+
 }
 
 _has_binary() {
