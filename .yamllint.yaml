@@ -18,5 +18,5 @@ rules:
   # quoted-strings:
   #   quote-type: any
   #   required: only-when-needed
-  # truthy:
-  #   allowed-values: ['true', 'false']
+  truthy:
+    allowed-values: ["true", "false"]

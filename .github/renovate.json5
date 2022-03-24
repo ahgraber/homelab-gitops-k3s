@@ -5,17 +5,31 @@
   "dependencyDashboardTitle": "Renovate Dashboard",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
+  // set up ignored deps
+  "ignoreDeps": [
+    "ghcr.io/fluxcd/helm-controller",
+    "ghcr.io/fluxcd/image-automation-controller",
+    "ghcr.io/fluxcd/image-reflector-controller",
+    "ghcr.io/fluxcd/kustomize-controller",
+    "ghcr.io/fluxcd/notification-controller",
+    "ghcr.io/fluxcd/source-controller",
+  ],
+  "pre-commit": {
+    enabled: true,
+  },
+  "flux": {
+    fileMatch: ["cluster/.+\\.ya?ml$"],
+  },
   "helm-values": {
-    fileMatch: ["cluster/.+/helm-release\\.yaml$"],
+    fileMatch: ["cluster/.+\\.ya?ml$"],
   },
   "kubernetes": {
-    fileMatch: ["cluster/.+\\.yaml$"],
-    ignorePaths: ["cluster/base/"],
+    fileMatch: ["cluster/.+\\.ya?ml$"],
   },
   "regexManagers": [
     // regexManager to read and process HelmRelease files
     {
-      fileMatch: ["cluster/.+\\.yaml$"],
+      fileMatch: ["cluster/.+\\.ya?ml$"],
       matchStrings: [
         // helm releases
         "registryUrl=(?<registryUrl>.*?)\n *chart: (?<depName>.*?)\n *version: (?<currentValue>.*)\n",
@@ -24,18 +38,14 @@
     },
     // regexManager to read and process cert-manager CRD's
     {
-      fileMatch: ["cluster/crds/cert-manager/.+\\.yaml$"],
-      matchStrings: [
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n.*\\/(?<currentValue>.*?)\\/",
-      ],
+      fileMatch: ["cluster/crds/cert-manager/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n.*\\/(?<currentValue>.*?)\\/"],
       datasourceTemplate: "helm",
     },
     // regexManager to read and process Traefik CRD's
     {
-      fileMatch: ["cluster/crds/traefik/.+\\.yaml$"],
-      matchStrings: [
-        "registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n",
-      ],
+      fileMatch: ["cluster/crds/traefik/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
       datasourceTemplate: "helm",
     },
   ],
