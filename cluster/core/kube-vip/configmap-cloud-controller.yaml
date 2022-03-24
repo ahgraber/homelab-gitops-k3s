@@ -10,8 +10,8 @@ data:
   ## without requiring ingressRoute
   cidr-networking: ${METALLB_FRONTEND}/32
   cidr-monitoring: ${METALLB_GUI}/32
-  cidr-mariadb: ${METALLB_MARIADB}/32
-  cidr-postgres: ${METALLB_POSTGRES}/32
+  # cidr-mariadb: ${METALLB_MARIADB}/32
+  # cidr-postgres: ${METALLB_POSTGRES}/32
   # ## CIDR-based IP range for use in the default Namespace
   # cidr-default: ${METALLB_LB_RANGE}
   # ## Range-based IP range for use in the development Namespace

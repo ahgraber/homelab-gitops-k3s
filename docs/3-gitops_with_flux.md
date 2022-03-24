@@ -1,5 +1,17 @@
 # :small_blue_diamond:&nbsp; GitOps (with Flux)
 
+- [:small_blue_diamond:&nbsp; GitOps (with Flux)](#small_blue_diamond-gitops-with-flux)
+  - [1. Verify Flux can be installed](#1-verify-flux-can-be-installed)
+  - [2. Pre-create the `flux-system` namespace](#2-pre-create-the-flux-system-namespace)
+  - [3. Add the Age key in-order for Flux to decrypt SOPS secrets](#3-add-the-age-key-in-order-for-flux-to-decrypt-sops-secrets)
+  - [4. Export more environment variables for application configuration](#4-export-more-environment-variables-for-application-configuration)
+  - [5. Create required files based on ALL exported environment variables](#5-create-required-files-based-on-all-exported-environment-variables)
+  - [6. :mag:&nbsp; **Verify** all the above files have the correct information present](#6-mag-verify-all-the-above-files-have-the-correct-information-present)
+  - [7. :closed_lock_with_key:&nbsp; Encrypt secrets with SOPS](#7-closed_lock_with_key-encrypt-secrets-with-sops)
+  - [8. :mag:&nbsp; **Verify** all the above files are **encrypted** with SOPS](#8-mag-verify-all-the-above-files-are-encrypted-with-sops)
+  - [9. Push your changes to git](#9-push-your-changes-to-git)
+  - [10. Install Flux](#10-install-flux)
+
 :round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/) after some quick
 bootstrap steps.
 
@@ -7,26 +19,22 @@ bootstrap steps.
 
 ```sh
 flux --kubeconfig=$(pwd)/kubeconfig check --pre
-# ► checking prerequisites
-# ✔ kubectl 1.21.0 >=1.18.0-0
-# ✔ Kubernetes 1.20.5+k3s1 >=1.16.0-0
-# ✔ prerequisites checks passed
 ```
 
 ## 2. Pre-create the `flux-system` namespace
 
 ```sh
-kubectl --kubeconfig=${KUBECONFIG} create namespace flux-system --dry-run=client -o yaml | \
-  kubectl --kubeconfig=./kubeconfig apply -f -
+kubectl --kubeconfig="${KUBECONFIG}" create namespace flux-system --dry-run=client -o yaml | \
+  kubectl --kubeconfig="${KUBECONFIG}" apply -f -
 ```
 
-## 3. Add the Flux GPG key in-order for Flux to decrypt SOPS secrets
+## 3. Add the Age key in-order for Flux to decrypt SOPS secrets
 
 ```sh
-gpg --export-secret-keys --armor "${FLUX_KEY_FP}" \
-  | kubectl --kubeconfig=${KUBECONFIG} create secret generic sops-gpg \
-    --namespace=flux-system \
-    --from-file=sops.asc=/dev/stdin
+cat ~/.config/sops/age/keys.txt |
+    kubectl --kubeconfig="${KUBECONFIG}" \
+    -n flux-system create secret generic sops-age \
+    --from-file=age.agekey=/dev/stdin
 ```
 
 ## 4. Export more environment variables for application configuration
@@ -70,38 +78,41 @@ EOF
 
 ## 5. Create required files based on ALL exported environment variables
 
-> If additional customization is needed via variable exports, export variables, create templates in
-> `./tmpl`, and add to export code below If recreating secrets, may have to delete 'real' files
-> outside of `./tmpl` > `>!` allows replacing of files on zsh. In other shells, may use `>`
+General procedure:
 
 ```zsh
 # reload all env variables
 direnv allow .
 
 # create SOPS hook for secret encryption
-envsubst < ./tmpl/.sops.yaml >! ./.sops.yaml
-# encrypt secrets
-envsubst < ./tmpl/cluster-secrets.sops.yaml >! ./cluster/base/cluster-secrets.sops.yaml
-envsubst < ./tmpl/cluster-settings.yaml >! ./cluster/base/cluster-settings.yaml
-envsubst < ./tmpl/gotk-sync.yaml >! ./cluster/base/flux-system/gotk-sync.yaml
-envsubst < ./tmpl/secret-traefik-middlewares.sops.yaml >! ./cluster/apps/networking/traefik/middlewares.d/secret-basicauth.sops.yaml
+envsubst < /path/to/templatefile.yaml.tmpl >! /path/to/outputfile.yaml
+```
+
+To run for all templates in repo:
+
+```sh
+bash ./scripts/substitute.sh
 ```
 
 ## 6. :mag:&nbsp; **Verify** all the above files have the correct information present
 
 ## 7. :closed_lock_with_key:&nbsp; Encrypt secrets with SOPS
 
-> If additional customization is needed add new files to export code below
-
-```sh
-export GPG_TTY=$(tty)
-# Encrypt SOPS secrets
-sops --encrypt --in-place ./cluster/base/cluster-secrets.sops.yaml
-sops --encrypt --in-place ./cluster/apps/networking/traefik/middlewares.d/secret-basicauth.sops.yaml
-```
-
 :round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
 usable anywhere in your YAML manifests under `./cluster`
+
+General procedure:
+
+```sh
+# Encrypt SOPS secrets
+sops --encrypt --in-place /path/to/unencrypted_secrets.sops.yaml
+```
+
+To run for all templates in repo:
+
+```sh
+bash ./scripts/sops.sh
+```
 
 ## 8. :mag:&nbsp; **Verify** all the above files are **encrypted** with SOPS
 

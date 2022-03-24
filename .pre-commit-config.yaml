@@ -17,8 +17,25 @@ repos:
     hooks:
       - id: fix-smartquotes
       - id: fix-ligatures
+  - repo: local
+    hooks:
+      - id: fix-yml
+        name: yml-to-yaml
+        entry: .precommit/to_yaml.sh
+        language: script
+        pass_filenames: false
+      # - id: env-substitute
+      #   name: envvar-substitute
+      #   entry: .precommit/substitute.sh
+      #   language: script
+      #   pass_filenames: false
+      # - id: sops
+      #   name: sops-encrypt
+      #   entry: .precommit/sops.sh
+      #   language: script
+      #   pass_filenames: false
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.5.1 # Use the sha or tag you want to point at
+    rev: v2.6.0 # Use the sha or tag you want to point at
     hooks:
       - id: prettier
         # args: ["--ignore-path '**/*.md'", "--ignore-path '**/*.y*ml'"]
@@ -26,12 +43,14 @@ repos:
     rev: v0.31.1 # v0.30.0
     hooks:
       - id: markdownlint
-        args: [--fix, --config=.markdownlint.yaml]
-  # - repo: https://github.com/adrienverge/yamllint.git
-  #   rev: v1.26.3
-  #   hooks:
-  #     - id: yamllint
-  #       args: [-c=.yamllint.yaml]
+        args: [--fix, --config=.github/linters/.markdownlint.yaml]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.26.3
+    hooks:
+      - args:
+          - --config-file
+          - .github/linters/.yamllint.yaml
+        id: yamllint
   # - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
   #   rev: 0.1.0
   #   hooks:
@@ -43,3 +62,7 @@ repos:
       - id: forbid-secrets
         args: [-h, "**/*.sops.yaml"]
         # note: this only checks specific files for secrets!
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: v8.5.1
+    hooks:
+      - id: gitleaks

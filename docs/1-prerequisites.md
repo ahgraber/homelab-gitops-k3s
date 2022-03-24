@@ -1,5 +1,17 @@
 # :memo:&nbsp; Prerequisites
 
+- [:memo:&nbsp; Prerequisites](#memo-prerequisites)
+  - [:computer:&nbsp; Nodes](#computer-nodes)
+  - [:wrench:&nbsp; Tools](#wrench-tools)
+  - [:ballot_box_with_check:&nbsp; Installation](#ballot_box_with_check-installation)
+  - [:warning:&nbsp; pre-commit](#warning-pre-commit)
+  - [:bulb:&nbsp; direnv](#bulb-direnv)
+  - [:bulb:&nbsp; SOPS](#bulb-sops)
+  - [:closed_lock_with_key:&nbsp; Set up Age](#closed_lock_with_key-set-up-age)
+    - [1. Create a Age Private / Public Key](#1-create-a-age-private--public-key)
+    - [2. Set up the directory for the Age key and move the Age file to it](#2-set-up-the-directory-for-the-age-key-and-move-the-age-file-to-it)
+    - [3. Add the Age key file and public key to the local `.envrc` and reload](#3-add-the-age-key-file-and-public-key-to-the-local-envrc-and-reload)
+
 ## :computer:&nbsp; Nodes
 
 Already provisioned Bare metal or VMs with any modern operating system like Ubuntu, Debian or
@@ -9,34 +21,32 @@ CentOS.
 
 :round_pushpin: You need to install the required CLI tools listed below on your workstation.
 
-| Tool                                                               | Purpose                                                             | Minimum version | Required |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------- | :-------------: | :------: |
-| [k3sup](https://github.com/alexellis/k3sup)                        | Tool to install k3s on your nodes                                   |    `0.10.2`     |    ✅    |
-| [kubectl](https://kubernetes.io/docs/tasks/tools/)                 | Allows you to run commands against Kubernetes clusters              |    `1.21.0`     |    ✅    |
-| [flux](https://toolkit.fluxcd.io/)                                 | Operator that manages your k8s cluster based on your Git repository |    `0.12.3`     |    ✅    |
-| [SOPS](https://github.com/mozilla/sops)                            | Encrypts k8s secrets with GnuPG                                     |     `3.7.1`     |    ✅    |
-| [GnuPG](https://gnupg.org/)                                        | Encrypts and signs your data                                        |    `2.2.27`     |    ✅    |
-| [pinentry](https://gnupg.org/related_software/pinentry/index.html) | Allows GnuPG to read passphrases and PIN numbers                    |     `1.1.1`     |    ✅    |
-| [direnv](https://github.com/direnv/direnv)                         | Exports env vars based on present working directory                 |    `2.28.0`     |    ❌    |
-| [pre-commit](https://github.com/pre-commit/pre-commit)             | Runs checks during `git commit`                                     |    `2.12.0`     |    ❌    |
-| [kustomize](https://kustomize.io/)                                 | Template-free way to customize application configuration            |     `4.1.0`     |    ❌    |
-| [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |     `3.5.4`     |    ❌    |
-| [k9s](https://k9scli.io/)                                          | CLI-GUI for k8s clusters                                            |    `0.25.18`    |    ❌    |
-| [popeye](https://popeyecli.io/)                                    | CLI-based scanner/finder for k8s clusters                           |     `0.9.8`     |    ❌    |
-| [kubetail](https://github.com/johanhaleby/kubetail)                | aggregate (tail/follow) logs from multiple pods into one            |    `1.6.13`     |    ❌    |
+| Tool                                                               | Purpose                                                             |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| [ansible](https://www.ansible.com)                                 | Automate actions against nodes (like installing k3s)                |
+| [kubectl](https://kubernetes.io/docs/tasks/tools/)                 | Allows you to run commands against Kubernetes clusters              |
+| [flux](https://toolkit.fluxcd.io/)                                 | Operator that manages your k8s cluster based on your Git repository |
+| [age](https://github.com/FiloSottile/age)                          | A simple, modern and secure encryption tool (and Go library)        |
+| [SOPS](https://github.com/mozilla/sops)                            | Encrypts k8s secrets with GnuPG                                     |
+| [direnv](https://github.com/direnv/direnv)                         | Exports env vars based on present working directory                 |
+| [jq](https://stedolan.github.io/jq/)                               | Parse and edit json                                                 |
+| [pre-commit](https://github.com/pre-commit/pre-commit)             | Runs checks during `git commit`                                     |
+| [gitleaks](https://github.com/zricethezav/gitleaks)                | Scan git repos (or files) for secrets                               |
+| [kustomize](https://kustomize.io/)                                 | Template-free way to customize application configuration            |
+| [helm](https://helm.sh/)                                           | Manage Kubernetes applications                                      |
+| [k9s](https://k9scli.io/)                                          | CLI-GUI for k8s clusters                                            |
+| [popeye](https://popeyecli.io/)                                    | CLI-based scanner/finder for k8s clusters                           |
+| [kubetail](https://github.com/johanhaleby/kubetail)                | aggregate (tail/follow) logs from multiple pods into one            |
 
 ## :ballot_box_with_check:&nbsp; Installation
 
 ```sh
-# install k3sup
-curl -sLS https://get.k3sup.dev | sh
-sudo install k3sup /usr/local/bin/
+# install packages
+brew install age direnv flux gitleaks go helm jq kompose kubernetes-cli kustomize pre-commit sops
 
-# install other packages
-brew install direnv flux helm jq kompose kubernetes-cli kustomize pre-commit sops
-
-# if GPGTools not installed
-brew install gnupg
+# if Ansible not installed
+conda create --name ansible && conda activate ansible
+conda install ansible --name ansible
 ```
 
 ## :warning:&nbsp; pre-commit
@@ -48,7 +58,7 @@ to make sure you are not by accident commiting your secrets un-encrypted.
 After pre-commit is installed on your machine run:
 
 ```sh
-pre-commit install-hooks
+pre-commit install && pre-commit autoupdate
 ```
 
 ## :bulb:&nbsp; direnv
@@ -91,77 +101,31 @@ The [SOPS VSCode Extension](https://github.com/signageos/vscode-sops) will autom
 SOPS secrets when you click on the file in the editor and encrypt them when you save and exit the
 file.
 
-## :closed_lock_with_key:&nbsp; Set up GnuPG keys
+## :closed_lock_with_key:&nbsp; Set up Age
 
-:round_pushpin: Here we will create a personal and a Flux GPG key. Using SOPS with GnuPG allows us
-to encrypt and decrypt secrets.
+:round_pushpin: Here we will create a Age Private and Public key. Using SOPS with Age allows us to encrypt and decrypt secrets.
 
-## 1. Create a Personal GPG Key, password protected, and export the fingerprint
-
-It's **strongly encouraged** to back up this key somewhere safe so you don't lose it
+### 1. Create a Age Private / Public Key
 
 ```sh
-# add environmental variables to .envrc for direnv
-export EMAIL=""
-export FNAME=""
-export LNAME=""
-echo "export EMAIL=\"${EMAIL}\"" >> .envrc
-echo "export PERSONAL_KEY_NAME=\"${FNAME} ${LNAME} ${EMAIL}\"" >> .envrc
-
-export GPG_TTY=$(tty)
-gpg --batch --full-generate-key << EOF
-Key-Type: 1
-Key-Length: 4096
-Subkey-Type: 1
-Subkey-Length: 4096
-Expire-Date: 0
-Name-Real: ${PERSONAL_KEY_NAME}
-EOF
-
-gpg --list-secret-keys "${PERSONAL_KEY_NAME}"
-# pub   rsa4096 2021-03-11 [SC]
-#       772154FFF783DE317KLCA0EC77149AC618D75581
-# uid           [ultimate] k8s@home (Macbook) <k8s-at-home@gmail.com>
-# sub   rsa4096 2021-03-11 [E]
-
-# replace key value from output above
-# export PERSONAL_KEY_FP=772154FFF783DE317KLCA0EC77149AC618D75581
-echo "export PERSONAL_KEY_FP=\"$(gpg --list-secret-keys ${PERSONAL_KEY_NAME} | sed -n '2p' | xargs)\"" >> .envrc
+age-keygen -o age.agekey
 ```
 
-## 2. Create a Flux GPG Key and export the fingerprint
+### 2. Set up the directory for the Age key and move the Age file to it
 
 ```sh
-export CLUSTERNAME=""
-echo "export FLUX_KEY_NAME=\"${CLUSTERNAME} (Flux) ${EMAIL}\"" >> .envrc
-
-export GPG_TTY=$(tty)
-gpg --batch --full-generate-key << EOF
-%no-protection
-Key-Type: 1
-Key-Length: 4096
-Subkey-Type: 1
-Subkey-Length: 4096
-Expire-Date: 0
-Name-Real: ${FLUX_KEY_NAME}
-EOF
-
-gpg --list-secret-keys "${FLUX_KEY_NAME}"
-# pub   rsa4096 2021-03-11 [SC]
-#       AB675CE4CC64251G3S9AE1DAA88ARRTY2C009E2D
-# uid           [ultimate] Home cluster (Flux) <k8s-at-home@gmail.com>
-# sub   rsa4096 2021-03-11 [E]
-
-# replace key value from output above
-# export FLUX_KEY_FP=AB675CE4CC64251G3S9AE1DAA88ARRTY2C009E2D
-echo "export FLUX_KEY_FP=\"$(gpg --list-secret-keys ${FLUX_KEY_NAME} | sed -n '2p' | xargs)\"" >> .envrc
+mkdir -p ~/.config/sops/age
+mv age.agekey ~/.config/sops/age/keys.txt
 ```
 
-## 3. Save keys to password manager or vault
+### 3. Add the Age key file and public key to the local `.envrc` and reload
 
 ```sh
-gpg --output backup-key-personal.pgp --armor --export-secret-keys --export-options export-backup ${PERSONAL_KEY_NAME}
-gpg --output backup-key-flux.pgp --armor --export-secret-keys --export-options export-backup ${FLUX_KEY_NAME}
+echo "export SOPS_AGE_KEY_FILE=\"${HOME}/.config/sops/age/keys.txt\"" >> .envrc
+echo "export AGE_PUBLIC_KEY=\"$(grep public """${HOME}/.config/sops/age/keys.txt""" | awk '{ print $NF }')\"" >> .envrc
+direnv allow .
 ```
 
-_**Don't forget to delete the keys from the repo once saved elsewhere!!!**_
+_Optional:_ Save keys to password manager or vault
+
+> _**Don't forget to delete the keys from the repo once saved elsewhere!!!**_
