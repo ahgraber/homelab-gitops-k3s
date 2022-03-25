@@ -32,7 +32,7 @@ data:
             targetLabel: instance
 
     kubeControllerManager:
-      enabled: false
+      enabled: true
       endpoints:
         - 10.2.118.10
         - 10.2.118.11
