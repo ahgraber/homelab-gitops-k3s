@@ -69,7 +69,7 @@ data:
         enabled: false
 
       alertmanagerSpec:
-        retention: 120h
+        retention: 72h
         storage:
           volumeClaimTemplate:
             # metadata:
