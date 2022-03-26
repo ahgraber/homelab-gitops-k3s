@@ -24,4 +24,6 @@ spec:
         - name: httpbin
           image: kennethreitz/httpbin:latest
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+              protocol: TCP

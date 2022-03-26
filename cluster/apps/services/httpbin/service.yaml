@@ -12,5 +12,7 @@ spec:
     app.kubernetes.io/name: httpbin
     app.kubernetes.io/instance: httpbin
   ports:
-    - protocol: TCP
+    - name: http
       port: 80
+      protocol: TCP
+      targetPort: http
