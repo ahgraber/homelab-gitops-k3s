@@ -6,6 +6,8 @@ metadata:
   namespace: networking
   labels:
     app.kubernetes.io/name: cloudflared
+  annotations:
+    configmap.reloader.stakater.com/reload: "k8s-argo-tunnel"
 spec:
   selector:
     matchLabels:
