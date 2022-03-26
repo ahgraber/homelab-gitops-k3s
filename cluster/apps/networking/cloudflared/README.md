@@ -35,24 +35,29 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    > This writes a tunnel credential files to `${HOME}/.cloudflared/{GUID}.json`
    > and prints a `Tunnel Token` to the terminal
-   > **Save this tunnel token to the .envrc** for use in k8s secret creation
 
-3. Create a Kubernetes secret using the tunnel token and secret template
+3. Extract the secret value and send to `.envrc` for use in secret template
+
+   ```sh
+   GUID=... # from above step
+   SECRET_CLOUDFLARE_TUNNEL_CREDS=$(kubectl create secret generic tunnel-credentials \
+   --from-file=credentials.json="${HOME}/.cloudflared/${GUID}.json" \
+   --output=yaml \
+   --dry-run=client | grep credentials.json | awk '{ print $2 }')
+   echo "export SECRET_CLOUDFLARE_TUNNEL_CREDS=\"$SECRET_CLOUDFLARE_TUNNEL_CREDS\"" >> .envrc
+   ```
+
+4. Substitute and encrypt the secret
 
    ```sh
    # substitute
-   envsubst < ./secret.sops.yaml.tmpl > ./secret.sops.yaml
-   # encrypt with sops
-   sops --encrypt --in-place ./secret.sops.yaml
+   envsubst < ./cluster/apps/networking/cloudflared/secret.sops.yaml.tmpl >! ./cluster/apps/networking/cloudflared/secret.sops.yaml
+
+   # encrypt
+   sops --encrypt --in-place ./cluster/apps/networking/cloudflared/secret.sops.yaml
    ```
 
-   > use scripts to substitute & encrypt all at once:
-   >
-   > ```sh
-   > ./scripts/substitute.sh && ./scripts/sops.sh
-   > ```
-
-4. Associate your Tunnel with a DNS record.
+5. Associate your Tunnel with a DNS record.
 
    ```sh
    cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
@@ -60,13 +65,13 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    > Repeat this process for all (sub)domains to be proxied over Cloudflared Tunnel
 
-5. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
+6. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
 
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step,
    it will send that traffic to the cloudflareds running in this deployment.
    Those cloudflared instances will proxy the request to your app's Service.
 
-6. Examine status of the pod.
+7. Examine status of the pod.
 
    <!-- markdownlint-disable -->
    ```sh
