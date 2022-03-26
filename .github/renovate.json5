@@ -42,9 +42,33 @@
       matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n.*\\/(?<currentValue>.*?)\\/"],
       datasourceTemplate: "helm",
     },
+    // regexManager to read and process external-snapshotter CRD's
+    {
+      fileMatch: ["cluster/crds/external-snapshotter/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      datasourceTemplate: "helm",
+    },
+    // regexManager to read and process kube-prometheus-stack CRD's
+    {
+      fileMatch: ["cluster/crds/kube-prometheus-stack/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      datasourceTemplate: "helm",
+    },
+    // regexManager to read and process system-upgrade CRD's
+    {
+      fileMatch: ["cluster/crds/system-upgrade/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      datasourceTemplate: "helm",
+    },
     // regexManager to read and process Traefik CRD's
     {
       fileMatch: ["cluster/crds/traefik/.+\\.ya?ml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      datasourceTemplate: "helm",
+    },
+    // regexManager to read and process velero CRD's
+    {
+      fileMatch: ["cluster/crds/velero/.+\\.ya?ml$"],
       matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
       datasourceTemplate: "helm",
     },
