@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: rfc1918-ips
+  name: rfc1918
   namespace: networking
 spec:
   ipWhiteList:
@@ -12,14 +12,14 @@ spec:
       - 192.168.0.0/16
     ipStrategy:
       # ignore final bounce
-      depth: 2
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: rfc1918
-  namespace: networking
-spec:
-  chain:
-    middlewares:
-      - name: rfc1918-ips
+      depth: 1
+# ---
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: rfc1918
+#   namespace: networking
+# spec:
+#   chain:
+#     middlewares:
+#       - name: rfc1918-ips
