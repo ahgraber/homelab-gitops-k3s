@@ -20,20 +20,22 @@ data:
     no-autoupdate: true
 
     # The `ingress` block tells cloudflared which local service to route incoming requests to.
-    # To route traffic from the internet to cloudflared, run `cloudflared tunnel route dns <tunnel> <hostname>`.
+    # To route traffic from the internet to cloudflared, run `cloudflared tunnel route dns k8s-argo-tunnel <hostname>`.
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
     ingress:
     # Proxy traefik to the k8s ingress (Traefik) to hand off to Services
+    # internet --> cloudflared tunnel --> local DNS --> ingress --> service
+    # NOTE: relies on split-brain DNS / local overrides
     - hostname: hammond.${SECRET_DOMAIN}
-      service: http://traefik.networking
+      service: https://hammond.${SECRET_DOMAIN}
+    - hostname: baikal.${SECRET_DOMAIN}
+      service: https://baikal.${SECRET_DOMAIN}
+    - hostname: vaultwarden.${SECRET_DOMAIN}
+      service: https://vaultwarden.${SECRET_DOMAIN}
 
     # # Proxy traffic to the k8s Services directly
-    # - hostname: baikal.${SECRET_DOMAIN}
-    #   service: http://baikal.services:80
     # - hostname: hammond.${SECRET_DOMAIN}
     #   service: http://hammond.services:3000
-    # - hostname: vaultwarden.${SECRET_DOMAIN}
-    #   service: http://vaultwarden.vaultwarden:80
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity issues.
     # If hello.${SECRET_DOMAIN} resolves and <service>.${SECRET_DOMAIN} does not, then the problem is
