@@ -4,6 +4,5 @@ kind: Kustomization
 resources:
   - cloudflared
   # - cloudflare-ddns
-  - httpbin
   - traefik
   - wildcard-certificate
