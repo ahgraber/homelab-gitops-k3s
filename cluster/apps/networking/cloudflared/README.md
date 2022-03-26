@@ -9,7 +9,7 @@ connections to Cloudflare's edge.
 
 ### Prerequisites
 
-- [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide#1-download-and-install-cloudflared)
+Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide#1-download-and-install-cloudflared)
 
 ### Deploying for k8s application
 
@@ -22,46 +22,47 @@ connections to Cloudflare's edge.
    cloudflared tunnel login
    ```
 
+   > This saves a cert.pem file to `${HOME}/.cloudflared/cert.pem`
+
 2. Create a tunnel, change example-tunnel to the name you want to assign to your tunnel.
 
    ```sh
-   cloudflared tunnel create example-tunnel
+   # list existing
+   cloudflared tunnel list
+   # create new
+   cloudflared tunnel create k8s-argo-tunnel
    ```
 
-3. Upload the tunnel credentials file to your Kubernetes as a secret. You'll need to provide the filepath
-   that the tunnel credentials file was created under.
-   You can find that path in the output of cloudflared tunnel create above.
+   > This writes a tunnel credential files to `${HOME}/.cloudflared/{GUID}.json`
+   > and prints a `Tunnel Token` to the terminal
+   > **Save this tunnel token to the .envrc** for use in k8s secret creation
+
+3. Create a Kubernetes secret using the tunnel token and secret template
 
    ```sh
-   # create secret locally
-   kubectl create secret generic tunnel-credentials \
-   --from-file=credentials.json=</path/to/credentials.json> \
-   --output=yaml \
-   --dry-run=client \
-   > </path/to/secret.sops.yaml>
-
+   # substitute
+   envsubst < ./secret.sops.yaml.tmpl > ./secret.sops.yaml
    # encrypt with sops
-   export GPG_TTY=$(tty)
    sops --encrypt --in-place ./secret.sops.yaml
    ```
+
+   > use scripts to substitute & encrypt all at once:
+   >
+   > ```sh
+   > ./scripts/substitute.sh && ./scripts/sops.sh
+   > ```
 
 4. Associate your Tunnel with a DNS record.
 
    ```sh
-   cloudflared tunnel route dns example-tunnel "<hostname>.${SECRET_DOMAIN}"
+   cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
    ```
 
-5. Deploy cloudflared by applying its manifest.
-   This will start a Deployment for running cloudflared and a ConfigMap with cloudflared's config.
+5. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
+
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step,
    it will send that traffic to the cloudflareds running in this deployment.
    Those cloudflared instances will proxy the request to your app's Service.
-
-   ```sh
-   $ kubectl apply -f cloudflared.yaml
-   deployment.apps/cloudflared created
-   configmap/cloudflared configured
-   ```
 
 6. Examine status of the pod.
 
