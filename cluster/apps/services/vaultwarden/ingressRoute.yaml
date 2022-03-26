@@ -9,7 +9,7 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`vaultwarden.${SECRET_DOMAIN}`)
+    - match: Host(`vaultwarden.${SECRET_DOMAIN}`) && ! Path(`/admin`)
       kind: Rule
       # Enable auth middleware
       # middlewares:
