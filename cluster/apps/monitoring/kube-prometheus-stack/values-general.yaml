@@ -18,7 +18,8 @@ data:
           multicluster:
             global:
               enabled: true
-
+    # coreDns:
+    #   enabled: true
     kubelet:
       enabled: true
       serviceMonitor:
@@ -35,20 +36,14 @@ data:
         - 10.2.118.10
         - 10.2.118.11
         - 10.2.118.12
-      # service:
-      #   port: null
-      #   targetPort: null
-      #   # enabled: true
-      #   # port: 10257
-      #   # targetPort: 10257
-      # serviceMonitor:
-      #   enabled: true
-      #   https: true
-      #   insecureSkipVerify: true
-
-    coreDns:
-      enabled: true
-
+      service:
+        enabled: true
+        port: 10257
+        targetPort: 10257
+      serviceMonitor:
+        enabled: true
+        https: true
+        insecureSkipVerify: true
     kubeEtcd:
       enabled: true
       endpoints:
