@@ -3,15 +3,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared
+  namespace: networking
+  labels:
+    app.kubernetes.io/name: cloudflared
 spec:
   selector:
     matchLabels:
-      app: cloudflared
+      app.kubernetes.io/name: cloudflared
   replicas: 2 # You could also consider elastic scaling for this deployment
   template:
     metadata:
       labels:
-        app: cloudflared
+        app.kubernetes.io/name: cloudflared
     spec:
       containers:
         - name: cloudflared
