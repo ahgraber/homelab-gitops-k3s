@@ -39,7 +39,7 @@ data:
       service:
         enabled: true
         port: 10257
-        targetPort: 10257
+        targetPort:  10257
       serviceMonitor:
         enabled: true
         https: true
@@ -66,14 +66,14 @@ data:
         - 10.2.118.10
         - 10.2.118.11
         - 10.2.118.12
-      # service:
-      #   enabled: true
-      #   port: 10259
-      #   targetPort: 10259
-      # serviceMonitor:
-      #   enabled: true
-      #   https: true
-      #   insecureSkipVerify: true
+      service:
+        enabled: true
+        port: 10259
+        targetPort: 10259
+      serviceMonitor:
+        enabled: true
+        https: true
+        insecureSkipVerify: true
 
     kubeStateMetrics:
       # enabled: true
