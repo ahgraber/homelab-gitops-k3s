@@ -166,15 +166,16 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 [optional] Add alias for update
 
 ```sh
-cat >> ~/.local_aliases << EOF
-alias flux-update="
+cat >> ~/.aliases.local << EOF
+flux-update () {
 flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
-sleep 60
+sleep 50
 kubectl --kubeconfig=$(pwd)/kubeconfig get kustomization -A
+sleep 10
 flux --kubeconfig=$(pwd)/kubeconfig get helmrelease -A
-"
+}
 EOF
-source ~/.aliases
+source ~/.aliases.local
 ```
 
 ## Verify ingress
