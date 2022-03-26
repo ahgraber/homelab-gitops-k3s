@@ -12,7 +12,7 @@ spec:
     solvers:
       - dns01:
           cloudflare:
-            email: "${SECRET_CLOUDFLARE_EMAIL}"
+            # email: "${SECRET_CLOUDFLARE_EMAIL}"
             apiTokenSecretRef:
               name: secret-cloudflare-token
               key: cloudflare-token
