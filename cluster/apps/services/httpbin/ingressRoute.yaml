@@ -12,11 +12,10 @@ spec:
     - match: Host(`httpbin.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
-      middlewares:
-        - name: rfc1918
-        # - name: hammond
-        # - name: headers-sts
-        # - name: basicauth
+      # middlewares:
+      # - name: rfc1918
+      # - name: headers-sts
+      # - name: basicauth
       services:
         - name: httpbin
           namespace: services
