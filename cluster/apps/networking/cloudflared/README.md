@@ -58,6 +58,8 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
    cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
    ```
 
+   > Repeat this process for all (sub)domains to be proxied over Cloudflared Tunnel
+
 5. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
 
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step,
