@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`baikal.${SECRET_DOMAIN}`)
+    - match: Host(`baikal.${SECRET_DOMAIN}`) && ! Path(`/admin`)
       kind: Rule
       # Enable auth middleware
       middlewares:
@@ -17,6 +17,18 @@ spec:
         - name: baikal
         - name: headers-sts
         # - name: basicauth
+      services:
+        - name: baikal
+          namespace: services
+          port: 80
+    - match: Host(`baikal.${SECRET_DOMAIN}`) && Path(`/admin`)
+      kind: Rule
+      # Enable auth middleware
+      middlewares:
+        - name: rfc1918
+        - name: baikal
+        - name: headers-sts
+        - name: basicauth
       services:
         - name: baikal
           namespace: services
