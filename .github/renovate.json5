@@ -14,6 +14,10 @@
     "ghcr.io/fluxcd/notification-controller",
     "ghcr.io/fluxcd/source-controller",
   ],
+  // set up renovate managers
+  "docker-compose": {
+    fileMatch: ["(^|/)docker-compose.*.ya?ml$", "(^|/)docker-compose.*.ya?ml.j2$"],
+  },
   "pre-commit": {
     enabled: true,
   },
@@ -44,20 +48,14 @@
     },
     // regexManager to read and process external-snapshotter CRD's
     {
-      fileMatch: ["cluster/crds/external-snapshotter/.+\\.ya?ml$"],
-      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
-      datasourceTemplate: "helm",
+      fileMatch: ["cluster/crds/external-snapshotter/.+\\.yaml$"],
+      matchStrings: ["datasource=(?<datasource>.*?)\n *url: https://github\\.com/(?<depName>.*?)\\.git\n *ref:\n *tag: (?<currentValue>.*)\n"],
+      datasourceTemplate: "github-releases",
     },
-    // regexManager to read and process kube-prometheus-stack CRD's
+    // regexManager to read and process kube-prometheus-stack and velero CRD's
     {
-      fileMatch: ["cluster/crds/kube-prometheus-stack/.+\\.ya?ml$"],
-      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
-      datasourceTemplate: "helm",
-    },
-    // regexManager to read and process system-upgrade CRD's
-    {
-      fileMatch: ["cluster/crds/system-upgrade/.+\\.ya?ml$"],
-      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      fileMatch: ["cluster/crds/kube-prometheus-stack/.+\\.yaml$"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?)\n *tag: (?<depName>[a-zA-Z-]+)-(?<currentValue>.*)\n"],
       datasourceTemplate: "helm",
     },
     // regexManager to read and process Traefik CRD's
@@ -69,7 +67,7 @@
     // regexManager to read and process velero CRD's
     {
       fileMatch: ["cluster/crds/velero/.+\\.ya?ml$"],
-      matchStrings: ["registryUrl=(?<registryUrl>.*?) chart=(?<depName>.*?)\n *tag: v(?<currentValue>.*)\n"],
+      matchStrings: ["registryUrl=(?<registryUrl>.*?)\n *tag: (?<depName>[a-zA-Z-]+)-(?<currentValue>.*)\n"],
       datasourceTemplate: "helm",
     },
   ],
