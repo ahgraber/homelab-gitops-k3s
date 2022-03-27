@@ -68,9 +68,9 @@ spec:
       # - "--providers.kubernetescrd.endpoint=websecure"
       # - "--providers.kubernetescrd.allowcrossnamespace=true"
       ### Allow Cloudflare IPs (https://www.cloudflare.com/ips-v4)
-      # - "--entryPoints.websecure.proxyProtocol.trustedIPs=insecure"
+      - "--entryPoints.websecure.proxyProtocol.trustedIPs=insecure"
       # - "--entryPoints.websecure.forwardedHeaders.trustedIPs=insecure"
-      - "--entryPoints.websecure.proxyProtocol.trustedIPs=10.0.0.0/8"
+      # - "--entryPoints.websecure.proxyProtocol.trustedIPs=10.0.0.0/8"
       - |
         "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
         173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22,
