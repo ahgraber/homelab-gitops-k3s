@@ -68,10 +68,10 @@ spec:
       # - "--providers.kubernetescrd.endpoint=websecure"
       # - "--providers.kubernetescrd.allowcrossnamespace=true"
       ### Set trusted Proxy IPs for headers
-      - "--entryPoints.websecure.proxyProtocol=insecure"
+      - "--entryPoints.websecure.proxyProtocol.insecure=true"
       # - "--entryPoints.websecure.proxyProtocol.trustedIPs=10.0.0.0/8"
       ### Allow Cloudflare IPs (https://www.cloudflare.com/ips-v4)
-      - "--entryPoints.websecure.forwardedHeaders=insecure"
+      - "--entryPoints.websecure.forwardedHeaders.insecure=true"
       # - |
       #   "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16,
       #   173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22,
