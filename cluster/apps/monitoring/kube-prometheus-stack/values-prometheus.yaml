@@ -23,7 +23,7 @@ data:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
-        retention: 3d
+        retention: 1d
         enableAdminAPI: true
         walCompression: true
         storageSpec:
@@ -49,7 +49,7 @@ data:
           requests:
             memory: 3072Mi
           limits:
-            memory: 5120Mi # 4096Mi
+            memory: 4096Mi
 
         # thanos:
         #   image: quay.io/thanos/thanos:v0.23.1
