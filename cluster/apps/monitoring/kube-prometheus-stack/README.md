@@ -19,6 +19,17 @@ Once `prometheus-operator` is up and running, `./prometheus-rules` can be added 
 
 ### [Node Exporter](https://github.com/prometheus/node_exporter)
 
+### Thanos
+
+Distributed Prometheus solutions such as Thanos and Cortex use an alternate architecture in which multiple small
+Prometheus instances are deployed.
+
+In the case of Thanos, the metrics from each Prometheus are aggregated into the common Thanos deployment,
+and then those metrics are exported to a persistent store, such as S3.
+
+This more robust architecture avoids burdening any single Prometheus instance with too many time series,
+while also preserving the ability to query metrics on a global level.
+
 ## etcd alerts
 
 Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
@@ -27,3 +38,8 @@ repeated etcd alerts may be raised.  To fix, manually apply the custom Prometheu
 ```sh
 kubectl apply -f ./prometheus-rules/etcd.yaml
 ```
+
+## References
+
+- [Rancher docs on monitoring](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/k)
+- [Rancher docs on debugging high memory use](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/guides/memory-usage/)
