@@ -7,8 +7,8 @@ resources:
   - ingressRoute-alertmanager.yaml
   - ingressRoute-prometheus.yaml
   - podmonitor.yaml
-  # - pvc-alertmanager.yaml
-  # - pvc-prometheus.yaml
+  - pvc-alertmanager.yaml
+  - pvc-prometheus.yaml
   - values-alertmanager.yaml
   - values-general.yaml
   - values-prometheus.yaml
