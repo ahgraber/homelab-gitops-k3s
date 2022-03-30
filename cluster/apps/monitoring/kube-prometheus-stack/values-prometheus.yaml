@@ -23,28 +23,17 @@ data:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
-        retention: 1d
+        retention: 3hgi
         enableAdminAPI: true
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
-            # metadata:
-            #   name: prometheus-data
-            #   labels:
-            #     app.kubernetes.io/instance: prometheus-prometheus
-            #     app.kubernetes.io/name: prometheus
-            #     operator.prometheus.io/name: prometheus-prometheus
-            #     operator.prometheus.io/shard: "0"
-            #     prometheus: prometheus-prometheus
             spec:
-              # matchLabels:
-              #   app.kubernetes.io/name: prometheus
-              # volumeName: prometheus-data
-              # storageClassName: csi-truenas-iscsi
-              storageClassName: local-path
-              resources:
-                requests:
-                  storage: 3Gi
+              volumeName: prometheus-data
+              # storageClassName: local-path # csi-truenas-iscsi
+              # resources:
+              #   requests:
+              #     storage: 3Gi
         resources:
           requests:
             memory: 3072Mi
