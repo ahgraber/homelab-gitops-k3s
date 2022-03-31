@@ -30,16 +30,15 @@ and then those metrics are exported to a persistent store, such as S3.
 This more robust architecture avoids burdening any single Prometheus instance with too many time series,
 while also preserving the ability to query metrics on a global level.
 
-## etcd alerts
+## Debugging
 
-Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
-repeated etcd alerts may be raised.  To fix, manually apply the custom PrometheusRule:
-
-```sh
-kubectl apply -f ./prometheus-rules/etcd.yaml
-```
-
-## References
+### high memory use / OOMkilled containers
 
 - [Rancher docs on monitoring](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/k)
 - [Rancher docs on debugging high memory use](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/guides/memory-usage/)
+- [identifying metrics contributing to high use](https://www.robustperception.io/which-are-my-biggest-metrics)
+
+### etcd alerts
+
+Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
+repeated etcd alerts may be raised.  To fix, use a custom [PrometheusRule](./prometheus-rules/etcd.yaml)

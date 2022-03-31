@@ -23,22 +23,24 @@ data:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
-        retention: 3hgi
+        retention: 3d
+        retention_size: 2816Mi
         enableAdminAPI: true
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
             spec:
-              volumeName: prometheus-data
-              # storageClassName: local-path # csi-truenas-iscsi
-              # resources:
-              #   requests:
-              #     storage: 3Gi
+              # matchLabels:
+              #   app.kubernetes.io/name: prometheus
+              storageClassName: local-path
+              resources:
+                requests:
+                  storage: 3Gi
         resources:
           requests:
             memory: 3072Mi
           limits:
-            memory: 4096Mi
+            memory: 4096Mi # 5120Mi
 
         # thanos:
         #   image: quay.io/thanos/thanos:v0.23.1
@@ -53,10 +55,6 @@ data:
             static_configs:
               - targets:
                   - "opnsense.${SECRET_DOMAIN}:9100"
-        #   - job_name: "traefik"
-        #     # metrics_path: /metrics
-        #     static_configs:
-        #       - targets: ["traefik:9100"]
         #   - job_name: cadvisor
         #     honor_timestamps: true
         #     static_configs:
