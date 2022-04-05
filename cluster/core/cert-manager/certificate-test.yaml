@@ -11,4 +11,6 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-staging
+  privateKey:
+    rotationPolicy: Never
   secretName: test-tls

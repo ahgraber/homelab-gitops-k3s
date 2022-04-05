@@ -18,6 +18,8 @@ spec:
   dnsNames:
     - "${SECRET_DOMAIN}"
     - "*.${SECRET_DOMAIN}"
+  privateKey:
+    rotationPolicy: Never
 # ---
 # # define blank secret to be filled/used by Cert
 # apiVersion: v1
