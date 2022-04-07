@@ -63,7 +63,8 @@ spec:
             - name: TZ
               value: America/New_York
             # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
-            - MSMTPRC: |
+            - name: MSMTPRC
+              value: |
                 defaults
                 auth           on
                 tls            on
