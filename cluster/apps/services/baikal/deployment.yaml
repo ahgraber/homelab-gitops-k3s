@@ -32,7 +32,7 @@ spec:
         #   --freeze /var/www/baikal/Specific"]'
     spec:
       initContainers:
-        - name: init
+        - name: init_permissions
           image: busybox
           command: ["sh", "-c"]
           args:
@@ -40,7 +40,9 @@ spec:
               cd /var/www/baikal; \
               chown -R 101:101 config Specific; \
               chmod -R 766 config Specific; \
-              mkdir -p Specific/db;
+              mkdir -p Specific/db; \
+              chown root:msmtp /etc/msmtprc; \
+              chmod 640 /etc/msmtprc;
           volumeMounts:
             - name: baikal-data
               subPath: config
@@ -50,6 +52,8 @@ spec:
               subPath: data
               mountPath: /var/www/baikal/Specific
               readOnly: false
+            - name: msmtp
+              mountPath: /etc/msmtprc
       containers:
         # ref: https://github.com/ckulka/baikal-docker
         - name: baikal
@@ -63,18 +67,6 @@ spec:
             - name: TZ
               value: America/New_York
             # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
-            - name: MSMTPRC
-              value: |
-                defaults
-                auth           on
-                tls            on
-                account        default
-                host           in-v3.mailjet.com
-                port           587
-                from           ${SECRET_SMTP_ADDRESS}
-                user           ${SECRET_SMTP_USER}
-                password       ${SECRET_SMTP_PWD}
-
           volumeMounts:
             - name: baikal-data
               subPath: config
@@ -84,6 +76,9 @@ spec:
               subPath: data
               mountPath: /var/www/baikal/Specific
               readOnly: false
+            - name: msmtp
+              mountPath: /etc/msmtprc
+              readOnly: true
           resources:
             limits:
               memory: 2000Mi
@@ -134,3 +129,7 @@ spec:
         - name: baikal-data
           persistentVolumeClaim:
             claimName: baikal-data
+        - name: msmtp
+          secret:
+            secretName: baikal-msmtp-secret
+            defaultMode: 0640
