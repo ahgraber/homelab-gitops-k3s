@@ -62,6 +62,18 @@ spec:
           env:
             - name: TZ
               value: America/New_York
+            # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
+            - MSMTPRC: |
+                defaults
+                auth           on
+                tls            on
+                account        default
+                host           in-v3.mailjet.com
+                port           587
+                from           ${SECRET_SMTP_ADDRESS}
+                user           ${SECRET_SMTP_USER}
+                password       ${SECRET_SMTP_PWD}
+
           volumeMounts:
             - name: baikal-data
               subPath: config
