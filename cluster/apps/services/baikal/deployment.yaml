@@ -79,7 +79,7 @@ spec:
             # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
             # https://www.jeffgeerling.com/blog/2019/mounting-kubernetes-secret-single-file-inside-pod
             - name: msmtp
-              mountPath: /mnt/msmtprc
+              mountPath: /mnt
               readOnly: true
           resources:
             limits:
