@@ -1,9 +1,7 @@
 # Template for deploying k3s backed by Flux
 
-Deploy a single [k3s](https://k3s.io/) cluster with [k3sup](https://github.com/alexellis/k3sup),
-backed by the [GitOps](https://www.weave.works/blog/what-is-gitops-really) tool
-[Flux](https://toolkit.fluxcd.io/) and [SOPS](https://toolkit.fluxcd.io/guides/mozilla-sops/).
-Cluster provisioned with [terraform on vsphere](https://github.com/ahgraber/homelab-terraform).
+Deploy a single [k3s](https://k3s.io/) cluster, managed by the GitOps tool [Flux](https://toolkit.fluxcd.io/).
+Cluster provisioned with [pxe, ansible, and/or terraform](https://github.com/ahgraber/homelab-infra).
 
 This Git repository will be specifies the state of the cluster. In addition, with the help of the
 [Flux SOPS integration](https://toolkit.fluxcd.io/guides/mozilla-sops/) GPG encrypted secrets can be
@@ -14,10 +12,7 @@ committed to this public repo.
 - [onedr0p](https://github.com/onedr0p/home-cluster/)
 - [bjw-s](https://github.com/bjw-s/k8s-gitops)
 - [carpenike](https://github.com/carpenike/k8s-gitops/tree/master/cluster/apps/security)
-- [zacheryph](https://github.com/zacheryph/k8s-gitops)
 - [billimek](https://github.com/billimek/k8s-gitops)
-- [toboshii](https://github.com/toboshii/home-cluster)
-- [budimanjojo](https://github.com/budimanjojo/home-cluster)
 
 ## Overview
 
@@ -29,19 +24,12 @@ committed to this public repo.
 
 ## :wave:&nbsp; Introduction
 
-The following components will be installed in your [k3s](https://k3s.io/) cluster by default. They
-are only included to get a minimum viable cluster up and running. You are free to add / remove
-components to your liking but anything outside the scope of the below components are not supported
-by this template.
+The following components are the foundation of the [k3s](https://k3s.io/) cluster.
 
-Feel free to read up on any of these technologies before you get started to be more familiar with
-them.
-
-- [flannel](https://github.com/flannel-io/flannel)
 - [flux](https://toolkit.fluxcd.io/)
+- [calico](https://github.com/projectcalico/calico)
 - [metallb](https://metallb.universe.tf/)
 - [cert-manager](https://cert-manager.io/) with Cloudflare DNS challenge
-- [homer](https://github.com/bastienwirtz/homer)
 - [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller)
 
 ## :open_file_folder:&nbsp; Repository structure
@@ -76,17 +64,15 @@ cluster
 
 ### direnv
 
-This is a great tool to export environment variables depending on what your present working
-directory is, head over to their [installation guide](https://direnv.net/docs/installation.html) and
+`direnv` is a great tool allowing a dynamic export of environment variables depending
+on the current working directory.
+See their [installation guide](https://direnv.net/docs/installation.html) and
 don't forget to hook it into your shell!
-
-When this is done you no longer have to use `--kubeconfig=./kubeconfig` in your `kubectl`, `flux` or
-`helm` commands.
 
 ### VSCode SOPS extension
 
 [VSCode SOPS](https://marketplace.visualstudio.com/items?itemName=signageos.signageos-vscode-sops)
-is a neat little plugin for those using VSCode. It will automatically decrypt you SOPS secrets when
+is a plugin for VSCode. It will automatically decrypt you SOPS secrets when
 you click on the file in the editor and encrypt them when you save and exit the file.
 
 ### :robot:&nbsp; Automation
@@ -99,8 +85,7 @@ you click on the file in the editor and encrypt them when you save and exit the 
 - [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) will watch for
   new k3s releases and upgrade your nodes when new releases are found.
 
-There's also a couple Github workflows included in this repository that will help automate some
-processes.
+There's also a couple Github workflows included in this repository that help automate some processes.
 
 - [Flux upgrade schedule](./.github/workflows/flux-schedule.yaml) - workflow to upgrade Flux.
 - [Renovate schedule](./.github/workflows/renovate-schedule.yaml) - workflow to annotate
