@@ -5,4 +5,3 @@ resources:
   - helm-release.yaml
   - ingressRoute.yaml
   - secret.yaml
-  - dashboards/
