@@ -2361,8 +2361,8 @@
     "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "utc",
-  "title": "Kubernetes / Compute Resources / Pod",
-  "uid": "6581e46e4e5c7ba40a07646395ef7b23",
+  "title": "Kubernetes / Compute Resources / Pod (Memory)",
+  "uid": "gu2eoyCCpEqMEwJn4OmoNw",
   "version": 1,
   "weekStart": ""
 }
