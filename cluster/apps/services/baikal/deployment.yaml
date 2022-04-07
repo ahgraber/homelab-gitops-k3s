@@ -31,29 +31,29 @@ spec:
         #   '["/bin/sh", "-c", "/sbin/fsfreeze --unfreeze /var/www/baikal/config && /sbin/fsfreeze
         #   --freeze /var/www/baikal/Specific"]'
     spec:
-      initContainers:
-        - name: init_permissions
-          image: busybox
-          command: ["sh", "-c"]
-          args:
-            - |
-              cd /var/www/baikal; \
-              chown -R 101:101 config Specific; \
-              chmod -R 766 config Specific; \
-              mkdir -p Specific/db; \
-              chown root:msmtp /etc/msmtprc; \
-              chmod 640 /etc/msmtprc;
-          volumeMounts:
-            - name: baikal-data
-              subPath: config
-              mountPath: /var/www/baikal/config
-              readOnly: false
-            - name: baikal-data
-              subPath: data
-              mountPath: /var/www/baikal/Specific
-              readOnly: false
-            - name: msmtp
-              mountPath: /etc/msmtprc
+      # initContainers:
+      #   - name: init_permissions
+      #     image: busybox
+      #     command: ["sh", "-c"]
+      #     args:
+      #       - |
+      #         cd /var/www/baikal; \
+      #         chown -R 101:101 config Specific; \
+      #         chmod -R 766 config Specific; \
+      #         mkdir -p Specific/db; \
+      #         chown root:msmtp /etc/msmtprc; \
+      #         chmod 640 /etc/msmtprc;
+      #     volumeMounts:
+      #       - name: baikal-data
+      #         subPath: config
+      #         mountPath: /var/www/baikal/config
+      #         readOnly: false
+      #       - name: baikal-data
+      #         subPath: data
+      #         mountPath: /var/www/baikal/Specific
+      #         readOnly: false
+      #       - name: msmtp
+      #         mountPath: /mnt/msmtprc
       containers:
         # ref: https://github.com/ckulka/baikal-docker
         - name: baikal
@@ -66,7 +66,7 @@ spec:
           env:
             - name: TZ
               value: America/New_York
-            # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
+
           volumeMounts:
             - name: baikal-data
               subPath: config
@@ -76,8 +76,10 @@ spec:
               subPath: data
               mountPath: /var/www/baikal/Specific
               readOnly: false
+            # https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md
+            # https://www.jeffgeerling.com/blog/2019/mounting-kubernetes-secret-single-file-inside-pod
             - name: msmtp
-              mountPath: /etc/msmtprc
+              mountPath: /mnt/msmtprc
               readOnly: true
           resources:
             limits:
@@ -108,6 +110,21 @@ spec:
             failureThreshold: 30
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    chown -R 101:101 /var/www/baikal/config; \
+                    chmod -R 766 /var/www/baikal/config; \
+                    mkdir -p /var/www/baikal/Specific/db; \
+                    chown -R 101:101 /var/www/baikal/Specific; \
+                    chmod -R 766 /var/www/baikal/Specific; \
+                    cp /mnt/msmtprc /etc/msmtprc; \
+                    chown root:msmtp /etc/msmtprc; \
+                    chmod 0640 /etc/msmtprc;
         # - name: fsfreeze
         #   image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
         #   volumeMounts:

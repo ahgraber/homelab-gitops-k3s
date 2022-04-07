@@ -17,3 +17,8 @@ chown -R 101:101 config Specific # for nginx
 chmod -R 766 config Specific
 mkdir -p Specific/db
 ```
+
+## Email
+
+[config guide](https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md)
+[older config reference](https://mchodled.com/posts/2020/Apr/03/de-google-your-calendar-with-baikal/#configure-email-invitation-plugin)
