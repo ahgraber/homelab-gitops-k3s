@@ -7,7 +7,8 @@ The data can be stored in a MySQL or a SQLite database.
 
 ## Configuration
 
-May have to set permissions on mounted volumes [ref](https://github.com/ckulka/baikal-docker/blob/master/examples/docker-compose.localvolumes.yaml):
+May have to set permissions on mounted volumes
+[ref](https://github.com/ckulka/baikal-docker/blob/master/examples/docker-compose.localvolumes.yaml):
 
 ```sh
 kubectl exec -it <baikal-pod-name> -n <baikal-namespace> bash
@@ -18,7 +19,7 @@ chmod -R 766 config Specific
 mkdir -p Specific/db
 ```
 
-## Email
+## Email Invitations
 
-[config guide](https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md)
-[older config reference](https://mchodled.com/posts/2020/Apr/03/de-google-your-calendar-with-baikal/#configure-email-invitation-plugin)
+- [config guide](https://github.com/ckulka/baikal-docker/blob/features/mail/docs/email-guide.md)
+- [older config reference](https://mchodled.com/posts/2020/Apr/03/de-google-your-calendar-with-baikal/#configure-email-invitation-plugin)
