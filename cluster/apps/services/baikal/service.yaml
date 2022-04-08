@@ -16,3 +16,7 @@ spec:
       port: 80
       protocol: TCP
       targetPort: http
+    - name: smtp
+      protocol: TCP
+      port: 25
+      targetPort: 25
