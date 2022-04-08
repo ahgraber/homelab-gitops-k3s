@@ -57,7 +57,8 @@ spec:
       containers:
         # ref: https://github.com/ckulka/baikal-docker
         - name: baikal
-          image: ckulka/baikal:nginx
+          # image: ckulka/baikal:nginx
+          image: ahgraber/baikal:nginx-experimental
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -125,6 +126,7 @@ spec:
                     cp /mnt/msmtprc /etc/msmtprc; \
                     chown root:msmtp /etc/msmtprc; \
                     chmod 0640 /etc/msmtprc;
+                  # sed -i 's|;sendmail_path =|sendmail_path = "/usr/bin/msmtp -C /etc/msmtprc --logfile /var/log/msmtp.log -a default -t"|' php.ini;
         # - name: fsfreeze
         #   image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
         #   volumeMounts:
