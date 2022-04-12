@@ -40,7 +40,7 @@ data:
           requests:
             memory: 4Gi
           limits:
-            memory: 5.25Gi
+            memory: 5.5Gi
 
         # thanos:
         #   image: quay.io/thanos/thanos:v0.23.1
