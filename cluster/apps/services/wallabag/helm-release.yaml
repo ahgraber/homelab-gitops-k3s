@@ -32,7 +32,7 @@ spec:
 
     persistence:
       images:
-        enabled: false
+        enabled: true
         # existingClaim: wallabag-images
         # mountPath: /var/www/wallabag/web/assets/images
       cache:
@@ -73,7 +73,7 @@ spec:
 
     # use bundled dbs?
     postgresql:
-      enabled: false
+      enabled: true
       auth:
         databasae: wallabag
         username: wallabag
@@ -103,16 +103,16 @@ spec:
         #       privileged: true
 
     redis:
-      enabled: false
-      # auth:
-      #   enabled: true
-      #   existingSecret: wallabag-secret
-      #   existingSecretPasswordKey: password
-      # # clusterDomain: ${SECRET_DOMAIN}
-      # architecture: standalone
-      # master:
-      #   persistence:
-      #     enabled: true
-      #     existingClaim: wallabag-redis
-      # replica:
-      #   replicaCount: 0
+      enabled: true
+      auth:
+        enabled: true
+        existingSecret: wallabag-secret
+        existingSecretPasswordKey: password
+      # clusterDomain: ${SECRET_DOMAIN}
+      architecture: standalone
+      master:
+        persistence:
+          enabled: true
+          existingClaim: wallabag-redis
+      replica:
+        replicaCount: 0
