@@ -22,6 +22,7 @@ spec:
     updateStrategy: RollingUpdate
     configuration:
       timeZone: "America/New_York"
+      rebootDays: [su, mo, tu, we, th, fr, sa]
       startTime: "0:00"
       endTime: "6:00"
       prometheusUrl: http://prometheus-prometheus.monitoring.svc.cluster.local:9090
