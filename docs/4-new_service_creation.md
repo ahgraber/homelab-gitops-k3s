@@ -27,6 +27,8 @@
   - Include required `helm-release.yaml` or other configuration specifications
   - Include `kustomization.yaml`
 - Add pointers to `kustomization.yaml` files in parent dir
+- Test-deploy service with `kubectl apply -k <path/to/folder/>
+  - _NOTE:_ : services deployed with `kubectl apply` will not have flux's environmental substitutions applied
 
 ## Secret encryption
 
