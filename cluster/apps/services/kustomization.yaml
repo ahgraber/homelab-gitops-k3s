@@ -9,4 +9,4 @@ resources:
   # - mealie  # wait for v1 (https://github.com/hay-kot/mealie/discussions/645)
   # - nextcloud
   - vaultwarden
-  # - wallabag
+  - wallabag

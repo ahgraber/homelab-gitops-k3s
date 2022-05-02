@@ -81,7 +81,7 @@ spec:
 
     # use bundled dbs?
     postgresql:
-      enabled: false
+      enabled: true
       # global:
       #   postgresql:
       #     auth:
