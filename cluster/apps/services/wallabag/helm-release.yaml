@@ -30,9 +30,9 @@ spec:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin1234
       POPULATE_DATABASE: true
-    envFrom:
-      - secretRef:
-          name: wallabag-secret
+    # envFrom:
+    #   - secretRef:
+    #       name: wallabag-secret
 
     ingress:
       main:
@@ -120,16 +120,16 @@ spec:
         #       privileged: true
 
     redis:
-      enabled: true
-      auth:
-        enabled: true
-        existingSecret: wallabag-redis-secret
-        existingSecretPasswordKey: password
-      # clusterDomain: ${SECRET_DOMAIN}
-      architecture: standalone
-      master:
-        persistence:
-          enabled: true
-          existingClaim: wallabag-redis
-      replica:
-        replicaCount: 0
+      enabled: false
+      # auth:
+      #   enabled: true
+      #   existingSecret: wallabag-redis-secret
+      #   existingSecretPasswordKey: password
+      # # clusterDomain: ${SECRET_DOMAIN}
+      # architecture: standalone
+      # master:
+      #   persistence:
+      #     enabled: true
+      #     existingClaim: wallabag-redis
+      # replica:
+      #   replicaCount: 0
