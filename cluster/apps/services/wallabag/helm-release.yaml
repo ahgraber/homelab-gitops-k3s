@@ -81,10 +81,12 @@ spec:
     # use bundled dbs?
     postgresql:
       enabled: true
-      auth:
-        database: wallabag
-        username: wallabag
-        existingSecret: wallabag-secret
+      global:
+        postgresql:
+          auth:
+            database: wallabag
+            username: wallabag
+            existingSecret: wallabag-secret
       persistence:
         enabled: true
         existingClaim: wallabag-db
