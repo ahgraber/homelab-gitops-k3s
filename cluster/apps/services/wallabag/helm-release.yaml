@@ -22,13 +22,14 @@ spec:
       tag: 2.4.3
     env:
       TZ: "America/New_York"
-      # SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
-      # SYMFONY__ENV__DATABASE_HOST: wallabag-postgresql-0  # services.wallabag-postgresql-0.svc.cluster.local
-      # SYMFONY__ENV__DATABASE_PORT: "5432"
-      # SYMFONY__ENV__FOSUSER_REGISTRATION: false
-      # SYMFONY__ENV__FOSUSER_CONFIRMATION: true
-      # SYMFONY__ENV__SERVER_NAME: wallabag
-      POPULATE_DATABASE: false
+      SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
+      SYMFONY__ENV__DATABASE_HOST: wallabag-postgresql
+      SYMFONY__ENV__DATABASE_NAME: wallabag
+      SYMFONY__ENV__DATABASE_USER: wallabag
+      SYMFONY__ENV__DATABASE_PASSWORD: testing123
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin1234
+      POPULATE_DATABASE: true
     envFrom:
       - secretRef:
           name: wallabag-secret
@@ -81,19 +82,22 @@ spec:
     # use bundled dbs?
     postgresql:
       enabled: true
-      global:
-        postgresql:
-          auth:
-            database: wallabag
-            username: wallabag
-            existingSecret: wallabag-secret
-      # auth:
-      #   database: wallabag
-      #   username: wallabag
-      #   existingSecret: wallabag-secret
-      persistence:
-        enabled: true
-        existingClaim: wallabag-db
+      # global:
+      #   postgresql:
+      #     auth:
+      #       database: wallabag
+      #       username: wallabag
+      #       existingSecret: wallabag-db-secret
+      auth:
+        database: wallabag
+        username: wallabag
+        password: testing123
+        postgresPassword: admin1234
+        # existingSecret: wallabag-db-secret
+
+      # persistence:
+      #   enabled: true
+      #   existingClaim: wallabag-db
 
       primary:
         persistence:
@@ -119,7 +123,7 @@ spec:
       enabled: true
       auth:
         enabled: true
-        existingSecret: wallabag-secret
+        existingSecret: wallabag-redis-secret
         existingSecretPasswordKey: password
       # clusterDomain: ${SECRET_DOMAIN}
       architecture: standalone
