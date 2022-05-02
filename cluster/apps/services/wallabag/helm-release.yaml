@@ -82,7 +82,7 @@ spec:
     postgresql:
       enabled: true
       auth:
-        databasae: wallabag
+        database: wallabag
         username: wallabag
         existingSecret: wallabag-secret
       persistence:
