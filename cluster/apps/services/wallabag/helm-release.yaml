@@ -28,7 +28,7 @@ spec:
       # SYMFONY__ENV__FOSUSER_REGISTRATION: false
       # SYMFONY__ENV__FOSUSER_CONFIRMATION: true
       # SYMFONY__ENV__SERVER_NAME: wallabag
-      POPULATE_DATABASE: true
+      POPULATE_DATABASE: false
     envFrom:
       - secretRef:
           name: wallabag-secret
@@ -87,6 +87,10 @@ spec:
             database: wallabag
             username: wallabag
             existingSecret: wallabag-secret
+      # auth:
+      #   database: wallabag
+      #   username: wallabag
+      #   existingSecret: wallabag-secret
       persistence:
         enabled: true
         existingClaim: wallabag-db
