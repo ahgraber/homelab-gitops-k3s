@@ -58,10 +58,10 @@ data:
           - job_name: truenas-minio
             bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4MDUxODEzODIsImlzcyI6InByb21ldGhldXMiLCJzdWIiOiJadGdROWdHcmJ3RUNaOGt4WlJRbyJ9.W1oCrRnCbP3SJCGiT1I5yrfAYqhO4coehQqWUduF8DLXKhOStS3LteNrPCPn5fodjWHydu_BILwkc6AhOwWe9g
             metrics_path: /minio/v2/metrics/node
-            scheme: http
+            scheme: https
             static_configs:
               - targets:
-                  - "https://truenas.${SECRET_DOMAIN}:9000"
+                  - "truenas.${SECRET_DOMAIN}:9000"
         #   - job_name: cadvisor
         #     honor_timestamps: true
         #     static_configs:
