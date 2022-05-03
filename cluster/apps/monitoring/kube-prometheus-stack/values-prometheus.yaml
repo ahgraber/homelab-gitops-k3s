@@ -61,7 +61,7 @@ data:
             scheme: http
             static_configs:
               - targets:
-                  - "truenas.${SECRET_DOMAIN}:9000"
+                  - "https://truenas.${SECRET_DOMAIN}:9000"
         #   - job_name: cadvisor
         #     honor_timestamps: true
         #     static_configs:
