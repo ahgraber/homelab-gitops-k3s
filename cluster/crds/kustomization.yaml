@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - cert-manager
   - cockroachdb
-  # - external-snapshotter
+  - external-snapshotter
   - kube-prometheus-stack
   - traefik
   - velero
