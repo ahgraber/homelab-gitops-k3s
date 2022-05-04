@@ -17,6 +17,8 @@
 :round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/) after some quick
 bootstrap steps.
 
+> [Here](https://fluxcd.io/docs/flux-e2e/) is flux's explanation of its end-to-end commit flowgit.
+
 ## 1. Verify Flux can be installed
 
 ```sh
