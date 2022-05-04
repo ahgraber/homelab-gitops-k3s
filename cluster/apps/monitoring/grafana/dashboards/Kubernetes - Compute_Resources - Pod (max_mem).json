@@ -2353,7 +2353,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -2361,8 +2361,8 @@
     "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "utc",
-  "title": "Kubernetes / Compute Resources / Pod (Memory)",
-  "uid": "gu2eoyCCpEqMEwJn4OmoNw",
+  "title": "Kubernetes / Compute Resources / Pod (Max_Memory)",
+  "uid": "gu2eoyCCpEqMEwJn4Omo0N",
   "version": 1,
   "weekStart": ""
 }
