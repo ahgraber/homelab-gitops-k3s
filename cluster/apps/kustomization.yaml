@@ -10,4 +10,4 @@ resources:
   - networking
   - security
   - services
-  - system-upgrade
+  # - system-upgrade
