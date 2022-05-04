@@ -7,6 +7,5 @@ resources:
   - democratic-csi
   # - kube-vip  # managed in ansible k3s install
   - metallb-system
-  # - system-upgrade
   ### overwrite local-path StorageClass to set as NOT default
   - storage-class-local.yaml
