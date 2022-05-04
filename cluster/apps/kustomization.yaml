@@ -4,9 +4,10 @@ kind: Kustomization
 resources:
   - backend
   - default
+  - flux-extras
   - kube-system
   - monitoring
   - networking
   - security
   - services
-  ## - system-upgrade
+  - system-upgrade

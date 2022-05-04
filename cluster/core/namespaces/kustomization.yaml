@@ -9,9 +9,10 @@ resources:
   - metallb-system.yaml
   - monitoring.yaml
   - networking.yaml
-  - nextcloud.yaml
+  # - nextcloud.yaml
   # - postgresql.yaml
   - security.yaml
   - services.yaml
+  - system-upgrade.yaml
   - vaultwarden.yaml
   - velero.yaml
