@@ -23,15 +23,13 @@ data:
     # To route traffic from the internet to cloudflared, run `cloudflared tunnel route dns k8s-argo-tunnel <hostname>`.
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
     ingress:
-    # Proxy traefik to the k8s ingress (Traefik) to hand off to Services
+    ### Proxy traefik to the k8s ingress (Traefik) to hand off to Services
     # internet --> cloudflared tunnel --> local DNS --> ingress --> service
-    # NOTE: relies on split-brain DNS / local overrides
+    ### NOTE: relies on split-brain DNS / local overrides
     - hostname: httpbin.${SECRET_DOMAIN}
       service: https://httpbin.${SECRET_DOMAIN}
     - hostname: hammond.${SECRET_DOMAIN}
       service: https://hammond.${SECRET_DOMAIN}
-    # - hostname: flux-receiver.${SECRET_DOMAIN}
-    #   service: https://flux-receiver.${SECRET_DOMAIN}
 
     # - hostname: baikal.${SECRET_DOMAIN}
     #   service: https://baikal.${SECRET_DOMAIN}
@@ -39,9 +37,8 @@ data:
     #   service: https://vaultwarden.${SECRET_DOMAIN}
 
 
-    # # Proxy traffic to the k8s Services directly
+    ### Proxy traffic to the k8s Services directly
     - hostname: flux-receiver.${SECRET_DOMAIN}
-      # path: /hook/*
       service: http://webhook-receiver.flux-system:80
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity issues.
