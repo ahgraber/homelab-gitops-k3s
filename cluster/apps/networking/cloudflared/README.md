@@ -57,7 +57,7 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
    sops --encrypt --in-place ./cluster/apps/networking/cloudflared/secret.sops.yaml
    ```
 
-5. Associate your Tunnel with a DNS record.
+5. (**START HERE IF TUNNEL ALREADY DEPLOYED**) Associate your Tunnel with a DNS record.
 
    ```sh
    cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
@@ -72,3 +72,5 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
    Those cloudflared instances will proxy the request to your app's Service.
 
 ## Terraform
+
+TBD
