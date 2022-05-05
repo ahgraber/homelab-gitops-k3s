@@ -2,7 +2,7 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Receiver
 metadata:
-  name: github-receiver
+  name: webhook-receiver
   namespace: flux-system
 spec:
   type: github
