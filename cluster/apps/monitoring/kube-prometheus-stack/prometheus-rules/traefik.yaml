@@ -1,11 +1,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  labels:
-    app: kube-prometheus-stack
-    release: prometheus
   name: traefik-rules
-  namespace: networking
+  namespace: monitoring
 spec:
   groups:
     - name: traefik.rules

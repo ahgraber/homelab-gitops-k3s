@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifest.yaml
+  - prometheus-rule.yaml
+
+# ref: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/inlinePatch.md
+patchesJSON6902:
+  # enable feature-gates for topology & tolerations
+  # ref: https://www.cockroachlabs.com/docs/v21.2/schedule-cockroachdb-kubernetes.html#enable-feature-gates
+  - target:
+      group: crdb.cockroachlabs.com
+      version: v1alpha1
+      kind: CrdbCluster
+      name: cockroachdb
+    patch: |-
+      - op: add
+        path: "/spec/containers/args"
+        value:
+          # name: NEW_ENV
+          value: -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true

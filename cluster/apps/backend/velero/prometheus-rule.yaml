@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: velero-rules
-  namespace: velero
+  namespace: monitoring
 spec:
   groups:
     - name: velero.rules
