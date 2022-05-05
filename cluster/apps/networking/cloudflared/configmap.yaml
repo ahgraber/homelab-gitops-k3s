@@ -36,7 +36,6 @@ data:
     # - hostname: vaultwarden.${SECRET_DOMAIN}
     #   service: https://vaultwarden.${SECRET_DOMAIN}
 
-
     ### Proxy traffic to the k8s Services directly
     - hostname: flux-receiver.${SECRET_DOMAIN}
       service: http://webhook-receiver.flux-system:80
