@@ -2,11 +2,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  labels:
-    prometheus: k8s
-    role: alert-rules
   name: cert-manager-rules
-  namespace: cert-manager
+  namespace: monitoring
 spec:
   groups:
     - name: cert-manager.rules
