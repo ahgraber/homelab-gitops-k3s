@@ -19,7 +19,7 @@ spec:
   values:
     env:
       # can be email or nickname
-      email: admin
+      email: admin@{SECRET_DOMAIN}
       # password: ${SECRET_DEFAULT_PASSWORD}
 
     existingSecret: pgadmin-secret
