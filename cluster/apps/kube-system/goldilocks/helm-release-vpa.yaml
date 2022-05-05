@@ -1,0 +1,37 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vpa
+  namespace: kube-system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.fairwinds.com/stable
+      chart: vpa
+      version: 1.3.1
+      sourceRef:
+        kind: HelmRepository
+        name: fairwinds-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    # monitors the current and past resource consumption and
+    # provides recommended values containers' cpu and memory requests
+    recommender:
+      enabled: true
+      extraArgs:
+        v: "4"
+
+    # checks which of the managed pods have correct resources set and, if required,
+    # kills them so that they can be recreated by their controllers with the updated requests
+    updater:
+      enabled: false
+
+    # sets the correct resource requests on new pods
+    # (newly created or recreated by their controller due to Updater's activity)
+    admissionController:
+      enabled: false
+      cleanupOnDelete:
+        enabled: true

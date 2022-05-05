@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   # - config-syncer
   - descheduler
+  - goldilocks
   - kube-cleanup-operator
   - kured
   # - node-feature-discovery
