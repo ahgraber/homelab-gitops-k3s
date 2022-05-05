@@ -30,8 +30,8 @@ data:
       service: https://httpbin.${SECRET_DOMAIN}
     - hostname: hammond.${SECRET_DOMAIN}
       service: https://hammond.${SECRET_DOMAIN}
-    - hostname: webhook-receiver.${SECRET_DOMAIN}
-      service: https://webhook-receiver.${SECRET_DOMAIN}
+    # - hostname: flux-receiver.${SECRET_DOMAIN}
+    #   service: https://flux-receiver.${SECRET_DOMAIN}
 
     # - hostname: baikal.${SECRET_DOMAIN}
     #   service: https://baikal.${SECRET_DOMAIN}
@@ -40,9 +40,9 @@ data:
 
 
     # # Proxy traffic to the k8s Services directly
-    # - hostname: webhook-receiver.${SECRET_DOMAIN}
-    #   path: /hook/*
-    #   service: webhook-receiver.flux-system:80
+    - hostname: flux-receiver.${SECRET_DOMAIN}
+      # path: /hook/*
+      service: webhook-receiver.flux-system:80
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity issues.
     # If hello.${SECRET_DOMAIN} resolves and <service>.${SECRET_DOMAIN} does not, then the problem is

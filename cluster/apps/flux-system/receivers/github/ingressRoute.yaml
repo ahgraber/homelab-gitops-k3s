@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`webhook-receiver.${SECRET_DOMAIN}`) && PathPrefix(`/hook`)
+    - match: Host(`flux-receiver.${SECRET_DOMAIN}`) && PathPrefix(`/hook`)
       kind: Rule
       # Enable auth middleware
       # middlewares:
