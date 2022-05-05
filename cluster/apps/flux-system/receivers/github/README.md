@@ -16,8 +16,17 @@ reducing the need to wait for the timed reconciliation or manually call for a sy
 2. Create secret using token
 3. Apply `github-webhook` kustomization
 
-## Create webhoook
+## Create webhoook in Github settings
 
 1. In Github repo > Settings > Create Webhook
-2. Set `payload url` to the url specified in the ingress
+
+2. Set `payload url` to the url specified in the ingress + the `/hook/<random>`:
+   i.e., `https://flux-receiver.example.com/hook/0p39dj3nck3udn3m`
+
+   The path can be found with:
+
+   ```sh
+   kubectl -n flux-system get receiver/github-receiver
+   ```
+
 3. Set `token` to the token created above
