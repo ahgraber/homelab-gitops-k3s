@@ -20,7 +20,7 @@ kind: CrdbCluster
 metadata:
   # this translates to the name of the statefulset that is created
   name: cockroachdb
-  namespace: cockroach-operator-system
+  namespace: databases
 spec:
   image:
     name: cockroachdb/cockroach:v21.2.10
