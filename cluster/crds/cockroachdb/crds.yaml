@@ -33,7 +33,7 @@ spec:
   # ref: https://fluxcd.io/docs/components/kustomize/api/
   patches:
     - target:
-        apiVersion: v1
+        # apiVersion: v1
         kind: Namespace
         name: cockroach-operator-system
       patch: |-
@@ -45,7 +45,7 @@ spec:
             goldilocks.fairwinds.com/enabled: "true"
 
     - target:
-        apiVersion: apps/v1
+        # apiVersion: apps/v1
         kind: Deployment
         name: cockroach-operator-manager
         namespace: cockroach-operator-system
