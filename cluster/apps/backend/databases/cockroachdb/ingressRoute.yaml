@@ -11,7 +11,7 @@ spec:
     - websecure
   routes:
     - match: Host(`roachdb.${SECRET_DOMAIN}`)
-      kind: Rule
+      # kind: Rule
       # Enable auth middleware
       # middlewares:
       #   - name: rfc1918
