@@ -3,3 +3,18 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - crds.yaml
+
+# ref: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/inlinePatch.md
+patchesJSON6902:
+  # enable feature-gates for topology & tolerations
+  # ref: https://www.cockroachlabs.com/docs/v21.2/schedule-cockroachdb-kubernetes.html#enable-feature-gates
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: cockroach-operator-manager
+      namespace: cockroach-operator-system
+    patch: |-
+      - op: add
+        path: "/spec/template/spec/containers/args/-"
+        value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
