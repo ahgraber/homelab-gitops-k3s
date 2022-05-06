@@ -19,10 +19,13 @@ spec:
   values:
     # monitors the current and past resource consumption and
     # provides recommended values containers' cpu and memory requests
+    # ** Goldilocks only requires the recommender component
     recommender:
       enabled: true
       extraArgs:
-        v: "4"
+        storage: prometheus
+        prometheus-address: |-
+          http://prometheus-prometheus.monitoring.svc.cluster.local:9090
 
     # checks which of the managed pods have correct resources set and, if required,
     # kills them so that they can be recreated by their controllers with the updated requests
