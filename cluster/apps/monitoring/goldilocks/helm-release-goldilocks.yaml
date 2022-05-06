@@ -25,10 +25,19 @@ spec:
       # image.pullPolicy -- imagePullPolicy - Highly recommended to leave this as `Always`
       pullPolicy: Always
 
-    dashboard:
-      # dashboard.enabled -- If true, the dashboard component will be installed
+    controller:
       enabled: true
-      # dashboard.excludeContainers -- Container names to exclude from displaying in the Goldilocks dashboard
+      resources:
+        requests:
+          cpu: 15m
+          memory: 105M
+        limits:
+          cpu: 100m
+          memory: 132M
+
+    dashboard:
+      enabled: true
+      # Container names to exclude from displaying in the Goldilocks dashboard
       excludeContainers: "linkerd-proxy,istio-proxy"
       resources:
         requests:
