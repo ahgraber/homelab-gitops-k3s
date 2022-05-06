@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`db.${SECRET_DOMAIN}`)
+    - match: Host(`roachdb.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
