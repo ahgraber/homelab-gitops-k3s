@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   # - cert-manager  # manage in Helm chart
   - cockroachdb
-  # - external-snapshotter
   - kube-prometheus-stack
   - traefik
   - velero
