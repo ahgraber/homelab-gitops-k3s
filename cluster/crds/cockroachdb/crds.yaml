@@ -44,25 +44,25 @@ spec:
           labels:
             goldilocks.fairwinds.com/enabled: "true"
 
-    - target:
-        # apiVersion: apps/v1
-        kind: Deployment
-        name: cockroach-operator-manager
-        namespace: cockroach-operator-system
-      patch: |-
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: cockroach-operator-manager
-          namespace: cockroach-operator-system
-        spec:
-          template:
-            spec:
-              containers:
-                - name: cockroach-operator
-                    args:
-                      - -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
-      # patch: |-
-      #   - op: add
-      #     path: "/spec/template/spec/containers[0]/args/-"
-      #     value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
+    # - target:
+    #     # apiVersion: apps/v1
+    #     kind: Deployment
+    #     name: cockroach-operator-manager
+    #     namespace: cockroach-operator-system
+    #   patch: |-
+    #     apiVersion: apps/v1
+    #     kind: Deployment
+    #     metadata:
+    #       name: cockroach-operator-manager
+    #       namespace: cockroach-operator-system
+    #     spec:
+    #       template:
+    #         spec:
+    #           containers:
+    #             - name: cockroach-operator
+    #                 args:
+    #                   - -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
+    #   # patch: |-
+    #   #   - op: add
+    #   #     path: "/spec/template/spec/containers[0]/args/-"
+    #   #     value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
