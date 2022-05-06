@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # - cert-manager  # manage in Helm chart
-  # - cockroachdb
+  - cockroachdb
   - external-snapshotter
   - kube-prometheus-stack
   - traefik
