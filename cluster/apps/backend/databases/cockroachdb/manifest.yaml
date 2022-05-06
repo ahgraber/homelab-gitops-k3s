@@ -84,5 +84,3 @@ spec:
   sqlPort: 5432 # match postgres defaults
 
   tlsEnabled: true
-# You can set either a version of the db or a specific image name
-# cockroachDBVersion: v21.2.9
