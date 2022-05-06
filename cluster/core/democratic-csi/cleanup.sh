@@ -1,4 +1,6 @@
-#!/usr/local/env bash
+#!/usr/bin/env bash
+
+echo "If prompted to delete, respond true/false"
 
 controllers=()
 while IFS='' read -r line; do controllers+=("$line"); done < \
