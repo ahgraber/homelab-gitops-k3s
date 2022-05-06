@@ -1,10 +1,10 @@
 ---
 apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+kind: IngressRouteTCP
 metadata:
   name: route-cockroachdb
-  # namespace: networking
-  namespace: cockroach-operator-system
+  namespace: networking
+  # namespace: cockroach-operator-system
 spec:
   entryPoints:
     # - web
