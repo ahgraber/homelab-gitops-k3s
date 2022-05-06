@@ -6,4 +6,3 @@ resources:
   - helm-release-nfs.yaml
   - secret-iscsi.yaml
   - secret-nfs.yaml
-  # - snapshot-controller.d  # should be included in csi?
