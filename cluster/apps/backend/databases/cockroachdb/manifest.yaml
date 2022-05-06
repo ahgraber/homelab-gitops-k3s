@@ -67,6 +67,13 @@ spec:
         volumeMode: Filesystem
         storageClassName: csi-truenas-iscsi
 
+  ingress:
+    ui:
+      # ingressClassName: nginx
+      # annotations:
+      #   key: value
+      host: roachdb.${SECRET_DOMAIN}
+
   resources:
     requests:
       # This is intentionally low to make it work on local k3d clusters.
