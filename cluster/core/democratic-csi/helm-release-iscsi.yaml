@@ -55,10 +55,10 @@ spec:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
         # securityContext:
-        tolerations:
-          - key: node-role.kubernetes.io/master
-            operator: Exists
-            # effect: NoSchedule
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          # effect: NoSchedule
 
     node:
       enabled: true
@@ -81,10 +81,10 @@ spec:
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
-        tolerations:
-          - key: node-role.kubernetes.io/master
-            operator: Exists
-            # effect: NoSchedule
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          # effect: NoSchedule
 
     storageClasses:
       - name: csi-truenas-iscsi
