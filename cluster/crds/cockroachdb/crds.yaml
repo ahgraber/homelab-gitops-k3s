@@ -44,13 +44,13 @@ spec:
             control-plane: cockroach-operator
             goldilocks.fairwinds.com/enabled: "true"
 
-    # - target:
-    #     group: apps
-    #     version: v1
-    #     kind: Deployment
-    #     name: cockroach-operator-manager
-    #     namespace: cockroach-operator-system
-    #   patch: |-
-    #     - op: add
-    #       path: "/spec/template/spec/containers/args/-"
-    #       value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
+    - target:
+        group: apps
+        version: v1
+        kind: Deployment
+        name: cockroach-operator-manager
+        namespace: cockroach-operator-system
+      patch: |-
+        - op: add
+          path: "/spec/template/spec/containers/args/-"
+          value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
