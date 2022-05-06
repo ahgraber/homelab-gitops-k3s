@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: cockroachdb-client-secure
-  namespace: databases
+  namespace: cockroach-operator-system
 spec:
   serviceAccountName: cockroachdb-sa
   containers:
