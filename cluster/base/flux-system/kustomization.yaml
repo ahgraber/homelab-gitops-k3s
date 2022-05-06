@@ -5,3 +5,5 @@ resources:
   - gotk-components.yaml
   - gotk-sync.yaml
   - charts
+patchesStrategicMerge:
+  - ./gotk-patches.yaml

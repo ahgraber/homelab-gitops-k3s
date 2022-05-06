@@ -4,6 +4,18 @@ kind: Kustomization
 resources:
   - crds.yaml
 # patchesStrategicMerge:
+#   - target:
+#       version: v1
+#       kind: Namespace
+#       name: cockroach-operator-system
+#     patch: |-
+#       kind: Namespace
+#       metadata:
+#         name: cockroach-operator-system
+#         labels:
+#           control-plane: cockroach-operator
+#           goldilocks.fairwinds.com/enabled: "true"
+# #
 #   - |-
 #     apiVersion: apps/v1
 #     kind: Deployment
