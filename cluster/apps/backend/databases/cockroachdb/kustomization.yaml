@@ -18,6 +18,4 @@ patchesJSON6902:
     patch: |-
       - op: add
         path: "/spec/containers/args"
-        value:
-          # name: NEW_ENV
-          value: -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
+        value: -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
