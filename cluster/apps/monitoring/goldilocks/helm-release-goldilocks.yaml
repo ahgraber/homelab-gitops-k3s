@@ -30,6 +30,13 @@ spec:
       enabled: true
       # dashboard.excludeContainers -- Container names to exclude from displaying in the Goldilocks dashboard
       excludeContainers: "linkerd-proxy,istio-proxy"
+      resources:
+        requests:
+          cpu: 15m
+          memory: 100M
+        limits:
+          cpu: 100m
+          memory: 200M
 
     ingress:
       enabled: false
