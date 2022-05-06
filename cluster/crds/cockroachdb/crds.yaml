@@ -33,10 +33,11 @@ spec:
   # ref: https://fluxcd.io/docs/components/kustomize/api/
   patches:
     - target:
-        version: v1
+        apiVersion: v1
         kind: Namespace
         name: cockroach-operator-system
       patch: |-
+        apiVersion: v1
         kind: Namespace
         metadata:
           name: cockroach-operator-system
@@ -45,27 +46,27 @@ spec:
             goldilocks.fairwinds.com/enabled: "true"
 
     - target:
-        group: apps
-        version: v1
+        apiVersion: apps/v1
         kind: Deployment
         name: cockroach-operator-manager
         namespace: cockroach-operator-system
-      # patch: |-
-      #   kind: Deployment
-      #   metadata:
-      #     labels:
-      #       app: cockroach-operator
-      #     name: cockroach-operator-manager
-      #     namespace: cockroach-operator-system
-      #   spec:
-      #     template:
-      #       spec:
-      #         containers:
-      #           - args:
-      #               - -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
-      #               - -zap-log-level
-      #               - info
       patch: |-
-        - op: add
-          path: "/spec/template/spec/containers[0]/args/-"
-          value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
+        kind: Deployment
+        metadata:
+          labels:
+            app: cockroach-operator
+          name: cockroach-operator-manager
+          namespace: cockroach-operator-system
+        spec:
+          template:
+            spec:
+              containers:
+                - name: cockroach-operator
+                    args:
+                      - -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
+                      - -zap-log-level
+                      - info
+      # patch: |-
+      #   - op: add
+      #     path: "/spec/template/spec/containers[0]/args/-"
+      #     value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
