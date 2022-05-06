@@ -11,11 +11,12 @@ patchesJSON6902:
   # enable feature-gates for topology & tolerations
   # ref: https://www.cockroachlabs.com/docs/v21.2/schedule-cockroachdb-kubernetes.html#enable-feature-gates
   - target:
-      group: crdb.cockroachlabs.com
-      version: v1alpha1
-      kind: CrdbCluster
-      name: cockroachdb
+      group: apps
+      version: v1
+      kind: Deployment
+      name: cockroach-operator-manager
+      namespace: cockroach-operator-system
     patch: |-
       - op: add
-        path: "/spec/containers/args/0"
+        path: "/spec/template/spec/containers/args"
         value: -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
