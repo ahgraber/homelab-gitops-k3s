@@ -5,6 +5,7 @@ resources:
   - namespaces
   - cert-manager
   - democratic-csi
+  - kube-system
   # - kube-vip  # managed in ansible k3s install
   - metallb-system
   ### overwrite local-path StorageClass to set as NOT default
