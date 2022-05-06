@@ -90,4 +90,4 @@ spec:
   httpPort: 8080
   sqlPort: 5432 # match postgres defaults
 
-  tlsEnabled: false
+  tlsEnabled: true
