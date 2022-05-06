@@ -32,6 +32,7 @@ spec:
   # ref: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/inlinePatch.md
   # ref: https://fluxcd.io/docs/components/kustomize/api/
   patches:
+    # add goldlilocks label to namespace
     - target:
         kind: Namespace
         name: cockroach-operator-system
@@ -43,23 +44,12 @@ spec:
           labels:
             goldilocks.fairwinds.com/enabled: "true"
 
+    # enable feature gates for topology
+    # ref: https://www.cockroachlabs.com/docs/v21.2/schedule-cockroachdb-kubernetes.html#enable-feature-gates
     - target:
         kind: Deployment
         name: cockroach-operator-manager
         namespace: cockroach-operator-system
-      # patch: |-
-      #   apiVersion: apps/v1
-      #   kind: Deployment
-      #   metadata:
-      #     name: cockroach-operator-manager
-      #     namespace: cockroach-operator-system
-      #   spec:
-      #     template:
-      #       spec:
-      #         containers:
-      #           - name: cockroach-operator
-      #               args:
-      #                 - '-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true'
       patch: |-
         - op: add
           path: "/spec/template/spec/containers/0/args/-"
