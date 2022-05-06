@@ -8,3 +8,5 @@ metadata:
   #   # secret_name: kubed
   #   ${SECRET_DOMAIN/./-}-tls: kubed
   #   ${SECRET_DOMAIN/./-}-stage-tls: kubed
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"

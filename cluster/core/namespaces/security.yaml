@@ -4,6 +4,7 @@ kind: Namespace
 metadata:
   name: security
   labels:
+    goldilocks.fairwinds.com/enabled: "true"
     # Define namespace label for kubed for secrets-sharing -->
     # secret_name: kubed
     ${SECRET_DOMAIN/./-}-tls: kubed
