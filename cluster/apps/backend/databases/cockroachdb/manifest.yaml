@@ -67,12 +67,12 @@ spec:
         volumeMode: Filesystem
         storageClassName: csi-truenas-iscsi
 
-  ingress:
-    ui:
-      # ingressClassName: nginx
-      # annotations:
-      #   key: value
-      host: roachdb.${SECRET_DOMAIN}
+  # ingress:
+  #   ui:
+  #     # ingressClassName: nginx
+  #     # annotations:
+  #     #   key: value
+  #     host: roachdb.${SECRET_DOMAIN}
 
   resources:
     requests:
