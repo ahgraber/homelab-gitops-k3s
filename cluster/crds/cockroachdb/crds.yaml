@@ -57,9 +57,12 @@ spec:
           template:
             spec:
               containers:
-                - name: cockroach-operator
-                    args:
-                      - '-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true'
+                - args:
+                    - '-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true'
+
+      #          - name: cockroach-operator
+      #              args:
+      #                - '-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true'
       # patch: |-
       #   - op: add
       #     path: "/spec/template/spec/containers[0]/args/-"
