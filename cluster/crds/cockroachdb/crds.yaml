@@ -28,3 +28,29 @@ spec:
   sourceRef:
     kind: GitRepository
     name: cockroachdb-source
+
+  # ref: https://github.com/kubernetes-sigs/kustomize/blob/master/examples/inlinePatch.md
+  # ref: https://fluxcd.io/docs/components/kustomize/api/
+  patches:
+    - target:
+        version: v1
+        kind: Namespace
+        name: cockroach-operator-system
+      patch: |-
+        kind: Namespace
+        metadata:
+          name: cockroach-operator-system
+          labels:
+            control-plane: cockroach-operator
+            goldilocks.fairwinds.com/enabled: "true"
+
+    - target:
+        group: apps
+        version: v1
+        kind: Deployment
+        name: cockroach-operator-manager
+        namespace: cockroach-operator-system
+      patch: |-
+        - op: add
+          path: "/spec/template/spec/containers/args/-"
+          value: "-feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true"
