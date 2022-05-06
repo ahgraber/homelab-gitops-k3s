@@ -17,5 +17,5 @@ patchesJSON6902:
       name: cockroachdb
     patch: |-
       - op: add
-        path: "/spec/containers/args"
+        path: "/spec/containers/args/0"
         value: -feature-gates=TolerationRules=true,AffinityRules=true,TopologySpreadRules=true
