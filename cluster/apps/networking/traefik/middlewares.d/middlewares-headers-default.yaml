@@ -6,6 +6,8 @@ metadata:
   namespace: networking
 spec:
   headers:
+    # ref: https://tferdinand.net/en/traefik-2-tls-configuration/
+    frameDeny: true
     sslRedirect: true
     browserXssFilter: true
     contentTypeNosniff: true
@@ -22,4 +24,5 @@ spec:
   headers:
     forceSTSHeader: true
     stsIncludeSubdomains: true
-    stsSeconds: 15552000
+    stsPreload: true
+    stsSeconds: 31536000
