@@ -20,12 +20,20 @@ spec:
     env:
       # can be email or nickname
       email: admin@${SECRET_DOMAIN}
-      # password: ${SECRET_DEFAULT_PASSWORD}
+
+    existingSecret: pgadmin-secret
 
     serverDefinitions:
       enabled: true
-
-    existingSecret: pgadmin-secret
+      servers:
+        cockroachdb:
+          Name: cockroachdb
+          Group: Servers
+          Port: 5432
+          Username: postgres
+          Host: cockroachdb-public.cockroach-operator-system.svc.cluster.local"
+          SSLMode: prefer
+          MaintenanceDB: postgres
 
     strategy:
       type: Recreate
