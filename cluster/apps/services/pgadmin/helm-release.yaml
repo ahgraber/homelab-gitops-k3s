@@ -22,6 +22,9 @@ spec:
       email: admin@${SECRET_DOMAIN}
       # password: ${SECRET_DEFAULT_PASSWORD}
 
+    serverDefinitions:
+      enabled: true
+
     existingSecret: pgadmin-secret
 
     strategy:
