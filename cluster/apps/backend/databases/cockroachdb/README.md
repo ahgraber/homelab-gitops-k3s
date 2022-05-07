@@ -20,7 +20,7 @@ CockroachDB is wire-compatible with PostgreSQL 13 and works with majority of Pos
 Leverage the [secure client](client.yaml) to run quick queries, create users, and provide priviledges
 
 ```sh
-kubectl exec -it cockroachdb-client-secure -n cockroach-operator-system\
+kubectl exec -it cockroachdb-client-secure -n cockroach-operator-system \
   -- ./cockroach sql \
   --certs-dir=/cockroach/cockroach-certs \
   --host=cockroachdb-public \
