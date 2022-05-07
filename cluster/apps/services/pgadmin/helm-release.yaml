@@ -26,12 +26,12 @@ spec:
     serverDefinitions:
       enabled: true
       servers:
-        cockroachdb:
+        firstServer:
           Name: cockroachdb
           Group: Servers
           Port: 5432
           Username: postgres
-          Host: cockroachdb-public.cockroach-operator-system.svc.cluster.local"
+          Host: cockroachdb-public.cockroach-operator-system.svc.cluster.local
           SSLMode: prefer
           MaintenanceDB: postgres
 
