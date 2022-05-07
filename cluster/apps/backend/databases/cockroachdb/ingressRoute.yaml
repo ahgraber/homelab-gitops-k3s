@@ -10,7 +10,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`roachdb.${SECRET_DOMAIN}`) # HostSNI(`*`) #
+    - match: HostSNI(`roachdb.${SECRET_DOMAIN}`) #Host(`roachdb.${SECRET_DOMAIN}`) #
       # kind: Rule
       # Enable auth middleware
       # middlewares:
