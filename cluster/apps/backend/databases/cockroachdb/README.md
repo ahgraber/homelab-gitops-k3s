@@ -15,6 +15,28 @@ This means that existing applications built on PostgreSQL can often be migrated 
 
 CockroachDB is wire-compatible with PostgreSQL 13 and works with majority of PostgreSQL database tools.
 
+## Using SQL CLI
+
+Leverage the [secure client](client.yaml) to run quick queries, create users, and provide priviledges
+
+```sh
+kubectl exec -it cockroachdb-client-secure -n cockroach-operator-system\
+  -- ./cockroach sql \
+  --certs-dir=/cockroach/cockroach-certs \
+  --host=cockroachdb-public \
+  --port=5432 # we set the port to match postgres defaults
+```
+
+### Create a user
+
+```sql
+-- from console (above)
+CREATE USER <USERNAME> WITH PASSWORD '<PASSWORD>';
+GRANT admin TO <USERNAME>;
+SHOW USERS;
+-- log out with /q
+```
+
 ## Backups
 
 [Full backups](https://www.cockroachlabs.com/docs/v21.2/take-full-and-incremental-backups#full-backups) are supported on non-Enterprise instances
