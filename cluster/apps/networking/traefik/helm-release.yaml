@@ -114,7 +114,6 @@ spec:
         tls:
           enabled: true
           options: "default"
-
       metrics:
         port: 9100
         expose: true
@@ -124,10 +123,10 @@ spec:
       #   port: 3306
       #   expose: true
       #   exposedPort: 3306
-      # postgresql:
-      #   port: 5432
-      #   expose: true
-      #   exposedPort: 5432
+      postgresql:
+        port: 5432
+        expose: true
+        exposedPort: 5432
 
     rbac:
       enabled: true
