@@ -40,3 +40,4 @@ resources:
   - victoriametrics-charts.yaml
   - vmware-tanzu-charts.yaml
   - weaveworks-kured-charts.yaml
+  - zalando-postgress-charts.yaml
