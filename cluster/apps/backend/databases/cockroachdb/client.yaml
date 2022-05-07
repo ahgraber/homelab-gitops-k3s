@@ -17,7 +17,8 @@ spec:
         - sleep
         - "2147483648" # 2^31
       env:
-        COCKROACH_CERTS_DIR: /cockroach/cockroach-certs/
+        - name: COCKROACH_CERTS_DIR
+          value: /cockroach/cockroach-certs/
 
   terminationGracePeriodSeconds: 0
   volumes:
