@@ -12,8 +12,8 @@ spec:
   routes:
     - match: HostSNI(`roachdb.${SECRET_DOMAIN}`)
       # Enable auth middleware
-      middlewares:
-        - name: rfc1918
+      # middlewares:
+      #   - name: rfc1918
       #   # - name: basicauth
       services:
         - name: cockroachdb-public
@@ -35,8 +35,8 @@ spec:
     - postgresql
   routes:
     - match: HostSNI(`roachdb.${SECRET_DOMAIN}`)
-      middlewares:
-        - name: rfc1918
+      # middlewares:
+      #   - name: rfc1918
       services:
         - name: cockroachdb-public
           namespace: cockroach-operator-system
