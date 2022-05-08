@@ -31,7 +31,7 @@ spec:
     # https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
     # UI specific env variables can be found here: https://github.com/zalando/postgres-operator/blob/master/ui/operator_ui/main.py
     extraEnvs:
-      # Exemple of settings to make snapshot view working in the ui when using AWS
+      # Example of settings to make snapshot view working in the ui when using AWS
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
