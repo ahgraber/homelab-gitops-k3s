@@ -1,0 +1,138 @@
+---
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: acid-test-cluster
+  namespace: database
+#  labels:
+#    application: test-app
+#    environment: demo
+spec:
+  ### https://github.com/zalando/postgres-operator/blob/master/docs/reference/cluster_manifest.md
+  ### https://github.com/zalando/postgres-operator/blob/master/manifests/complete-postgres-manifest.yaml
+  teamId: "default"
+  numberOfInstances: 2
+  # [optional] map {Username: roles[SUPERUSER, REPLICATION, INHERIT, LOGIN, NOLOGIN, CREATEROLE, CREATEDB, BYPASSURL]}
+  # If the config option `enable_cross_namespace_secret` is enabled, use the form {namespace}.{username}
+  # and the operator will create the K8s secret in that namespace
+  users:
+    zalando:
+      - superuser
+      - createdb
+  # [optional] map {databasename: users[]}
+  databases:
+    foo: zalando
+  # # specify db to create with pre-defined owner, reader and writer roles for each individual database
+  # # and, optionally, for each database schema
+  # # https://github.com/zalando/postgres-operator/blob/master/docs/user.md#prepared-databases-with-roles-and-default-privileges
+  # preparedDatabases:
+  #   bar:
+  #     defaultUsers: true
+  #     extensions: {}
+  #     schemas: {}
+
+  postgresql:
+    version: "14"
+    parameters: # Expert section
+      # for loki logging: https://github.com/zalando/postgres-operator/issues/858#issuecomment-608136253
+      logging_collector: "off"
+      log_line_prefix: "%m user=%u db=%d pid=%p "
+      log_min_messages: "ERROR"
+      log_min_error_statement: "ERROR"
+      log_error_verbosity: "DEFAULT"
+      log_lock_waits: "ON"
+      log_statement: "none"
+      log_connections: "on"
+      log_disconnections: "on"
+      log_duration: "off"
+
+  patroni:
+    initdb:
+      encoding: "UTF8"
+      locale: "en_US.UTF-8"
+      data-checksums: "true"
+    # pg_hba:
+    #   - hostssl all all 0.0.0.0/0 md5
+    #   - host    all all 0.0.0.0/0 md5
+
+  env:
+    - name: BACKUP_NUM_TO_RETAIN
+      value: 10
+    - name: WAL_S3_BUCKET
+      value: sample_postgres
+    # - name: AWS_REGION
+    #   value: "us-east" # This value is ONLY used for the wal-g S3 streaming
+    - name: AWS_ENDPOINT
+      value: "https://truenas.${SECRET_DOMAIN}:9001"
+
+  volume:
+    size: 1Gi
+    storageClass: truenas-csi-iscsi
+
+  enableShmVolume: true
+  # spiloRunAsUser: 101
+  # spiloRunAsGroup: 103
+  # spiloFSGroup: 103
+
+  # tolerations:
+  #   - key: node-role.kubernetes.io/master
+  #     # operator: Exists
+  #     effect: NoSchedule
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
+    limits:
+      cpu: 500m
+      memory: 500Mi
+
+  # # restore a Postgres DB with point-in-time-recovery
+  # # with a non-empty timestamp, clone from an S3 bucket using the latest backup before the timestamp
+  # # with an empty/absent timestamp, clone from an existing alive cluster using pg_basebackup
+  # clone:
+  #   uid: "efd12e58-5786-11e8-b5a7-06148230260c"
+  #   cluster: "acid-minimal-cluster"
+  #   timestamp: "2017-12-19T12:40:33+01:00"  # timezone required (offset relative to UTC, see RFC 3339 section 5.6)
+  #   s3_wal_path: "s3://custom/path/to/bucket"
+
+  # run periodic backups with k8s cron jobs
+  enableLogicalBackup: true
+  logicalBackupSchedule: "30 02 * * *"
+
+  # initContainers:
+  #   - name: date
+  #     image: busybox
+  #     command: [ "/bin/date" ]
+  sidecars:
+    - name: exporter
+      image: wrouesnel/postgres_exporter:v0.8.0
+      ports:
+        - name: exporter
+          containerPort: 9187
+          protocol: TCP
+      resources:
+        requests:
+          cpu: 50m
+          memory: 200M
+      env:
+        - name: "DATA_SOURCE_URI"
+          value: "localhost/postgres?sslmode=disable"
+        - name: "DATA_SOURCE_USER"
+          value: "$(POSTGRES_USER)"
+        - name: "DATA_SOURCE_PASS"
+          value: "$(POSTGRES_PASSWORD)"
+
+  # Custom TLS certificate. Disabled unless tls.secretName has a value.
+  tls:
+    secretName: "postgres-tls" # should correspond to a Kubernetes Secret resource to load
+    # certificateFile: "tls.crt"
+    # privateKeyFile: "tls.key"
+    # caFile: ""  # optionally configure Postgres with a CA certificate
+    # caSecretName: "" # optionally the ca.crt can come from this secret instead.
+    # # file names can be also defined with absolute path, and will no longer be relative
+    # # to the "/tls/" path where the secret is being mounted by default, and "/tlsca/"
+    # # where the caSecret is mounted by default.
+    # # When TLS is enabled, also set spiloFSGroup parameter above to the relevant value.
+    # # if unknown, set it to 103 which is the usual value in the default spilo images.
+    # # In Openshift, there is no need to set spiloFSGroup/spilo_fsgroup.

@@ -1,0 +1,17 @@
+---
+# dedicated service that selects all the postgres cluster pods,
+# so that you can scrape metrics from all pods in the postgres cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: <cluster-name>-exporter
+  labels:
+    app: postgres-exporter
+spec:
+  ports:
+    - name: exporter
+      port: 9187
+      targetPort: exporter
+  selector:
+    application: spilo
+    cluster-name: <cluster-name>
