@@ -13,9 +13,9 @@ spec:
     - match: Host(`pgui.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
-      # middlewares:
-      #   - name: rfc1918
-      #   # - name: basicauth
+      middlewares:
+        - name: rfc1918
+        - name: basicauth
       services:
         - name: postgres-operator-ui
           namespace: postgres
