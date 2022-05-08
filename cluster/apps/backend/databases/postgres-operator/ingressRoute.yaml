@@ -1,0 +1,25 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: route-postgres-ui
+  namespace: networking
+  # namespace: cockroach-operator-system
+spec:
+  entryPoints:
+    # - web
+    - websecure
+  routes:
+    - match: Host(`pgui.${SECRET_DOMAIN}`)
+      kind: Rule
+      # Enable auth middleware
+      # middlewares:
+      #   - name: rfc1918
+      #   # - name: basicauth
+      services:
+        - name: postgres-operator-ui
+          namespace: postgres
+          port: 8081
+  tls:
+    secretName: "${SECRET_DOMAIN/./-}-tls"
+    # secretName: '${SECRET_DOMAIN/./-}-stage-tls'
