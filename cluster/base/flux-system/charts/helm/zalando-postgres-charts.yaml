@@ -6,8 +6,8 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  # url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator
-  url: https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator/
+  url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator
+  # url: https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator/
   timeout: 3m
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
@@ -17,6 +17,6 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  # url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator-ui
-  url: https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator-ui/
+  url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator-ui
+  # url: https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator-ui/
   timeout: 3m
