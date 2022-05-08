@@ -24,6 +24,12 @@ which define databases and associated users, permissions, configuration, etc.
   kubectl get pods -A -o name | grep postgres-0 | xargs -I{} kubectl exec {} -- patronictl list
   ```
 
+- delete clsuter
+
+  ```sh
+  kubectl delete postgres <cluster-name> -n <namespace>
+  ```
+
 - cannot re-create DB cluster:
 
   ```sh

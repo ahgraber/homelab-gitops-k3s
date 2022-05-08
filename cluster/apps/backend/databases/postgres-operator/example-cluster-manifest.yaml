@@ -16,12 +16,16 @@ spec:
   # If the config option `enable_cross_namespace_secret` is enabled, use the form {namespace}.{username}
   # and the operator will create the K8s secret in that namespace
   users:
-    zalando:
+    # zalando: # example with 'superuser' and 'createdb' roles
+    #   - superuser
+    #   - createdb
+    postgres: # "standard" bitnami superuser
       - superuser
       - createdb
   # [optional] map {databasename: users[]}
   databases:
-    foo: zalando
+    # foo: zalando # example
+    postgres: postgres # create 'postgres' db and grant 'postgres' user admin
   # # specify db to create with pre-defined owner, reader and writer roles for each individual database
   # # and, optionally, for each database schema
   # # https://github.com/zalando/postgres-operator/blob/master/docs/user.md#prepared-databases-with-roles-and-default-privileges
