@@ -12,7 +12,7 @@ spec:
       version: 1.8.0
       sourceRef:
         kind: HelmRepository
-        name: zalando-postgres-charts
+        name: zalando-postgres-operator-ui
         namespace: flux-system
       interval: 5m
   # https://github.com/zalando/postgres-operator/blob/master/charts/postgres-operator-ui/values.yaml
