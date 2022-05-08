@@ -52,11 +52,11 @@ spec:
           secretKeyRef:
             name: postgres-podenv-secret
             key: WALE_S3_ENDPOINT
-      - name: AWS_DEFAULT_REGION
-        valueFrom:
-          secretKeyRef:
-            name: postgres-podenv-secret
-            key: AWS_DEFAULT_REGION
+      # - name: AWS_DEFAULT_REGION
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: postgres-podenv-secret
+      #       key: AWS_REGION
       - name: SPILO_S3_BACKUP_BUCKET
         value: ""
       - name: SPILO_S3_BACKUP_PREFIX
