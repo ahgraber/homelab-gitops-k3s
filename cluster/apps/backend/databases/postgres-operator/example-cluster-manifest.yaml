@@ -4,9 +4,9 @@ kind: postgresql
 metadata:
   name: example-postgres # {TEAM}-{NAME}; {TEAM} must match spec.teamId
   namespace: postgres
-#  labels:
-#    application: test-app
-#    environment: demo
+  # labels:
+  #   application: example
+  #   # environment: demo
 spec:
   ### https://github.com/zalando/postgres-operator/blob/master/docs/reference/cluster_manifest.md
   ### https://github.com/zalando/postgres-operator/blob/master/manifests/complete-postgres-manifest.yaml

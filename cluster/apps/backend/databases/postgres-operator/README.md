@@ -34,6 +34,8 @@ which define databases and associated users, permissions, configuration, etc.
 
   ```sh
   kubectl delete poddisruptionbudgets postgres-<chart name>-zalando-postgres-cluster-postgres-pdb
+  # may also leave behind service, endpoint, and/or pooler deployment
+  # ref: https://github.com/zalando/postgres-operator/issues/1751
   ```
 
 - apply backup:

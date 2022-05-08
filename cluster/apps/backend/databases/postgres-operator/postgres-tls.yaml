@@ -6,11 +6,11 @@ metadata:
   namespace: postgres
 spec:
   secretName: "postgres-tls"
-  # secretTemplate:
-  #   annotations:
-  #     # kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
-  #     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-  #     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
+  secretTemplate:
+    annotations:
+      # kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
   issuerRef:
     name: selfsigned-ca
     kind: ClusterIssuer
