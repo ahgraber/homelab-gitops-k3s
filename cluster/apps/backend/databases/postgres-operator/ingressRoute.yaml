@@ -19,7 +19,7 @@ spec:
       services:
         - name: postgres-operator-ui
           namespace: postgres
-          port: 8081
+          port: 80
   tls:
     secretName: "${SECRET_DOMAIN/./-}-tls"
     # secretName: '${SECRET_DOMAIN/./-}-stage-tls'
