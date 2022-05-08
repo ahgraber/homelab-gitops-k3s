@@ -2,7 +2,7 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  name: acid-test-cluster
+  name: example-postgres # {TEAM}-{NAME}; {TEAM} must match spec.teamId
   namespace: postgres
 #  labels:
 #    application: test-app
@@ -10,7 +10,7 @@ metadata:
 spec:
   ### https://github.com/zalando/postgres-operator/blob/master/docs/reference/cluster_manifest.md
   ### https://github.com/zalando/postgres-operator/blob/master/manifests/complete-postgres-manifest.yaml
-  teamId: "default"
+  teamId: "example"
   numberOfInstances: 2
   # [optional] map {Username: roles[SUPERUSER, REPLICATION, INHERIT, LOGIN, NOLOGIN, CREATEROLE, CREATEDB, BYPASSURL]}
   # If the config option `enable_cross_namespace_secret` is enabled, use the form {namespace}.{username}
@@ -57,17 +57,21 @@ spec:
 
   env:
     - name: BACKUP_NUM_TO_RETAIN
-      value: 10
+      value: "10"
     - name: WAL_S3_BUCKET
-      value: sample_postgres
+      value: example_postgres
     # - name: AWS_REGION
     #   value: "us-east" # This value is ONLY used for the wal-g S3 streaming
-    - name: AWS_ENDPOINT
-      value: "https://truenas.${SECRET_DOMAIN}:9001"
+    # - name: AWS_ENDPOINT
+    #   value: "https://truenas.${SECRET_DOMAIN}:9001"
 
   volume:
     size: 1Gi
-    storageClass: truenas-csi-iscsi
+    storageClass: csi-truenas-iscsi
+    selector:
+      matchLabels:
+        # match Name
+        cluster-name: example-postgres
 
   enableShmVolume: true
   # spiloRunAsUser: 101

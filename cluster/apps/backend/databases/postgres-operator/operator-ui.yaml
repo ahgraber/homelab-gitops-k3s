@@ -32,27 +32,35 @@ spec:
     # UI specific env variables can be found here: https://github.com/zalando/postgres-operator/blob/master/ui/operator_ui/main.py
     extraEnvs:
       # Exemple of settings to make snapshot view working in the ui when using AWS
-      - name: WALE_S3_ENDPOINT
-        value: https+path://s3.us-east-1.amazonaws.com:443
-      - name: SPILO_S3_BACKUP_PREFIX
-        value: spilo/
       - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
-            name: <postgres operator secret with AWS token>
+            name: postgres-podenv-secret
             key: AWS_ACCESS_KEY_ID
       - name: AWS_SECRET_ACCESS_KEY
         valueFrom:
           secretKeyRef:
-            name: <postgres operator secret with AWS token>
+            name: postgres-podenv-secret
             key: AWS_SECRET_ACCESS_KEY
+      - name: AWS_ENDPOINT
+        valueFrom:
+          secretKeyRef:
+            name: postgres-podenv-secret
+            key: AWS_ENDPOINT
+      - name: WALE_S3_ENDPOINT
+        valueFrom:
+          secretKeyRef:
+            name: postgres-podenv-secret
+            key: WALE_S3_ENDPOINT
       - name: AWS_DEFAULT_REGION
         valueFrom:
           secretKeyRef:
-            name: <postgres operator secret with AWS token>
+            name: postgres-podenv-secret
             key: AWS_DEFAULT_REGION
       - name: SPILO_S3_BACKUP_BUCKET
-        value: <s3 bucket used by the operator>
+        value: ""
+      - name: SPILO_S3_BACKUP_PREFIX
+        value: spilo/
 
     ingress:
       enabled: false
