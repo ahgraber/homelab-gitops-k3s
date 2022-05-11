@@ -48,7 +48,7 @@ spec:
       # postgres superuser name to be created by initdb
       super_username: postgres
       # postgres username used for replication between instances
-      replication_username: postgres
+      replication_username: pg_repl
       # roles to be granted to database owners
       additional_owner_roles:
         - cron_admin
@@ -64,7 +64,10 @@ spec:
     configKubernetes:
       # allow user secrets in other namespaces than the Postgres cluster
       # if enabled, specify the namespace in the form {namespace}.{username} when declaring username
-      enable_cross_namespace_secret: true
+      enable_cross_namespace_secret: false
+      # if`enable_cross_namespace_secret` enabled, 'username' contains the namespace: 'namespace.username'
+      secret_name_template: "{username}.{cluster}.credentials.zalando"
+
       # enables initContainers to run actions before Spilo is started
       enable_init_containers: true
       # toggles pod anti affinity on the Postgres pods
@@ -74,7 +77,8 @@ spec:
       # enables sidecar containers to run alongside Spilo in the same pod
       enable_sidecars: true
 
-      # # namespaced name of the secret containing infrastructure roles names and passwords
+      # infrastructure role is a role that should be present on every PostgreSQL cluster managed by the operator
+      # namespaced name of the secret containing infrastructure roles names and passwords
       # infrastructure_roles_secret_name: postgresql-infrastructure-roles
 
       # name of the Secret (in cluster namespace) with environment variables to populate on every pod
