@@ -6,7 +6,7 @@ resources:
   - baikal.yaml
   - hammond.yaml
   # - mariadb.yaml
-  - nextcloud.yaml
+  # - nextcloud.yaml
   # - postgresql.yaml
   # - security.yaml
   - vaultwarden.yaml
