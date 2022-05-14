@@ -1,0 +1,33 @@
+---
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: example-cluster
+  namespace: postgres
+spec:
+  image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
+  postgresVersion: 14
+  instances:
+    - dataVolumeClaimSpec:
+        storageClassName: csi-truenas-iscsi-retain
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
+        # # if need to pick up existing/retained PV
+        # volumeName: "pvc-aef7ee64-4495-4813-b896-8a67edc53e58"
+
+  backups:
+    pgbackrest:
+      image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
+      repos:
+        - name: repo1
+          volume:
+            volumeClaimSpec:
+              storageClassName: csi-truenas-iscsi-retain
+              accessModes:
+                - "ReadWriteOnce"
+              resources:
+                requests:
+                  storage: 1Gi

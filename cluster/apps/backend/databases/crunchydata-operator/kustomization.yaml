@@ -8,6 +8,7 @@ resources:
 
 configMapGenerator:
   - name: grafana-dashboards
+    namespace: monitoring
     behavior: merge
     files:
       - grafana_dashboards.yaml
