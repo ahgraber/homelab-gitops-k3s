@@ -9,11 +9,11 @@ spec:
   chart:
     spec:
       # renovate: registryUrl=https://github.com/CrunchyData/postgres-operator-examples/blob/main/helm/install/
-      chart: "."
+      chart: ./helm/install
       version: 0.3.0
       sourceRef:
         kind: GitRepository
-        name: crunchdata-pgo-charts-git
+        name: crunchdata-charts-git
         namespace: flux-system
       interval: 5m
   values:
