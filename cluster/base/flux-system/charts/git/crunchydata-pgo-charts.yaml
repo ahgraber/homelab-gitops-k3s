@@ -8,9 +8,9 @@ spec:
   interval: 10m
   url: https://github.com/CrunchyData/postgres-operator-examples
   ref:
-    branch: master
+    branch: main
   ignore: |
     # exclude all
     /*
     # include charts directory
-    !/helm/
+    !/helm/install/
