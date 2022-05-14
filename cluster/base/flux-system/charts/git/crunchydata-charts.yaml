@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
-  name: crunchdata-pgo-charts-git
+  name: crunchdata-charts-git
   namespace: flux-system
 spec:
   interval: 10m
@@ -13,21 +13,21 @@ spec:
     # exclude all
     /*
     # include charts directory
-    !/helm/install
+    !/helm/
 
----
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: GitRepository
-metadata:
-  name: crunchdata-cluster-charts-git
-  namespace: flux-system
-spec:
-  interval: 10m
-  url: https://github.com/CrunchyData/postgres-operator-examples
-  ref:
-    branch: main
-  ignore: |
-    # exclude all
-    /*
-    # include charts directory
-    !/helm/postgres
+# ---
+# apiVersion: source.toolkit.fluxcd.io/v1beta2
+# kind: GitRepository
+# metadata:
+#   name: crunchdata-cluster-charts-git
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   url: https://github.com/CrunchyData/postgres-operator-examples
+#   ref:
+#     branch: main
+#   ignore: |
+#     # exclude all
+#     /*
+#     # include charts directory
+#     !/helm/postgres
