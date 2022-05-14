@@ -1,0 +1,63 @@
+---
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: example-cluster
+  namespace: postgres
+spec:
+  image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
+  postgresVersion: 14
+  instances:
+    - dataVolumeClaimSpec:
+        storageClassName: csi-truenas-iscsi
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
+
+  # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backups/
+  # https://pgbackrest.org/configuration.html#section-repository/
+  backups:
+    pgbackrest:
+      image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
+      configuration:
+        - secret:
+            name: cluster-secret
+      global:
+        # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
+        repo1-path: /pgbackrest/postgres/example-cluster/repo1
+        repo1-s3-uri-style: path # for minio
+        repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
+        repo1-retention-full: 2
+        repo1-retention-history: 365
+      # define in secret
+      # repos:
+      #   - name: repo1
+      #     s3:
+      #       bucket: "<YOUR_AWS_S3_BUCKET_NAME>"
+      #       endpoint: "<YOUR_AWS_S3_ENDPOINT>"
+      #       region: "<YOUR_AWS_S3_REGION>"
+
+  # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/user-management/
+  users:
+    # define default "postgres" superuser to pick up on password secret
+    - name: postgres
+    # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
+    - name: pg_repl
+      databases:
+        - exampledb
+      # options: https://www.postgresql.org/docs/current/role-attributes.html
+      options: "REPLICATION"
+
+  # https://access.crunchydata.com/documentation/postgres-operator/v5/architecture/pgadmin4/
+  userInterface:
+    pgAdmin:
+      image: registry.developers.crunchydata.com/crunchydata/crunchy-pgadmin4:ubi8-4.30-0
+      dataVolumeClaimSpec:
+        storageClassName: csi-truenas-iscsi
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
