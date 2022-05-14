@@ -103,8 +103,33 @@ spec:
         #   node-publish-secret:
         #   controller-expand-secret:
 
+      - name: csi-truenas-iscsi-retain
+        defaultClass: false
+        reclaimPolicy: Retain # Delete, Retain
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          # for block-based storage can be ext3, ext4, xfs
+          fsType: xfs
+        mountOptions: []
+        # secrets:
+        #   provisioner-secret:
+        #   controller-publish-secret:
+        #   node-stage-secret:
+        #   node-publish-secret:
+        #   controller-expand-secret:
+
     volumeSnapshotClasses:
       - name: csi-truenas-iscsi
+        deletionPolicy: Retain # Delete, Retain
+        annotations:
+          velero.io/csi-volumesnapshot-class: "true"
+        labels:
+          velero.io/csi-volumesnapshot-class: "true"
+        # secrets:
+        #   snapshotter-secret:
+
+      - name: csi-truenas-iscsi-retain
         deletionPolicy: Retain # Delete, Retain
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
