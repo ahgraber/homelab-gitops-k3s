@@ -6,4 +6,4 @@ resources:
   # https://github.com/cockroachdb/cockroach-operator/issues/895
   # https://github.com/cockroachdb/cockroach-operator/issues/896
   - cockroachdb
-  - postgres-operator
+  - zalando-operator

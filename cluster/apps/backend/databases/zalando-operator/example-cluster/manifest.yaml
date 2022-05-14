@@ -71,11 +71,12 @@ spec:
 
   volume:
     size: 1Gi
-    storageClass: csi-truenas-iscsi
-    selector:
-      matchLabels:
-        # match Name
-        cluster-name: example-postgres
+    storageClass: "csi-truenas-iscsi"
+    # selector:
+    #   matchLabels:
+    #     application: spilo
+    #     cluster-name: example-postgres
+    #     team: example
 
   enableShmVolume: true
   # spiloRunAsUser: 101
