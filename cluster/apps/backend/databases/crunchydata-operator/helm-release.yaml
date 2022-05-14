@@ -13,7 +13,7 @@ spec:
       version: 0.3.0
       sourceRef:
         kind: GitRepository
-        name: crunchydata-charts-git
+        name: crunchdata-pgo-charts-git
         namespace: flux-system
       interval: 5m
   values:
