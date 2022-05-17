@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - manifest-db.yaml
   - secret-db-cluster.sops.yaml
-  - secret-db-user.sops.yaml
+  # - secret-db-user.sops.yaml

@@ -28,7 +28,7 @@ spec:
             name: vaultwarden-db-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
-        repo1-path: /pgbackrest/postgres/example-cluster/repo1
+        repo1-path: /pgbackrest/postgres/vaultwarden/repo1
         repo1-s3-uri-style: path # for minio
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: "2"
