@@ -1,0 +1,54 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vaultwarden-test
+  namespace: vaultwarden
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
+      chart: vaultwarden
+      version: 4.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-at-home-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      repository: ghcr.io/k8s-at-home/vaultwarden
+      tag: v1.24.0
+    env:
+      # Postgres database connection strings take the format
+      #`postgresql://user:password@host[:port]/database_name`,
+      # where `POSTGRES_HOST` on k8s has a FQDN like `service.namespace.svc.cluster.local`
+      # DATABASE_URL: ""
+      DATA_FOLDER: "config"
+      DOMAIN: https://vaultwarden-test.${SECRET_DOMAIN}
+      SIGNUPS_ALLOWED: "false"
+      SMTP_FROM_NAME: Vaultwarden
+      SMTP_FROM: "noreply@mail.${SECRET_DOMAIN}"
+      SMTP_HOST: in-v3.mailjet.com
+      SMTP_PORT: 587
+      SMTP_SSL: "true"
+      TZ: "America/New_York"
+      WEBSOCKET_ADDRESS: 0.0.0.0
+      WEBSOCKET_ENABLED: true
+      WEBSOCKET_PORT: 3012
+    envFrom:
+      - secretRef:
+          name: vaultwarden-secret
+    ingress:
+      main:
+        enabled: false
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: vaultwarden-config-test
+
+    postgresql:
+      # Use bitnami postgres?
+      enabled: false
