@@ -50,7 +50,7 @@ spec:
       databases:
         - vaultwarden
       # options: https://www.postgresql.org/docs/current/role-attributes.html
-      options: "LOGIN,CREATEDB"
+      options: "LOGIN CREATEDB"
     # create user "repl" with access to database "exampledb" and role attributes "replication"
     - name: repl
       databases:
