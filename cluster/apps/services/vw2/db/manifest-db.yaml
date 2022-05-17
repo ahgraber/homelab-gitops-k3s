@@ -34,10 +34,10 @@ spec:
         repo1-retention-full: "2"
         repo1-retention-history: "365"
       # defined in secret
-      # repos:
-      #   - name: repo1
-      #     s3:
-      #       bucket: "<YOUR_AWS_S3_BUCKET_NAME>"
+      repos:
+        - name: repo1
+          s3:
+      #       bucket: "postgres"
       #       endpoint: "<YOUR_AWS_S3_ENDPOINT>"
       #       region: "<YOUR_AWS_S3_REGION>"
 
