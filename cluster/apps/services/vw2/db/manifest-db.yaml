@@ -33,13 +33,12 @@ spec:
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: "2"
         repo1-retention-history: "365"
-      # defined in secret
       repos:
         - name: repo1
-          s3: {}
-      #       bucket: "postgres"
-      #       endpoint: "<YOUR_AWS_S3_ENDPOINT>"
-      #       region: "<YOUR_AWS_S3_REGION>"
+          s3:
+            bucket: "postgres"
+            endpoint: "https://truenas.${SECRET_DOMAIN}:9001/"
+            region: ""
 
   # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/user-management/
   # to set passwords, define in secret
