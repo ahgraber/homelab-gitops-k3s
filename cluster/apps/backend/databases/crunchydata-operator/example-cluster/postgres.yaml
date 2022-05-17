@@ -46,8 +46,8 @@ spec:
   users:
     # define default "postgres" superuser to pick up on password secret
     - name: postgres
-    # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
-    - name: pg_repl
+    # create user "repl" with access to database "exampledb" and role attributes "replication"
+    - name: repl
       databases:
         - exampledb
       # options: https://www.postgresql.org/docs/current/role-attributes.html
