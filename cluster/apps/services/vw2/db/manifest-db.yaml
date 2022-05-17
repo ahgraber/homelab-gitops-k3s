@@ -2,8 +2,8 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: example-cluster
-  namespace: postgres
+  name: vaultwarden-db
+  namespace: vaultwarden
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
   postgresVersion: 14
@@ -25,7 +25,7 @@ spec:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
       configuration:
         - secret:
-            name: cluster-secret
+            name: vaultwarden-db-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
         repo1-path: /pgbackrest/postgres/example-cluster/repo1
@@ -33,7 +33,7 @@ spec:
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: 2
         repo1-retention-history: 365
-      # define in secret
+      # defined in secret
       # repos:
       #   - name: repo1
       #     s3:
@@ -42,25 +42,31 @@ spec:
       #       region: "<YOUR_AWS_S3_REGION>"
 
   # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/user-management/
-  # to set passwords, define in secret (see postgres-user-secret.yaml)
+  # to set passwords, define in secret
   users:
     # define default "postgres" superuser to pick up on password secret
     - name: postgres
     # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
+    - name: vaultwarden
+      databases:
+        - vaultwarden
+      # options: https://www.postgresql.org/docs/current/role-attributes.html
+      options: "LOGIN,CREATEDB"
+    # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
     - name: pg_repl
       databases:
-        - exampledb
+        - vaultwarden
       # options: https://www.postgresql.org/docs/current/role-attributes.html
       options: "REPLICATION"
 
-  # https://access.crunchydata.com/documentation/postgres-operator/v5/architecture/pgadmin4/
-  userInterface:
-    pgAdmin:
-      image: registry.developers.crunchydata.com/crunchydata/crunchy-pgadmin4:ubi8-4.30-0
-      dataVolumeClaimSpec:
-        storageClassName: csi-truenas-iscsi
-        accessModes:
-          - "ReadWriteOnce"
-        resources:
-          requests:
-            storage: 1Gi
+  # # https://access.crunchydata.com/documentation/postgres-operator/v5/architecture/pgadmin4/
+  # userInterface:
+  #   pgAdmin:
+  #     image: registry.developers.crunchydata.com/crunchydata/crunchy-pgadmin4:ubi8-4.30-0
+  #     dataVolumeClaimSpec:
+  #       storageClassName: csi-truenas-iscsi
+  #       accessModes:
+  #         - "ReadWriteOnce"
+  #       resources:
+  #         requests:
+  #           storage: 1Gi
