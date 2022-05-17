@@ -36,7 +36,7 @@ spec:
       # defined in secret
       repos:
         - name: repo1
-          s3:
+          s3: {}
       #       bucket: "postgres"
       #       endpoint: "<YOUR_AWS_S3_ENDPOINT>"
       #       region: "<YOUR_AWS_S3_REGION>"
