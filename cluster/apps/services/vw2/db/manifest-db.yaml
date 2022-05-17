@@ -52,8 +52,8 @@ spec:
         - vaultwarden
       # options: https://www.postgresql.org/docs/current/role-attributes.html
       options: "LOGIN,CREATEDB"
-    # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
-    - name: pg_repl
+    # create user "repl" with access to database "exampledb" and role attributes "replication"
+    - name: repl
       databases:
         - vaultwarden
       # options: https://www.postgresql.org/docs/current/role-attributes.html
