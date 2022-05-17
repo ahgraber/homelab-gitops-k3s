@@ -25,6 +25,8 @@ When you create a Postgres cluster with PGO and do not specify any additional us
   - `uri`: A PostgreSQL connection URI that provides all the information for logging into the Postgres database.
   - `jdbc-uri`: A PostgreSQL JDBC connection URI that provides all the information for logging into the Postgres database via the JDBC driver.
 
+> Per [github issue](https://github.com/CrunchyData/postgres-operator/issues/2861) we cannot set the password _at time of cluster creation_; the user secret must be applied _after_ the cluster has been initialized
+
 ## References
 
 - [examples](https://github.com/CrunchyData/postgres-operator-examples)

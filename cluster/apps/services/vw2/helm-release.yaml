@@ -24,22 +24,26 @@ spec:
       # Postgres database connection strings take the format
       #`postgresql://user:password@host[:port]/database_name`,
       # where `POSTGRES_HOST` on k8s has a FQDN like `service.namespace.svc.cluster.local`
-      # DATABASE_URL: ""
-      DATA_FOLDER: "config"
-      DOMAIN: https://vaultwarden-test.${SECRET_DOMAIN}
-      SIGNUPS_ALLOWED: "false"
-      SMTP_FROM_NAME: Vaultwarden
-      SMTP_FROM: "noreply@mail.${SECRET_DOMAIN}"
-      SMTP_HOST: in-v3.mailjet.com
-      SMTP_PORT: 587
-      SMTP_SSL: "true"
-      TZ: "America/New_York"
-      WEBSOCKET_ADDRESS: 0.0.0.0
-      WEBSOCKET_ENABLED: true
-      WEBSOCKET_PORT: 3012
+      - name: DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: pgo-cluster-pguser-vaultwarden
+            key: uri
+      # DATA_FOLDER: "config"
+      # DOMAIN: https://vaultwarden-test.${SECRET_DOMAIN}
+      # SIGNUPS_ALLOWED: "false"
+      # SMTP_FROM_NAME: Vaultwarden
+      # SMTP_FROM: "noreply@mail.${SECRET_DOMAIN}"
+      # SMTP_HOST: in-v3.mailjet.com
+      # SMTP_PORT: 587
+      # SMTP_SSL: "true"
+      # TZ: "America/New_York"
+      # WEBSOCKET_ADDRESS: 0.0.0.0
+      # WEBSOCKET_ENABLED: true
+      # WEBSOCKET_PORT: 3012
     envFrom:
       - secretRef:
-          name: vaultwarden-secret
+          name: vw2-secret
     ingress:
       main:
         enabled: false
@@ -47,7 +51,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: vaultwarden-config-test
+        existingClaim: vw2-config
 
     postgresql:
       # Use bitnami postgres?
