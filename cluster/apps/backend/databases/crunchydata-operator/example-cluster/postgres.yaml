@@ -49,7 +49,7 @@ spec:
     - name: repl
       databases:
         - exampledb
-      # options: https://www.postgresql.org/docs/current/role-attributes.html
+      # space-delimited options: https://www.postgresql.org/docs/current/role-attributes.html
       options: "REPLICATION"
 
   # https://access.crunchydata.com/documentation/postgres-operator/v5/architecture/pgadmin4/
