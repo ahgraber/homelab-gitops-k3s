@@ -6,7 +6,7 @@ metadata:
   namespace: vaultwarden
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
-  postgresVersion: "14"
+  postgresVersion: 14
   instances:
     - dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
