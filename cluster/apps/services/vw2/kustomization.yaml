@@ -6,4 +6,4 @@ resources:
   - helm-release.yaml
   # - ingressRoute.yaml
   - pvc.yaml
-  - secret-vaultwarden.sops.yaml
+  # - secret-vaultwarden.sops.yaml # use existing
