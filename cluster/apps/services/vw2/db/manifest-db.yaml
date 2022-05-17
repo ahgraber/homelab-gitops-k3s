@@ -6,7 +6,7 @@ metadata:
   namespace: vaultwarden
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
-  postgresVersion: 14
+  postgresVersion: "14"
   instances:
     - dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
@@ -31,8 +31,8 @@ spec:
         repo1-path: /pgbackrest/postgres/example-cluster/repo1
         repo1-s3-uri-style: path # for minio
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
-        repo1-retention-full: 2
-        repo1-retention-history: 365
+        repo1-retention-full: "2"
+        repo1-retention-history: "365"
       # defined in secret
       # repos:
       #   - name: repo1
