@@ -45,6 +45,8 @@ spec:
                   name: vaultwarden-db-pguser-vaultwarden
                   key: uri
           envFrom:
+            - configMapRef:
+                name: vaultwarden-env
             - secretRef:
                 name: vw2-secret
 
