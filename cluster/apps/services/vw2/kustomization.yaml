@@ -7,4 +7,4 @@ resources:
   # - ingressRoute.yaml
   - deployment.yaml
   - pvc.yaml
-  # - secret-vaultwarden.sops.yaml # use existing
+  - secret-vw2.yaml
