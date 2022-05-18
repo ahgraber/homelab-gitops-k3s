@@ -92,7 +92,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vaultwarden
+  name: vw2
+  namespace: vaultwarden
   labels:
     app.kubernetes.io/name: vaultwarden
 spec:
