@@ -21,14 +21,6 @@ spec:
       repository: ghcr.io/k8s-at-home/vaultwarden
       tag: v1.24.0
     env:
-      # Postgres database connection strings take the format
-      #`postgresql://user:password@host[:port]/database_name`,
-      # where `POSTGRES_HOST` on k8s has a FQDN like `service.namespace.svc.cluster.local`
-      - name: DATABASE_URL
-        valueFrom:
-          secretKeyRef:
-            name: vaultwarden-db-pguser-vaultwarden
-            key: uri
       # DATA_FOLDER: "config"
       # DOMAIN: https://vaultwarden-test.${SECRET_DOMAIN}
       # SIGNUPS_ALLOWED: "false"
@@ -41,9 +33,18 @@ spec:
       # WEBSOCKET_ADDRESS: 0.0.0.0
       # WEBSOCKET_ENABLED: true
       # WEBSOCKET_PORT: 3012
+      # # Postgres database connection strings take the format
+      # # `postgresql://user:password@host[:port]/database_name`,
+      # # where `POSTGRES_HOST` on k8s has a FQDN like `service.namespace.svc.cluster.local`
+      - name: DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: vaultwarden-db-pguser-vaultwarden
+            key: uri
     envFrom:
       - secretRef:
           name: vw2-secret
+
     ingress:
       main:
         enabled: false
