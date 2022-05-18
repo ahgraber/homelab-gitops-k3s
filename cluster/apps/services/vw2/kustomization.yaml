@@ -7,4 +7,5 @@ resources:
   # - ingressRoute.yaml
   # - deployment.yaml
   - pvc.yaml
+  - configmap-env.yaml
   - secret-vw2.sops.yaml
