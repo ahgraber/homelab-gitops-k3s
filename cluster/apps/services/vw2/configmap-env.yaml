@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+metadata:
+  name: vaultwarden-env
+  namespace: vaultwarden
+kind: ConfigMap
+data:
+  # other config
+  DATA_FOLDER: "config"
+  DOMAIN: https://vaultwarden-test.${SECRET_DOMAIN}
+  SIGNUPS_ALLOWED: "false"
+  SMTP_FROM_NAME: Vaultwarden
+  SMTP_FROM: "noreply@mail.${SECRET_DOMAIN}"
+  SMTP_HOST: in-v3.mailjet.com
+  SMTP_PORT: 587
+  SMTP_SSL: "true"
+  TZ: "America/New_York"
+  WEBSOCKET_ADDRESS: 0.0.0.0
+  WEBSOCKET_ENABLED: true
+  WEBSOCKET_PORT: 3012
