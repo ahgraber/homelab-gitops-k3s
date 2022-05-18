@@ -39,6 +39,13 @@ spec:
             bucket: "<YOUR_AWS_S3_BUCKET_NAME>"
             endpoint: "<YOUR_AWS_S3_ENDPOINT>"
             region: "<YOUR_AWS_S3_REGION>"
+      # allow manual backup by setting annotation
+      # kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
+      #   postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
+      manual:
+        repoName: repo1
+        options:
+          - --type=full
 
   # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/user-management/
   # to set passwords, define in secret (see postgres-user-secret.yaml)
