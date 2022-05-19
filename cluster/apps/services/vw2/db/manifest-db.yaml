@@ -39,7 +39,7 @@ spec:
         repo1-retention-full: "2"
         repo1-retention-history: "365"
         repo1-s3-uri-style: path # for minio
-        # repo1-storage-verify-tls: "n" # [y, n]
+        repo1-storage-verify-tls: "n" # [y, n]
       repos:
         - name: repo1
           s3:
