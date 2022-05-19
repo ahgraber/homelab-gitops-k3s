@@ -39,19 +39,19 @@ spec:
         repo1-retention-full: "2"
         repo1-retention-history: "365"
         repo1-s3-uri-style: path # for minio
-        repo1-storage-verify-tls: "n" # [y, n]
+        # repo1-storage-verify-tls: "n" # [y, n]
       repos:
         - name: repo1
           s3:
             bucket: "postgres"
-            # endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
-            endpoint: "10.2.1.1:9000"
+            endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
+            # endpoint: "10.2.1.1:9000"
             region: "us-east"
           schedules:
-            # take a full backup every 15 min (testing)
-            full: "0/15 * * * *"
-            # # take incremental backup every 4 hours
-            # incremental: "0 */4 * * *"
+            # take a full backup daily at 1am
+            full: "0 1 * * *"
+            # take incremental backup every 4 hours
+            incremental: "0 */4 * * *"
 
             # # take a full backup weekly on Sunday at 1am
             # full: "0 1 * * 0"
