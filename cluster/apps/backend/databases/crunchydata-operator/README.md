@@ -27,6 +27,19 @@ When you create a Postgres cluster with PGO and do not specify any additional us
 
 > Per [github issue](https://github.com/CrunchyData/postgres-operator/issues/2861) we cannot set the password _at time of cluster creation_; the user secret must be applied _after_ the cluster has been initialized
 
+## Backups
+
+- [backups](https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backups/)
+- [backup mgmt](https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backup-management/)
+
+Backups happen automatically to configured backup repos.
+Backups can be manually configured, and, if configured, triggered:
+
+```sh
+kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
+  postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
+```
+
 ## References
 
 - [examples](https://github.com/CrunchyData/postgres-operator-examples)
