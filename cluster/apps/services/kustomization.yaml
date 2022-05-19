@@ -8,7 +8,6 @@ resources:
   - httpbin
   # - mealie  # wait for v1 (https://github.com/hay-kot/mealie/discussions/645)
   # - nextcloud
-  - pgadmin
   - vaultwarden
-  - vw2
+  # - vw2
   # - wallabag

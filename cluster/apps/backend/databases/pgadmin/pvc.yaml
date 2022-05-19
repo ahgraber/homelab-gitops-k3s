@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: pgadmin-config
-  namespace: services
+  namespace: postgres
   labels:
     app.kubernetes.io/instance: pgadmin
     app.kubernetes.io/name: pgadmin
