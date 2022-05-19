@@ -45,6 +45,14 @@ spec:
             bucket: "<YOUR_AWS_S3_BUCKET_NAME>"
             endpoint: "<YOUR_AWS_S3_ENDPOINT>"
             region: "<YOUR_AWS_S3_REGION>"
+          schedules:
+            # take a full backup weekly on Sunday at 1am
+            full: "0 1 * * 0"
+            # take differential backups daily at 1am on every day except Sunday.
+            differential: "0 1 * * 1-6"
+            # take incremental backup every 4 hours
+            incremental: "0 */4 * * *"
+
       # allow manual backup by setting annotation
       # kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
       #   postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"

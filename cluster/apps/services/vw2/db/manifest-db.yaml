@@ -50,7 +50,7 @@ spec:
             # take a full backup daily at 1am
             full: "0 1 * * *"
             # take incremental backup every 4 hours
-            incremental: " */4 * * *"
+            incremental: "0 */4 * * *"
 
             # # take a full backup weekly on Sunday at 1am
             # full: "0 1 * * 0"
