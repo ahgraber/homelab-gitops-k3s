@@ -34,11 +34,12 @@ spec:
             name: cluster-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
-        repo1-path: /pgbackrest/postgres/example-cluster/repo1
-        repo1-s3-uri-style: path # for minio
+        repo1-path: /pgbackrest/vaultwarden/vaultwarden-db/repo1
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
-        repo1-retention-full: 2
-        repo1-retention-history: 365
+        repo1-retention-full: "2"
+        repo1-retention-history: "365"
+        repo1-s3-uri-style: path # for minio
+        # repo1-storage-verify-tls: "n" # [y, n]
       repos:
         - name: repo1
           s3:
