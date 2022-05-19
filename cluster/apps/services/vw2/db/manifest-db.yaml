@@ -8,6 +8,12 @@ spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
   postgresVersion: 14
   instances:
+    # - name: instance1
+    #   replicas: 2
+    #   resources:
+    #     limits:
+    #       cpu: 2.0
+    #       memory: 4Gi
     - dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
         accessModes:
@@ -44,7 +50,7 @@ spec:
             # take a full backup daily at 1am
             full: "0 1 * * *"
             # take incremental backup every 4 hours
-            incremental: "0 */4 * * *"
+            incremental: " */4 * * *"
 
             # # take a full backup weekly on Sunday at 1am
             # full: "0 1 * * 0"
