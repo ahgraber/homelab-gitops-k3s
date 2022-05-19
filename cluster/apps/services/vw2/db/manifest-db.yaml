@@ -44,7 +44,8 @@ spec:
         - name: repo1
           s3:
             bucket: "postgres"
-            endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
+            # endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
+            endpoint: "10.2.1.1:9000"
             region: "us-east"
           schedules:
             # take a full backup every 15 min (testing)
