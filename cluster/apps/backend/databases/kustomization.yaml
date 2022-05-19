@@ -5,6 +5,7 @@ resources:
   # waiting on responses to github issues
   # https://github.com/cockroachdb/cockroach-operator/issues/895
   # https://github.com/cockroachdb/cockroach-operator/issues/896
-  - cockroachdb
+  # - cockroachdb
   - crunchydata-operator
-  - zalando-operator
+  - pgadmin
+  # - zalando-operator
