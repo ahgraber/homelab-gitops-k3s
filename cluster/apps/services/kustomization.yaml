@@ -10,5 +10,5 @@ resources:
   # - nextcloud
   - pgadmin
   - vaultwarden
-  - vw2
+  # - vw2
   # - wallabag
