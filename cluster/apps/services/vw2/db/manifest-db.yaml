@@ -28,17 +28,26 @@ spec:
             name: vaultwarden-db-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
-        repo1-path: /pgbackrest/postgres/vaultwarden/repo1
-        repo1-s3-uri-style: path # for minio
+        repo1-path: /pgbackrest/vaultwarden/vaultwarden-db/repo1
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: "2"
         repo1-retention-history: "365"
+        repo1-s3-uri-style: path # for minio
+        # repo1-storage-verify-tls: "n" # [y, n]
       repos:
         - name: repo1
           s3:
             bucket: "postgres"
-            endpoint: "https://truenas.${SECRET_DOMAIN}:9001/"
-            region: ""
+            endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
+            region: "us-east"
+          schedules:
+            # take a full backup weekly on Sunday at 1am
+            full: "0 1 * * 0"
+            # # take differential backups daily at 1am on every day except Sunday.
+            # differential: "0 1 * * 1-6"
+            # # take incremental backup every 4 hours
+            # incremental: "0 */4 * * *"
+
       # allow manual backup by setting annotation
       # kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
       #   postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
