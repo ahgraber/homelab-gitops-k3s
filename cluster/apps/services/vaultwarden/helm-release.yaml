@@ -21,6 +21,11 @@ spec:
       repository: ghcr.io/k8s-at-home/vaultwarden
       tag: v1.24.0
     env:
+      DATABASE_URL:
+        valueFrom:
+          secretKeyRef:
+            name: vaultwarden-db-pguser-vaultwarden
+            key: uri
       DATA_FOLDER: "config"
       DOMAIN: https://vaultwarden.${SECRET_DOMAIN}
       SIGNUPS_ALLOWED: "false"
@@ -36,6 +41,7 @@ spec:
     envFrom:
       - secretRef:
           name: vaultwarden-secret
+
     ingress:
       main:
         enabled: false
@@ -44,25 +50,10 @@ spec:
       config:
         enabled: true
         existingClaim: vaultwarden-config
-    podAnnotations:
-      backup.velero.io/backup-volumes: config
-      pre.hook.backup.velero.io/container: fsfreeze
-      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
-      post.hook.backup.velero.io/container: fsfreeze
-      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
-      secret.reloader.stakater.com/reload: "vaultwarden"
+
     resources:
       requests:
         memory: 100Mi
         cpu: 100m
       limits:
         memory: 2000Mi
-    additionalContainers:
-      fsfreeze:
-        name: fsfreeze
-        image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        volumeMounts:
-          - name: config
-            mountPath: /config
-        securityContext:
-          privileged: true
