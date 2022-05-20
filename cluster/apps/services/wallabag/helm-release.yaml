@@ -23,6 +23,23 @@ spec:
       # see https://doc.wallabag.org/en/admin/upgrade.html
       tag: 2.4.3
 
+    initContainers:
+      - name: wait-database
+        image: busybox:1.35.0
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+        args:
+          - -c
+          - >-
+            until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
+        env:
+          - name: POSTGRES_HOST
+            value: wallabag-db-primary
+        # envFrom:
+        #   - secretRef:
+        #       name: wallabag-secret
+
     env:
       TZ: "America/New_York"
       SYMFONY__ENV__DOMAIN_NAME: https://wallabag.${SECRET_DOMAIN}

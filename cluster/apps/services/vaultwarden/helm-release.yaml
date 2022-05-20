@@ -20,6 +20,22 @@ spec:
     image:
       repository: ghcr.io/k8s-at-home/vaultwarden
       tag: v1.24.0
+    initContainers:
+      - name: wait-database
+        image: busybox:1.35.0
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+        args:
+          - -c
+          - >-
+            until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
+        env:
+          - name: POSTGRES_HOST
+            value: vaultwarden-db-primary
+        # envFrom:
+        #   - secretRef:
+        #       name: vaultwarden-secret
     env:
       DATABASE_URL:
         valueFrom:
