@@ -81,15 +81,15 @@ spec:
         enabled: true
         existingClaim: wallabag-images
         # mountPath: /var/www/wallabag/web/assets/images
-      cache:
-        ## Note that if you make cache persistent, you may need to clear it (with `bin/console cache:clear --env=prod`)
-        ## to apply any changes you make to wallabag's parameters.
-        enabled: true
-        existingClaim: wallabag-cache
-        # mountPath: /var/www/wallabag/var/cache
+      # cache:
+      #   ## Note that if you make cache persistent, you may need to clear it (with `bin/console cache:clear --env=prod`)
+      #   ## to apply any changes you make to wallabag's parameters.
+      #   enabled: true
+      #   existingClaim: wallabag-cache
+      #   # mountPath: /var/www/wallabag/var/cache
 
     # podAnnotations:
-    #   backup.velero.io/backup-volumes: baikal-data
+    #   backup.velero.io/backup-volumes: images
 
     resources:
       requests:
@@ -97,15 +97,6 @@ spec:
         cpu: 100m
       limits:
         memory: 2000Mi
-    # additionalContainers:
-    #   fsfreeze:
-    #     name: fsfreeze
-    #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-    #     volumeMounts:
-    #       - name: config
-    #         mountPath: /config
-    #     securityContext:
-    #       privileged: true
 
     securityContext:
       runAsUser: 0
@@ -125,7 +116,14 @@ spec:
       enabled: false
 
     redis:
-      enabled: false
+      enabled: true
+      # clusterDomain: ${CLUSTER_DOMAIN}
+      architecture: standalone
+      replica:
+        replicaCount: 0
+      persistence:
+        enabled: false
+
       # auth:
       #   enabled: true
       #   existingSecret: wallabag-redis-secret
