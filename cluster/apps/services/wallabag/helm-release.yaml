@@ -19,20 +19,58 @@ spec:
   values:
     image:
       repository: wallabag/wallabag
+      # Upgrading the wallabag version generally requires a migration.
+      # see https://doc.wallabag.org/en/admin/upgrade.html
       tag: 2.4.3
+
     env:
       TZ: "America/New_York"
+      SYMFONY__ENV__DOMAIN_NAME: https://wallabag.${SECRET_DOMAIN}
+      # SYMFONY__ENV__SENTRY_DSN:
+      SYMFONY__ENV__SERVER_NAME: wallabag
+      SYMFONY__ENV__LOCALE: en
+      SYMFONY__ENV__FOSUSER_REGISTRATION: "false"
+      SYMFONY__ENV__FOSUSER_CONFIRMATION: "true"
       SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
-      SYMFONY__ENV__DATABASE_HOST: wallabag-postgresql
-      SYMFONY__ENV__DATABASE_NAME: wallabag
-      SYMFONY__ENV__DATABASE_USER: wallabag
-      SYMFONY__ENV__DATABASE_PASSWORD: testing123
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin1234
+      SYMFONY__ENV__DATABASE_HOST:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-wallabag
+            key: host
+      SYMFONY__ENV__DATABASE_PORT:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-wallabag
+            key: port
+      SYMFONY__ENV__DATABASE_NAME:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-wallabag
+            key: dbname
+      SYMFONY__ENV__DATABASE_USER:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-wallabag
+            key: user
+      SYMFONY__ENV__DATABASE_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-wallabag
+            key: password
+      POSTGRES_USER:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-postgres
+            key: user
+      POSTGRES_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: wallabag-db-pguser-postgres
+            key: password
       POPULATE_DATABASE: true
-    # envFrom:
-    #   - secretRef:
-    #       name: wallabag-secret
+    envFrom:
+      - secretRef:
+          name: wallabag-secret
 
     ingress:
       main:
@@ -46,9 +84,12 @@ spec:
       cache:
         ## Note that if you make cache persistent, you may need to clear it (with `bin/console cache:clear --env=prod`)
         ## to apply any changes you make to wallabag's parameters.
-        enabled: false
-        # existingClaim: wallabag-cache
+        enabled: true
+        existingClaim: wallabag-cache
         # mountPath: /var/www/wallabag/var/cache
+
+    # podAnnotations:
+    #   backup.velero.io/backup-volumes: baikal-data
 
     resources:
       requests:
@@ -81,50 +122,14 @@ spec:
 
     # use bundled dbs?
     postgresql:
-      enabled: true
-      # global:
-      #   postgresql:
-      #     auth:
-      #       database: wallabag
-      #       username: wallabag
-      #       existingSecret: wallabag-db-secret
-      auth:
-        database: wallabag
-        username: wallabag
-        password: testing123
-        postgresPassword: admin1234
-        # existingSecret: wallabag-db-secret
-
-      # persistence:
-      #   enabled: true
-      #   existingClaim: wallabag-db
-
-      primary:
-        persistence:
-          enabled: true
-          existingClaim: wallabag-db
-
-        # podAnnotations:
-        #   backup.velero.io/backup-volumes: data
-        #   pre.hook.backup.velero.io/container: fsfreeze
-        #   pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
-        #   post.hook.backup.velero.io/container: fsfreeze
-        #   post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
-        # sidecars:
-        #   - name: fsfreeze
-        #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        #     volumeMounts:
-        #       - name: data
-        #         mountPath: /data
-        #     securityContext:
-        #       privileged: true
+      enabled: false
 
     redis:
       enabled: false
       # auth:
       #   enabled: true
       #   existingSecret: wallabag-redis-secret
-      #   existingSecretPasswordKey: password
+      #   existingSecretPasswordKey: SYMFONY__ENV__REDIS_PASSWORD
       # # clusterDomain: ${SECRET_DOMAIN}
       # architecture: standalone
       # master:
