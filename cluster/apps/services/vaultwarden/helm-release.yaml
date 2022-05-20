@@ -21,7 +21,7 @@ spec:
       repository: ghcr.io/k8s-at-home/vaultwarden
       tag: v1.24.0
     initContainers:
-      - name: wait-database
+      wait-database:
         image: busybox:1.35.0
         imagePullPolicy: IfNotPresent
         command:
