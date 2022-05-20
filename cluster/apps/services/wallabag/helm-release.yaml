@@ -31,6 +31,9 @@ spec:
       SYMFONY__ENV__LOCALE: en
       SYMFONY__ENV__FOSUSER_REGISTRATION: "false"
       SYMFONY__ENV__FOSUSER_CONFIRMATION: "true"
+      SYMFONY__ENV__REDIS_HOST: wallabag-redis-master.services.svc.cluster.local
+      SYMFONY__ENV__REDIS_PORT: "6379"
+      # postgres stuff
       SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
       SYMFONY__ENV__DATABASE_HOST:
         valueFrom:
@@ -117,22 +120,17 @@ spec:
 
     redis:
       enabled: true
-      # clusterDomain: ${CLUSTER_DOMAIN}
       architecture: standalone
+      auth:
+        enabled: true
+        existingSecret: wallabag-secret
+        existingSecretPasswordKey: SYMFONY__ENV__REDIS_PASSWORD
+      master:
+        persistence:
+          enabled: false
+          storageClass: "local-path"
       replica:
         replicaCount: 0
-      persistence:
-        enabled: false
-
-      # auth:
-      #   enabled: true
-      #   existingSecret: wallabag-redis-secret
-      #   existingSecretPasswordKey: SYMFONY__ENV__REDIS_PASSWORD
-      # # clusterDomain: ${SECRET_DOMAIN}
-      # architecture: standalone
-      # master:
-      #   persistence:
-      #     enabled: true
-      #     existingClaim: wallabag-redis
-      # replica:
-      #   replicaCount: 0
+        persistence:
+          enabled: false
+          storageClass: "local-path"
