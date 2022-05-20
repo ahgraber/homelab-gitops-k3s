@@ -128,9 +128,10 @@ spec:
       master:
         persistence:
           enabled: false
-          storageClass: "local-path"
+          # storageClass: "local-path"
+          existingClaim: wallabag-redis
       replica:
         replicaCount: 0
-        persistence:
-          enabled: false
-          storageClass: "local-path"
+        # persistence:
+        #   enabled: false
+        #   storageClass: "local-path"
