@@ -24,31 +24,54 @@
 
 ## TrueNAS SCALE
 
-1. Install [Restic](https://github.com/restic/restic) binary
+1. Install [Restic](https://github.com/restic/restic) and [autorestic](https://github.com/cupcakearmy/autorestic)
+   [using Ansible](https://github.com/ahgraber/homelab-infra/blob/main/ansible/playbooks/truenas/packages.yaml)
 
-   ```sh
-   sudo mkdir /opt/restic
-   sudo wget -P /opt/restic https://github.com/restic/restic/releases/download/v0.12.1/restic_0.12.1_linux_amd64.bz2
-   sudo bzip2 -d /opt/restic/restic_0.12.1_linux_amd64.bz2
-   sudo chmod 755 /opt/restic/restic_0.12.1_linux_amd64
-   sudo ln -rs /opt/restic/restic_0.12.1_linux_amd64 /usr/local/bin/restic
-   ```
-
-2. Install [autorestic](https://github.com/cupcakearmy/autorestic)
-
-   ```sh
-   sudo mkdir /opt/autorestic
-   sudo wget -P /opt/autorestic https://github.com/cupcakearmy/autorestic/releases/download/v1.5.0/autorestic_1.5.0_linux_amd64.bz2
-   sudo bzip2 -d /opt/autorestic/autorestic_1.5.0_linux_amd64.bz2
-   sudo chmod 755 /opt/autorestic/autorestic_1.5.0_linux_amd64
-   sudo ln -rs /opt/autorestic/autorestic_1.5.0_linux_amd64 /usr/local/bin/autorestic
-   ```
-
-3. Check for updates
+2. Check for updates
 
    ```sh
    restic self-update
    autorestic upgrade
+   ```
+
+3. [Configure `autorestic`](https://autorestic.vercel.app/config)
+
+    ```yml
+    version: 2
+
+    locations:
+      location_name:
+        from: '/path/on/nas'
+        to:
+          - backend_name
+        cron: '0 3 * * 0' # Every Sunday at 3:00
+        forget: prune
+        options:
+          forget:
+            keep-last: 5 # always keep at least 5 snapshots
+
+    backends:
+      backend_name:
+        type: b2
+        path: 'bucketname:/some/path'
+        env:
+          B2_ACCOUNT_ID: '12345'
+          B2_ACCOUNT_KEY: 'qwerty'
+    ```
+
+4. Set up [crontab](https://autorestic.vercel.app/location/cron)
+
+   ```sh
+   crontab -e
+   ```
+
+   ```sh
+   ### at end of file
+   # This is required, as it otherwise cannot find restic as a command.
+   PATH="/usr/local/bin:/usr/bin:/bin"
+
+   # Example running every 5 minutes
+   */5 * * * * autorestic -c /path/to/my/.autorestic.yml --ci cron
    ```
 
 ## References
