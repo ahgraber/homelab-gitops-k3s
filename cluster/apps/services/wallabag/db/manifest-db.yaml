@@ -10,13 +10,16 @@ spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
   postgresVersion: 14
   instances:
-    # - name: instance1
-    #   replicas: 2
-    #   resources:
-    #     limits:
-    #       cpu: 2.0
-    #       memory: 4Gi
-    - dataVolumeClaimSpec:
+    - name: wallabag-db
+      metadata:
+        labels:
+          app.kubernetes.io/instance: wallabag
+      # replicas: 2
+      resources:
+        limits:
+          cpu: 2.0
+          memory: 4Gi
+      dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
         accessModes:
           - "ReadWriteOnce"
@@ -30,6 +33,9 @@ spec:
   # https://pgbackrest.org/configuration.html#section-repository/
   backups:
     pgbackrest:
+      metadata:
+        labels:
+          app.kubernetes.io/instance: wallabag
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
       configuration:
         - secret:
