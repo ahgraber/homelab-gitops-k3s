@@ -24,7 +24,7 @@ spec:
       tag: 2.4.3
 
     initContainers:
-      - name: wait-database
+      wait-database:
         image: busybox:1.35.0
         imagePullPolicy: IfNotPresent
         command:
@@ -39,21 +39,58 @@ spec:
         # envFrom:
         #   - secretRef:
         #       name: wallabag-secret
-      - name: kubectl
-        image: kubectl
-        imagePullPolicy: IfNotPresent
-        command:
-          - sh
-        args:
-          - -c
-          - >-
-            until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
-        env:
-          - name: POSTGRES_HOST
-            value: wallabag-db-primary
-        # envFrom:
-        #   - secretRef:
-        #       name: wallabag-secret
+      # init-database:
+      #   repository: wallabag/wallabag
+      #   # Upgrading the wallabag version generally requires a migration.
+      #   # see https://doc.wallabag.org/en/admin/upgrade.html
+      #   tag: 2.4.3
+      #   imagePullPolicy: IfNotPresent
+      #   command:
+      #     - /var/www/wallabag/bin/console
+      #   args:
+      #     - wallabag:install
+      #     - --env=prod
+      #     - --no-interaction
+      #   env:
+      #     SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
+      #     SYMFONY__ENV__DATABASE_HOST:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-wallabag
+      #           key: host
+      #     SYMFONY__ENV__DATABASE_PORT:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-wallabag
+      #           key: port
+      #     SYMFONY__ENV__DATABASE_NAME:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-wallabag
+      #           key: dbname
+      #     SYMFONY__ENV__DATABASE_USER:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-wallabag
+      #           key: user
+      #     SYMFONY__ENV__DATABASE_PASSWORD:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-wallabag
+      #           key: password
+      #     POSTGRES_USER:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-postgres
+      #           key: user
+      #     POSTGRES_PASSWORD:
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: wallabag-db-pguser-postgres
+      #           key: password
+      #   envFrom:
+      #     - secretRef:
+      #         name: wallabag-secret
 
     env:
       TZ: "America/New_York"
