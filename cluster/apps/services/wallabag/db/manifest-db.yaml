@@ -4,6 +4,8 @@ kind: PostgresCluster
 metadata:
   name: wallabag-db
   namespace: services
+  labels:
+    app.kubernetes.io/instance: wallabag
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
   postgresVersion: 14
