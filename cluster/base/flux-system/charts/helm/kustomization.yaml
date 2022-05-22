@@ -17,9 +17,8 @@ resources:
   - ealenn-charts.yaml
   - emberstack-charts.yaml
   - fairwinds-charts.yaml
-  - falco-security-charts.yaml
-  - fydrah-charts.yaml
-  # - gissilabs-charts.yaml
+  # - falco-security-charts.yaml
+  # - fydrah-charts.yaml
   - grafana-charts.yaml
   - infracloudio-charts.yaml
   # - ingress-nginx-charts.yaml
@@ -30,15 +29,13 @@ resources:
   - metallb-charts.yaml
   - metrics-server-charts.yaml
   - nextcloud-charts.yaml
-  - nfs-subdir-external-provisioner-charts.yaml
+  # - nfs-subdir-external-provisioner-charts.yaml
   - node-feature-discovery-charts.yaml
   - oauth2-proxy-charts.yaml
   - prometheus-community-charts.yaml
-  - rancher-charts.yaml
   - runix-charts.yaml
   - stakater-charts.yaml
   - traefik-charts.yaml
-  - victoriametrics-charts.yaml
-  - vmware-tanzu-charts.yaml
+  # - victoriametrics-charts.yaml
+  # - vmware-tanzu-charts.yaml
   - weaveworks-kured-charts.yaml
-  # - zalando-postgres-charts.yaml
