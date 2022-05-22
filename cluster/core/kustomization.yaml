@@ -8,6 +8,7 @@ resources:
   - kube-system/
   # - kube-vip/  # managed in ansible k3s install
   - metallb-system/
+  - rook-ceph/
   # - tigera-operator/  # managed in ansible k3s install
   ### overwrite local-path StorageClass to set as NOT default
   - storage-class-local.yaml
