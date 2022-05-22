@@ -4,6 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: wallabag-images
   namespace: services
+  labels:
+    app.kubernetes.io/instance: wallabag
+    app.kubernetes.io/name: wallabag
 spec:
   accessModes:
     - ReadWriteOnce
@@ -11,29 +14,19 @@ spec:
   resources:
     requests:
       storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wallabag-cache
-  namespace: services
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: wallabag-redis
-  namespace: services
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi
-  resources:
-    requests:
-      storage: 1Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: wallabag-redis
+#   namespace: services
+#   labels:
+#     app.kubernetes.io/instance: wallabag
+#     app.kubernetes.io/name: wallabag
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: csi-truenas-iscsi
+#   resources:
+#     requests:
+#       storage: 1Gi
