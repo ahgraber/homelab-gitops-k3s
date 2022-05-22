@@ -10,6 +10,6 @@ resources:
   - postgres.yaml
   - security.yaml
   - services.yaml
-  # - system-upgrade.yaml
+  - system-upgrade.yaml
   - vaultwarden.yaml
   - velero.yaml

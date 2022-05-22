@@ -2,10 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - baikal
-  # - echo-server
-  - hammond
-  - httpbin
-  # - mealie  # wait for v1 (https://github.com/hay-kot/mealie/discussions/645)
-  - vaultwarden
-  - wallabag
+  - baikal/
+  # - echo-server/
+  - hammond/
+  - httpbin/
+  # - mealie/  # wait for v1 (https://github.com/hay-kot/mealie/discussions/645)
+  - vaultwarden/
+  - wallabag/
+  - namespace.yaml

@@ -2,11 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespaces
-  - cert-manager
-  - democratic-csi
-  - kube-system
-  # - kube-vip  # managed in ansible k3s install
-  - metallb-system
+  # - namespaces/
+  - cert-manager/
+  - democratic-csi/
+  - kube-system/
+  # - kube-vip/  # managed in ansible k3s install
+  - metallb-system/
   ### overwrite local-path StorageClass to set as NOT default
   - storage-class-local.yaml

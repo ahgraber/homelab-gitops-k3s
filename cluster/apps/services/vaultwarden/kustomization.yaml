@@ -5,5 +5,6 @@ resources:
   - db/
   - helm-release.yaml
   - ingressRoute.yaml
+  - namespace.yaml
   - pvc.yaml
   - secret-vaultwarden.sops.yaml
