@@ -1,5 +1,7 @@
 {
+  // General RenovateBot configuration
   "enabled": true,
+  "timezone": "America/New_York",
   "semanticCommits": "enabled",
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Renovate Dashboard",
@@ -14,7 +16,7 @@
     "ghcr.io/fluxcd/notification-controller",
     "ghcr.io/fluxcd/source-controller",
   ],
-  // set up renovate managers
+  // set up Renovate Managers
   "docker-compose": {
     fileMatch: ["(^|/)docker-compose.*.ya?ml$", "(^|/)docker-compose.*.ya?ml.j2$"],
   },
