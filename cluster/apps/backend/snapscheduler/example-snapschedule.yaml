@@ -1,0 +1,47 @@
+---
+apiVersion: snapscheduler.backube/v1
+kind: SnapshotSchedule
+metadata:
+  # The name for this schedule. It is also used as a part
+  # of the template for naming the snapshots.
+  name: hourly
+  # Schedules are namespaced objects
+  namespace: myns
+spec:
+  # A LabelSelector to control which PVCs should be snapshotted
+  claimSelector: # optional
+  # Set to true to make the schedule inactive
+  disabled: false # optional
+  retention:
+    # The length of time a given snapshot should be
+    # retained, specified in hours. (168h = 1 week)
+    expires: "168h" # optional
+    # The maximum number of snapshots per PVC to keep
+    maxCount: 10 # optional
+  # The cronspec (https://en.wikipedia.org/wiki/Cron#Overview)
+  # that defines the schedule. It is interpreted with
+  # respect to the UTC timezone. The following pre-defined
+  # shortcuts are also supported: @hourly, @daily, @weekly,
+  # @monthly, and @yearly
+  schedule: "0 * * * *"
+  snapshotTemplate:
+    # A set of labels can be added to each
+    # VolumeSnapshot object
+    labels: # optional
+      mylabel: myvalue
+    # The SnapshotClassName to use when creating the
+    # snapshots. If omitted, the cluster default will
+    # be used.
+    snapshotClassName: ebs-csi # optional
+
+---
+# limit the maximum number of snapshots in the specified namespace
+# if no retention policy is set above
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: snapshots
+  namespace: default
+spec:
+  hard:
+    count/volumesnapshots.snapshot.storage.k8s.io: "50"
