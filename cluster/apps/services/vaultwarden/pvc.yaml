@@ -4,6 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: vaultwarden-config
   namespace: vaultwarden
+  labels:
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/name: vaultwarden
 spec:
   accessModes:
     - ReadWriteOnce
