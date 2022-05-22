@@ -9,6 +9,7 @@ resources:
   - bitnami-charts.yaml
   - crowdsec-charts.yaml
   - cloudflare-charts.yaml
+  - crunchydata-charts.yaml
   - dashboard-charts.yaml
   - deliveryhero-charts.yaml
   - democratic-csi-charts.yaml
@@ -24,15 +25,20 @@ resources:
   # - ingress-nginx-charts.yaml
   - jetstack-charts.yaml
   - k8s-at-home-charts.yaml
+  - kasten-charts.yaml
   - kuberhealthy-charts.yaml
   - lwolf-charts.yaml
   - metallb-charts.yaml
   - metrics-server-charts.yaml
+  - mintel-dex-charts.yaml
+  - mysql-charts.yaml
   - nextcloud-charts.yaml
   # - nfs-subdir-external-provisioner-charts.yaml
   - node-feature-discovery-charts.yaml
   - oauth2-proxy-charts.yaml
+  - project-calico-charts.yaml
   - prometheus-community-charts.yaml
+  - rook-ceph-charts.yaml
   - runix-charts.yaml
   - stakater-charts.yaml
   - traefik-charts.yaml
