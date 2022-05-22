@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: networking
+  # labels:
+  #   # Define namespace label for kubed for secrets-sharing -->
+  #   # secret_name: kubed
+  #   ${SECRET_DOMAIN/./-}-tls: kubed
+  #   ${SECRET_DOMAIN/./-}-stage-tls: kubed
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"

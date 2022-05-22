@@ -5,5 +5,6 @@ resources:
   - schedules/
   - storagelocations/
   - helm-release.yaml
+  - namespace.yaml
   - prometheus-rule.yaml
   - secret-velero.sops.yaml
