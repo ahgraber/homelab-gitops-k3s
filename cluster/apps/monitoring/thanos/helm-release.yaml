@@ -109,6 +109,6 @@ spec:
       serviceMonitor:
         enabled: true
 
-  valuesFrom:
-    - kind: Secret
-      name: thanos-objstore-secret
+    valuesFrom:
+      - kind: Secret
+        name: thanos-objstore-secret
