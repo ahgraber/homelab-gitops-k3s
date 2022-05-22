@@ -25,6 +25,10 @@ spec:
     #   config:
     #     bucket: thanos
     #     insecure: true
+    valuesFrom:
+      secretKeyRef:
+        name: thanos-objstore-secret
+        key: objstoreConfig
 
     query:
       enabled: true
@@ -108,7 +112,3 @@ spec:
       enabled: true
       serviceMonitor:
         enabled: true
-
-    valuesFrom:
-      - kind: Secret
-        name: thanos-objstore-secret
