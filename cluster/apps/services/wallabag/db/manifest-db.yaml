@@ -4,7 +4,7 @@ kind: PostgresCluster
 metadata:
   name: wallabag-db
   namespace: services
-  labels:
+  labels: &labels
     app.kubernetes.io/instance: wallabag
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
@@ -12,8 +12,7 @@ spec:
   instances:
     - name: wallabag-db
       metadata:
-        labels:
-          app.kubernetes.io/instance: wallabag
+        labels: *labels
       # replicas: 2
       # resources:
       #   limits:
@@ -33,10 +32,9 @@ spec:
   # https://pgbackrest.org/configuration.html#section-repository/
   backups:
     pgbackrest:
-      metadata:
-        labels:
-          app.kubernetes.io/instance: wallabag
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
+      metadata:
+        labels: *labels
       configuration:
         - secret:
             name: wallabag-db-secret
