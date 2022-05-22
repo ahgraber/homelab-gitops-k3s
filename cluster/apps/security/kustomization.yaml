@@ -2,9 +2,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  # - authentik
-  # - crowdsec
-  # - keycloak
-  # - oauth2-proxy
-  - rbac-manager
-  # - traefik-forward-auth
+  # - authentik/
+  # - crowdsec/
+  # - keycloak/
+  # - oauth2-proxy/
+  - rbac-manager/
+  # - traefik-forward-auth/
+  - namespace.yaml

@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - helm-release-iscsi.yaml
   - helm-release-nfs.yaml
+  - namespace.yaml
   - secret-iscsi.yaml
   - secret-nfs.yaml
