@@ -10,12 +10,6 @@ data:
       ingress:
         enabled: false
 
-      # Service for thanos service discovery on sidecar
-      thanosService:
-        enabled: false
-      thanosServiceMonitor:
-        enabled: false
-
       prometheusSpec:
         replicas: 1
         replicaExternalLabelName: "replica"
@@ -38,18 +32,27 @@ data:
                   storage: 3Gi
         resources:
           requests:
-            cpu: 627m
+            cpu: 671m
             memory: 6Gi
           limits:
-            cpu: 627m
+            cpu: 671m
             memory: 6Gi
 
-        # thanos:
-        #   image: quay.io/thanos/thanos:v0.23.1
-        #   version: v0.22.0
-        #   objectStorageConfig:
-        #     name: thanos-objstore-secret
-        #     key: objstore.yml
+      #   thanos:
+      #     image: quay.io/thanos/thanos
+      #     tag: v0.25.2
+      #     objectStorageConfig:
+      #       name: thanos-objstore-secret
+      #       key: objstore.yml
+
+      # # Service for thanos service discovery on sidecar
+      # thanosImage:
+      #   repository: quay.io/thanos/thanos
+      #   tag: v0.25.2
+      # thanosService:
+      #   enabled: true
+      # thanosServiceMonitor:
+      #   enabled: true
 
         additionalScrapeConfigs:
           # - job_name: cadvisor
