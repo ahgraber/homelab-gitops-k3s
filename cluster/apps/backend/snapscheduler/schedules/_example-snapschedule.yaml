@@ -13,25 +13,21 @@ spec:
   # Set to true to make the schedule inactive
   disabled: false # optional
   retention:
-    # The length of time a given snapshot should be
-    # retained, specified in hours. (168h = 1 week)
+    # The length of time a given snapshot should be retained, specified in hours. (168h = 1 week)
     expires: "168h" # optional
     # The maximum number of snapshots per PVC to keep
     maxCount: 10 # optional
-  # The cronspec (https://en.wikipedia.org/wiki/Cron#Overview)
-  # that defines the schedule. It is interpreted with
-  # respect to the UTC timezone. The following pre-defined
-  # shortcuts are also supported: @hourly, @daily, @weekly,
-  # @monthly, and @yearly
+  # The cronspec (https://en.wikipedia.org/wiki/Cron#Overview) that defines the schedule.
+  # It is interpreted with respect to the UTC timezone (EDT = UTC-4; EST = UTC-5).
+  # The following pre-defined shortcuts are also supported: @hourly, @daily, @weekly, @monthly, and @yearly
   schedule: "0 * * * *"
   snapshotTemplate:
     # A set of labels can be added to each
     # VolumeSnapshot object
     labels: # optional
       mylabel: myvalue
-    # The SnapshotClassName to use when creating the
-    # snapshots. If omitted, the cluster default will
-    # be used.
+    # The SnapshotClassName to use when creating the snapshots.
+    # If omitted, the cluster default will be used.
     snapshotClassName: ebs-csi # optional
 
 ---
