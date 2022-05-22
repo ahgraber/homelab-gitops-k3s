@@ -1,0 +1,116 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: thanos
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: thanos
+      version: 10.3.7
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    image:
+      registry: public.ecr.aws
+      repository: bitnami/thanos
+
+    # objstoreConfig:
+    #   type: s3
+    #   config:
+    #     bucket: thanos
+    #     insecure: true
+
+    query:
+      enabled: true
+      replicaLabels:
+        - replica
+
+      dnsDiscovery:
+        sidecarsService: prometheus-thanos-discovery
+        sidecarsNamespace: monitoring
+
+      ingress:
+        enabled: false
+        hostname: "thanos.${SECRET_DOMAIN}"
+
+    existingObjstoreSecret: thanos-objstore-secret
+
+    queryFrontend:
+      enabled: false
+
+    bucketweb:
+      enabled: true
+      resources:
+        requests:
+          cpu: 15m
+          memory: 64M
+        limits:
+          memory: 64M
+
+    compactor:
+      enabled: true
+      retentionResolutionRaw: 14d
+      retentionResolution5m: 30d
+      retentionResolution1h: 180d
+      resources:
+        requests:
+          cpu: 15m
+          memory: 204M
+        limits:
+          memory: 270M
+      persistence:
+        enabled: true
+        storageClass: "csi-truenas-iscsi"
+        size: 5Gi
+
+    storegateway:
+      enabled: true
+      resources:
+        requests:
+          cpu: 15m
+          memory: 64M
+        limits:
+          memory: 64M
+      persistence:
+        enabled: true
+        storageClass: "csi-truenas-iscsi"
+        size: 1Gi
+
+    ruler:
+      enabled: true
+      dnsDiscovery:
+        enabled: true
+      alertmanagers:
+        - http://prometheus-alertmanager.monitoring.svc.cluster.local:9093
+      # clusterName: ${CLUSTER_NAME}
+      config: |-
+        groups:
+          - name: "PrometheusWatcher"
+            rules:
+              - alert: "PrometheusDown"
+                expr: absent(up{job="kube-prometheus-stack-prometheus"})
+      persistence:
+        enabled: true
+        storageClass: "csi-truenas-iscsi"
+        size: 1Gi
+      resources:
+        requests:
+          cpu: 15m
+          memory: 94M
+        limits:
+          memory: 113M
+
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+  valuesFrom:
+    - kind: Secret
+      name: thanos-objstore-config
