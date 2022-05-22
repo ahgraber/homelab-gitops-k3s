@@ -4,6 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: alertmanager-data
   namespace: monitoring
+  labels:
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/instance: prometheus-prometheus
 spec:
   accessModes:
     - ReadWriteOnce

@@ -6,6 +6,7 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/name: prometheus
+    app.kubernetes.io/instance: prometheus-prometheus
 spec:
   accessModes:
     - ReadWriteOnce
