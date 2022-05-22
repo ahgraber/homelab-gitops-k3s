@@ -5,7 +5,7 @@ apiVersion: velero.io/v1
 kind: BackupStorageLocation
 # Standard Kubernetes metadata. Required.
 metadata:
-  name: security-storagelocation
+  name: wallabag-storagelocation
   namespace: velero
 spec:
   provider: aws
@@ -14,7 +14,7 @@ spec:
   objectStorage:
     bucket: ninerealmlabs-velero
     # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
-    prefix: security
+    prefix: wallabag
   config:
     region: us-west-002
     s3ForcePathStyle: "true"
@@ -28,7 +28,7 @@ spec:
 apiVersion: velero.io/v1
 kind: VolumeSnapshotLocation
 metadata:
-  name: security-snapshotlocation
+  name: wallabag-snapshotlocation
   namespace: velero
 spec:
   provider: aws
