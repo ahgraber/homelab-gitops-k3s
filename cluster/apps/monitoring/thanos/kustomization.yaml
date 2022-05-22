@@ -5,4 +5,4 @@ resources:
   - dashboard/
   - helm-release.yaml
   - ingressRoute.yaml
-  - secret.sops.yaml
+  - secret-thanos-objstore.sops.yaml
