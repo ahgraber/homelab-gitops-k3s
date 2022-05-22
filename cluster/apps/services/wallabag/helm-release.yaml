@@ -146,7 +146,7 @@ spec:
         persistence:
           enabled: false
           # storageClass: "local-path"
-          existingClaim: wallabag-redis
+          # existingClaim: wallabag-redis
       replica:
         replicaCount: 0
         # persistence:
