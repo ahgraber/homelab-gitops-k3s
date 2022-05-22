@@ -39,8 +39,6 @@ spec:
         enabled: false
         hostname: "thanos.${SECRET_DOMAIN}"
 
-    existingObjstoreSecret: thanos-objstore-secret
-
     queryFrontend:
       enabled: false
 
@@ -113,4 +111,4 @@ spec:
 
   valuesFrom:
     - kind: Secret
-      name: thanos-objstore-config
+      name: thanos-objstore-secret
