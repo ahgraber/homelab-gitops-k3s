@@ -4,6 +4,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: mealie-pvc
   namespace: default
+  labels:
+    app.kubernetes.io/instance: mealie
+    app.kubernetes.io/name: mealie
 spec:
   accessModes:
     - ReadWriteOnce
