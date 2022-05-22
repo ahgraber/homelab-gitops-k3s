@@ -18,7 +18,7 @@ spec:
       #   limits:
       #     cpu: 2.0
       #     memory: 4Gi
-    - dataVolumeClaimSpec:
+      dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
         accessModes:
           - "ReadWriteOnce"
