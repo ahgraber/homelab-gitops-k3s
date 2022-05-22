@@ -5,7 +5,7 @@ metadata:
   name: loki-data
   namespace: monitoring
   labels:
-    app: loki
+    app.kubernetes.io/instance: loki
 spec:
   accessModes:
     - ReadWriteOnce

@@ -38,8 +38,10 @@ data:
                   storage: 3Gi
         resources:
           requests:
+            cpu: 627m
             memory: 6Gi
           limits:
+            cpu: 627m
             memory: 6Gi
 
         # thanos:
