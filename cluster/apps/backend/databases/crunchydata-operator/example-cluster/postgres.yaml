@@ -2,19 +2,23 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: example-cluster
+  name: example-db
   namespace: postgres
+  labels: &labels
+    app.kubernetes.io/instance: example
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.2-1
   postgresVersion: 14
   instances:
-    # - name: instance1
-    #   replicas: 2
-    #   resources:
-    #     limits:
-    #       cpu: 2.0
-    #       memory: 4Gi
-    - dataVolumeClaimSpec:
+    - name: example-db
+      # replicas: 2
+      # resources:
+      #   limits:
+      #     cpu: 2.0
+      #     memory: 4Gi
+      metadata:
+        labels: *labels
+      dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
         accessModes:
           - "ReadWriteOnce"
@@ -29,6 +33,8 @@ spec:
   backups:
     pgbackrest:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.38-0
+      metadata:
+        labels: *labels
       configuration:
         - secret:
             name: cluster-secret
