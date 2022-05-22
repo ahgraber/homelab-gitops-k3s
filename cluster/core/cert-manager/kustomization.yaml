@@ -7,4 +7,5 @@ resources:
   - letsencrypt-production.yaml
   - letsencrypt-staging.yaml
   - namespace.yaml
+  - prometheus-rule.yaml
   - secret-certmanager.sops.yaml
