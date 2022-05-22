@@ -5,6 +5,7 @@ resources:
   - appscode-charts.yaml
   - appuio-charts.yaml
   - authentik-charts.yaml
+  - backube-charts.yaml
   - bitnami-charts.yaml
   - crowdsec-charts.yaml
   - cloudflare-charts.yaml
@@ -40,4 +41,4 @@ resources:
   - victoriametrics-charts.yaml
   - vmware-tanzu-charts.yaml
   - weaveworks-kured-charts.yaml
-  - zalando-postgres-charts.yaml
+  # - zalando-postgres-charts.yaml
