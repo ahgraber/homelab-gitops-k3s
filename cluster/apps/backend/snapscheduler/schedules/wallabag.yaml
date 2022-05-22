@@ -4,7 +4,7 @@ kind: SnapshotSchedule
 metadata:
   # The name for this schedule. It is also used as a part
   # of the template for naming the snapshots.
-  name: hammond
+  name: wallabag
   # Schedules are namespaced objects
   namespace: services
 spec:
