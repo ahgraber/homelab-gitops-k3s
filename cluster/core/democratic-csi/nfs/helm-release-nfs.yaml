@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nfs-democratic-csi
+  name: democratic-csi-nfs
   namespace: democratic-csi
 spec:
   interval: 5m
@@ -108,7 +108,7 @@ spec:
           operator: Exists
           # effect: NoSchedule
       nodeSelector:
-        node-role.kubernetes.io/master: true
+        node-role.kubernetes.io/master: "true"
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
