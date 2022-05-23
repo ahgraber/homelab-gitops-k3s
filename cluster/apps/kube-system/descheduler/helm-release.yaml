@@ -49,3 +49,26 @@ spec:
           #       cpu: 50
           #       memory: 50
           #       pods: 50
+
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/master
+                  operator: Exists
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
