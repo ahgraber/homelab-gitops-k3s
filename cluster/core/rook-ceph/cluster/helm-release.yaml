@@ -18,6 +18,10 @@ spec:
     - name: rook-ceph-operator
       namespace: rook-ceph
   values:
+    annotations:
+      all:
+        configmap.reloader.stakater.com/reload: "ceph-values-block,ceph-values-filesystem,ceph-values-object"
+
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -46,84 +50,76 @@ spec:
         useAllNodes: false
         useAllDevices: false
         config:
-          osdsPerDevice: "1"
+          osdsPerDevice: 1"
         nodes:
           # - name: datto0
           #   devices:
-          #     - name: "/dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB42182"
+          #     - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB42182"
           # - name: datto1
           #   devices:
-          #     - name: "/dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB71697"
+          #     - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB71697"
           # - name: datto2
           #   devices:
-          #     - name: "/dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
+          #     - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
           - name: datto3
             devices:
-              - name: "/dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R244763"
+              - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R244763"
           - name: datto4
             devices:
-              - name: "/dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0NB10875"
+              - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0NB10875"
           - name: datto5
             devices:
-              - name: "/dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNX0N937668"
+              - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNX0N937668"
 
-    resources:
-      mgr:
-        limits:
-          cpu: "1000m"
-          memory: "1Gi"
-        requests:
-          cpu: "500m"
-          memory: "512Mi"
-      mon:
-        limits:
-          cpu: "2000m"
-          memory: "2Gi"
-        requests:
-          cpu: "1000m"
-          memory: "1Gi"
-      osd:
-        limits:
-          cpu: "2000m"
-          memory: "4Gi"
-        requests:
-          cpu: "1000m"
-          memory: "4Gi"
-      prepareosd:
-        limits:
-          cpu: "500m"
-          memory: "200Mi"
-        requests:
-          cpu: "500m"
-          memory: "50Mi"
-      mgr-sidecar:
-        limits:
-          cpu: "500m"
-          memory: "100Mi"
-        requests:
-          cpu: "100m"
-          memory: "40Mi"
-      crashcollector:
-        limits:
-          cpu: "500m"
-          memory: "60Mi"
-        requests:
-          cpu: "100m"
-          memory: "60Mi"
-      logcollector:
-        limits:
-          cpu: "500m"
-          memory: "1Gi"
-        requests:
-          cpu: "100m"
-          memory: "100Mi"
-      cleanup:
-        limits:
-          cpu: "500m"
-          memory: "1Gi"
-        requests:
-          cpu: "500m"
-          memory: "100Mi"
+      resources:
+        mgr:
+          requests:
+            cpu: 125m
+            memory: 549m
+          limits:
+            memory: 1219m
+        mon:
+          requests:
+            cpu: 49m
+            memory: 477m
+          limits:
+            memory: 1059m
+        osd:
+          requests:
+            cpu: 442m
+            memory: 2678m
+          limits:
+            memory: 5944m
+        prepareosd:
+          requests:
+            cpu: 250m
+            memory: 50Mi
+          limits:
+            memory: 200Mi
+        mgr-sidecar:
+          requests:
+            cpu: 49m
+            memory: 94m
+          limits:
+            memory: 208m
+        crashcollector:
+          requests:
+            cpu: 15m
+            memory: 64m
+          limits:
+            memory: 64m
+        logcollector:
+          requests:
+            cpu: 100m
+            memory: 100m
+          limits:
+            memory: 1Gi
+        cleanup:
+          requests:
+            cpu: 250m
+            memory: 100m
+          limits:
+            memory: 1Gi
 
   valuesFrom:
     - kind: ConfigMap

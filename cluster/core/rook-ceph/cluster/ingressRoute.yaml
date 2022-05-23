@@ -16,7 +16,7 @@ spec:
         - name: rfc1918
         - name: basicauth
       services:
-        - name: rook
+        - name: rook-ceph-mgr-dashboard
           namespace: rook-ceph
           port: 80
 
