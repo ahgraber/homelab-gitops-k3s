@@ -5,6 +5,7 @@ resources:
   # - _namespaces/
   - cert-manager/
   - democratic-csi/
+  - flux-system
   - kube-system/
   # - kube-vip/  # managed in ansible k3s install
   - metallb-system/
