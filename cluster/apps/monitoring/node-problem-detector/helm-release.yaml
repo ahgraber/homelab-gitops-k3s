@@ -20,3 +20,16 @@ spec:
     metrics:
       serviceMonitor:
         enabled: true
+
+    resources:
+      requests:
+        cpu: 15m
+        memory: 105M
+      limits:
+        cpu: 15m
+        memory: 105M
+
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
