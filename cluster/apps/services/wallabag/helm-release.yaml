@@ -120,10 +120,10 @@ spec:
 
     resources:
       requests:
-        cpu: 15m
+        cpu: 25m
         memory: 105M
       limits:
-        cpu: 50m
+        cpu: 100m
         memory: 145M
 
     securityContext:
@@ -157,11 +157,11 @@ spec:
           # existingClaim: wallabag-redis
         resources:
           requests:
-            cpu: 23m
-            memory: 105M
+            cpu: 50m
+            memory: 128M
           limits:
-            cpu: 23m
-            memory: 105M
+            cpu: 50m
+            memory: 128M
       replica:
         replicaCount: 0
         # persistence:
