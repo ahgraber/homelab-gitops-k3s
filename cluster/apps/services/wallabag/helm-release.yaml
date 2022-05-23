@@ -113,10 +113,11 @@ spec:
 
     resources:
       requests:
-        memory: 100Mi
-        cpu: 100m
+        cpu: 25m
+        memory: 105M
       limits:
-        memory: 2000Mi
+        cpu: 25m
+        memory: 105M
 
     securityContext:
       runAsUser: 0
@@ -147,6 +148,13 @@ spec:
           enabled: false
           # storageClass: "local-path"
           # existingClaim: wallabag-redis
+        resources:
+          requests:
+            cpu: 23m
+            memory: 105M
+          limits:
+            cpu: 23m
+            memory: 105M
       replica:
         replicaCount: 0
         # persistence:
