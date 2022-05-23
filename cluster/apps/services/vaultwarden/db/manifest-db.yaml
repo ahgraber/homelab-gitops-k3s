@@ -15,12 +15,18 @@ spec:
         labels: *labels
       # replicas: 2
       resources:
+        # requests:
+        #   cpu: 11m
+        #   memory: 381M
+        # limits:
+        #   cpu: 11m
+        #   memory: 381M
         requests:
-          cpu: 11m
-          memory: 381M
+          cpu: 10m
+          memory: 53M
         limits:
-          cpu: 11m
-          memory: 381M
+          cpu: 181m
+          memory: 1977M
       dataVolumeClaimSpec:
         storageClassName: csi-truenas-iscsi-retain
         accessModes:
