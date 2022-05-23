@@ -53,11 +53,12 @@ spec:
               subPath: data
               mountPath: /assets
           resources:
-            limits:
-              memory: 2000Mi
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 25m
+              memory: 105M
+            limits:
+              cpu: 25m
+              memory: 105M
           livenessProbe:
             tcpSocket:
               port: 3000
@@ -81,6 +82,7 @@ spec:
             failureThreshold: 30
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+
         # - name: fsfreeze
         #   image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
         #   volumeMounts:
