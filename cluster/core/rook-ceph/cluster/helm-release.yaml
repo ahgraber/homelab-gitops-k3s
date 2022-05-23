@@ -28,7 +28,6 @@ spec:
       bdev_async_discard = true
 
     cephClusterSpec:
-      # TODO(rook-ceph): Use default ceph version on next rebuild
       cephVersion:
         image: quay.io/ceph/ceph:v17.2.0
 
@@ -81,7 +80,7 @@ spec:
         storageClass:
           enabled: true
           name: ceph-block
-          isDefault: true
+          isDefault: false
           reclaimPolicy: Delete
           allowVolumeExpansion: true
           parameters:
