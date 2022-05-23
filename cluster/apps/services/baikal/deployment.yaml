@@ -83,11 +83,12 @@ spec:
               mountPath: /mnt
               readOnly: true
           resources:
-            limits:
-              memory: 2000Mi
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 25m
+              memory: 128M
+            limits:
+              cpu: 25m
+              memory: 128M
           livenessProbe:
             tcpSocket:
               port: 80
