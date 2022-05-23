@@ -18,7 +18,7 @@ spec:
   values:
     csiDriver:
       name: "org.democratic-csi.truenas-iscsi"
-      # installCRD: false
+      installCRD: false
 
     driver:
       # see the driver-config-secret.yaml template for syntax
@@ -38,15 +38,40 @@ spec:
       strategy: deployment
       externalAttacher:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalProvisioner:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalResizer:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 37M
+          limits:
+            cpu: 11m
+            memory: 37M
       external Snapshotter:
         enabled: true
-        # 1.20+ should use v4.0.0+
-        # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
-        image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalHealthMonitorController:
         enabled: false
       livenessProbe:
@@ -54,11 +79,36 @@ spec:
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
-        # securityContext:
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+              - SYS_ADMIN
+          privileged: true
+        resources:
+          requests:
+            cpu: 49m
+            memory: 127M
+          limits:
+            cpu: 49m
+            memory: 127M
+
       tolerations:
-        - key: node-role.kubernetes.io/master
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
           operator: Exists
-          # effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/master: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/master
+                    operator: Exists
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
 
     node:
       enabled: true
@@ -78,9 +128,33 @@ spec:
             enabled: true
           ext4:
             enabled: true
+
+      cleanup:
+        resources:
+          requests:
+            cpu: 11m
+            memory: 14M
+          limits:
+            cpu: 11m
+            memory: 14M
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
+        resources:
+          requests:
+            cpu: 49m
+            memory: 127M
+          limits:
+            cpu: 49m
+            memory: 127M
+      driverRegistrar:
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
@@ -96,12 +170,6 @@ spec:
           # for block-based storage can be ext3, ext4, xfs
           fsType: xfs
         mountOptions: []
-        # secrets:
-        #   provisioner-secret:
-        #   controller-publish-secret:
-        #   node-stage-secret:
-        #   node-publish-secret:
-        #   controller-expand-secret:
 
       - name: csi-truenas-iscsi-retain
         defaultClass: false
@@ -112,12 +180,6 @@ spec:
           # for block-based storage can be ext3, ext4, xfs
           fsType: xfs
         mountOptions: []
-        # secrets:
-        #   provisioner-secret:
-        #   controller-publish-secret:
-        #   node-stage-secret:
-        #   node-publish-secret:
-        #   controller-expand-secret:
 
     volumeSnapshotClasses:
       - name: csi-truenas-iscsi
@@ -135,5 +197,12 @@ spec:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
           velero.io/csi-volumesnapshot-class: "true"
-        # secrets:
-        #   snapshotter-secret:
+
+    csiProxy:
+      resources:
+        requests:
+          cpu: 11m
+          memory: 14M
+        limits:
+          cpu: 11m
+          memory: 14M
