@@ -9,5 +9,8 @@ resources:
   - loki.yaml
   - node-exporter.yaml
   # app/ services are configured after monitoring/, so manage with the application
-  # - traefik.yaml
+  - crunchydata.yaml
+  - kured.yaml
+  - traefik.yaml
+  - velero.yaml
   # - upsc.yaml
