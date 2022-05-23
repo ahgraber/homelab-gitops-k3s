@@ -7,7 +7,6 @@ resources:
   - karma/
   - kube-prometheus-stack/
   - loki/
-  - metrics-server/
   - node-problem-detector/
   - promtail/
   # - speedtest-exporter/
