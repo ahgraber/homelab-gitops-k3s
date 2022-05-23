@@ -89,6 +89,8 @@ data:
                   storage: 1Gi
         resources:
           requests:
-            memory: 48Mi
+            cpu: 11m
+            memory: 53M
           limits:
-            memory: 96Mi
+            cpu: 11m
+            memory: 53M
