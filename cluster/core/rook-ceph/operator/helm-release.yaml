@@ -25,3 +25,10 @@ spec:
         memory: 128Mi
       limits:
         memory: 256Mi
+
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+    nodeSelector:
+      node-role.kubernetes.io/master: true
