@@ -2,10 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  # - config-syncer
-  - descheduler
-  - kube-cleanup-operator
-  - kured
-  # - node-feature-discovery
-  - reflector
-  - reloader
+  # - config-syncer/
+  - descheduler/
+  - kube-cleanup-operator/
+  - kured/
+  - metrics-server/
+  # - node-feature-discovery/
+  - reflector/
+  - reloader/
