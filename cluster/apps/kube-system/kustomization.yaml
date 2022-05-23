@@ -6,7 +6,6 @@ resources:
   - descheduler/
   - kube-cleanup-operator/
   - kured/
-  - metrics-server/
   # - node-feature-discovery/
   - reflector/
   - reloader/
