@@ -16,6 +16,10 @@ spec:
         name: democratic-csi-charts
         namespace: flux-system
   values:
+    csiDriver:
+      name: "org.democratic-csi.truenas-nfs"
+      installCRD: false
+
     driver:
       # see the driver-config-secret.yaml template for syntax
       existingConfigSecret: secret-democratic-csi-driver-config-nfs
@@ -24,30 +28,50 @@ spec:
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
         driver: freenas-api-nfs
-      # installCRD: false
-
-    csiDriver:
-      name: "org.democratic-csi.truenas-nfs"
-      # version: 1.2.0
 
     controller:
       enabled: true
-      hostNetwork: false
-      hostIPC: false
+      hostNetwork: true # set false if fails
+      hostIPC: true # set false if fails
       podAnnotations:
         secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       strategy: deployment
       externalAttacher:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalProvisioner:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalResizer:
         enabled: true
+        resources:
+          requests:
+            cpu: 11m
+            memory: 37M
+          limits:
+            cpu: 11m
+            memory: 37M
       external Snapshotter:
         enabled: true
-        # 1.20+ should use v4.0.0+
-        # READ *before* updating from beta https://github.com/kubernetes-csi/external-snapshotter#usage
-        image: k8s.gcr.io/sig-storage/csi-snapshotter:v5.0.1
+        resources:
+          requests:
+            cpu: 11m
+            memory: 24M
+          limits:
+            cpu: 11m
+            memory: 24M
       externalHealthMonitorController:
         enabled: false
       livenessProbe:
@@ -65,16 +89,36 @@ spec:
         #   preStop:
         #     exec:
         #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+        resources:
+          requests:
+            cpu: 35m
+            memory: 127M
+          limits:
+            cpu: 35m
+            memory: 127M
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
             add:
               - SYS_ADMIN
           privileged: true
-        tolerations:
-          - key: node-role.kubernetes.io/master
-            operator: Exists
-            # effect: NoSchedule
+
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          # effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/master: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/master
+                    operator: Exists
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
 
     node:
       enabled: true
@@ -95,9 +139,33 @@ spec:
           ext4:
             enabled: true
 
+      cleanup:
+        resources:
+          requests:
+            cpu: 11m
+            memory: 14M
+          limits:
+            cpu: 11m
+            memory: 14M
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
+        resources:
+          requests:
+            cpu: 35m
+            memory: 127M
+          limits:
+            cpu: 35m
+            memory: 127M
+      driverRegistrar:
+        resources:
+          requests:
+            cpu: 11m
+            memory: 14M
+          limits:
+            cpu: 11m
+            memory: 14M
+
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
@@ -115,12 +183,6 @@ spec:
           - noatime
           - nfsvers=4
           - sec=sys
-        # secrets:
-        #   provisioner-secret:
-        #   controller-publish-secret:
-        #   node-stage-secret:
-        #   node-publish-secret:
-        #   controller-expand-secret:
 
     volumeSnapshotClasses:
       - name: csi-truenas-nfs
@@ -129,5 +191,12 @@ spec:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
           velero.io/csi-volumesnapshot-class: "true"
-        # secrets:
-        #   snapshotter-secret:
+
+    csiProxy:
+      resources:
+        requests:
+          cpu: 11m
+          memory: 14M
+        limits:
+          cpu: 11m
+          memory: 14M
