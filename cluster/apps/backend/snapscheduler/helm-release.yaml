@@ -22,6 +22,19 @@ spec:
       # tag: v1.8.1
 
     resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
+      resources:
+        requests:
+          cpu: 11m
+          memory: 53M
+        limits:
+          cpu: 11m
+          memory: 53M
+
+    rbacProxy:
+      resources:
+        requests:
+          cpu: 11m
+          memory: 53M
+        limits:
+          cpu: 11m
+          memory: 53M
