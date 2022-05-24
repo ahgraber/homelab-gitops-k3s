@@ -20,7 +20,6 @@ spec:
     env:
       # can be email or nickname
       email: admin@${SECRET_DOMAIN}
-
     existingSecret: pgadmin-secret
 
     serverDefinitions:
@@ -38,9 +37,17 @@ spec:
     strategy:
       type: Recreate
 
+    ingress:
+      enabled: false
+
     persistentVolume:
       enabled: true
       existingClaim: pgadmin-config
 
-    ingress:
-      enabled: false
+    resources:
+      requests:
+        cpu: 15m
+        memory: 183M
+      limits:
+        cpu: 32m
+        memory: 536M
