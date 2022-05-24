@@ -9,7 +9,7 @@ patchesStrategicMerge:
   # Add labels; tolerations & selectors
   - |-
     apiVersion: apps/v1
-    kind: Deployment
+    kind: ReplicaSet
     metadata:
       name: tigera-operator
       namespace: tigera-operator
