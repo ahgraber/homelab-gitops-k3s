@@ -20,6 +20,19 @@ patchesStrategicMerge:
         spec:
           containers:
             - name: snapshot-controller
+              args:
+                - "--v=5"
+                - "--leader-election=true"
+                - "--enable-distributed-snapshotting"
+
+          resources:
+            requests:
+              cpu: 15m
+              memory: 64M
+            limits:
+              cpu: 15m
+              memory: 64M
+
           tolerations:
             - effect: NoSchedule
               key: node-role.kubernetes.io/master
