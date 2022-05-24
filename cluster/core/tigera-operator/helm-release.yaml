@@ -45,3 +45,18 @@ spec:
             - "10.2.118.0/24"
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
+
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/master
+                  operator: Exists
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
