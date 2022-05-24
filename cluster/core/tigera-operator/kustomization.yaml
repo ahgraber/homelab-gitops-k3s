@@ -13,9 +13,6 @@ patchesStrategicMerge:
     metadata:
       name: tigera-operator
       namespace: tigera-operator
-      labels:
-        app.kubernetes.io/name: tigera-operator
-        app.kubernetes.io/instance: tigera-operator
     spec:
       template:
         metadata:
