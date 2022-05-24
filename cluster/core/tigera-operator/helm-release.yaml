@@ -41,7 +41,7 @@ spec:
         multiInterfaceMode: None
         nodeAddressAutodetectionV4:
           cidrs:
-            - "10.2.118.0/24"
+            - "10.2.0.0/16"
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
 
