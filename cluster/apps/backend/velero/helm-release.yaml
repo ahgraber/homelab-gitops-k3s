@@ -92,11 +92,11 @@ spec:
 
     resources:
       requests:
-        cpu: 49m
-        memory: 64M
+        cpu: 100m
+        memory: 128M
       limits:
-        cpu: 49m
-        memory: 64M
+        cpu: 100m
+        memory: 128M
 
     ### Don't need restic since `democratic-csi` can use snapshots (assuming `external-snapshotter` is installed)
     deployRestic: true
