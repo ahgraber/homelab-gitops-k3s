@@ -165,6 +165,9 @@ kubectl --kubeconfig=${KUBECONFIG} get kustomization -A
 flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 ```
 
+> For objects that have been preinstalled with ansible, we patch to allow helm to manage
+> [tigera-operator](../cluster/core/tigera-operator/give_helm_ownership.sh)
+
 [optional] Add alias for update
 
 ```sh
