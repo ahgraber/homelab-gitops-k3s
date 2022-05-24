@@ -39,10 +39,11 @@ spec:
             nodeSelector: all()
         linuxDataplane: Iptables
         multiInterfaceMode: None
-        nodeAddressAutodetectionV4:
-          cidrs:
-            - "10.2.118.0/24"
-            - "10.2.113.0/24"
+        # nodeAddressAutodetectionV4:
+        #   cidrs:
+        #     - "10.2.118.0/24"
+        #     # - "10.2.113.0/24"
+        #     - "10.113.0.128/25"  # leave front half for metallb
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
 
