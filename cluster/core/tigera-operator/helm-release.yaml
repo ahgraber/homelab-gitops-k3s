@@ -15,7 +15,6 @@ spec:
         name: project-calico-charts
         namespace: flux-system
   install:
-    createNamespace: true
     crds: CreateReplace
     remediation:
       retries: 5
@@ -50,13 +49,15 @@ spec:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
         operator: Exists
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/master
-                  operator: Exists
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
+    # affinity:
+    #   nodeAffinity:
+    #     requiredDuringSchedulingIgnoredDuringExecution:
+    #       nodeSelectorTerms:
+    #         - matchExpressions:
+    #             - key: node-role.kubernetes.io/master
+    #               operator: Exists
+    #         - matchExpressions:
+    #             - key: node-role.kubernetes.io/control-plane
+    #               operator: Exists
