@@ -45,6 +45,7 @@ spec:
       existingClaim: pgadmin-config
 
     resources:
+      # required to initialize
       requests:
         cpu: 25m
         memory: 183M
