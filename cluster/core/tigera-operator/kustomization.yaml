@@ -4,3 +4,33 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   - namespace.yaml
+
+patchesStrategicMerge:
+  # Add labels; tolerations & selectors
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: tigera-operator
+      namespace: tigera-operator
+      labels:
+        app.kubernetes.io/name: tigera-operator
+        app.kubernetes.io/instance: tigera-operator
+    spec:
+      containers:
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
+        nodeSelector:
+          node-role.kubernetes.io/master: "true"
+        # affinity:
+        #   nodeAffinity:
+        #     requiredDuringSchedulingIgnoredDuringExecution:
+        #       nodeSelectorTerms:
+        #         - matchExpressions:
+        #             - key: node-role.kubernetes.io/master
+        #               operator: Exists
+        #         - matchExpressions:
+        #             - key: node-role.kubernetes.io/control-plane
+        #               operator: Exists
