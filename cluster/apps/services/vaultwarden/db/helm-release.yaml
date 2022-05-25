@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: wallabag-db
-  namespace: services
+  name: vaultwarden-db
+  namespace: vaultwarden
 spec:
   interval: 5m
   chart:
@@ -17,15 +17,15 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    name: wallabag-db
+    name: vaultwarden-db
     postgresVersion: 14
 
     metadata:
       labels:
-        app.kubernetes.io/instance: wallabag
+        app.kubernetes.io/instance: vaultwarden
 
     instances:
-      - name: wallabag-db
+      - name: vaultwarden-db
         # replicas: 2
         resources:
           requests:
@@ -43,17 +43,17 @@ spec:
               storage: 1Gi
           # if need to pick up existing/retained PV
           # may have to remove prior claimRef
-          volumeName: "pvc-455ad896-d4ba-4383-9627-bf1f28940d62"
+          volumeName: "pvc-a40b88ba-7111-4985-bfd0-153e85717f70"
 
     # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backups/
     # https://pgbackrest.org/configuration.html#section-repository/
     pgBackRestConfig:
       configuration:
         - secret:
-            name: wallabag-db-secret
+            name: vaultwarden-db-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
-        repo1-path: /pgbackrest/services/wallabag-db/repo1
+        repo1-path: /pgbackrest/services/vaultwarden-db/repo1
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: "2"
         repo1-retention-history: "365"
@@ -86,14 +86,14 @@ spec:
       # define default "postgres" superuser to pick up on password secret
       - name: postgres
       # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
-      - name: wallabag
+      - name: vaultwarden
         databases:
-          - wallabag
+          - vaultwarden
         # options: https://www.postgresql.org/docs/current/role-attributes.html
         options: "LOGIN CREATEDB"
       # create user "repl" with access to database "exampledb" and role attributes "replication"
       - name: repl
         databases:
-          - wallabag
+          - vaultwarden
         # options: https://www.postgresql.org/docs/current/role-attributes.html
         options: "REPLICATION"
