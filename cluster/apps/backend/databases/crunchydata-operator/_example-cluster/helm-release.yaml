@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: wallabag-db
+  name: example-db
   namespace: services
 spec:
   interval: 5m
@@ -17,15 +17,15 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    name: wallabag-db
+    name: example-db
     postgresVersion: 14
 
     metadata:
       labels:
-        app.kubernetes.io/instance: wallabag
+        app.kubernetes.io/instance: example
 
     instances:
-      - name: wallabag-db
+      - name: example-db
         # replicas: 2
         resources:
           requests:
@@ -50,10 +50,10 @@ spec:
     pgBackRestConfig:
       configuration:
         - secret:
-            name: wallabag-db-secret
+            name: example-db-secret
       global:
         # recommended path: /pgbackrest/$NAMESPACE/$CLUSTER_NAME/repoN
-        repo1-path: /pgbackrest/services/wallabag-db/repo1
+        repo1-path: /pgbackrest/services/example-db/repo1
         repo1-cipher-type: aes-256-cbc # if pgbackrest-secrets contains cipher for encryption
         repo1-retention-full: "2"
         repo1-retention-history: "365"
@@ -62,13 +62,14 @@ spec:
       repos:
         - name: repo1
           s3:
-            bucket: "postgres"
-            endpoint: "https://truenas.${SECRET_DOMAIN}:9000"
-            # endpoint: "10.2.1.1:9000"
-            region: "us-east"
+            bucket: "<YOUR_AWS_S3_BUCKET_NAME>"
+            endpoint: "<YOUR_AWS_S3_ENDPOINT>"
+            region: "<YOUR_AWS_S3_REGION>"
           schedules:
-            # take a full backup daily at 1am
-            full: "0 1 * * *"
+            # take a full backup weekly on Sunday at 1am
+            full: "0 1 * * 0"
+            # take differential backups daily at 1am on every day except Sunday.
+            differential: "0 1 * * 1-6"
             # take incremental backup every 4 hours
             incremental: "0 */4 * * *"
 
@@ -86,14 +87,16 @@ spec:
       # define default "postgres" superuser to pick up on password secret
       - name: postgres
       # create user "pg_repl" with access to database "exampledb" and role attributes "replication"
-      - name: wallabag
+      - name: example
         databases:
-          - wallabag
+          - example
         # options: https://www.postgresql.org/docs/current/role-attributes.html
         options: "LOGIN CREATEDB"
       # create user "repl" with access to database "exampledb" and role attributes "replication"
       - name: repl
         databases:
-          - wallabag
+          - example
         # options: https://www.postgresql.org/docs/current/role-attributes.html
         options: "REPLICATION"
+
+      ## userInterface.pgAdmin does not exist in helm chart

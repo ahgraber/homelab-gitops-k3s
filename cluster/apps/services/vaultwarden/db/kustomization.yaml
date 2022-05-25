@@ -2,6 +2,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - manifest-db.yaml
+  - helm-release.yaml
+  # - manifest-db.yaml
   - secret-db-cluster.sops.yaml
-  # - secret-db-user.sops.yaml
