@@ -26,18 +26,18 @@ spec:
           protocol: layer2
           addresses:
             - ${METALLB_FRONTEND}/32
-        - name: gui
-          protocol: layer2
-          addresses:
-            - ${METALLB_GUI}/32
-        - name: mariadb
-          protocol: layer2
-          addresses:
-            - ${METALLB_MARIADB}/32
-        - name: postgres
-          protocol: layer2
-          addresses:
-            - ${METALLB_POSTGRES}/32
+        # - name: gui
+        #   protocol: layer2
+        #   addresses:
+        #     - ${METALLB_GUI}/32
+        # - name: mariadb
+        #   protocol: layer2
+        #   addresses:
+        #     - ${METALLB_MARIADB}/32
+        # - name: postgres
+        #   protocol: layer2
+        #   addresses:
+        #     - ${METALLB_POSTGRES}/32
     controller:
       tolerations:
         - effect: NoSchedule
