@@ -5,9 +5,10 @@ resources:
   - goldilocks/
   # - grafana/
   # - karma/
-  # - kube-prometheus-stack//
+  - kube-prometheus-stack/
   # - loki/
   - node-problem-detector/
+  # - prometheus-stack/
   # - promtail/
   # # - speedtest-exporter/
   # - thanos/
