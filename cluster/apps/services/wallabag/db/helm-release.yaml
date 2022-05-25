@@ -29,11 +29,11 @@ spec:
         # replicas: 2
         resources:
           requests:
-            cpu: 50m
-            memory: 381M
+            cpu: 100m
+            memory: 384M
           limits:
-            cpu: 50m
-            memory: 381M
+            cpu: 100m
+            memory: 384M
         dataVolumeClaimSpec:
           storageClassName: csi-truenas-iscsi-retain
           accessModes:
@@ -42,6 +42,7 @@ spec:
             requests:
               storage: 1Gi
           # if need to pick up existing/retained PV
+          # may have to remove prior claimRef
           volumeName: "pvc-455ad896-d4ba-4383-9627-bf1f28940d62"
 
     # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backups/

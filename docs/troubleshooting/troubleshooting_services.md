@@ -1,5 +1,7 @@
 # Troubleshooting services
 
+[Jq cheatsheet](https://medium.com/geekculture/my-jq-cheatsheet-34054df5b650)
+
 ## Debug HelmRelease
 
 - Show the health of helm _releases_
@@ -162,4 +164,10 @@ kubectl patch pv/c <pv/c name> -p '{"metadata":{"finalizers": []}}' --type=merge
 kubectl get rs --all-namespaces -o json | \
   jq '.items[] | select((.spec.replicas==0) and (.status.replicas==0)) |
   "kubectl delete rs \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+```
+
+## Remove `claimRef` on retained PVs to reuse
+
+```sh
+kubectl patch pv pvc-455ad896-d4ba-4383-9627-bf1f28940d62 -p '{"spec":{"claimRef": null}}'
 ```

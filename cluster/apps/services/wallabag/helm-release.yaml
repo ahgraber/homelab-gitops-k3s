@@ -121,13 +121,13 @@ spec:
     # podAnnotations:
     #   backup.velero.io/backup-volumes: images
 
-    # resources:
-    #   requests:
-    #     cpu: 25m
-    #     memory: 105M
-    #   limits:
-    #     cpu: 100m
-    #     memory: 145M
+    resources:
+      requests:
+        cpu: 250m
+        memory: 384M
+      limits:
+        cpu: 250m
+        memory: 384M
 
     securityContext:
       runAsUser: 0
