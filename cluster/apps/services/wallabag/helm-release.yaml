@@ -123,10 +123,10 @@ spec:
 
     resources:
       requests:
-        cpu: 250m
+        cpu: 500m
         memory: 384M
       limits:
-        cpu: 250m
+        cpu: 500m
         memory: 384M
 
     securityContext:
