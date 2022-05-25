@@ -41,8 +41,8 @@ spec:
           resources:
             requests:
               storage: 1Gi
-          # # if need to pick up existing/retained PV
-          # volumeName: "pvc-aef7ee64-4495-4813-b896-8a67edc53e58"
+          # if need to pick up existing/retained PV
+          volumeName: "pvc-455ad896-d4ba-4383-9627-bf1f28940d62"
 
     # https://access.crunchydata.com/documentation/postgres-operator/5.1.0/tutorial/backups/
     # https://pgbackrest.org/configuration.html#section-repository/
