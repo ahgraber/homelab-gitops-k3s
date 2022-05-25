@@ -121,18 +121,6 @@ spec:
     # podAnnotations:
     #   backup.velero.io/backup-volumes: images
 
-    resources:
-      requests:
-        cpu: 500m
-        memory: 384M
-      limits:
-        cpu: 500m
-        memory: 384M
-
-    securityContext:
-      runAsUser: 0
-      # runAsUser: 65534 # nobody
-
     service:
       main:
         ports:
@@ -170,3 +158,38 @@ spec:
         # persistence:
         #   enabled: false
         #   storageClass: "local-path"
+
+    securityContext:
+      runAsUser: 0
+      # runAsUser: 65534 # nobody
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 384M
+      limits:
+        cpu: 100m
+        memory: 384M
+
+    livenessProbe:
+      tcpSocket:
+        port: 80
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      tcpSocket:
+        port: 80
+      timeoutSeconds: 1
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    startupProbe:
+      tcpSocket:
+        port: 80
+      initialDelaySeconds: 60
+      timeoutSeconds: 1
+      periodSeconds: 5
+      successThreshold: 1
+      failureThreshold: 30
