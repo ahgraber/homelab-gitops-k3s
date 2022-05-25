@@ -1,5 +1,54 @@
 ---
+# Allow on master nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+---
+# Allow on master nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kustomize-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+---
+# Allow on master nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+---
 # Increase memory limits on source-controller
+# Allow on master nodes
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,6 +62,12 @@ spec:
           resources:
             limits:
               memory: 2Gi
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
 ---
 # Delete the allow-egress NetworkPolicy
 $patch: delete
