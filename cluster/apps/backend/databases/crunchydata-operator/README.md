@@ -40,6 +40,15 @@ kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
   postgres-operator.crunchydata.com/pgbackrest-backup="$(date)"
 ```
 
+## Debugging & Restore
+
+If restoring an _existing_ pv to a _new_ database cluster, we must first remove the existing claimRef that
+associates the existing PV with the dynamic PVC before it can be reassociated
+
+```sh
+kubectl patch pv <PV_NAME> -p '{"spec":{"claimRef": null}}'
+```
+
 ## References
 
 - [examples](https://github.com/CrunchyData/postgres-operator-examples)
