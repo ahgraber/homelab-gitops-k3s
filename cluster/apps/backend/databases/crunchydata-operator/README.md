@@ -46,4 +46,5 @@ kubectl annotate -n <namespace> postgrescluster <clustername> [--overwrite] \
 
 ## Monitoring
 
+- [exporter](https://access.crunchydata.com/documentation/postgres-operator/4.6.2/advanced/crunchy-postgres-exporter/)
 - [examples](https://github.com/CrunchyData/postgres-operator-examples/tree/main/kustomize/monitoring)
