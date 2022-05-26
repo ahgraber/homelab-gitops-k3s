@@ -3,12 +3,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - goldilocks/
-  # - grafana/
-  # - karma/
+  - grafana/
+  - karma/
   - kube-prometheus-stack/
   # - loki/
   - node-problem-detector/
-  # - prometheus-stack/
   # - promtail/
   # # - speedtest-exporter/
   # - thanos/
