@@ -195,7 +195,7 @@ spec:
           initialDelaySeconds: 90
           timeoutSeconds: 1
           periodSeconds: 5
-          failureThreshold: 30
+          failureThreshold: 90
       # livenessProbe:
       #   tcpSocket:
       #     port: 80
