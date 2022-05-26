@@ -130,6 +130,44 @@ spec:
             prometheus.io/probe: "true"
             prometheus.io/protocol: http
 
+    securityContext:
+      runAsUser: 0
+      # runAsUser: 65534 # nobody
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 384M
+      limits:
+        # cpu: 250m
+        memory: 384M
+
+    probes:
+      liveness:
+        enabled: true
+        custom: false
+        spec:
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness:
+        enabled: true
+        custom: false
+        spec:
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      startup:
+        enabled: true
+        custom: false
+        spec:
+          initialDelaySeconds: 90 # takes a long time to start up on restricted CPU
+          timeoutSeconds: 1
+          periodSeconds: 5
+          failureThreshold: 30
+
     # use bundled dbs?
     postgresql:
       enabled: false
@@ -158,63 +196,3 @@ spec:
         # persistence:
         #   enabled: false
         #   storageClass: "local-path"
-
-    securityContext:
-      runAsUser: 0
-      # runAsUser: 65534 # nobody
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 384M
-      limits:
-        cpu: 250m
-        memory: 384M
-
-    probes:
-      liveness:
-        enabled: true
-        custom: false
-        spec:
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness:
-        enabled: true
-        custom: false
-        spec:
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      startup:
-        enabled: true
-        custom: false
-        spec:
-          initialDelaySeconds: 90 # takes a long time to start up on restricted CPU
-          timeoutSeconds: 1
-          periodSeconds: 5
-          failureThreshold: 30
-      # livenessProbe:
-      #   tcpSocket:
-      #     port: 80
-      #   timeoutSeconds: 1
-      #   periodSeconds: 10
-      #   successThreshold: 1
-      #   failureThreshold: 3
-      # readinessProbe:
-      #   tcpSocket:
-      #     port: 80
-      #   timeoutSeconds: 1
-      #   periodSeconds: 10
-      #   successThreshold: 1
-      #   failureThreshold: 3
-      # startupProbe:
-      #   tcpSocket:
-      #     port: 80
-      #   initialDelaySeconds: 60
-      #   timeoutSeconds: 1
-      #   periodSeconds: 5
-      #   successThreshold: 1
-      #   failureThreshold: 30
