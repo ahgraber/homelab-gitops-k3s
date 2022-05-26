@@ -168,7 +168,7 @@ spec:
         cpu: 100m
         memory: 384M
       limits:
-        cpu: 100m
+        cpu: 250m
         memory: 384M
 
     probes:
@@ -192,10 +192,10 @@ spec:
         enabled: true
         custom: false
         spec:
-          initialDelaySeconds: 90
+          initialDelaySeconds: 90 # takes a long time to start up on restricted CPU
           timeoutSeconds: 1
           periodSeconds: 5
-          failureThreshold: 90
+          failureThreshold: 30
       # livenessProbe:
       #   tcpSocket:
       #     port: 80
