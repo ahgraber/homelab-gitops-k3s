@@ -24,6 +24,7 @@ spec:
         cpu: 100m
         memory: 128Mi
       limits:
+        cpu: 250m
         memory: 256Mi
 
     tolerations:
@@ -31,4 +32,4 @@ spec:
         key: node-role.kubernetes.io/master
         operator: Exists
     nodeSelector:
-      node-role.kubernetes.io/master: true
+      node-role.kubernetes.io/master: "true"
