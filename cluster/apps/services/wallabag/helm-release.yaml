@@ -139,7 +139,7 @@ spec:
         cpu: 100m
         memory: 384M
       limits:
-        # cpu: 250m
+        cpu: "0.2"
         memory: 384M
 
     probes:
