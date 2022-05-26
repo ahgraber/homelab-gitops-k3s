@@ -188,8 +188,7 @@ spec:
     startupProbe:
       tcpSocket:
         port: 80
-      initialDelaySeconds: 60
       timeoutSeconds: 1
-      periodSeconds: 5
+      periodSeconds: 10
       successThreshold: 1
       failureThreshold: 30
