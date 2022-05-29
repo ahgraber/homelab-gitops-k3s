@@ -35,30 +35,6 @@ data:
         podAntiAffinity: soft
         podAntiAffinityTopologyKey: kubernetes.io/hostname
 
-        ## Number of replicas of each shard to deploy for a Prometheus deployment.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        replicas: 1
-        ## Name of the external label used to denote replica name
-        replicaExternalLabelName: replica
-
-        ## EXPERIMENTAL: Number of shards to distribute targets onto.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        ## Note that scaling down shards will not reshard data onto remaining instances, it must be manually moved.
-        ## Increasing shards will not reshard data either but it will continue to be available from the same instances.
-        ## To query globally use Thanos sidecar and Thanos querier or remote write data to a central location.
-        ## Sharding is done on the content of the `__address__` target meta-label.
-        shards: 1
-
-        ## How long to retain metrics
-        retention: 36h # 3d
-        ## Maximum size of metrics
-        retentionSize: 3GiB
-        ## Enable compression of the write-ahead log using Snappy.
-        walCompression: true
-
-        ## Log level for Prometheus be configured in
-        logLevel: info
-
         ## Resource limits & requests
         resources:
           requests:
@@ -82,6 +58,30 @@ data:
               #   matchLabels:
               #     app.kubernetes.io/instance: kps-prometheus
               #     app.kubernetes.io/name: prometheus
+
+        ## Number of replicas of each shard to deploy for a Prometheus deployment.
+        ## Number of replicas multiplied by shards is the total number of Pods created.
+        replicas: 1
+        ## Name of the external label used to denote replica name
+        replicaExternalLabelName: replica
+
+        ## EXPERIMENTAL: Number of shards to distribute targets onto.
+        ## Number of replicas multiplied by shards is the total number of Pods created.
+        ## Note that scaling down shards will not reshard data onto remaining instances, it must be manually moved.
+        ## Increasing shards will not reshard data either but it will continue to be available from the same instances.
+        ## To query globally use Thanos sidecar and Thanos querier or remote write data to a central location.
+        ## Sharding is done on the content of the `__address__` target meta-label.
+        shards: 1
+
+        ## How long to retain metrics
+        retention: 36h # 3d
+        ## Maximum size of metrics
+        retentionSize: 3GiB
+        ## Enable compression of the write-ahead log using Snappy.
+        walCompression: true
+
+        ## Log level for Prometheus be configured in
+        logLevel: info
 
         ## Alertmanagers to which alerts will be sent
         ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
@@ -213,9 +213,7 @@ data:
           #         fileName: "objstore.yaml"
           # objectStorageConfigFile: /var/secrets/object-store.yaml
 
-
-      # ## Thanos sidecar
-      # ## Thanos service discovery on sidecar
+      # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
       # ## (Please remember to change ${kube-prometheus-stack.fullname} and ${namespace}. Not just copy and paste!)
       # thanosService:
       #   enabled: true
@@ -223,12 +221,10 @@ data:
       # ## Needs thanosService to be enabled as well
       # thanosServiceMonitor:
       #   enabled: true
-
       # ## Service for external access to sidecar
       # ## Enabling this creates a service to expose thanos-sidecar outside the cluster.
       # thanosServiceExternal:
       #   enabled: false
-
       # ## Ingress exposes thanos sidecar outside the cluster
       # thanosIngress:
       #   enabled: false # use ingressRoute if required
