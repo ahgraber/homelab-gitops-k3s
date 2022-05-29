@@ -32,7 +32,7 @@ spec:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
 
     admin:
-      existingSecret: secret-grafana
+      existingSecret: grafana-admin-secret
       userKey: admin-user
       passwordKey: admin-password
 
@@ -143,6 +143,14 @@ spec:
     ingress:
       enabled: false
 
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
     persistence:
       enabled: true
       size: 2Gi
@@ -150,3 +158,6 @@ spec:
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: "grafana"
+
+    tolerations: []
+    nodeSelector: {}
