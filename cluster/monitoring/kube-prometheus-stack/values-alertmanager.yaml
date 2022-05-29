@@ -78,17 +78,10 @@ data:
           receiver: "email"
           routes:
             - receiver: "null"
-              match:
-                alertname: InfoInhibitor
-            - receiver: "null"
-              match:
-                alertname: Watchdog
-            # - receiver: "null"
-            #   match:
-            #     alertname: etcdHighNumberOfFailedGRPCRequests
+              matchers:
+                - alertname =~ "InfoInhibitor|Watchdog"
             - receiver: "email"
               match_re:
-                # severity: critical|warning
                 severity: critical
               continue: true
 
