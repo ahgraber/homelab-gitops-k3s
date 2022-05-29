@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: values-grafana
+  namespace: monitoring
+data:
+  values.yaml: |
+    grafana:
+      enabled: false # manage by itself
+      forceDeployDashboards: true
+      sidecar:
+        dashboards:
+          multicluster:
+            global:
+              enabled: true
