@@ -32,13 +32,13 @@ data:
       hostNetwork: false
 
       tolerations:
-      - effect: NoSchedule
-        operator: Exists
-      # - effect: NoExecute
-      #   operator: Exists
-      # - effect: NoSchedule
-      #   key: node-role.kubernetes.io/master
-      #   operator: Exists
+        - effect: NoSchedule
+          operator: Exists
+        # - effect: NoExecute
+        #   operator: Exists
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/master
+        #   operator: Exists
 
       ## Define which Nodes the Pods are scheduled on.
       nodeSelector: {}
