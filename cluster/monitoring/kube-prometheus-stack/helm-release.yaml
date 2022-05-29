@@ -17,13 +17,12 @@ spec:
         kind: HelmRepository
         name: prometheus-community-charts
         namespace: flux-system
-  install:
-    createNamespace: true
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
+  # install:
+  #   remediation:
+  #     retries: 3
+  # upgrade:
+  #   remediation:
+  #     retries: 3
 
   values:
     fullnameOverride: kps

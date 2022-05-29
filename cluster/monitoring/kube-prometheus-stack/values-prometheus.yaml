@@ -28,7 +28,7 @@ data:
         enableAdminAPI: true
 
         ## External URL at which Prometheus will be reachable.
-        externalUrl: "prometheus.${SECRET_DOMAIN}"
+        externalUrl: prometheus.${SECRET_DOMAIN}
 
         tolerations: []
         nodeSelector: {}
@@ -42,7 +42,7 @@ data:
             memory: 6Gi
           limits:
             cpu: 750m
-            memory: 7.5Gi
+            memory: 7Gi
 
         ## Prometheus StorageSpec for persistent data
         ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
@@ -83,17 +83,17 @@ data:
         ## Log level for Prometheus be configured in
         logLevel: info
 
-        ## Alertmanagers to which alerts will be sent
-        ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
-        alertingEndpoints:
-          - name: alertmanager
-            namespace: monitoring
-            port: http
-            # scheme: http
-            # pathPrefix: ""
-            # tlsConfig: {}
-            # bearerTokenFile: ""
-            # apiVersion: v2
+        # ## Alertmanagers to which alerts will be sent (default - use integrated alertmanager)
+        # ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
+        alertingEndpoints: []
+          # - name: alertmanager
+          #   namespace: monitoring
+          #   port: http
+          #   # scheme: http
+          #   # pathPrefix: ""
+          #   # tlsConfig: {}
+          #   # bearerTokenFile: ""
+          #   # apiVersion: v2
 
         ## Secrets is a list of Secret [names?] in the same namespace as the Prometheus object, to be mounted into the Prometheus Pods.
         ## The Secrets are mounted into /etc/prometheus/secrets/.
@@ -105,7 +105,6 @@ data:
         ## ConfigMaps is a list of ConfigMap [names?] in the same namespace as the Prometheus object, to be mounted into the Prometheus Pods.
         ## The ConfigMaps are mounted into /etc/prometheus/configmaps/.
         configMaps: []
-
 
         ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
         ## prometheus resource to be created with selectors based on values in the helm deployment,

@@ -20,6 +20,8 @@ data:
       ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
       denyNamespaces: []
 
+      hostNetwork: false
+
       ## Resource limits & requests
       resources: {}
         # requests:
@@ -28,8 +30,6 @@ data:
         # limits:
         #   cpu: 587m
         #   memory: 6Gi
-
-      hostNetwork: false
 
       tolerations:
         - effect: NoSchedule

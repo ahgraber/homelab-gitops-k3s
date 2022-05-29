@@ -20,16 +20,16 @@ data:
       prometheus:
         monitor:
           enabled: true
-          additionalLabels: {}
-          namespace: ""
-          jobLabel: ""
-          interval: ""
-          scrapeTimeout: ""
-          proxyUrl: ""
-          selectorOverride: {}
-          honorLabels: false
-          metricRelabelings: []
-          relabelings: []
+          # additionalLabels: {}
+          # namespace: ""
+          # jobLabel: ""
+          # interval: ""
+          # scrapeTimeout: ""
+          # proxyUrl: ""
+          # selectorOverride: {}
+          # honorLabels: false
+          # metricRelabelings: []
+          # relabelings: []
 
       # Enable self metrics configuration for service and Service Monitor
       # Default values for telemetry configuration can be overridden
