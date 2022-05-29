@@ -17,7 +17,7 @@ data:
         enabled: false
 
       alertmanagerSpec:
-        externalUrl: alertmanager.${SECRET_DOMAIN}
+        externalUrl: "alertmanager.${SECRET_DOMAIN}"
         retention: 72h
         storage:
           volumeClaimTemplate:
