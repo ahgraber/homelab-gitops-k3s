@@ -27,6 +27,7 @@ data:
               sourceLabels:
                 - __meta_kubernetes_pod_node_name
               targetLabel: kubernetes_node
+
       tolerations:
         - effect: NoSchedule
           operator: Exists
@@ -37,9 +38,9 @@ data:
         #   operator: Exists
 
       resources: {}
-      # requests:
-      #   cpu: 23m
-      #   memory: 105M
-      # limits:
-      #   cpu: 23m
-      #   memory: 105M
+        # requests:
+        #   cpu: 23m
+        #   memory: 105M
+        # limits:
+        #   cpu: 23m
+        #   memory: 105M
