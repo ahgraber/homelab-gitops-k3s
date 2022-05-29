@@ -28,8 +28,13 @@ data:
                 - __meta_kubernetes_pod_node_name
               targetLabel: kubernetes_node
       tolerations:
-        - key: "node-role.kubernetes.io/master"
-          operator: "Exists"
+        - effect: NoSchedule
+          operator: Exists
+        # - effect: NoExecute
+        #   operator: Exists
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/master
+        #   operator: Exists
 
       resources: {}
       # requests:
@@ -38,12 +43,3 @@ data:
       # limits:
       #   cpu: 23m
       #   memory: 105M
-
-    tolerations:
-      - effect: NoSchedule
-        operator: Exists
-      # - effect: NoExecute
-      #   operator: Exists
-      # - effect: NoSchedule
-      #   key: node-role.kubernetes.io/master
-      #   operator: Exists
