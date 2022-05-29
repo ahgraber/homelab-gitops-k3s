@@ -28,8 +28,7 @@ data:
         enableAdminAPI: true
 
         ## External URL at which Prometheus will be reachable.
-        # externalUrl: prometheus.${SECRET_DOMAIN}
-        externalUrl: prometheus.ninerealmlabs.com
+        externalUrl: "prometheus.${SECRET_DOMAIN}"
 
         tolerations: []
         nodeSelector: {}
