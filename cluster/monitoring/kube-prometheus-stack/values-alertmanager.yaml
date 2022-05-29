@@ -2,14 +2,50 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: kps-values-alertmanager
+  name: values-alertmanager
   namespace: monitoring
 data:
   values.yaml: |
-    ## Configuration for alertmanager
-    ## ref: https://prometheus.io/docs/alerting/alertmanager/
+    ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+    ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
     alertmanager:
+      enabled: true
+
+      nameOverride: alertmanager
+
+      ingress:
+        enabled: false
+
+      alertmanagerSpec:
+        externalUrl: alertmanager.${SECRET_DOMAIN}
+        retention: 72h
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path # csi-truenas-iscsi
+              resources:
+                requests:
+                  storage: 1Gi
+              ## for attaching retained PV
+              # selector:
+              #   matchLabels:
+              #     app.kubernetes.io/name: alertmanager
+              #     app.kubernetes.io/instance: kps-alertmanager
+        resources:
+          requests:
+            cpu: 11m
+            memory: 53M
+          limits:
+            cpu: 11m
+            memory: 53M
+
+        tolerations: []
+        nodeSelector: {}
+
+      ## ref: https://prometheus.io/docs/alerting/alertmanager/
       config:
+        global:
+          resolve_timeout: 5m
         receivers:
           - name: "null"
           - name: "email"
@@ -64,33 +100,3 @@ data:
             target_match:
               severity: "warning"
             equal: ["alertname", "namespace"]
-
-      ingress:
-        enabled: false
-
-      alertmanagerSpec:
-        retention: 72h
-        storage:
-          volumeClaimTemplate:
-            # metadata:
-            #   name: alertmanager-data
-            #   labels:
-            #     alertmanager: prometheus-alertmanager
-            #     app.kubernetes.io/instance: prometheus-alertmanager
-            #     app.kubernetes.io/name: alertmanager
-            spec:
-              # matchLabels:
-              #   app.kubernetes.io/name: alertmanager
-              # volumeName: alertmanager-data
-              # storageClassName: csi-truenas-iscsi
-              storageClassName: local-path
-              resources:
-                requests:
-                  storage: 1Gi
-        resources:
-          requests:
-            cpu: 11m
-            memory: 53M
-          limits:
-            cpu: 11m
-            memory: 53M

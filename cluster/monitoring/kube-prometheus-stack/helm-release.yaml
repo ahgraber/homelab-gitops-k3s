@@ -5,7 +5,7 @@ metadata:
   name: kube-prometheus-stack
   namespace: monitoring
 spec:
-  interval: 6h
+  interval: 1h
   maxHistory: 2
   timeout: 20m
   chart:
@@ -26,18 +26,31 @@ spec:
       retries: 3
 
   values:
+    fullnameOverride: kps
+
     podAnnotations:
       annotations:
-        configmap.reloader.stakater.com/reload: "kps-values-general,kps-values-prometheus,kps-values-alertmanager"
-    fullnameOverride: prometheus
+        configmap.reloader.stakater.com/reload:
+          "values-alertmanager, values-grafana, values-kube-state-metrics, values-node-exporter, values-prometheus-exporters, values-prometheus-operator, values-prometheus, values-rules"
 
-    defaultRules:
-      create: true
+    global:
+      rbac:
+        create: true
 
   valuesFrom:
     - kind: ConfigMap
-      name: kps-values-general
+      name: values-alertmanager
     - kind: ConfigMap
-      name: kps-values-prometheus
+      name: values-grafana
     - kind: ConfigMap
-      name: kps-values-alertmanager
+      name: values-kube-state-metrics
+    - kind: ConfigMap
+      name: values-node-exporter
+    - kind: ConfigMap
+      name: values-prometheus-exporters
+    - kind: ConfigMap
+      name: values-prometheus-operator
+    - kind: ConfigMap
+      name: values-prometheus
+    - kind: ConfigMap
+      name: values-rules

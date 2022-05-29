@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: values-prometheus-operator
+  namespace: monitoring
+data:
+  values.yaml: |
+    ## Manages Prometheus and Alertmanager components
+    prometheusOperator:
+      enabled: true
+
+      ## Namespaces to scope the interaction of the Prometheus Operator and the apiserver (allow list).
+      ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
+      namespaces: {}
+        # releaseNamespace: true
+        # additional:
+        # - kube-system
+
+      ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
+      denyNamespaces: []
+
+      ## Resource limits & requests
+      resources: {}
+        # requests:
+        #   cpu: 587m
+        #   memory: 6Gi
+        # limits:
+        #   cpu: 587m
+        #   memory: 6Gi
+
+      hostNetwork: false
+
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      # - effect: NoExecute
+      #   operator: Exists
+      # - effect: NoSchedule
+      #   key: node-role.kubernetes.io/master
+      #   operator: Exists
+
+      ## Define which Nodes the Pods are scheduled on.
+      nodeSelector: {}
+        # node-role.kubernetes.io/master: "true"
+
+      ## Setting this option to 0 to disable cpu limits
+      ## see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175
+      # configReloaderCpu: 0
+      prometheusConfigReloader:
+        resources:
+          requests:
+            cpu: 11m
+            memory: 53M
+          limits:
+            cpu: 11m
+            memory: 53M
+
+      # ## Thanos side-car image when configured
+      # thanosImage:
+      #   repository: quay.io/thanos/thanos
+      #   tag: v0.25.2
+
+      # ## Set a Field Selector to filter watched secrets
+      # secretFieldSelector: ""
