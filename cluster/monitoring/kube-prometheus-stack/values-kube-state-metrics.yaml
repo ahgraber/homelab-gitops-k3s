@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: values-kube-state-metrics
+  namespace: monitoring
+data:
+  values.yaml: |
+    kubeStateMetrics:
+      enabled: true
+
+    kube-state-metrics:
+      nameOverride: kube-state-metrics
+      fullnameOverride: kube-state-metrics
+
+      ## set to true to add the release label so scraping of the servicemonitor with kube-prometheus-stack works out of the box
+      releaseLabel: true
+
+      ## enable prometheus serviceMonitor
+      prometheus:
+        monitor:
+          enabled: true
+          additionalLabels: {}
+          namespace: ""
+          jobLabel: ""
+          interval: ""
+          scrapeTimeout: ""
+          proxyUrl: ""
+          selectorOverride: {}
+          honorLabels: false
+          metricRelabelings: []
+          relabelings: []
+
+      # Enable self metrics configuration for service and Service Monitor
+      # Default values for telemetry configuration can be overridden
+      selfMonitor:
+        enabled: false
+        # telemetryHost: 0.0.0.0
+        # telemetryPort: 8081
+
+      resources: {}
+        # requests:
+        #   cpu: 100m
+        #   memory: 30Mi
+        # limits:
+        #   cpu: 200m
+        #   memory: 50Mi
+
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+        # - effect: NoExecute
+        #   operator: Exists
+        # - effect: NoSchedule
+        #   key: node-role.kubernetes.io/master
+        #   operator: Exists

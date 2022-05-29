@@ -7,21 +7,11 @@ resources:
   - ingressRoute-alertmanager.yaml
   - ingressRoute-prometheus.yaml
   - podmonitor.yaml
-  # - pvc-alertmanager.yaml
-  # - pvc-prometheus.yaml
   - values-alertmanager.yaml
-  - values-general.yaml
+  - values-grafana.yaml
+  - values-kube-state-metrics.yaml
+  - values-node-exporter.yaml
+  - values-prometheus-exporters.yaml
+  - values-prometheus-operator.yaml
   - values-prometheus.yaml
-# namespace: monitoring
-# configurations:
-#   - kustomize-config.yaml
-# configMapGenerator:
-#   - name: kps-values-general
-#     files:
-#       - values.yaml=values-general.yaml
-#   - name: kps-values-prometheus
-#     files:
-#       - values.yaml=values-prometheus.yaml
-#   - name: kps-values-alertmanager
-#     files:
-#       - values.yaml=values-alertmanager.yaml
+  - values-rules.yaml
