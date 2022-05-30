@@ -47,4 +47,10 @@ spec:
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
 
-    resources: {}
+    resources:
+      requests:
+        cpu: 35m
+        memory: 200Mi
+      limits:
+        cpu: 35m
+        memory: 200Mi
