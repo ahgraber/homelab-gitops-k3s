@@ -12,24 +12,24 @@ data:
 
       ## Namespaces to scope the interaction of the Prometheus Operator and the apiserver (allow list).
       ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
-      namespaces: {}
-        # releaseNamespace: true
-        # additional:
-        # - kube-system
+      # namespaces: {}
+      #   # releaseNamespace: true
+      #   # additional:
+      #   # - kube-system
 
       ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
-      denyNamespaces: []
+      # denyNamespaces: []
 
       hostNetwork: false
 
       ## Resource limits & requests
-      resources: {}
-        # requests:
-        #   cpu: 587m
-        #   memory: 6Gi
-        # limits:
-        #   cpu: 587m
-        #   memory: 6Gi
+      resources:
+        requests:
+          cpu: 250m
+          memory: 250Mi
+        limits:
+          cpu: 250m
+          memory: 250Mi
 
       tolerations:
         - effect: NoSchedule
@@ -41,8 +41,8 @@ data:
         #   operator: Exists
 
       ## Define which Nodes the Pods are scheduled on.
-      nodeSelector: {}
-        # node-role.kubernetes.io/master: "true"
+      # nodeSelector:
+      #   node-role.kubernetes.io/master: "true"
 
       ## Setting this option to 0 to disable cpu limits
       ## see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175

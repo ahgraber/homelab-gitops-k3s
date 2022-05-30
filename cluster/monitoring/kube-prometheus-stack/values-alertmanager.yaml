@@ -39,8 +39,8 @@ data:
             cpu: 11m
             memory: 53M
 
-        tolerations: []
-        nodeSelector: {}
+        # tolerations: []
+        # nodeSelector: {}
 
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
       config:

@@ -37,10 +37,10 @@ data:
         #   key: node-role.kubernetes.io/master
         #   operator: Exists
 
-      resources: {}
-        # requests:
-        #   cpu: 23m
-        #   memory: 105M
-        # limits:
-        #   cpu: 23m
-        #   memory: 105M
+      resources:
+        requests:
+          cpu: 23m
+          memory: 105M
+        limits:
+          cpu: 23m
+          memory: 105M
