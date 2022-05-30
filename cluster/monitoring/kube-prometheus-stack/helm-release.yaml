@@ -36,23 +36,23 @@ spec:
       rbac:
         create: true
 
-    valuesFrom:
-      - kind: ConfigMap
-        name: values-alertmanager
-      - kind: ConfigMap
-        name: values-grafana
-      - kind: ConfigMap
-        name: values-kube-state-metrics
-      - kind: ConfigMap
-        name: values-node-exporter
-      - kind: ConfigMap
-        name: values-prometheus-exporters
-      - kind: ConfigMap
-        name: values-prometheus-operator
-      - kind: ConfigMap
-        name: values-prometheus
-      - kind: ConfigMap
-        name: values-rules
+  valuesFrom:
+    - kind: ConfigMap
+      name: values-alertmanager
+    - kind: ConfigMap
+      name: values-grafana
+    - kind: ConfigMap
+      name: values-kube-state-metrics
+    - kind: ConfigMap
+      name: values-node-exporter
+    - kind: ConfigMap
+      name: values-prometheus-exporters
+    - kind: ConfigMap
+      name: values-prometheus-operator
+    - kind: ConfigMap
+      name: values-prometheus
+    - kind: ConfigMap
+      name: values-rules
 
     # # values-alertmanager ----------------------------------------------------
     # ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
