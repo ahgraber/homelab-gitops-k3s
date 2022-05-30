@@ -27,6 +27,14 @@ spec:
         prometheus-address: |-
           http://prometheus-prometheus.monitoring.svc.cluster.local:9090
 
+      resources:
+        requests:
+          cpu: 50m
+          memory: 105Mi
+        limits:
+          cpu: 50m
+          memory: 105Mi
+
     # checks which of the managed pods have correct resources set and, if required,
     # kills them so that they can be recreated by their controllers with the updated requests
     updater:
