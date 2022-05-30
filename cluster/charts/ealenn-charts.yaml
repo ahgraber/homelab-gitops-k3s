@@ -5,6 +5,6 @@ metadata:
   name: ealenn-charts
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   url: https://ealenn.github.io/charts
   timeout: 3m

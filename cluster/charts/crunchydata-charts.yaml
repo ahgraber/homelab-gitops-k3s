@@ -5,8 +5,9 @@ metadata:
   name: crunchdata-charts-git
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 1h
   url: https://github.com/CrunchyData/postgres-operator-examples
+  timeout: 3m
   ref:
     branch: main
   ignore: |
