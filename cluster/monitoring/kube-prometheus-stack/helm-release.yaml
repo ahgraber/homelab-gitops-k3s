@@ -36,558 +36,558 @@ spec:
       rbac:
         create: true
 
-    # valuesFrom:
-    #   - kind: ConfigMap
-    #     name: values-alertmanager
-    #   - kind: ConfigMap
-    #     name: values-grafana
-    #   - kind: ConfigMap
-    #     name: values-kube-state-metrics
-    #   - kind: ConfigMap
-    #     name: values-node-exporter
-    #   - kind: ConfigMap
-    #     name: values-prometheus-exporters
-    #   - kind: ConfigMap
-    #     name: values-prometheus-operator
-    #   - kind: ConfigMap
-    #     name: values-prometheus
-    #   - kind: ConfigMap
-    #     name: values-rules
+    valuesFrom:
+      - kind: ConfigMap
+        name: values-alertmanager
+      - kind: ConfigMap
+        name: values-grafana
+      - kind: ConfigMap
+        name: values-kube-state-metrics
+      - kind: ConfigMap
+        name: values-node-exporter
+      - kind: ConfigMap
+        name: values-prometheus-exporters
+      - kind: ConfigMap
+        name: values-prometheus-operator
+      - kind: ConfigMap
+        name: values-prometheus
+      - kind: ConfigMap
+        name: values-rules
 
-    # values-alertmanager ----------------------------------------------------
-    ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
-    ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
-    alertmanager:
-      enabled: true
+    # # values-alertmanager ----------------------------------------------------
+    # ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+    # ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
+    # alertmanager:
+    #   enabled: true
 
-      nameOverride: alertmanager
+    #   nameOverride: alertmanager
 
-      ingress:
-        enabled: false
+    #   ingress:
+    #     enabled: false
 
-      alertmanagerSpec:
-        externalUrl: alertmanager.${SECRET_DOMAIN}
-        retention: 72h
-        storage:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: local-path # csi-truenas-iscsi
-              resources:
-                requests:
-                  storage: 1Gi
-              ## for attaching retained PV
-              # selector:
-              #   matchLabels:
-              #     app.kubernetes.io/name: alertmanager
-              #     app.kubernetes.io/instance: kps-alertmanager
-        resources:
-          requests:
-            cpu: 11m
-            memory: 53M
-          limits:
-            cpu: 11m
-            memory: 53M
+    #   alertmanagerSpec:
+    #     externalUrl: alertmanager.${SECRET_DOMAIN}
+    #     retention: 72h
+    #     storage:
+    #       volumeClaimTemplate:
+    #         spec:
+    #           storageClassName: local-path # csi-truenas-iscsi
+    #           resources:
+    #             requests:
+    #               storage: 1Gi
+    #           ## for attaching retained PV
+    #           # selector:
+    #           #   matchLabels:
+    #           #     app.kubernetes.io/name: alertmanager
+    #           #     app.kubernetes.io/instance: kps-alertmanager
+    #     resources:
+    #       requests:
+    #         cpu: 11m
+    #         memory: 53M
+    #       limits:
+    #         cpu: 11m
+    #         memory: 53M
 
-        # tolerations: []
-        # nodeSelector: {}
+    #     # tolerations: []
+    #     # nodeSelector: {}
 
-      ## ref: https://prometheus.io/docs/alerting/alertmanager/
-      config:
-        global:
-          resolve_timeout: 5m
-        receivers:
-          - name: null
-          - name: email
-            email_configs:
-              - to: "${SECRET_DEFAULT_EMAIL}"
-                from: "${SECRET_SMTP_ADDRESS}"
-                smarthost: in-v3.mailjet.com:587
-                auth_username: "${SECRET_SMTP_USER}"
-                auth_password: "${SECRET_SMTP_PWD}"
-                # auth_identity: "${SECRET_SMTP_ADDRESS}"
-                # auth_secret: "${SECRET_SMTP_PWD}"
-                require_tls: true
-                # prettier-ignore
-                text: >-
-                  [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+    #   ## ref: https://prometheus.io/docs/alerting/alertmanager/
+    #   config:
+    #     global:
+    #       resolve_timeout: 5m
+    #     receivers:
+    #       - name: "null"
+    #       - name: "email"
+    #         email_configs:
+    #           - to: "${SECRET_DEFAULT_EMAIL}"
+    #             from: "${SECRET_SMTP_ADDRESS}"
+    #             smarthost: in-v3.mailjet.com:587
+    #             auth_username: "${SECRET_SMTP_USER}"
+    #             auth_password: "${SECRET_SMTP_PWD}"
+    #             # auth_identity: "${SECRET_SMTP_ADDRESS}"
+    #             # auth_secret: "${SECRET_SMTP_PWD}"
+    #             require_tls: true
+    #             # prettier-ignore
+    #             text: >-
+    #               [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
 
-                  {{ range .Alerts -}}
-                    *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-                  {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
-                  *Details:*
-                    {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-                    {{ end }}
-                  {{ end }}
+    #               {{ range .Alerts -}}
+    #                 *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+    #               {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
+    #               *Details:*
+    #                 {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+    #                 {{ end }}
+    #               {{ end }}
 
-        route:
-          group_by: ["alertname", "job"]
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 6h
-          receiver: "email"
-          routes:
-            - receiver: null
-              matchers:
-                - alertname =~ "InfoInhibitor|Watchdog"
-            - receiver: email
-              match_re:
-                severity: critical
-              continue: true
+    #     route:
+    #       group_by: ["alertname", "job"]
+    #       group_wait: 30s
+    #       group_interval: 5m
+    #       repeat_interval: 6h
+    #       receiver: "email"
+    #       routes:
+    #         - receiver: "null"
+    #           matchers:
+    #             - alertname =~ "InfoInhibitor|Watchdog"
+    #         - receiver: "email"
+    #           match_re:
+    #             severity: critical
+    #           continue: true
 
-        # Inhibition rules allow to mute a set of alerts given that another alert is firing.
-        # We use this to mute any warning-level notifications if the same alert is already critical.
-        inhibit_rules:
-          - source_match:
-              severity: critical
-            target_match:
-              severity: warning
-            equal: ["alertname", "namespace"]
+    #     # Inhibition rules allow to mute a set of alerts given that another alert is firing.
+    #     # We use this to mute any warning-level notifications if the same alert is already critical.
+    #     inhibit_rules:
+    #       - source_match:
+    #           severity: "critical"
+    #         target_match:
+    #           severity: "warning"
+    #         equal: ["alertname", "namespace"]
 
-    # values-grafana ---------------------------------------------------------
-    grafana:
-      enabled: false # manage by itself
-      forceDeployDashboards: true
-      sidecar:
-        dashboards:
-          multicluster:
-            global:
-              enabled: true
+    # # values-grafana ---------------------------------------------------------
+    # grafana:
+    #   enabled: false # manage by itself
+    #   forceDeployDashboards: true
+    #   sidecar:
+    #     dashboards:
+    #       multicluster:
+    #         global:
+    #           enabled: true
 
-    # values-kube-state-metrics ----------------------------------------------
-    kubeStateMetrics:
-      enabled: true
+    # # values-kube-state-metrics ----------------------------------------------
+    # kubeStateMetrics:
+    #   enabled: true
 
-    kube-state-metrics:
-      nameOverride: kube-state-metrics
-      fullnameOverride: kube-state-metrics
+    # kube-state-metrics:
+    #   nameOverride: kube-state-metrics
+    #   fullnameOverride: kube-state-metrics
 
-      ## set to true to add the release label so scraping of the servicemonitor with kube-prometheus-stack works out of the box
-      releaseLabel: true
+    #   ## set to true to add the release label so scraping of the servicemonitor with kube-prometheus-stack works out of the box
+    #   releaseLabel: true
 
-      ## enable prometheus serviceMonitor
-      prometheus:
-        monitor:
-          enabled: true
-          # additionalLabels: {}
-          # namespace: ""
-          # jobLabel: ""
-          # interval: ""
-          # scrapeTimeout: ""
-          # proxyUrl: ""
-          # selectorOverride: {}
-          # honorLabels: false
-          # metricRelabelings: []
-          # relabelings: []
+    #   ## enable prometheus serviceMonitor
+    #   prometheus:
+    #     monitor:
+    #       enabled: true
+    #       # additionalLabels: {}
+    #       # namespace: ""
+    #       # jobLabel: ""
+    #       # interval: ""
+    #       # scrapeTimeout: ""
+    #       # proxyUrl: ""
+    #       # selectorOverride: {}
+    #       # honorLabels: false
+    #       # metricRelabelings: []
+    #       # relabelings: []
 
-      # Enable self metrics configuration for service and Service Monitor
-      # Default values for telemetry configuration can be overridden
-      selfMonitor:
-        enabled: false
-        # telemetryHost: 0.0.0.0
-        # telemetryPort: 8081
+    #   # Enable self metrics configuration for service and Service Monitor
+    #   # Default values for telemetry configuration can be overridden
+    #   selfMonitor:
+    #     enabled: false
+    #     # telemetryHost: 0.0.0.0
+    #     # telemetryPort: 8081
 
-      resources:
-        requests:
-          cpu: 100m
-          memory: 30Mi
-        limits:
-          cpu: 200m
-          memory: 50Mi
+    #   resources:
+    #     requests:
+    #       cpu: 100m
+    #       memory: 30Mi
+    #     limits:
+    #       cpu: 200m
+    #       memory: 50Mi
 
-      tolerations:
-        - effect: NoSchedule
-          operator: Exists
-        # - effect: NoExecute
-        #   operator: Exists
-        # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
-        #   operator: Exists
+    #   tolerations:
+    #     - effect: NoSchedule
+    #       operator: Exists
+    #     # - effect: NoExecute
+    #     #   operator: Exists
+    #     # - effect: NoSchedule
+    #     #   key: node-role.kubernetes.io/master
+    #     #   operator: Exists
 
-    # values-node-exporter ---------------------------------------------------
-    nodeExporter:
-      enabled: true
-    prometheus-node-exporter:
-      nameOverride: node-exporter
-      fullnameOverride: node-exporter
+    # # values-node-exporter ---------------------------------------------------
+    # nodeExporter:
+    #   enabled: true
+    # prometheus-node-exporter:
+    #   nameOverride: node-exporter
+    #   fullnameOverride: node-exporter
 
-      extraArgs:
-        - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
-        - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
+    #   extraArgs:
+    #     - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+    #     - --collector.filesystem.fs-types-exclude=^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$
 
-      prometheus:
-        monitor:
-          enabled: true
-          jobLabel: jobLabel
-          relabelings:
-            - action: replace
-              regex: (.*)
-              replacement: $1
-              sourceLabels:
-                - __meta_kubernetes_pod_node_name
-              targetLabel: kubernetes_node
+    #   prometheus:
+    #     monitor:
+    #       enabled: true
+    #       jobLabel: jobLabel
+    #       relabelings:
+    #         - action: replace
+    #           regex: (.*)
+    #           replacement: $1
+    #           sourceLabels:
+    #             - __meta_kubernetes_pod_node_name
+    #           targetLabel: kubernetes_node
 
-      tolerations:
-        - effect: NoSchedule
-          operator: Exists
-        # - effect: NoExecute
-        #   operator: Exists
-        # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
-        #   operator: Exists
+    #   tolerations:
+    #     - effect: NoSchedule
+    #       operator: Exists
+    #     # - effect: NoExecute
+    #     #   operator: Exists
+    #     # - effect: NoSchedule
+    #     #   key: node-role.kubernetes.io/master
+    #     #   operator: Exists
 
-      resources:
-        requests:
-          cpu: 23m
-          memory: 105M
-        limits:
-          cpu: 23m
-          memory: 105M
+    #   resources:
+    #     requests:
+    #       cpu: 23m
+    #       memory: 105M
+    #     limits:
+    #       cpu: 23m
+    #       memory: 105M
 
-    # values-prometheus-exporters --------------------------------------------
-    coreDns:
-      enabled: true
-    kubelet:
-      enabled: true
-      serviceMonitor:
-        metricRelabelings:
-          - action: replace
-            sourceLabels:
-              - node
-            targetLabel: instance
-    kubeApiServer:
-      enabled: true
-    kubeControllerManager:
-      enabled: false
-      # endpoints:
-      #   - 10.2.118.10
-      #   - 10.2.118.11
-      #   - 10.2.118.12
-      # service:
-      #   enabled: true
-      #   port: 10257
-      #   targetPort:  10257
-      # serviceMonitor:
-      #   enabled: true
-      #   https: true
-      #   insecureSkipVerify: true
-    kubeEtcd:
-      enabled: false
-      # endpoints:
-      #   - 10.2.118.10
-      #   - 10.2.118.11
-      #   - 10.2.118.12
-      # service:
-      #   enabled: true
-      #   port: 2381
-      #   targetPort: 2381
-    kubeProxy:
-      enabled: false
-      # endpoints:
-      #   - 10.2.118.10
-      #   - 10.2.118.11
-      #   - 10.2.118.12
-    kubeScheduler:
-      enabled: false
-      # endpoints:
-      #   - 10.2.118.10
-      #   - 10.2.118.11
-      #   - 10.2.118.12
-      # service:
-      #   enabled: true
-      #   port: 10259
-      #   targetPort: 10259
-      # serviceMonitor:
-      #   enabled: true
-      #   https: true
-      #   insecureSkipVerify: true
+    # # values-prometheus-exporters --------------------------------------------
+    # coreDns:
+    #   enabled: true
+    # kubelet:
+    #   enabled: true
+    #   serviceMonitor:
+    #     metricRelabelings:
+    #       - action: replace
+    #         sourceLabels:
+    #           - node
+    #         targetLabel: instance
+    # kubeApiServer:
+    #   enabled: true
+    # kubeControllerManager:
+    #   enabled: false
+    #   # endpoints:
+    #   #   - 10.2.118.10
+    #   #   - 10.2.118.11
+    #   #   - 10.2.118.12
+    #   # service:
+    #   #   enabled: true
+    #   #   port: 10257
+    #   #   targetPort:  10257
+    #   # serviceMonitor:
+    #   #   enabled: true
+    #   #   https: true
+    #   #   insecureSkipVerify: true
+    # kubeEtcd:
+    #   enabled: false
+    #   # endpoints:
+    #   #   - 10.2.118.10
+    #   #   - 10.2.118.11
+    #   #   - 10.2.118.12
+    #   # service:
+    #   #   enabled: true
+    #   #   port: 2381
+    #   #   targetPort: 2381
+    # kubeProxy:
+    #   enabled: false
+    #   # endpoints:
+    #   #   - 10.2.118.10
+    #   #   - 10.2.118.11
+    #   #   - 10.2.118.12
+    # kubeScheduler:
+    #   enabled: false
+    #   # endpoints:
+    #   #   - 10.2.118.10
+    #   #   - 10.2.118.11
+    #   #   - 10.2.118.12
+    #   # service:
+    #   #   enabled: true
+    #   #   port: 10259
+    #   #   targetPort: 10259
+    #   # serviceMonitor:
+    #   #   enabled: true
+    #   #   https: true
+    #   #   insecureSkipVerify: true
 
-    # values-prometheus-operator ---------------------------------------------
-    ## Manages Prometheus and Alertmanager components
-    prometheusOperator:
-      enabled: true
+    # # values-prometheus-operator ---------------------------------------------
+    # ## Manages Prometheus and Alertmanager components
+    # prometheusOperator:
+    #   enabled: true
 
-      ## Namespaces to scope the interaction of the Prometheus Operator and the apiserver (allow list).
-      ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
-      # namespaces:
-      #   releaseNamespace: true
-      #   additional:
-      #   - kube-system
+    #   ## Namespaces to scope the interaction of the Prometheus Operator and the apiserver (allow list).
+    #   ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
+    #   # namespaces:
+    #   #   releaseNamespace: true
+    #   #   additional:
+    #   #   - kube-system
 
-      ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
-      # denyNamespaces: []
+    #   ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
+    #   # denyNamespaces: []
 
-      hostNetwork: false
+    #   hostNetwork: false
 
-      ## Resource limits & requests
-      resources:
-        requests:
-          cpu: 250m
-          memory: 250Mi
-        limits:
-          cpu: 250m
-          memory: 250Mi
+    #   ## Resource limits & requests
+    #   resources:
+    #     requests:
+    #       cpu: 250m
+    #       memory: 250Mi
+    #     limits:
+    #       cpu: 250m
+    #       memory: 250Mi
 
-      tolerations:
-        - effect: NoSchedule
-          operator: Exists
-        # - effect: NoExecute
-        #   operator: Exists
-        # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
-        #   operator: Exists
+    #   tolerations:
+    #     - effect: NoSchedule
+    #       operator: Exists
+    #     # - effect: NoExecute
+    #     #   operator: Exists
+    #     # - effect: NoSchedule
+    #     #   key: node-role.kubernetes.io/master
+    #     #   operator: Exists
 
-      ## Define which Nodes the Pods are scheduled on.
-      # nodeSelector:
-      #   node-role.kubernetes.io/master: "true"
+    #   ## Define which Nodes the Pods are scheduled on.
+    #   # nodeSelector:
+    #   #   node-role.kubernetes.io/master: "true"
 
-      ## Setting this option to 0 to disable cpu limits
-      ## see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175
-      # configReloaderCpu: 0
-      prometheusConfigReloader:
-        resources:
-          requests:
-            cpu: 11m
-            memory: 53M
-          limits:
-            cpu: 11m
-            memory: 53M
+    #   ## Setting this option to 0 to disable cpu limits
+    #   ## see https://github.com/prometheus-operator/prometheus-operator/blob/master/cmd/operator/main.go#L175
+    #   # configReloaderCpu: 0
+    #   prometheusConfigReloader:
+    #     resources:
+    #       requests:
+    #         cpu: 11m
+    #         memory: 53M
+    #       limits:
+    #         cpu: 11m
+    #         memory: 53M
 
-      # ## Thanos side-car image when configured
-      # thanosImage:
-      #   repository: quay.io/thanos/thanos
-      #   tag: v0.25.2
+    #   # ## Thanos side-car image when configured
+    #   # thanosImage:
+    #   #   repository: quay.io/thanos/thanos
+    #   #   tag: v0.25.2
 
-      # ## Set a Field Selector to filter watched secrets
-      # secretFieldSelector: ""
+    #   # ## Set a Field Selector to filter watched secrets
+    #   # secretFieldSelector: ""
 
-    # values-prometheus ------------------------------------------------------
-    ## Deploy a Prometheus instance
-    prometheus:
-      enabled: true
+    # # values-prometheus ------------------------------------------------------
+    # ## Deploy a Prometheus instance
+    # prometheus:
+    #   enabled: true
 
-      nameOverride: prometheus
+    #   nameOverride: prometheus
 
-      ingress:
-        enabled: false # see ingressRoute
+    #   ingress:
+    #     enabled: false # see ingressRoute
 
-      ## Settings affecting prometheusSpec
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
-      prometheusSpec:
-        ## If true, pass --storage.tsdb.max-block-duration=2h to prometheus. This is already done if using Thanos
-        disableCompaction: false
-        ## Interval between consecutive scrapes. Default 30s.
-        scrapeInterval: ""
-        ## Number of seconds to wait for target to respond before erroring
-        scrapeTimeout: ""
-        ## EnableAdminAPI enables Prometheus the administrative HTTP API which includes functionality such as deleting time series.
-        enableAdminAPI: true
+    #   ## Settings affecting prometheusSpec
+    #   ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
+    #   prometheusSpec:
+    #     ## If true, pass --storage.tsdb.max-block-duration=2h to prometheus. This is already done if using Thanos
+    #     disableCompaction: false
+    #     ## Interval between consecutive scrapes. Default 30s.
+    #     scrapeInterval: ""
+    #     ## Number of seconds to wait for target to respond before erroring
+    #     scrapeTimeout: ""
+    #     ## EnableAdminAPI enables Prometheus the administrative HTTP API which includes functionality such as deleting time series.
+    #     enableAdminAPI: true
 
-        ## External URL at which Prometheus will be reachable.
-        externalUrl: prometheus.${SECRET_DOMAIN}
+    #     ## External URL at which Prometheus will be reachable.
+    #     externalUrl: prometheus.${SECRET_DOMAIN}
 
-        # tolerations: []
-        # nodeSelector: {}
-        podAntiAffinity: soft
-        podAntiAffinityTopologyKey: kubernetes.io/hostname
+    #     # tolerations: []
+    #     # nodeSelector: {}
+    #     podAntiAffinity: soft
+    #     podAntiAffinityTopologyKey: kubernetes.io/hostname
 
-        ## Resource limits & requests
-        resources:
-          requests:
-            cpu: 500m
-            memory: 6Gi
-          limits:
-            cpu: 750m
-            memory: 7Gi
+    #     ## Resource limits & requests
+    #     resources:
+    #       requests:
+    #         cpu: 500m
+    #         memory: 6Gi
+    #       limits:
+    #         cpu: 750m
+    #         memory: 7Gi
 
-        ## Prometheus StorageSpec for persistent data
-        ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: local-path # csi-truenas-iscsi
-              resources:
-                requests:
-                  storage: 10Gi
-              ## for attaching retained PV
-              # selector:
-              #   matchLabels:
-              #     app.kubernetes.io/instance: kps-prometheus
-              #     app.kubernetes.io/name: prometheus
+    #     ## Prometheus StorageSpec for persistent data
+    #     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
+    #     storageSpec:
+    #       volumeClaimTemplate:
+    #         spec:
+    #           storageClassName: local-path # csi-truenas-iscsi
+    #           resources:
+    #             requests:
+    #               storage: 10Gi
+    #           ## for attaching retained PV
+    #           # selector:
+    #           #   matchLabels:
+    #           #     app.kubernetes.io/instance: kps-prometheus
+    #           #     app.kubernetes.io/name: prometheus
 
-        ## Number of replicas of each shard to deploy for a Prometheus deployment.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        replicas: 1
-        ## Name of the external label used to denote replica name
-        replicaExternalLabelName: replica
+    #     ## Number of replicas of each shard to deploy for a Prometheus deployment.
+    #     ## Number of replicas multiplied by shards is the total number of Pods created.
+    #     replicas: 1
+    #     ## Name of the external label used to denote replica name
+    #     replicaExternalLabelName: replica
 
-        ## EXPERIMENTAL: Number of shards to distribute targets onto.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        ## Note that scaling down shards will not reshard data onto remaining instances, it must be manually moved.
-        ## Increasing shards will not reshard data either but it will continue to be available from the same instances.
-        ## To query globally use Thanos sidecar and Thanos querier or remote write data to a central location.
-        ## Sharding is done on the content of the `__address__` target meta-label.
-        shards: 1
+    #     ## EXPERIMENTAL: Number of shards to distribute targets onto.
+    #     ## Number of replicas multiplied by shards is the total number of Pods created.
+    #     ## Note that scaling down shards will not reshard data onto remaining instances, it must be manually moved.
+    #     ## Increasing shards will not reshard data either but it will continue to be available from the same instances.
+    #     ## To query globally use Thanos sidecar and Thanos querier or remote write data to a central location.
+    #     ## Sharding is done on the content of the `__address__` target meta-label.
+    #     shards: 1
 
-        ## How long to retain metrics
-        retention: 36h # 3d
-        ## Maximum size of metrics
-        retentionSize: 3GiB
-        ## Enable compression of the write-ahead log using Snappy.
-        walCompression: true
+    #     ## How long to retain metrics
+    #     retention: 36h # 3d
+    #     ## Maximum size of metrics
+    #     retentionSize: 3GiB
+    #     ## Enable compression of the write-ahead log using Snappy.
+    #     walCompression: true
 
-        ## Log level for Prometheus be configured in
-        logLevel: info
+    #     ## Log level for Prometheus be configured in
+    #     logLevel: info
 
-        # ## Alertmanagers to which alerts will be sent (default - use integrated alertmanager)
-        # ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
-        # alertingEndpoints:
-        #   - name: alertmanager
-        #     namespace: monitoring
-        #     port: http
-        #     # scheme: http
-        #     # pathPrefix: ""
-        #     # tlsConfig: {}
-        #     # bearerTokenFile: ""
-        #     # apiVersion: v2
+    #     # ## Alertmanagers to which alerts will be sent (default - use integrated alertmanager)
+    #     # ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
+    #     # alertingEndpoints:
+    #     #   - name: alertmanager
+    #     #     namespace: monitoring
+    #     #     port: http
+    #     #     # scheme: http
+    #     #     # pathPrefix: ""
+    #     #     # tlsConfig: {}
+    #     #     # bearerTokenFile: ""
+    #     #     # apiVersion: v2
 
-        ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
-        ## prometheus resource to be created with selectors based on values in the helm deployment,
-        ## which will also match the Prometheus___resources created
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
+    #     ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
+    #     ## prometheus resource to be created with selectors based on values in the helm deployment,
+    #     ## which will also match the Prometheus___resources created
+    #     ruleSelectorNilUsesHelmValues: false
+    #     serviceMonitorSelectorNilUsesHelmValues: false
+    #     podMonitorSelectorNilUsesHelmValues: false
+    #     probeSelectorNilUsesHelmValues: false
 
-        ## AdditionalScrapeConfigs allows specifying additional Prometheus scrape configurations.
-        ## Scrape configurations are appended to the configurations generated by the Prometheus Operator.
-        ## Job configurations must have the form as specified in the official Prometheus documentation:
-        ## https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config.
-        ## As scrape configs are appended, the user is responsible to make sure it is valid.
-        ## Note that using this feature may expose the possibility to break upgrades of Prometheus.
-        ## It is advised to review Prometheus release notes to ensure that no incompatible scrape configs are going to break Prometheus after the upgrade.
-        ## AdditionalScrapeConfigs can be defined as a list or as a templated string.
-        additionalScrapeConfigs:
-          - job_name: opnsense
-            honor_timestamps: true
-            static_configs:
-              - targets:
-                  - "opnsense.${SECRET_DOMAIN}:9100"
-          - job_name: truenas-minio
-            bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4MDUxODEzODIsImlzcyI6InByb21ldGhldXMiLCJzdWIiOiJadGdROWdHcmJ3RUNaOGt4WlJRbyJ9.W1oCrRnCbP3SJCGiT1I5yrfAYqhO4coehQqWUduF8DLXKhOStS3LteNrPCPn5fodjWHydu_BILwkc6AhOwWe9g
-            metrics_path: /minio/v2/metrics/node
-            scheme: https
-            static_configs:
-              - targets:
-                  - "truenas.${SECRET_DOMAIN}:9000"
-          - job_name: crunchy-postgres-exporter
-            kubernetes_sd_configs:
-              - role: pod
-            relabel_configs:
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_crunchy_postgres_exporter, __meta_kubernetes_pod_label_crunchy_postgres_exporter]
-                action: keep
-                regex: true
-                separator: ""
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 5432
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 10000
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 8009
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 2022
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: ^$
-              - source_labels: [__meta_kubernetes_namespace]
-                action: replace
-                target_label: kubernetes_namespace
-              - source_labels: [__meta_kubernetes_pod_name]
-                target_label: pod
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster, __meta_kubernetes_pod_label_pg_cluster]
-                target_label: cluster
-                separator: ""
-                replacement: "$1"
-              - source_labels: [__meta_kubernetes_namespace, cluster]
-                target_label: pg_cluster
-                separator: ":"
-                replacement: "$1$2"
-              - source_labels: [__meta_kubernetes_pod_ip]
-                target_label: ip
-                replacement: "$1"
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance, __meta_kubernetes_pod_label_deployment_name]
-                target_label: deployment
-                replacement: "$1"
-                separator: ""
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role, __meta_kubernetes_pod_label_role]
-                target_label: role
-                replacement: "$1"
-                separator: ""
-              - source_labels: [dbname]
-                target_label: dbname
-                replacement: "$1"
-              - source_labels: [relname]
-                target_label: relname
-                replacement: "$1"
-              - source_labels: [schemaname]
-                target_label: schemaname
-                replacement: "$1"
+    #     ## AdditionalScrapeConfigs allows specifying additional Prometheus scrape configurations.
+    #     ## Scrape configurations are appended to the configurations generated by the Prometheus Operator.
+    #     ## Job configurations must have the form as specified in the official Prometheus documentation:
+    #     ## https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config.
+    #     ## As scrape configs are appended, the user is responsible to make sure it is valid.
+    #     ## Note that using this feature may expose the possibility to break upgrades of Prometheus.
+    #     ## It is advised to review Prometheus release notes to ensure that no incompatible scrape configs are going to break Prometheus after the upgrade.
+    #     ## AdditionalScrapeConfigs can be defined as a list or as a templated string.
+    #     additionalScrapeConfigs:
+    #       - job_name: opnsense
+    #         honor_timestamps: true
+    #         static_configs:
+    #           - targets:
+    #               - "opnsense.${SECRET_DOMAIN}:9100"
+    #       - job_name: truenas-minio
+    #         bearer_token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjQ4MDUxODEzODIsImlzcyI6InByb21ldGhldXMiLCJzdWIiOiJadGdROWdHcmJ3RUNaOGt4WlJRbyJ9.W1oCrRnCbP3SJCGiT1I5yrfAYqhO4coehQqWUduF8DLXKhOStS3LteNrPCPn5fodjWHydu_BILwkc6AhOwWe9g
+    #         metrics_path: /minio/v2/metrics/node
+    #         scheme: https
+    #         static_configs:
+    #           - targets:
+    #               - "truenas.${SECRET_DOMAIN}:9000"
+    #       - job_name: crunchy-postgres-exporter
+    #         kubernetes_sd_configs:
+    #           - role: pod
+    #         relabel_configs:
+    #           - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_crunchy_postgres_exporter, __meta_kubernetes_pod_label_crunchy_postgres_exporter]
+    #             action: keep
+    #             regex: true
+    #             separator: ""
+    #           - source_labels: [__meta_kubernetes_pod_container_port_number]
+    #             action: drop
+    #             regex: 5432
+    #           - source_labels: [__meta_kubernetes_pod_container_port_number]
+    #             action: drop
+    #             regex: 10000
+    #           - source_labels: [__meta_kubernetes_pod_container_port_number]
+    #             action: drop
+    #             regex: 8009
+    #           - source_labels: [__meta_kubernetes_pod_container_port_number]
+    #             action: drop
+    #             regex: 2022
+    #           - source_labels: [__meta_kubernetes_pod_container_port_number]
+    #             action: drop
+    #             regex: ^$
+    #           - source_labels: [__meta_kubernetes_namespace]
+    #             action: replace
+    #             target_label: kubernetes_namespace
+    #           - source_labels: [__meta_kubernetes_pod_name]
+    #             target_label: pod
+    #           - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster, __meta_kubernetes_pod_label_pg_cluster]
+    #             target_label: cluster
+    #             separator: ""
+    #             replacement: "$1"
+    #           - source_labels: [__meta_kubernetes_namespace, cluster]
+    #             target_label: pg_cluster
+    #             separator: ":"
+    #             replacement: "$1$2"
+    #           - source_labels: [__meta_kubernetes_pod_ip]
+    #             target_label: ip
+    #             replacement: "$1"
+    #           - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance, __meta_kubernetes_pod_label_deployment_name]
+    #             target_label: deployment
+    #             replacement: "$1"
+    #             separator: ""
+    #           - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role, __meta_kubernetes_pod_label_role]
+    #             target_label: role
+    #             replacement: "$1"
+    #             separator: ""
+    #           - source_labels: [dbname]
+    #             target_label: dbname
+    #             replacement: "$1"
+    #           - source_labels: [relname]
+    #             target_label: relname
+    #             replacement: "$1"
+    #           - source_labels: [schemaname]
+    #             target_label: schemaname
+    #             replacement: "$1"
 
-        ## prometheus.prometheusSpec.thanos allows configuring various aspects of a Prometheus server in a Thanos environment.
-        ## This section is experimental, it may change significantly without deprecation notice in any release.
-        ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#thanosspec
-        # thanos:
-        #   secretProviderClass:
-        #     provider: gcp
-        #     parameters:
-        #       secrets: |
-        #         - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
-        #           fileName: "objstore.yaml"
-        #   objectStorageConfigFile: /var/secrets/object-store.yaml
+    #     ## prometheus.prometheusSpec.thanos allows configuring various aspects of a Prometheus server in a Thanos environment.
+    #     ## This section is experimental, it may change significantly without deprecation notice in any release.
+    #     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#thanosspec
+    #     # thanos:
+    #     #   secretProviderClass:
+    #     #     provider: gcp
+    #     #     parameters:
+    #     #       secrets: |
+    #     #         - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
+    #     #           fileName: "objstore.yaml"
+    #     #   objectStorageConfigFile: /var/secrets/object-store.yaml
 
-      # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
-      # thanosService:
-      #   enabled: true
-      # ## ServiceMonitor to scrape Sidecar metrics
-      # ## Needs thanosService to be enabled as well
-      # thanosServiceMonitor:
-      #   enabled: true
-      # ## Service for external access to sidecar
-      # ## Enabling this creates a service to expose thanos-sidecar outside the cluster.
-      # thanosServiceExternal:
-      #   enabled: false
-      # ## Ingress exposes thanos sidecar outside the cluster
-      # thanosIngress:
-      #   enabled: false # use ingressRoute if required
+    #   # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
+    #   # thanosService:
+    #   #   enabled: true
+    #   # ## ServiceMonitor to scrape Sidecar metrics
+    #   # ## Needs thanosService to be enabled as well
+    #   # thanosServiceMonitor:
+    #   #   enabled: true
+    #   # ## Service for external access to sidecar
+    #   # ## Enabling this creates a service to expose thanos-sidecar outside the cluster.
+    #   # thanosServiceExternal:
+    #   #   enabled: false
+    #   # ## Ingress exposes thanos sidecar outside the cluster
+    #   # thanosIngress:
+    #   #   enabled: false # use ingressRoute if required
 
-    # values-rules -----------------------------------------------------------
-    defaultRules:
-      create: true
-      rules:
-        alertmanager: true
-        etcd: false # current version causes extra alerts.  Use our own.
-        configReloaders: true
-        general: true
-        k8s: true
-        kubeApiserver: true
-        kubeApiserverAvailability: true
-        kubeApiserverSlos: true
-        kubelet: true
-        kubeProxy: false
-        kubePrometheusGeneral: true
-        kubePrometheusNodeRecording: true
-        kubernetesApps: true
-        kubernetesResources: true
-        kubernetesStorage: true
-        kubernetesSystem: true
-        kubeScheduler: false
-        kubeStateMetrics: true
-        network: true
-        node: true
-        nodeExporterAlerting: true
-        nodeExporterRecording: true
-        prometheus: true
-        prometheusOperator: true
+    # # values-rules -----------------------------------------------------------
+    # defaultRules:
+    #   create: true
+    #   rules:
+    #     alertmanager: true
+    #     etcd: false # current version causes extra alerts.  Use our own.
+    #     configReloaders: true
+    #     general: true
+    #     k8s: true
+    #     kubeApiserver: true
+    #     kubeApiserverAvailability: true
+    #     kubeApiserverSlos: true
+    #     kubelet: true
+    #     kubeProxy: false
+    #     kubePrometheusGeneral: true
+    #     kubePrometheusNodeRecording: true
+    #     kubernetesApps: true
+    #     kubernetesResources: true
+    #     kubernetesStorage: true
+    #     kubernetesSystem: true
+    #     kubeScheduler: false
+    #     kubeStateMetrics: true
+    #     network: true
+    #     node: true
+    #     nodeExporterAlerting: true
+    #     nodeExporterRecording: true
+    #     prometheus: true
+    #     prometheusOperator: true
