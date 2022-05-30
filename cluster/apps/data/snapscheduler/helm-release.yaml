@@ -23,10 +23,10 @@ spec:
 
     resources:
       requests:
-        cpu: 11m
+        cpu: 23m
         memory: 53M
       limits:
-        cpu: 11m
+        cpu: 23m
         memory: 53M
 
     rbacProxy:
