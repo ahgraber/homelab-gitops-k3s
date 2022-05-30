@@ -38,10 +38,10 @@ data:
         ## Resource limits & requests
         resources:
           requests:
-            cpu: 500m
-            memory: 6Gi
+            cpu: 813m
+            memory: 7Gi
           limits:
-            cpu: 750m
+            cpu: 813m
             memory: 7Gi
 
         ## Prometheus StorageSpec for persistent data
