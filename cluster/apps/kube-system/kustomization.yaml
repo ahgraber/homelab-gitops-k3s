@@ -9,3 +9,4 @@ resources:
   # - node-feature-discovery/
   - reflector/
   - reloader/
+  # - system-upgrade/ # manage w/ ansible
