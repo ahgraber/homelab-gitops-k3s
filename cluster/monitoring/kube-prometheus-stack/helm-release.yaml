@@ -549,7 +549,6 @@ spec:
         #   objectStorageConfigFile: /var/secrets/object-store.yaml
 
       # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
-      # ## (Please remember to change ${kube-prometheus-stack.fullname} and ${namespace}. Not just copy and paste!)
       # thanosService:
       #   enabled: true
       # ## ServiceMonitor to scrape Sidecar metrics

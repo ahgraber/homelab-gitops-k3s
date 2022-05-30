@@ -38,13 +38,13 @@ data:
         # telemetryHost: 0.0.0.0
         # telemetryPort: 8081
 
-      resources: {}
-        # requests:
-        #   cpu: 100m
-        #   memory: 30Mi
-        # limits:
-        #   cpu: 200m
-        #   memory: 50Mi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 30Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
 
       tolerations:
         - effect: NoSchedule
