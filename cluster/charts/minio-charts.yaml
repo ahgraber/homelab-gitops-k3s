@@ -5,9 +5,9 @@ metadata:
   name: minio-charts
   namespace: flux-system
 spec:
-  interval: 30m
+  interval: 1h
   # operator (clustered/multitenancy -- i.e., not what we want!)
   # url: https://operator.min.io/
   # gateway (https://github.com/minio/ming)
   url: https://ming.min.io/
-  timeout: 2m
+  timeout: 3m
