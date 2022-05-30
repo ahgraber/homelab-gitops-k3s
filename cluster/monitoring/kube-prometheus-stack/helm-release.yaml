@@ -48,7 +48,7 @@ spec:
         enabled: false
 
       alertmanagerSpec:
-        externalUrl: alertmanager.${SECRET_DOMAIN}
+        # externalUrl: "https://alertmanager.${SECRET_DOMAIN}""
         retention: 72h
         storage:
           volumeClaimTemplate:
@@ -365,7 +365,7 @@ spec:
         enableAdminAPI: true
 
         ## External URL at which Prometheus will be reachable.
-        externalUrl: prometheus.${SECRET_DOMAIN}
+        # externalUrl: "https://prometheus.${SECRET_DOMAIN}"
 
         # tolerations: []
         # nodeSelector: {}
