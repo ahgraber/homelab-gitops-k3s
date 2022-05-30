@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: ALERTMANAGER_URI
-              value: http://prometheus-alertmanager:9093
+              value: http://alertmanager-operated:9093
           ports:
             - name: http
               containerPort: 8080
