@@ -75,7 +75,7 @@ spec:
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-prometheus.monitoring:9090/
+            url: http://prometheus-operated.monitoring:9090/
             access: proxy
             isDefault: true
             # url: http://thanos-query.monitoring:9090/
