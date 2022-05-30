@@ -39,8 +39,8 @@ data:
 
       resources:
         requests:
-          cpu: 23m
+          cpu: 50m
           memory: 105M
         limits:
-          cpu: 23m
+          cpu: 50m
           memory: 105M
