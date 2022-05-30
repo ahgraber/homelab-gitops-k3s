@@ -30,8 +30,8 @@ data:
         ## External URL at which Prometheus will be reachable.
         externalUrl: prometheus.${SECRET_DOMAIN}
 
-        tolerations: []
-        nodeSelector: {}
+        # tolerations: []
+        # nodeSelector: {}
         podAntiAffinity: soft
         podAntiAffinityTopologyKey: kubernetes.io/hostname
 
@@ -85,26 +85,15 @@ data:
 
         # ## Alertmanagers to which alerts will be sent (default - use integrated alertmanager)
         # ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
-        alertingEndpoints: []
-          # - name: alertmanager
-          #   namespace: monitoring
-          #   port: http
-          #   # scheme: http
-          #   # pathPrefix: ""
-          #   # tlsConfig: {}
-          #   # bearerTokenFile: ""
-          #   # apiVersion: v2
-
-        ## Secrets is a list of Secret [names?] in the same namespace as the Prometheus object, to be mounted into the Prometheus Pods.
-        ## The Secrets are mounted into /etc/prometheus/secrets/.
-        ## Secrets changes after initial creation of a Prometheus object are not
-        ## reflected in the running Pods. To change the secrets mounted into the Prometheus Pods,
-        ## the object must be deleted and recreated with the new list of secrets.
-        secrets: []
-
-        ## ConfigMaps is a list of ConfigMap [names?] in the same namespace as the Prometheus object, to be mounted into the Prometheus Pods.
-        ## The ConfigMaps are mounted into /etc/prometheus/configmaps/.
-        configMaps: []
+        # alertingEndpoints:
+        #   - name: alertmanager
+        #     namespace: monitoring
+        #     port: http
+        #     # scheme: http
+        #     # pathPrefix: ""
+        #     # tlsConfig: {}
+        #     # bearerTokenFile: ""
+        #     # apiVersion: v2
 
         ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
         ## prometheus resource to be created with selectors based on values in the helm deployment,
@@ -192,28 +181,20 @@ data:
                 target_label: schemaname
                 replacement: '$1'
 
-        ## If additional scrape configurations are already deployed in a single secret file you can use this section.
-        ## additionalScrapeConfigsSecret cannot be used with additionalScrapeConfigs
-        ## Expected values are the secret name and key
-        additionalScrapeConfigsSecret: {}
-          # enabled: false
-          # name:
-          # key:
-
         ## prometheus.prometheusSpec.thanos allows configuring various aspects of a Prometheus server in a Thanos environment.
         ## This section is experimental, it may change significantly without deprecation notice in any release.
         ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#thanosspec
-        thanos: {}
-          # secretProviderClass:
-          #   provider: gcp
-          #   parameters:
-          #     secrets: |
-          #       - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
-          #         fileName: "objstore.yaml"
-          # objectStorageConfigFile: /var/secrets/object-store.yaml
+        # thanos:
+        #   secretProviderClass:
+        #     provider: gcp
+        #     parameters:
+        #       secrets: |
+        #         - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
+        #           fileName: "objstore.yaml"
+        #   objectStorageConfigFile: /var/secrets/object-store.yaml
 
       # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
-      # ## (Please remember to change ${kube-prometheus-stack.fullname} and ${namespace}. Not just copy and paste!)
+      # ## (Please remember to change $${kube-prometheus-stack.fullname} and $${namespace}. Not just copy and paste!)
       # thanosService:
       #   enabled: true
       # ## ServiceMonitor to scrape Sidecar metrics
