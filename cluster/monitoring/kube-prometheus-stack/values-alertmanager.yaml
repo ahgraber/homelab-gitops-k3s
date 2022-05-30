@@ -81,8 +81,8 @@ data:
               matchers:
                 - alertname =~ "InfoInhibitor|Watchdog"
             - receiver: "email"
-              match_re:
-                severity: critical
+              matchers:
+                - severity = "critical"
               continue: true
 
         # Inhibition rules allow to mute a set of alerts given that another alert is firing.
