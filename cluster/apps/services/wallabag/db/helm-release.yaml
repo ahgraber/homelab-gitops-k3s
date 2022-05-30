@@ -30,10 +30,10 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 384M
+            memory: 512Mi
           limits:
             cpu: 100m
-            memory: 384M
+            memory: 512Mi
         dataVolumeClaimSpec:
           storageClassName: csi-truenas-iscsi-retain
           accessModes:

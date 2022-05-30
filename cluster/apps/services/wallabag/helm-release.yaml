@@ -121,6 +121,14 @@ spec:
     # podAnnotations:
     #   backup.velero.io/backup-volumes: images
 
+    resources:
+      requests:
+        cpu: 100m
+        memory: 384M
+      limits:
+        # cpu: 250m # if set, wallabag will not start
+        memory: 384M
+
     service:
       main:
         ports:
@@ -133,14 +141,6 @@ spec:
     securityContext:
       runAsUser: 0
       # runAsUser: 65534 # nobody
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 384M
-      limits:
-        # cpu: 250m
-        memory: 384M
 
     probes:
       liveness:
