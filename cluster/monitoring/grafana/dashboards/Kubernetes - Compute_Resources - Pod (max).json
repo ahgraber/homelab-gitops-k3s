@@ -113,7 +113,7 @@
           "step": 10
         },
         {
-          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}\n)\n",
+          "expr": "sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "requests",
@@ -121,12 +121,24 @@
           "step": 10
         },
         {
-          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}\n)\n",
+          "expr": "sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "limits",
           "refId": "C",
           "step": 10
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "max_over_time(rate(container_cpu_usage_seconds_total{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}[2d:15m]))",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "max({{container}})",
+          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -627,7 +639,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\"}\n)\n",
+          "expr": "sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "requests",
@@ -639,7 +651,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
-          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\"}\n)\n",
+          "expr": "sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"memory\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "limits",
@@ -652,7 +664,7 @@
             "uid": "$datasource"
           },
           "exemplar": true,
-          "expr": "max_over_time(container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", container!=\"\", image!=\"\"}[2d:15m])",
+          "expr": "max_over_time(sum(rate(container_cpu_usage_seconds_total{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}[5m]))[2d:15m])",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
@@ -2361,7 +2373,7 @@
     "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "utc",
-  "title": "Kubernetes / Compute Resources / Pod (Max_Memory)",
+  "title": "Kubernetes / Compute Resources / Pod (Max)",
   "uid": "gu2eoyCCpEqMEwJn4Omo0N",
   "version": 1,
   "weekStart": ""
