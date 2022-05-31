@@ -6,7 +6,7 @@ resources:
   - default/
   - flux-system/
   - kube-system/
-  - monitoring/
+  # - monitoring/
   - networking/
   - security/
   - services/
