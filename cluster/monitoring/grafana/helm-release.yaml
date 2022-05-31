@@ -98,10 +98,10 @@ spec:
           url: https://grafana.com/api/dashboards/1860/revisions/22/download
           datasource: Prometheus
         pod-resources-max:
-          url: https://github.com/ahgraber/homelab-gitops-k3s/blob/main/cluster/monitoring/grafana/dashboards/Kubernetes%20-%20Compute_Resources%20-%20Pod%20(max).json
+          url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/pod-resources-max.json
           datasource: Prometheus
         cert-manager:
-          url: https://github.com/ahgraber/homelab-gitops-k3s/blob/main/cluster/monitoring/grafana/dashboards/cert-manager.json
+          url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/cert-manager.json
         speedtest:
           gnetId: 13665
           revision: 1
