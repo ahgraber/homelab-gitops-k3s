@@ -133,7 +133,7 @@
             "type": "prometheus",
             "uid": "$datasource"
           },
-          "expr": "max_over_time(rate(container_cpu_usage_seconds_total{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}[2d:15m]))",
+          "expr": "max_over_time(sum(rate(container_cpu_usage_seconds_total{job=\"kube-state-metrics\", cluster=\"$cluster\", namespace=\"$namespace\", pod=\"$pod\", resource=\"cpu\"}[1m]))[2d:15m])",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
