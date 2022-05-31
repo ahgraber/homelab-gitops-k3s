@@ -16,14 +16,15 @@ spec:
         name: jetstack-charts
         namespace: flux-system
   values:
-    installCRDs: true
-    webhook:
-      enabled: true
+    installCRDs: false
+
+    # Comma separated list of feature gates that should be enabled on the controller pod.
+    featureGates: ""
+
     extraArgs:
       - "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53"
       - "--dns01-recursive-nameservers-only"
-    cainjector:
-      replicaCount: 1
+
     podDnsPolicy: "None"
     podDnsConfig:
       nameservers:
@@ -34,10 +35,39 @@ spec:
       enabled: true
       servicemonitor:
         enabled: true
-        prometheusInstance: default
+        prometheusInstance: monitoring
         targetPort: 9402
         path: /metrics
         interval: 60s
         scrapeTimeout: 30s
         labels: {}
         honorLabels: false
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 64m
+        memory: 64Mi
+
+    webhook:
+      enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 64m
+          memory: 64Mi
+
+    cainjector:
+      enabled: true
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 64m
+          memory: 64Mi
