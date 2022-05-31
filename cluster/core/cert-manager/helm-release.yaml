@@ -45,8 +45,8 @@ spec:
 
     resources:
       requests:
-        cpu: 10m
-        memory: 64Mi
+        cpu: 15m
+        memory: 128Mi
       limits:
         cpu: 64m
         memory: 128Mi
@@ -55,19 +55,19 @@ spec:
       enabled: true
       resources:
         requests:
-          cpu: 10m
-          memory: 25Mi
+          cpu: 23m
+          memory: 105M
         limits:
-          cpu: 30m
-          memory: 25Mi
+          cpu: 23m
+          memory: 105M
 
     cainjector:
       enabled: true
       replicaCount: 1
       resources:
         requests:
-          cpu: 10m
-          memory: 64Mi
+          cpu: 36m
+          memory: 256Mi
         limits:
-          cpu: 64m
-          memory: 128Mi
+          cpu: 36m
+          memory: 256Mi
