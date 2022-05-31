@@ -8,7 +8,7 @@ resources:
   ## monitoring/ services should be managed with monitoring/
   - etcd.yaml
   # - loki.yaml
-  # - node-exporter.yaml
+  - node-exporter.yaml
   ## app/ services
   - crunchydata.yaml
   - kured.yaml
