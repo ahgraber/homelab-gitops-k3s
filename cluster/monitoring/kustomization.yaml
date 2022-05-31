@@ -8,7 +8,6 @@ resources:
   - kube-prometheus-stack/
   # - loki/
   - node-problem-detector/
-  # - promtail/
   # # - speedtest-exporter/
   # - thanos/
   # # - uptimerobot-prometheus/
