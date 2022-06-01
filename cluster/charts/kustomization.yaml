@@ -27,6 +27,7 @@ resources:
   - k8s-at-home-charts.yaml
   - kasten-charts.yaml
   - kuberhealthy-charts.yaml
+  - kyverno-charts.yaml
   - lwolf-charts.yaml
   - metallb-charts.yaml
   - metrics-server-charts.yaml

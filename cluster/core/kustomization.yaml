@@ -8,6 +8,7 @@ resources:
   - flux-system/
   - kube-system/
   # - kube-vip/  # managed in ansible k3s install
+  - kyverno/
   - metallb-system/
   # - rook-ceph/
   - tigera-operator/ # may conflict from version managed in ansible k3s install
