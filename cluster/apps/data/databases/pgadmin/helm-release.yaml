@@ -48,7 +48,6 @@ spec:
       # required to initialize
       requests:
         cpu: 25m
-        memory: 183M
+        memory: 204Mi
       limits:
-        cpu: 400m
-        memory: 1024M
+        memory: 1024Mi

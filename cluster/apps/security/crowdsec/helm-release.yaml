@@ -49,11 +49,12 @@ spec:
           enabled: false
 
       resources:
-        limits:
-          memory: 100Mi
         requests:
           cpu: 150m
           memory: 100Mi
+        limits:
+          memory: 100Mi
+
       # -- Enable persistent volumes
       persistentVolume:
         # -- Persistent volume for data folder. Stores e.g. registered bouncer api keys

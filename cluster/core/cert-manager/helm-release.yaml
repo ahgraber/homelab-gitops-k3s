@@ -48,7 +48,6 @@ spec:
         cpu: 15m
         memory: 128Mi
       limits:
-        cpu: 64m
         memory: 128Mi
 
     webhook:

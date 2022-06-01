@@ -29,11 +29,11 @@ spec:
       enabled: true
       resources:
         requests:
-          cpu: 45m
-          memory: 105M
+          cpu: 15m
+          memory: 105Mi
         limits:
-          cpu: 256m
-          memory: 132M
+          cpu: 15m
+          memory: 132Mi
 
     dashboard:
       enabled: true
@@ -42,10 +42,10 @@ spec:
       resources:
         requests:
           cpu: 15m
-          memory: 100M
+          memory: 105Mi
         limits:
-          cpu: 100m
-          memory: 200M
+          cpu: 15m
+          memory: 105Mi
 
     ingress:
       enabled: false

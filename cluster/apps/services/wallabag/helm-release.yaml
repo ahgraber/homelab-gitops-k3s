@@ -47,7 +47,6 @@ spec:
             cpu: 11m
             memory: 53M
           limits:
-            cpu: 11m
             memory: 53M
 
     env:
@@ -126,7 +125,6 @@ spec:
         cpu: 100m
         memory: 384M
       limits:
-        # cpu: 250m # if set, wallabag will not start
         memory: 384M
 
     service:
@@ -186,10 +184,9 @@ spec:
           # existingClaim: wallabag-redis
         resources:
           requests:
-            cpu: 50m
+            cpu: 35m
             memory: 128M
           limits:
-            cpu: 50m
             memory: 128M
       replica:
         replicaCount: 0
