@@ -38,40 +38,12 @@ spec:
       strategy: deployment
       externalAttacher:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalProvisioner:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalResizer:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 37M
-          limits:
-            cpu: 11m
-            memory: 37M
       external Snapshotter:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalHealthMonitorController:
         enabled: false
       livenessProbe:
@@ -90,12 +62,6 @@ spec:
         #     exec:
         #       command: ["/bin/sh","-c","umount /mnt/nfs"]
         resources:
-          requests:
-            cpu: 35m
-            memory: 127M
-          limits:
-            cpu: 35m
-            memory: 127M
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
@@ -139,32 +105,9 @@ spec:
           ext4:
             enabled: true
 
-      cleanup:
-        resources:
-          requests:
-            cpu: 11m
-            memory: 14M
-          limits:
-            cpu: 11m
-            memory: 14M
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
-        resources:
-          requests:
-            cpu: 35m
-            memory: 127M
-          limits:
-            cpu: 35m
-            memory: 127M
-      driverRegistrar:
-        resources:
-          requests:
-            cpu: 11m
-            memory: 14M
-          limits:
-            cpu: 11m
-            memory: 14M
 
       tolerations:
         - key: node-role.kubernetes.io/master
@@ -191,12 +134,3 @@ spec:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
           velero.io/csi-volumesnapshot-class: "true"
-
-    csiProxy:
-      resources:
-        requests:
-          cpu: 11m
-          memory: 14M
-        limits:
-          cpu: 11m
-          memory: 14M

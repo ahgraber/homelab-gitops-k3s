@@ -25,11 +25,10 @@ data:
       ## Resource limits & requests
       resources:
         requests:
-          cpu: 250m
-          memory: 250Mi
+          cpu: 23m
+          memory: 150Mi
         limits:
-          cpu: 250m
-          memory: 250Mi
+          memory: 150Mi
 
       tolerations:
         - effect: NoSchedule

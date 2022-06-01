@@ -44,7 +44,6 @@ spec:
             cpu: 11m
             memory: 53M
           limits:
-            cpu: 11m
             memory: 53M
     env:
       DATABASE_URL:
@@ -82,5 +81,4 @@ spec:
         cpu: 25m
         memory: 105M
       limits:
-        cpu: 50m
-        memory: 225M
+        memory: 105M

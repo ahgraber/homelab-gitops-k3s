@@ -150,11 +150,10 @@ spec:
 
     resources:
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 49m
+        memory: 81Mi
       limits:
-        cpu: 100m
-        memory: 128Mi
+        memory: 81Mi
 
     persistence:
       enabled: true

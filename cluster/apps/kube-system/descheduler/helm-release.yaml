@@ -52,11 +52,10 @@ spec:
 
     resources:
       requests:
-        cpu: 500m
-        memory: 256Mi
-      # limits:
-      #   cpu: 100m
-      #   memory: 128Mi
+        cpu: 50m
+        memory: 50Mi
+      limits:
+        memory: 105Mi
 
     tolerations:
       - effect: NoSchedule

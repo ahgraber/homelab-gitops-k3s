@@ -28,7 +28,6 @@ spec:
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
         driver: freenas-api-iscsi
-
     controller:
       enabled: true
       hostNetwork: true
@@ -38,40 +37,12 @@ spec:
       strategy: deployment
       externalAttacher:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalProvisioner:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalResizer:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 37M
-          limits:
-            cpu: 11m
-            memory: 37M
       external Snapshotter:
         enabled: true
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
       externalHealthMonitorController:
         enabled: false
       livenessProbe:
@@ -85,13 +56,6 @@ spec:
             add:
               - SYS_ADMIN
           privileged: true
-        resources:
-          requests:
-            cpu: 49m
-            memory: 127M
-          limits:
-            cpu: 49m
-            memory: 127M
 
       tolerations:
         - effect: NoSchedule
@@ -129,32 +93,10 @@ spec:
           ext4:
             enabled: true
 
-      cleanup:
-        resources:
-          requests:
-            cpu: 11m
-            memory: 14M
-          limits:
-            cpu: 11m
-            memory: 14M
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
-        resources:
-          requests:
-            cpu: 49m
-            memory: 127M
-          limits:
-            cpu: 49m
-            memory: 127M
-      driverRegistrar:
-        resources:
-          requests:
-            cpu: 11m
-            memory: 24M
-          limits:
-            cpu: 11m
-            memory: 24M
+
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
@@ -197,12 +139,3 @@ spec:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
           velero.io/csi-volumesnapshot-class: "true"
-
-    csiProxy:
-      resources:
-        requests:
-          cpu: 11m
-          memory: 14M
-        limits:
-          cpu: 11m
-          memory: 14M
