@@ -36,7 +36,6 @@ data:
             cpu: 23m
             memory: 53M
           limits:
-            cpu: 23m
             memory: 53M
 
         # tolerations: []

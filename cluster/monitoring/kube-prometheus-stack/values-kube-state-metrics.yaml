@@ -40,10 +40,9 @@ data:
 
       resources:
         requests:
-          cpu: 100m
-          memory: 30Mi
+          cpu: 23m
+          memory: 50Mi
         limits:
-          cpu: 200m
           memory: 50Mi
 
       tolerations:

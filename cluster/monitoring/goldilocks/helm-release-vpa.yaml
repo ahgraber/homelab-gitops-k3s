@@ -29,10 +29,9 @@ spec:
 
       resources:
         requests:
-          cpu: 50m
+          cpu: 23m
           memory: 105Mi
         limits:
-          cpu: 50m
           memory: 105Mi
 
     # checks which of the managed pods have correct resources set and, if required,
