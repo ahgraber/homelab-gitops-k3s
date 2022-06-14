@@ -157,11 +157,10 @@ spec:
 
     resources:
       requests:
-        requests:
-          cpu: 15m
-          memory: 105M
-        limits:
-          memory: 105M
+        cpu: 15m
+        memory: 105M
+      limits:
+        memory: 105M
 
     tolerations:
       - key: "node-role.kubernetes.io/master"
