@@ -18,5 +18,13 @@ spec:
   values:
     installCRDs: false
     replicaCount: 1
+
+    resources:
+      requests:
+        cpu: 203m
+        memory: 128Mi
+      limits:
+        memory: 384Mi
+
     serviceMonitor:
       enabled: true
