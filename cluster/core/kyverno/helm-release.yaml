@@ -17,6 +17,6 @@ spec:
       interval: 15m
   values:
     installCRDs: false
-    mode: standalone
+    replicaCount: 1
     serviceMonitor:
       enabled: true
