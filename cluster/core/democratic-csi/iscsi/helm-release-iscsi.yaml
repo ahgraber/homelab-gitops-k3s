@@ -125,7 +125,7 @@ spec:
 
     volumeSnapshotClasses:
       - name: csi-truenas-iscsi
-        deletionPolicy: Retain # Delete, Retain
+        deletionPolicy: Delete # Delete, Retain
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
