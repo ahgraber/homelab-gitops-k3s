@@ -9,7 +9,7 @@ spec:
   # Schedule is a Cron expression defining when to run the Backup
   # Kubernetes uses UTC exclusively - adjust from local time!
   # Local is (UTC - 4) // UTC is (local + 4)
-  schedule: 05 5 * * *
+  schedule: 0 6 * * *
   template:
     # Array of namespaces to include in the scheduled backup. If unspecified, all namespaces are included.
     # Optional.

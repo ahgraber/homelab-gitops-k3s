@@ -35,12 +35,13 @@ spec:
         volumeMounts:
           - mountPath: /target
             name: plugins
-      - name: velero-plugin-for-csi
-        image: velero/velero-plugin-for-csi:v0.2.0
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - mountPath: /target
-            name: plugins
+      ### Note: don't use velero + csi-snapshots, just use restic
+      # - name: velero-plugin-for-csi
+      #   image: velero/velero-plugin-for-csi:v0.2.0
+      #   imagePullPolicy: IfNotPresent
+      #   volumeMounts:
+      #     - mountPath: /target
+      #       name: plugins
 
     metrics:
       enabled: true

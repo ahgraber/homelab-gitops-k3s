@@ -10,7 +10,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi
+  storageClassName: csi-truenas-iscsi # use csi-truenas-iscsi-retain if redeploy
   resources:
     requests:
       storage: 1Gi

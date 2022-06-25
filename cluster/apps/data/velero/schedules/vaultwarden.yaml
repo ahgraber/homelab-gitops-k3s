@@ -33,8 +33,7 @@ spec:
     # # Individual objects must match this label selector to be included in the scheduled backup. Optional.
     # labelSelector:
     #   matchLabels:
-    #     app: velero
-    #     component: server
+    #     app.kubernetes.io/instance: vaultwarden
     # Whether or not to snapshot volumes.
     # This only applies to PersistentVolumes for Azure, GCE, and AWS.
     # Valid values are true, false, and null/unset.
