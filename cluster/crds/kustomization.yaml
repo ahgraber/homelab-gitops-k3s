@@ -5,7 +5,7 @@ resources:
   - cert-manager/
   - kube-prometheus-stack/
   - kyverno/
-  - rook-ceph/
+  # - rook-ceph/
   # - system-upgrade-controller/
   - traefik/
   - velero/
