@@ -8,6 +8,7 @@ spec:
   interval: 15m
   chart:
     spec:
+      # renovate: registryUrl=https://kyverno.github.io/kyverno/
       chart: kyverno
       version: v2.5.1
       sourceRef:
