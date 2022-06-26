@@ -8,8 +8,9 @@ spec:
   interval: 15m
   chart:
     spec:
+      # renovate: registryUrl=https://charts.rook.io/release
       chart: rook-ceph-cluster
-      version: v1.9.5
+      version: v1.9.6
       sourceRef:
         kind: HelmRepository
         name: rook-ceph-charts
@@ -61,15 +62,15 @@ spec:
           # - name: datto2
           #   devices:
           #     - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
-          - name: datto3
+          - name: optiplex0
             devices:
               - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R244763"
-          - name: datto4
+          - name: optiplex1
             devices:
               - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0NB10875"
-          - name: datto5
+          - name: optiplex2
             devices:
-              - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNX0N937668"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000015"
 
       resources:
         mgr:

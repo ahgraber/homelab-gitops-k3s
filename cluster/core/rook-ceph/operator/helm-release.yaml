@@ -8,8 +8,9 @@ spec:
   interval: 15m
   chart:
     spec:
+      # renovate: registryUrl=https://charts.rook.io/release
       chart: rook-ceph
-      version: v1.9.5
+      version: v1.9.6
       sourceRef:
         kind: HelmRepository
         name: rook-ceph-charts
@@ -24,7 +25,6 @@ spec:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 250m
         memory: 256Mi
 
     tolerations:
@@ -33,3 +33,41 @@ spec:
         operator: Exists
     nodeSelector:
       node-role.kubernetes.io/master: "true"
+
+    csi:
+      enableRbdDriver: true
+      enableCephfsDriver: true
+      enableGrpcMetrics: false
+      enableCSIHostNetwork: true
+      enableCephfsSnapshotter: true
+      enableRBDSnapshotter: true
+      enablePluginSelinuxHostMount: false
+      enableCSIEncryption: false
+
+      kubeletDirPath: /var/lib/kubelet
+
+      # Set provisonerTolerations and provisionerNodeAffinity for provisioner pod.
+      # The CSI provisioner would be best to start on the same nodes as other ceph daemons.
+      provisionerTolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      provisionerNodeAffinity: node-role.kubernetes.io/master=true
+      # Set pluginTolerations and pluginNodeAffinity for plugin daemonset pods.
+      # The CSI plugins need to be started on all the nodes where the clients need to mount the storage.
+      pluginTolerations:
+        - effect: "NoExecute"
+          operator: "Exists"
+        - effect: "NoSchedule"
+          operator: "Exists"
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      # pluginNodeAffinity: node-role.kubernetes.io/master=true
+
+    admissionController:
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeAffinity: node-role.kubernetes.io/master=true
