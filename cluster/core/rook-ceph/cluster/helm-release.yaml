@@ -26,6 +26,7 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: true
+      rulesNamespaceOverride: monitoring
 
     configOverride: |
       [global]
@@ -35,6 +36,7 @@ spec:
     cephClusterSpec:
       cephVersion:
         image: quay.io/ceph/ceph:v17.2.1
+      dataDirHostPath: /var/lib/rook
 
       crashCollector:
         disable: false
@@ -51,7 +53,7 @@ spec:
         useAllNodes: false
         useAllDevices: false
         config:
-          osdsPerDevice: 1"
+          osdsPerDevice: "1"
         nodes:
           # - name: datto0
           #   devices:
@@ -64,61 +66,61 @@ spec:
           #     - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
           - name: optiplex0
             devices:
-              - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R244763"
+              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000028"
           - name: optiplex1
             devices:
-              - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0NB10875"
+              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000052"
           - name: optiplex2
             devices:
-              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000015"
+              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
 
       resources:
         mgr:
           requests:
             cpu: 125m
-            memory: 549m
+            memory: 512Mi
           limits:
-            memory: 1219m
+            memory: 1Gi
         mon:
           requests:
-            cpu: 49m
-            memory: 477m
+            cpu: 125m
+            memory: 512Mi
           limits:
-            memory: 1059m
+            memory: 1Gi
         osd:
           requests:
-            cpu: 442m
-            memory: 2678m
+            cpu: 500m
+            memory: 256Mi
           limits:
-            memory: 5944m
+            memory: 4Gi
         prepareosd:
           requests:
             cpu: 250m
             memory: 50Mi
           limits:
-            memory: 200Mi
+            memory: 256Mi
         mgr-sidecar:
           requests:
-            cpu: 49m
+            cpu: 50m
             memory: 94m
           limits:
-            memory: 208m
+            memory: 256Mi
         crashcollector:
           requests:
             cpu: 15m
-            memory: 64m
+            memory: 64Mi
           limits:
-            memory: 64m
+            memory: 64Mi
         logcollector:
           requests:
             cpu: 100m
-            memory: 100m
+            memory: 100Mi
           limits:
             memory: 1Gi
         cleanup:
           requests:
             cpu: 250m
-            memory: 100m
+            memory: 100Mi
           limits:
             memory: 1Gi
 

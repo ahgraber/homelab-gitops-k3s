@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   # - ingressRoute.yaml
+  - storageClass-block.yaml
+  - storageClass-filesystem.yaml
+  - storageClass-object.yaml

@@ -1,0 +1,2 @@
+# depends on kubernetes-csi/external-snapshotter/snapshot-controller
+# see /cluster/core/kube-system/snapshot-controller
