@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  # - helm-release.yaml
+  # - helm-release.yaml  # use direct github link instead
   - github.com/kubernetes-csi/external-snapshotter//deploy/kubernetes/snapshot-controller?ref=v6.0.1
 images:
   - name: gcr.io/k8s-staging-sig-storage/snapshot-controller
@@ -25,13 +25,12 @@ patchesStrategicMerge:
                 - "--leader-election=true"
                 - "--enable-distributed-snapshotting"
 
-          resources:
-            requests:
-              cpu: 15m
-              memory: 64M
-            limits:
-              cpu: 15m
-              memory: 64M
+              resources:
+                requests:
+                  cpu: 15m
+                  memory: 64M
+                limits:
+                  memory: 64M
 
           tolerations:
             - effect: NoSchedule
@@ -39,13 +38,13 @@ patchesStrategicMerge:
               operator: Exists
           nodeSelector:
             node-role.kubernetes.io/master: "true"
-          # affinity:
-          #   nodeAffinity:
-          #     requiredDuringSchedulingIgnoredDuringExecution:
-          #       nodeSelectorTerms:
-          #         - matchExpressions:
-          #             - key: node-role.kubernetes.io/master
-          #               operator: Exists
-          #         - matchExpressions:
-          #             - key: node-role.kubernetes.io/control-plane
-          #               operator: Exists
+
+patches:
+  # Enable this RBAC rule only when using distributed snapshotting, i.e. when the enable-distributed-snapshotting flag is set to true
+  - target:
+      kind: ClusterRole
+      name: snapshot-controller-runner
+    patch: |-
+      - op: add
+        path: '/rules/-'
+        value: { apiGroups: [""], resources: ["nodes"], verbs: ["get", "list", "watch"] }
