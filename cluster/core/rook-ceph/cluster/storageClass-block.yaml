@@ -35,7 +35,7 @@ data:
             size: 3
         storageClass:
           enabled: true
-          name: ceph-block
+          name: ceph-block-retain
           isDefault: false
           reclaimPolicy: Retain
           allowVolumeExpansion: true
