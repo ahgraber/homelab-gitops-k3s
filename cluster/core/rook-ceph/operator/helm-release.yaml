@@ -52,7 +52,7 @@ spec:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
           operator: Exists
-      provisionerNodeAffinity: node-role.kubernetes.io/master=true
+      # provisionerNodeAffinity: node-role.kubernetes.io/master=true
       # Set pluginTolerations and pluginNodeAffinity for plugin daemonset pods.
       # The CSI plugins need to be started on all the nodes where the clients need to mount the storage.
       pluginTolerations:

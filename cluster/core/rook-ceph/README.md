@@ -16,3 +16,11 @@ and file storage in one unified system.
 
 [Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
 [Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
+
+## Cleanup
+
+```sh
+kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"spec":{"cleanupPolicy":{"confirmation":"yes-really-destroy-data"}}}'
+kubectl delete hr rook-ceph-cluster -n rook-ceph
+kubectl delete cephcluster rook-ceph -n rook-ceph
+```

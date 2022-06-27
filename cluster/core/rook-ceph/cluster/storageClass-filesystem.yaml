@@ -22,14 +22,14 @@ data:
             activeStandby: true
             resources:
               requests:
-                cpu: 1000m
-                memory: 4Gi
+                cpu: 150m
+                memory: 128Mi
               limits:
-                memory: 4Gi
+                memory: 256Mi
         storageClass:
           enabled: true
           isDefault: false
-          name: ceph-filesystem
+          name: ceph-fs
           pool: data0
           reclaimPolicy: Delete
           allowVolumeExpansion: true
