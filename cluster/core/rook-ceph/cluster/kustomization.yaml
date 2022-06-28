@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - helm-release.yaml
-  # - ingressRoute.yaml
+  - ingressRoute.yaml
   - storageClass-block.yaml
   - storageClass-filesystem.yaml
   - storageClass-object.yaml
