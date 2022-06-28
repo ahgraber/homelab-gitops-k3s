@@ -26,4 +26,17 @@ and file storage in one unified system.
 kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"spec":{"cleanupPolicy":{"confirmation":"yes-really-destroy-data"}}}'
 kubectl delete hr rook-ceph-cluster -n rook-ceph
 kubectl delete cephcluster rook-ceph -n rook-ceph
+# clean up CRDS
+for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do kubectl delete "$CRD"; done;
+# NOTE: may have to edit/patch custom resources to delete them prior to force-removing finalzers for crds
+for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do
+  kubectl patch "$CRD" --type merge -p '{"metadata":{"finalizers": []}}'
+done
+
+for RES in $(kubectl get configmap,secret -n rook-ceph -o name); do kubectl delete "$RES" -n rook-ceph; done;
+for RES in $(kubectl get configmap,secret -n rook-ceph -o name); do
+  kubectl patch "$RES" -n rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
+done
+kubectl delete ns rook-ceph
+kubectl patch ns rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
 ```
