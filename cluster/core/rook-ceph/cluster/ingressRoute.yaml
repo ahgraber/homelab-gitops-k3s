@@ -14,7 +14,7 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: rfc1918
-        - name: basicauth
+        # - name: basicauth
       services:
         - name: rook-ceph-mgr-dashboard
           namespace: rook-ceph
