@@ -74,6 +74,23 @@ spec:
             devices:
               - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
 
+      toolbox:
+        enabled: true
+
+        tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/master
+            operator: Exists
+        nodeSelector:
+          node-role.kubernetes.io/master: "true"
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
       resources:
         mgr:
           requests:
