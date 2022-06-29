@@ -23,6 +23,23 @@ spec:
       all:
         configmap.reloader.stakater.com/reload: "ceph-values-block,ceph-values-filesystem,ceph-values-object"
 
+    toolbox:
+      enabled: true
+
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -73,23 +90,6 @@ spec:
           - name: optiplex2
             devices:
               - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
-
-      toolbox:
-        enabled: true
-
-        tolerations:
-          - effect: NoSchedule
-            key: node-role.kubernetes.io/master
-            operator: Exists
-        nodeSelector:
-          node-role.kubernetes.io/master: "true"
-
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            memory: 128Mi
 
       resources:
         mgr:
