@@ -18,6 +18,13 @@ and file storage in one unified system.
 [Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
 [Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
 
+## Troubleshooting
+
+### Too many PGs per OSD
+
+[stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
+[cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
+
 ## Teardown and Cleanup
 
 > Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.0/ceph-teardown.html)
