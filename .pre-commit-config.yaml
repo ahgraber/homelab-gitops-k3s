@@ -63,6 +63,6 @@ repos:
         args: [-h, "**/*.sops.yaml"]
         # note: this only checks specific files for secrets!
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.8.8
+    rev: v8.8.11
     hooks:
       - id: gitleaks
