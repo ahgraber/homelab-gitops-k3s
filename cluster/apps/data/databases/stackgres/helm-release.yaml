@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: stackgres
+  namespace: stackgres
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://stackgres.io/downloads/stackgres-k8s/stackgres/helm/
+      chart: stackgres-operator
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: stackgres-charts
+        namespace: flux-system
+  values:
+    rbac:
+      create: true
+    serviceAccount:
+      create: true
+
+    adminui:
+      name: stackgres-adminui
+      # exposeHTTP: true
+
+    # Custom credentials for the operator's admin user
+    authentication:
+      user: admin
+      # password: changeme
+      secretRef:
+        name: "stackgres-secret"
+
+    grafana:
+      #Embed an existing grafana by setting grafana.autoEmbed to true
+      autoEmbed: false
+      # # Set the HTTP scheme used by grafana:
+      # schema: http
+      # webHost: grafana.monitoring
+      # #Use follwing fields to indicate a secret where the grafana admin credentials are stored (replace user/password)
+      # secretNamespace: monitoring
+      # secretName: grafana-admin-secret
+      # secretUserKey: admin-user
+      # secretPasswordKey: admin-password
+      # datasourceName: Prometheus
+      # # dashboardConfigMap:
+      # dashboardId: 9628
+      # # Create grafana dashboard for postgres exporter and copy/paste share URL:
+      # # - Grafana > Create > Import > Grafana.com Dashboard 9628
+      # # Copy/paste grafana dashboard URL for postgres exporter:
+      # # - Grafana > Dashboard > Manage > Select postgres exporter dashboard > Copy URL
+      # # url: "http://localhost:3000/d/000000039/postgresql-database?orgId=1&refresh=10s"
+      # # Create and copy/paste grafana API token:
+      # # - Grafana > Configuration > API Keys > Add API key (for viewer) > Copy key value
+      # # token:
