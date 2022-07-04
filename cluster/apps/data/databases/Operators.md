@@ -10,6 +10,14 @@ See also:
 * [Hackerrank discussion](https://news.ycombinator.com/item?id=31882256)
 * [Comparing k8s operators for Postgres](https://blog.flant.com/comparing-kubernetes-operators-for-postgresql/)
 
+## CloudNativePG
+
+Pros:
+
+* Good documentation
+* Helm install
+* Declarative cluster config
+
 ## Crunchydata
 
 Pros:
@@ -20,7 +28,7 @@ Pros:
 
 Cons:
 
-* Docker Hub images provided under the terms of use of the Crunchy Data developer program
+* Images provided under the terms of use of the Crunchy Data developer program
   which means you can't use them in production without an active subscription.
 
 ## Percona
@@ -33,6 +41,20 @@ Cons:
 
 * Sparse documentation / difficult to navigate
 * Could not complete installation to get functional installation
+
+## Stackgres
+
+Pros:
+
+* Good documentation
+* Helm install
+* Snazzy UI
+
+Cons:
+
+* Configuration via embedded scripts
+* Some features (like [grafana autoimbed](https://gitlab.com/ongresinc/stackgres/-/issues/1849)) do not seem to work
+* Gitlab issues search requires sign in, which requires gitlab user account
 
 ## Zalando
 
@@ -56,7 +78,3 @@ Cons:
 
 * No helm install
 * Operator
-
-## Stackgres
-
-## CloudNativePG

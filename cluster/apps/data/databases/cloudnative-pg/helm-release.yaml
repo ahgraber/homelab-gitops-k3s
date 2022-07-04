@@ -1,0 +1,103 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cnpg-controller-manager
+  namespace: cnpg-system
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://github.com/cloudnative-pg/charts
+      chart: cloudnative-pg
+      version: 0.13.1
+      sourceRef:
+        kind: HelmRepository
+        name: cloudnativepg-charts
+        namespace: flux-system
+  values:
+    replicaCount: 1
+
+    image:
+      repository: ghcr.io/cloudnative-pg/cloudnative-pg
+      pullPolicy: IfNotPresent
+      # -- Overrides the image tag whose default is the chart appVersion.
+      tag: ""
+
+    imagePullSecrets: []
+    nameOverride: ""
+    fullnameOverride: ""
+
+    webhook:
+      port: 9443
+      mutating:
+        create: true
+        failurePolicy: Fail
+      validating:
+        create: true
+        failurePolicy: Fail
+
+    # Operator configuration
+    config:
+      # -- Specifies whether the secret should be created
+      create: true
+      # -- Specifies whether it should be stored in a secret, instead of a configmap
+      secret: false
+      # Examples:
+      # INHERITED_ANNOTATIONS: categories
+      # INHERITED_LABELS: environment, workload, app
+
+      data: {}
+      name: cnpg-controller-manager-config
+
+    # -- Additinal arguments to be added to the operator's args list
+    additionalArgs: []
+
+    serviceAccount:
+      # -- Specifies whether the service account should be created
+      create: true
+      # -- The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
+
+    rbac:
+      # -- Specifies whether ClusterRole and ClusterRoleBinding should be created
+      create: true
+
+    # -- Annotations to be added to the pod
+    podAnnotations: {}
+    # -- Annotations to be added to all other resources
+    commonAnnotations: {}
+
+    # -- Security Context for the whole pod
+    podSecurityContext:
+      runAsUser: 1001
+      # fsGroup: 2000
+
+    service:
+      type: ClusterIP
+      # -- DO NOT CHANGE THE SERVICE NAME as it is currently used to generate the certificate
+      # and can not be configured
+      name: cnpg-webhook-service
+      port: 443
+
+    resources:
+      {}
+      # If you want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      #
+      # limits:
+      #   cpu: 100m
+      #   memory: 200Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 100Mi
+
+    # -- Nodeselector for the operator to be installed
+    nodeSelector: {}
+
+    # -- Tolerations for the operator to be installed
+    tolerations: []
+
+    # -- Affinity for the operator to be installed
+    affinity: {}
