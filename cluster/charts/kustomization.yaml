@@ -7,7 +7,6 @@ resources:
   - authentik-charts.yaml
   - backube-charts.yaml
   - bitnami-charts.yaml
-  - crowdsec-charts.yaml
   - cloudflare-charts.yaml
   - cloudnativepg-charts.yaml
   - crowdsec-charts.yaml
