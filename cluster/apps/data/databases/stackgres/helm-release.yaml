@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://stackgres.io/downloads/stackgres-k8s/stackgres/helm/
       chart: stackgres-operator
-      version: 1.2.0
+      version: 1.2.1
       sourceRef:
         kind: HelmRepository
         name: stackgres-charts
