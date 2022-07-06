@@ -74,7 +74,10 @@ Cons:
 
 Notes:  after reviewing the documentation, I have not experimented with kubegres
 
+Pros:
+
+* Good documentation
+
 Cons:
 
 * No helm install
-* Operator
