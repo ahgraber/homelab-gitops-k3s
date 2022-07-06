@@ -21,9 +21,9 @@ spec:
     serviceAccount:
       create: true
 
-    adminui:
-      name: stackgres-adminui
-      # exposeHTTP: true
+    deploy:
+      operator: true
+      restapi: true
 
     # Custom credentials for the operator's admin user
     authentication:
