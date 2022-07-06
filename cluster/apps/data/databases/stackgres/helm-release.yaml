@@ -25,12 +25,12 @@ spec:
       name: stackgres-adminui
       # exposeHTTP: true
 
-      # Custom credentials for the operator's admin user
-      authentication:
-        user: admin
-        # password: changeme
-        secretRef:
-          name: stackgres-secret
+    # Custom credentials for the operator's admin user
+    authentication:
+      user: admin
+      # password: changeme
+      secretRef:
+        name: stackgres-restapi
 
     grafana:
       #Embed an existing grafana by setting grafana.autoEmbed to true
