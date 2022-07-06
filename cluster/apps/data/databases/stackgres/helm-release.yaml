@@ -27,7 +27,7 @@ spec:
 
     # Custom credentials for the operator's admin user
     authentication:
-      user: admin
+      # user: admin
       # password: changeme
       secretRef:
         name: stackgres-secret
