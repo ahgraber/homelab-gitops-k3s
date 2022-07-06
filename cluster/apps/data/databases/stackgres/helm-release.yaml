@@ -30,7 +30,7 @@ spec:
       user: admin
       # password: changeme
       secretRef:
-        name: stackgres-restapi
+        name: stackgres-secret
 
     grafana:
       #Embed an existing grafana by setting grafana.autoEmbed to true
