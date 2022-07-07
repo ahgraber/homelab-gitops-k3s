@@ -7,3 +7,5 @@ resources:
   - storageClass-block.yaml
   - storageClass-filesystem.yaml
   - storageClass-object.yaml
+patches:
+  - patch-modify-rules.yaml
