@@ -1,15 +1,8 @@
-# # remove CephNodeInconsistentMTU
-# - op: remove
-#   path: /spec/groups/6/rules/4
-# # remove PrometheusServer
-# - op: remove
-#   path: /spec/groups/10/rules/0
-
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: prometheus-ceph-rules
-  # namespace: monitoring
+  namespace: rook-ceph
 spec:
   groups:
     - name: nodes
