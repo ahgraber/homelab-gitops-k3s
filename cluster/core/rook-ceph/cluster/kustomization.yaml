@@ -7,5 +7,3 @@ resources:
   - storageClass-block.yaml
   - storageClass-filesystem.yaml
   - storageClass-object.yaml
-patchesStrategicMerge:
-  - patch-modify-rules.yaml
