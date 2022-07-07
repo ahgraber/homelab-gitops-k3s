@@ -16,6 +16,7 @@
         increase(node_network_receive_drop_total{device!="lo"}[1m]) +
         increase(node_network_transmit_drop_total{device!="lo"}[1m])
       ) >= 75
+    for: 1m
     labels:
       severity: warning
       type: ceph_default
