@@ -37,6 +37,7 @@ CentOS.
 | [k9s](https://k9scli.io/)                                          | CLI-GUI for k8s clusters                                            |
 | [popeye](https://popeyecli.io/)                                    | CLI-based scanner/finder for k8s clusters                           |
 | [kubetail](https://github.com/johanhaleby/kubetail)                | aggregate (tail/follow) logs from multiple pods into one            |
+| [krew](https://krew.sigs.k8s.io/)                                  | plugin manager for kubectl command-line tool                        |
 
 ## :ballot_box_with_check:&nbsp; Installation
 
