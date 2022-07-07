@@ -1,11 +1,12 @@
 ### https://raw.githubusercontent.com/rook/rook/v1.9.6/deploy/examples/monitoring/localrules.yaml
+# ref: https://rook.github.io/docs/rook/v1.9/ceph-monitoring.html#customize-alerts
 # CephNodeNetworkPacketDrops
 - op: add
   path: /spec/groups/6/rules/1/for
   value: 30s
-# CephNodeNetworkPacketErrors
-- op: add
-  path: /spec/groups/6/rules/2/for
-# # CephNodeInconsistentMTU
-# - op: remove
-#   path: /spec/groups/6/rules/4
+# # CephNodeNetworkPacketErrors
+# - op: add
+#   path: /spec/groups/6/rules/2/for
+# CephNodeInconsistentMTU
+- op: remove
+  path: /spec/groups/6/rules/4
