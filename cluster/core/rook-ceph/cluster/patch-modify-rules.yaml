@@ -1,0 +1,20 @@
+# # remove CephNodeInconsistentMTU
+# - op: remove
+#   path: /spec/groups/6/rules/4
+# # remove PrometheusServer
+# - op: remove
+#   path: /spec/groups/10/rules/0
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prometheus-ceph-rules
+  namespace: monitoring
+spec:
+  groups:
+    - name: nodes
+      rules:
+        - alert: CephNodeNetworkPacketDrops
+          for: 30s
+        - alert: CephNodeInconsistentMTU
+          for: 30s
