@@ -1,13 +1,11 @@
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: prometheus-ceph-rules
-  namespace: rook-ceph
-spec:
-  groups:
-    - name: nodes
-      rules:
-        - alert: CephNodeNetworkPacketDrops
-          for: 30s
-        - alert: CephNodeInconsistentMTU
-          for: 30s
+### https://raw.githubusercontent.com/rook/rook/v1.9.6/deploy/examples/monitoring/localrules.yaml
+# CephNodeNetworkPacketDrops
+- op: add
+  path: /spec/groups/6/rules/1/for
+  value: 30s
+# CephNodeNetworkPacketErrors
+- op: add
+  path: /spec/groups/6/rules/2/for
+# # CephNodeInconsistentMTU
+# - op: remove
+#   path: /spec/groups/6/rules/4
