@@ -25,12 +25,12 @@ spec:
       operator: true
       restapi: true
 
-    # # Custom credentials for the operator's admin user
-    # authentication:
-    #   # user: admin
-    #   # password: changeme
-    #   secretRef:
-    #     name: stackgres-restapi
+    # Custom credentials for the operator's admin user
+    authentication:
+      # user: admin
+      # password: changeme
+      secretRef:
+        name: stackgres-secret
 
     grafana:
       #Embed an existing grafana by setting grafana.autoEmbed to true
