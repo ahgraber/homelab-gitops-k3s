@@ -12,3 +12,32 @@ Thanos is made of a set of components with each filling a specific role.
 - Querier/Query: implements Prometheus's v1 API to aggregate data from the underlying components.
 - Query Frontend: implements Prometheus's v1 API proxies it to Query while caching the response
   and optional splitting by queries day.
+
+## Architecture
+
+This charts allows you install several Thanos components, so you deploy an architecture as the one below:
+
+```txt
+                       +--------------+                  +--------------+      +--------------+
+                       | Thanos       |----------------> | Thanos Store |      | Thanos       |
+                       | Query        |           |      | Gateway      |      | Compactor    |
+                       +--------------+           |      +--------------+      +--------------+
+                   push                           |             |                     |
++--------------+   alerts   +--------------+      |             | storages            | Downsample &
+| Alertmanager | <----------| Thanos       | <----|             | query metrics       | compact blocks
+| (*)          |            | Ruler        |      |             |                     |
++--------------+            +--------------+      |             \/                    |
+      ^                            |              |      +----------------+           |
+      | push alerts                +--------------|----> | MinIO&reg; (*) | <---------+
+      |                                           |      |                |
++------------------------------+                  |      +----------------+
+|+------------+  +------------+|                  |             ^
+|| Prometheus |->| Thanos     || <----------------+             |
+|| (*)        |<-| Sidecar (*)||    query                       | inspect
+|+------------+  +------------+|    metrics                     | blocks
++------------------------------+                                |
+                                                         +--------------+
+                                                         | Thanos       |
+                                                         | Bucket Web   |
+                                                         +--------------+
+```
