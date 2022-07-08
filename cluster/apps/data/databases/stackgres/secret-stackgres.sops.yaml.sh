@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 USER="admin"
-kubectl create secret generic -n stackgres stackgres-secret --dry-run=client -o json \
+kubectl create secret generic -n postgres stackgres-secret --dry-run=client -o json \
   --from-literal=k8sUsername="${USER}" \
   --from-literal=password="$(echo -n "${USER}${SECRET_DEFAULT_PWD}" | sha256sum | awk '{ print $1 }')" \
   --from-literal=clearPassword="${SECRET_DEFAULT_PWD}" \

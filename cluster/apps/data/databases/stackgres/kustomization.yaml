@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - helm-release.yaml
   - ingressRoute.yaml
-  - namespace.yaml
   - secret-stackgres.sops.yaml
