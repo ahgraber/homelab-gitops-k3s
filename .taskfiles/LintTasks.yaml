@@ -1,0 +1,34 @@
+---
+version: "3"
+
+tasks:
+  all:
+    - task: json
+    - task: markdown
+    - task: yaml
+    - task: format
+
+  json:
+    desc: Lint JSON
+    cmds:
+      - >-
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --ignore-unknown --parser=json --check '*.json' '**/*.json'
+    ignore_error: true
+
+  markdown:
+    desc: Lint Markdown
+    cmds:
+      - markdownlint -c '.markdownlint.yaml' *.md **/*.md
+    ignore_errors: true
+
+  shell:
+    desc: Lint shell scripts
+    cmds:
+      - shellcheck --severity=warning -e SC1071 **/*.sh
+    ignore_errors: true
+
+  yaml:
+    desc: Lint YAML
+    cmds:
+      - yamllint --config-file=.yamllint.yaml --format=parseable .
+    ignore_errors: true

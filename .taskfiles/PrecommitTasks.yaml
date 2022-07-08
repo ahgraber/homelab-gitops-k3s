@@ -6,7 +6,13 @@ tasks:
     desc: Initialize pre-commit hooks
     cmds:
       - pre-commit install --install-hooks
+
   run:
     desc: Run pre-commit
     cmds:
       - pre-commit run --all-files
+
+  update:
+    desc: Update pre-commit hooks
+    cmds:
+      - pre-commit autoupdate

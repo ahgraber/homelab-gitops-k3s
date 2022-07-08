@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 kubectl patch installation default --type=merge -p '{"metadata": {"annotations": {"meta.helm.sh/release-namespace": "tigera-operator"}}}'
 kubectl patch installation default --type=merge -p '{"metadata": {"labels": {"app.kubernetes.io/managed-by": "Helm"}}}'
 kubectl patch installation default --type=merge -p '{"metadata": {"annotations": {"meta.helm.sh/release-name": "tigera-operator"}}}'
