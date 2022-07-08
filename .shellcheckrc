@@ -1,0 +1,3 @@
+# source-path=SCRIPTDIR
+enable=require-variable-braces
+disable=SC1071 # disable error on zsh shebang

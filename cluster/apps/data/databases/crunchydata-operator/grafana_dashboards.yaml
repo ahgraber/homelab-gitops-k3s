@@ -1,3 +1,4 @@
+---
 apiVersion: 1
 
 providers:
@@ -6,6 +7,6 @@ providers:
     folder: ""
     type: file
     disableDeletion: false
-    updateIntervalSeconds: 90 #how often Grafana will scan for changed dashboards
+    updateIntervalSeconds: 90 # how often Grafana will scan for changed dashboards
     options:
       path: $GF_PATHS_PROVISIONING/dashboards

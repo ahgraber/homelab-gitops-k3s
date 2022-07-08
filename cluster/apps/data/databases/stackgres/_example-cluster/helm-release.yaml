@@ -170,8 +170,8 @@ spec:
           compression: lz4
           performance:
             uploadDiskConcurrency: 1
-            #maxNetworkBandwidth:
-            #maxDiskBandwidth:
+            # maxNetworkBandwidth:
+            # maxDiskBandwidth:
         storage:
           s3Compatible:
             bucket: postgres
@@ -224,7 +224,7 @@ spec:
       #     services:
       #       key: value
 
-    #You should only set following options for non production environment
+    # You should only set following options for non production environment
     nonProductionOptions:
       createMinio: false
       disableClusterPodAntiAffinity: false
