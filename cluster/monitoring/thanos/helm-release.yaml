@@ -5,111 +5,114 @@ metadata:
   name: thanos
   namespace: monitoring
 spec:
-  interval: 5m
+  interval: 15m
   chart:
     spec:
       chart: thanos
-      version: 10.5.5
+      version: 10.5.3
       sourceRef:
         kind: HelmRepository
         name: bitnami-charts
         namespace: flux-system
-      interval: 5m
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    image:
-      registry: public.ecr.aws
-      repository: bitnami/thanos
-
-    # objstoreConfig:
-    #   type: s3
-    #   config:
-    #     bucket: thanos
-    #     insecure: true
-    existingObjstoreSecret: thanos-objstore-secret
-    # valuesFrom:
-    #   secretKeyRef:
-    #     name: thanos-objstore-secret
-    #     key: objstoreConfig
-
+    objstoreConfig:
+      type: s3
+      config:
+        insecure: true
     query:
       enabled: true
+      replicaCount: 3
+      podAntiAffinityPreset: hard
       replicaLabels:
-        - replica
-
+        - __replica__
       dnsDiscovery:
-        sidecarsService: prometheus-thanos-discovery
+        sidecarsService: kube-prometheus-stack-thanos-discovery
         sidecarsNamespace: monitoring
-
       ingress:
         enabled: false
-        hostname: "thanos.${SECRET_DOMAIN}"
-
     queryFrontend:
       enabled: false
-
     bucketweb:
       enabled: true
-      resources:
-        requests:
-          cpu: 15m
-          memory: 64M
-        limits:
-          memory: 64M
-
+      replicaCount: 3
+      podAntiAffinityPreset: hard
+      ingress:
+        enabled: false
     compactor:
       enabled: true
+      extraFlags:
+        - "--compact.concurrency"
+        - "4"
       retentionResolutionRaw: 14d
-      retentionResolution5m: 30d
-      retentionResolution1h: 180d
-      resources:
-        requests:
-          cpu: 15m
-          memory: 204M
-        limits:
-          memory: 270M
+      retentionResolution5m: 14d
+      retentionResolution1h: 14d
+      ingress:
+        enabled: false
       persistence:
         enabled: true
-        storageClass: "csi-truenas-iscsi"
-        size: 5Gi
-
+        storageClass: "ceph-block"
+        size: 10Gi
     storegateway:
       enabled: true
-      resources:
-        requests:
-          cpu: 15m
-          memory: 64M
-        limits:
-          memory: 64M
+      replicaCount: 3
+      podAntiAffinityPreset: hard
+      ingress:
+        enabled: false
       persistence:
         enabled: true
-        storageClass: "csi-truenas-iscsi"
-        size: 1Gi
-
+        storageClass: "ceph-block"
+        size: 10Gi
     ruler:
       enabled: true
+      replicaCount: 3
+      podAntiAffinityPreset: hard
       dnsDiscovery:
         enabled: true
       alertmanagers:
-        - http://prometheus-alertmanager.monitoring.svc.cluster.local:9093
-      # clusterName: ${CLUSTER_NAME}
+        - http://kube-prometheus-stack-alertmanager.monitoring:9093
+      # clusterName: home-ops
+      extraFlags:
+        - "--web.prefix-header=X-Forwarded-Prefix"
       config: |-
         groups:
           - name: "PrometheusWatcher"
             rules:
               - alert: "PrometheusDown"
                 expr: absent(up{job="kube-prometheus-stack-prometheus"})
+      ingress:
+        enabled: false
       persistence:
         enabled: true
-        storageClass: "csi-truenas-iscsi"
-        size: 1Gi
-      resources:
-        requests:
-          cpu: 15m
-          memory: 94M
-        limits:
-          memory: 113M
-
+        storageClass: "ceph-block"
+        size: 10Gi
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
+
+  valuesFrom:
+    - targetPath: objstoreConfig.config.bucket
+      kind: ConfigMap
+      name: thanos-ceph-bucket
+      valuesKey: BUCKET_NAME
+    - targetPath: objstoreConfig.config.endpoint
+      kind: ConfigMap
+      name: thanos-ceph-bucket
+      valuesKey: BUCKET_HOST
+    - targetPath: objstoreConfig.config.region
+      kind: ConfigMap
+      name: thanos-ceph-bucket
+      valuesKey: BUCKET_REGION
+    - targetPath: objstoreConfig.config.access_key
+      kind: Secret
+      name: thanos-ceph-bucket
+      valuesKey: AWS_ACCESS_KEY_ID
+    - targetPath: objstoreConfig.config.secret_key
+      kind: Secret
+      name: thanos-ceph-bucket
+      valuesKey: AWS_SECRET_ACCESS_KEY
