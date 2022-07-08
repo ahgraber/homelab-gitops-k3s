@@ -22,7 +22,7 @@ data:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path # csi-truenas-iscsi
+              storageClassName: ceph-block # local-path # csi-truenas-iscsi
               resources:
                 requests:
                   storage: 1Gi
