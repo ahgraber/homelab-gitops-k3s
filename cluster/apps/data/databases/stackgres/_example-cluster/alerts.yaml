@@ -1,11 +1,9 @@
+# ref: https://github.com/ongres/stackgres/blob/main/stackgres-k8s/examples/full_example/production/cluster/StackGres-alerts.yaml
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  labels:
-    app: kube-prometheus-stack
-    release: monitoring
   name: stackgres-rules
-  namespace: monitoring
+  namespace: postgres
 spec:
   groups:
     - name: StackGres
