@@ -9,6 +9,6 @@
 .**/
 dist/
 *.sops.*
-gotk-components.yaml
+gotk-components.y*ml
 *.md
 # *.y*ml

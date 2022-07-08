@@ -33,7 +33,7 @@ spec:
         name: stackgres-secret
 
     grafana:
-      #Embed an existing grafana by setting grafana.autoEmbed to true
+      # Embed an existing grafana by setting grafana.autoEmbed to true
       autoEmbed: false
       # # Set the HTTP scheme used by grafana:
       # schema: http

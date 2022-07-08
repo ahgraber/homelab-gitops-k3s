@@ -1,3 +1,4 @@
+---
 ### https://raw.githubusercontent.com/rook/rook/v1.9.6/deploy/examples/monitoring/localrules.yaml
 # ref: https://rook.github.io/docs/rook/v1.9/ceph-monitoring.html#customize-alerts
 # CephNodeNetworkPacketDrops
