@@ -39,7 +39,7 @@ repos:
   #   hooks:
   #     - id: megalinter # Faster, less thorough, runs pre-commit by default
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.7.2
+    rev: v0.8.0
     hooks:
       - id: shellcheck
         args:
@@ -62,7 +62,7 @@ repos:
           - --config=.markdownlint.yaml
           - --fix
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.26.3
+    rev: v1.27.1
     hooks:
       - id: yamllint
         args:
