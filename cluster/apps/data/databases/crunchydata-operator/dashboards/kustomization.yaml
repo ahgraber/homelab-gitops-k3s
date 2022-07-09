@@ -5,6 +5,7 @@ configMapGenerator:
   - name: grafana-dashboards
     namespace: monitoring
     files:
+      - grafana_dashboards.yaml
       - pgbackrest.json
       - pod_details.json
       - postgres_overview.json
