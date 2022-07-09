@@ -1,0 +1,85 @@
+---
+# Configuration file for MegaLinter
+# See all available variables at https://megalinter.github.io/configuration/ and in linters documentation
+
+APPLY_FIXES: all # When active, APPLY_FIXES must also be defined as environment variable (in github/workflows/mega-linter.yml or other CI tool)
+
+# only linters listed under ENABLE_LINTERS will be run (all others disabled)
+ENABLE_LINTERS:
+  - ACTION_ACTIONLINT
+  - BASH_SHELLCHECK
+  # - COPYPASTE_JSCPD
+  # - DOCKERFILE_DOCKERFILELINT
+  # - DOCKERFILE_HADOLINT
+  # - ENV_DOTENV_LINTER
+  - GIT_GIT_DIFF
+  - JSON_PRETTIER
+  - KUBERNETES_KUBEVAL
+  - MARKDOWN_MARKDOWNLINT
+  - MARKDOWN_MARKDOWN_LINK_CHECK
+  # - PYTHON_BLACK
+  # - PYTHON_FLAKE8
+  # - PYTHON_ISORT
+  # - SPELL_CSPELL
+  - YAML_PRETTIER
+  - YAML_YAMLLINT
+
+## linter configuration
+LINTER_RULES_PATH: /
+BASH_SHELLCHECK_ARGUMENTS: --severity=warning -e SC1071
+# DOCKERFILE_HADOLINT_ARGUMENTS:
+#   "--ignore DL3003 --ignore DL3007 --ignore DL3013 --ignore DL3016 --ignore DL3018 --ignore DL3028 --ignore DL4001 --ignore DL4006
+#   --ignore SC2015 --ignore SC2016 --ignore SC2039 --ignore SC2086 --ignore SC1091"
+JSON_PRETTIER_CONFIG_FILE: .prettierrc.yaml
+JSON_PRETTIER_ARGUMENTS: --ignore-unknown
+KUBERNETES_DIRECTORY: cluster
+KUBERNETES_KUBEVAL_ARGUMENTS: --ignore-missing-schemas
+MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .markdownlint.yaml
+MARKDOWN_MARKDOWN_LINK_CHECK_CONFIG_FILE: .markdown-link-check.json
+# PYTHON_BLACK_CONFIG_FILE: pyproject.toml
+# PYTHON_FLAKE8_CONFIG_FILE: setup.cfg
+# PYTHON_ISORT_CONFIG_FILE: setup.cfg
+YAML_PRETTIER_CONFIG_FILE: .prettierrc.yaml
+YAML_PRETTIER_ARGUMENTS: --ignore-unknown
+YAML_YAMLLINT_CONFIG_FILE: .yamllint.yaml
+YAML_YAMLLINT_ARGUMENTS: --format=parsable --strict
+
+## includes
+ACTION_ACTIONLINT_FILTER_REGEX_INCLUDE: "(\\.github)"
+
+## excludes
+FILTER_REGEX_EXCLUDE: "(\\.vscode|.*\\.sops\\..*)" # '(\.github/workflows)'
+JSON_JSONLINT_FILTER_REGEX_EXCLUDE: "(\\.vscode)"
+KUBERNETES_KUBEVAL_FILTER_REGEX_EXCLUDE: "(.*patch.*|.*/crunchydata-operator/dashboards)"
+MARKDOWN_FILTER_REGEX_EXCUDE: "(license\\.md)"
+YAML_PRETTIER_FILTER_REGEX_EXCLUDE: "(.*gotk.*)"
+# YAML_YAMLLINT_FILTER_REGEX_EXCLUDE: "(gotk.*)"
+
+## disable errors -- don't block b/c of errors
+DISABLE_ERRORS: false
+MARKDOWN_MARKDOWN_LINK_CHECK_DISABLE_ERRORS: true
+
+## other
+PRINT_ALL_FILES: false
+PRINT_ALPACA: false
+SHOW_ELAPSED_TIME: true
+
+## reporters
+CONSOLE_REPORTER: true
+TEXT_REPORTER: true
+CONFIG_REPORTER: false # enable for testing
+UPDATED_SOURCES_REPORTER: false # enable for (local) testing
+## disabled reporters
+EMAIL_REPORTER: false
+FILEIO_REPORTER: false
+GITHUB_STATUS_REPORTER: false
+JSON_REPORTER: false
+TAP_REPORTER: false
+# PLUGINS:
+#   - https://raw.githubusercontent.com/megalinter/megalinter/main/.automation/test/mega-linter-plugin-test/test.megalinter-descriptor.yml
+# PRE_COMMANDS:
+#   - command: echo "This is MegaLinter PRE_COMMAND on own MegaLinter ! :)"
+#     cwd: "root"
+# POST_COMMANDS:
+#   - command: echo "This is MegaLinter POST_COMMAND on own MegaLinter ! :)"
+#     cwd: "workspace"
