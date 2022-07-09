@@ -5,7 +5,7 @@
 # .obsidian
 # .pytest_cache
 # .tox
-.vscode
+.vscode/
 .**/
 dist/
 *.sops.*
