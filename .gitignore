@@ -22,6 +22,7 @@ kubeconfig
 .private/
 .logs/
 .task/
+report/
 # Local archives
 **/archive
 **/wip

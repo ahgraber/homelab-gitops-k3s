@@ -3,10 +3,9 @@ version: "3"
 
 tasks:
   all:
-    - task: json
-    - task: markdown
-    - task: yaml
-    - task: format
+    desc: Lint with MegaLinter
+    cmds:
+      - mega-linter-runner --flavor=python -e MEGALINTER_CONFIG=./.mega-linter.yaml -e APPLY_FIXES=none
 
   json:
     desc: Lint JSON
@@ -24,7 +23,7 @@ tasks:
   shell:
     desc: Lint shell scripts
     cmds:
-      - shellcheck --severity=warning -e SC1071 **/*.sh
+      - shellcheck --severity=warning **/*.sh
     ignore_errors: true
 
   yaml:
