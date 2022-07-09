@@ -126,6 +126,6 @@ development (Aug 2020)
 - [restic docs](https://restic.readthedocs.io/en/stable/020_installation.html#docker-container)
 - <https://blah.cloud/automation/using-velero-for-k8s-backup-and-restore-of-csi-volumes/>
 - <https://vraccoon.com/2020/09/velero-backup-and-restore-example/>
-- [onedr0p's cluster](https://github.com/onedr0p/home-cluster/tree/main/cluster/apps/velero)
+- [onedr0p's cluster](https://github.com/onedr0p/home-ops/tree/7f640efe61dd79d36bc51bcb72c49a8b6f1eb7a9/cluster/apps/velero)
 - [billimek's cluster](https://github.com/billimek/k8s-gitops/tree/master/velero)
 - [Using Velero to migrate between storage classes](https://gist.github.com/deefdragon/d58a4210622ff64088bd62a5d8a4e8cc)
