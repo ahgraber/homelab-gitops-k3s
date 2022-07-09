@@ -4,12 +4,3 @@ kind: Kustomization
 resources:
   - ./dashboards/
   - helm-release.yaml
-
-configMapGenerator:
-  - name: grafana-dashboards
-    namespace: monitoring
-    behavior: merge
-    files:
-      - grafana_dashboards.yaml
-generatorOptions:
-  disableNameSuffixHash: true
