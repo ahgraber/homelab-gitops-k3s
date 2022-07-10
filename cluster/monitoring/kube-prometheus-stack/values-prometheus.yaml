@@ -15,6 +15,15 @@ data:
       ingress:
         enabled: false # see ingressRoute
 
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true
+      thanosServiceExternal:
+          enabled: false
+      thanosIngress:
+        enabled: false
+
       ## Settings affecting prometheusSpec
       ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
       prometheusSpec:
@@ -48,7 +57,7 @@ data:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path # csi-truenas-iscsi
+              storageClassName: ceph-block # local-path # csi-truenas-iscsi
               resources:
                 requests:
                   storage: 10Gi
@@ -57,6 +66,14 @@ data:
               #   matchLabels:
               #     app.kubernetes.io/instance: kps-prometheus
               #     app.kubernetes.io/name: prometheus
+
+        thanos:
+          image: quay.io/thanos/thanos:v0.27.0
+          # renovate: datasource=docker depName=quay.io/thanos/thanos
+          version: "v0.27.0"
+          objectStorageConfig:
+            name: thanos-objstore-secret
+            key: objstore.yml
 
         ## Number of replicas of each shard to deploy for a Prometheus deployment.
         ## Number of replicas multiplied by shards is the total number of Pods created.
@@ -73,9 +90,9 @@ data:
         shards: 1
 
         ## How long to retain metrics
-        retention: 36h # 3d
+        retention: 3d
         ## Maximum size of metrics
-        retentionSize: 3GiB
+        retentionSize: 6GiB
         ## Enable compression of the write-ahead log using Snappy.
         walCompression: true
 

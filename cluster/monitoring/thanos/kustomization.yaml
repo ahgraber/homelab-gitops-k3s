@@ -5,4 +5,4 @@ resources:
   - dashboard/
   - helm-release.yaml
   - ingressRoute.yaml
-  - secret-thanos-objstore.sops.yaml
+  - thanos-ceph-bucket.yaml # this creates the s3 configmap + secret as well!

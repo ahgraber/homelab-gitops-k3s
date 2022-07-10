@@ -7,8 +7,9 @@ resources:
   - authentik-charts.yaml
   - backube-charts.yaml
   - bitnami-charts.yaml
-  - crowdsec-charts.yaml
   - cloudflare-charts.yaml
+  - cloudnativepg-charts.yaml
+  - crowdsec-charts.yaml
   - crunchydata-charts.yaml
   - dashboard-charts.yaml
   - deliveryhero-charts.yaml
@@ -42,6 +43,7 @@ resources:
   - prometheus-community-charts.yaml
   - rook-ceph-charts.yaml
   - runix-charts.yaml
+  - stackgres-charts.yaml
   - stakater-charts.yaml
   - traefik-charts.yaml
   # - victoriametrics-charts.yaml

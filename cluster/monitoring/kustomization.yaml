@@ -9,7 +9,7 @@ resources:
   # - loki/
   - node-problem-detector/
   # # - speedtest-exporter/
-  # - thanos/
+  - thanos/
   # # - uptimerobot-prometheus/
   # # - vector/
   - namespace.yaml

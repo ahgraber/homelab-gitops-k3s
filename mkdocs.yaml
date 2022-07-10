@@ -66,17 +66,19 @@ markdown_extensions:
   - attr_list
   - toc:
       permalink: true
+  # prettier-ignore
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 
 # Navigation structure
 nav:
-  - Introduction: index.md # hardlink of ../README.md
+  - Introduction: index.md # formerly hardlinked to README.md
   - Installation:
       - Prerequisites: 1-prerequisites.md
       - Install k3s with ansible: 2-install_k3s_with_ansible.md
-      - Install k3s with k3sup: 2-install_k3s_with_k3sup.md
-      - kube-vip: 2a-kube-vip.md
-  - gitops with flux: 3-gitops_with_flux.md
-  - new service creation: 4-new_service_creation.md
+  - GitOps with Flux: 3-gitops_with_flux.md
+  - Deploy a new application: 4-new_app.md
   - Troubleshooting:
       - Troubleshooting flux: troubleshooting/troubleshooting_flux.md
       - Troubleshooting nodes: troubleshooting/troubleshooting_nodes.md

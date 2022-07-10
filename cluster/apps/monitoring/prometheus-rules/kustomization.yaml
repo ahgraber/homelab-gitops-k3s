@@ -5,7 +5,8 @@ resources:
   ### loading in /apps ensures rules are installed after prometheus is available
   ## core/ services
   - cert-manager.yaml
-  ## monitoring/ services should be managed with monitoring/
+  - https://raw.githubusercontent.com/rook/rook/v1.9.6/deploy/examples/monitoring/localrules.yaml
+  ## monitoring/ services
   - etcd.yaml
   # - loki.yaml
   - node-exporter.yaml
@@ -15,3 +16,13 @@ resources:
   - traefik.yaml
   - velero.yaml
   # - upsc.yaml
+
+# patchesJson6902:
+patches:
+  - path: patch-rook-ceph.yaml
+    target:
+      group: monitoring.coreos.com
+      version: v1
+      kind: PrometheusRule
+      name: prometheus-ceph-rules
+      namespace: rook-ceph
