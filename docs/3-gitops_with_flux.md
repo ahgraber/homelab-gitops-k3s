@@ -13,6 +13,7 @@
   - [10. Install Flux](#10-install-flux)
   - [Verify Flux](#verify-flux)
   - [Verify ingress](#verify-ingress)
+  - [Next Steps -- :robot:&nbsp; Automation](#next-steps----robot-automation)
 
 :round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/) after some quick
 bootstrap steps.
@@ -196,3 +197,19 @@ echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN
 ``` -->
 
 Head over to your browser and you _should_ be able to access `https://homer.${BOOTSTRAP_DOMAIN}`
+
+## Next Steps -- :robot:&nbsp; Automation
+
+- [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate) is a very useful
+  tool that when configured will start to create PRs in your Github repository when Docker images,
+  Helm charts or anything else that can be tracked has a newer version. The configuration for
+  renovate is located [here](./.github/renovate.json5).
+
+There's also a couple Github workflows included in this repository that help automate some processes.
+
+- [Renovate schedule](./.github/workflows/schedule-renovate.yaml) - workflow to annotate `HelmRelease`'s which allows
+  [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate) to track Helm chart versions.
+- [Megalinter](./.github/workflows/megalinter.yaml) - workflow to lint so cluster specifications
+  remain properly formatted
+- [Helm differ](./.github/workflows/helm-release-differ.yaml) - workflow to annotate PRs with the differences in helm files
+  _NOTE:_ this requires [creating a private github bot](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)

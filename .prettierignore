@@ -5,10 +5,10 @@
 # .obsidian
 # .pytest_cache
 # .tox
-.vscode
+.vscode/
 .**/
 dist/
 *.sops.*
-gotk-components.yaml
+gotk-components.y*ml
 *.md
 # *.y*ml

@@ -1,9 +1,11 @@
+---
 kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 configMapGenerator:
   - name: grafana-dashboards
     namespace: monitoring
     files:
+      - grafana_dashboards.yaml
       - pgbackrest.json
       - pod_details.json
       - postgres_overview.json

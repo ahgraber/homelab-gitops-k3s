@@ -10,7 +10,21 @@ env:
   KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"
 
 includes:
-  flux: .taskfiles/flux.yaml
-  format: .taskfiles/format.yaml
-  lint: .taskfiles/lint.yaml
-  pre-commit: .taskfiles/pre-commit.yaml
+  flux: .taskfiles/ClusterTasks.yaml
+  format: .taskfiles/FormatTasks.yaml
+  lint: .taskfiles/LintTasks.yaml
+  pre-commit: .taskfiles/PrecommitTasks.yaml
+
+tasks:
+  init:
+    desc: Initialize workstation dependencies with Brew
+    cmds:
+      - brew install {{.DEPS}} {{.CLI_ARGS}}
+    preconditions:
+      - sh: command -v brew
+        msg: |
+          Homebrew is not installed. Using MacOS, Linux or WSL?
+          Head over to https://brew.sh to get up and running.
+    vars:
+      DEPS: >-
+        age ansible direnv fluxcd/tap/flux go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize pre-commit prettier sops stern yamllint yq

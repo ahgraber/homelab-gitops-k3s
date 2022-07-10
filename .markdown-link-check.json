@@ -1,0 +1,22 @@
+{
+  "retryOn429": true,
+  "retryCount": 5,
+  "aliveStatusCodes": [200, 203, 403],
+  "ignorePatterns": [
+    {
+      "pattern": "^\\..*\\.md$"
+    },
+    {
+      "pattern": "^\\..*\\.ya?ml$"
+    },
+    {
+      "pattern": "^\\..*\\.json5?$"
+    }
+  ],
+  "replacementPatterns": [
+    {
+      "pattern": "^\\.\\/docs\\/.*\\.md$",
+      "replacement": "https://ahgraber.github.io/homelab-gitops-k3s/"
+    }
+  ]
+}
