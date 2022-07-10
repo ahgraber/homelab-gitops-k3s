@@ -11,7 +11,7 @@ on: # yamllint disable-line rule:truthy
 env:
   # Currently no way to detect automatically
   DEFAULT_BRANCH: main
-  BOT_USERNAME: "rosey-bot[bot]"
+  BOT_USERNAME: "UnhesitatingEffectiveBot[bot]"
 
 jobs:
   detect-file-changes:
