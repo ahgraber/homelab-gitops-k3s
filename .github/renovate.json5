@@ -1,6 +1,5 @@
 {
   // General RenovateBot configuration
-  "enabled": true,
   "extends": [
     "config:base",
     "docker:enableMajor",
