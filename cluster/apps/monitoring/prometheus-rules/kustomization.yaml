@@ -10,12 +10,7 @@ resources:
   - etcd.yaml
   # - loki.yaml
   - node-exporter.yaml
-  ## app/ services
-  - crunchydata.yaml
-  - kured.yaml
-  - traefik.yaml
-  - velero.yaml
-  # - upsc.yaml
+  ## app/ services should be deployed with application
 
 # patchesJson6902:
 patches:
