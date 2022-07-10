@@ -204,12 +204,12 @@ Head over to your browser and you _should_ be able to access `https://homer.${BO
   tool that when configured will start to create PRs in your Github repository when Docker images,
   Helm charts or anything else that can be tracked has a newer version. The configuration for
   renovate is located [here](./.github/renovate.json5).
-- [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller) will watch for
-  new k3s releases and upgrade your nodes when new releases are found.
 
 There's also a couple Github workflows included in this repository that help automate some processes.
 
-- [Renovate schedule](./.github/workflows/renovate-schedule.yaml) - workflow to annotate
-  `HelmRelease`'s which allows
-  [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate) to track Helm chart
-  versions.
+- [Renovate schedule](./.github/workflows/schedule-renovate.yaml) - workflow to annotate `HelmRelease`'s which allows
+  [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate) to track Helm chart versions.
+- [Megalinter](./.github/workflows/megalinter.yaml) - workflow to lint so cluster specifications
+  remain properly formatted
+- [Helm differ](./.github/workflows/helm-release-differ.yaml) - workflow to annotate PRs with the differences in helm files
+  _NOTE:_ this requires [creating a private github bot](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)
