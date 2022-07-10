@@ -27,7 +27,7 @@ spec:
     query:
       enabled: true
       replicaCount: 3
-      podAntiAffinityPreset: hard
+      podAntiAffinityPreset: soft
       replicaLabels:
         - __replica__
       dnsDiscovery:
@@ -40,7 +40,7 @@ spec:
     bucketweb:
       enabled: true
       replicaCount: 3
-      podAntiAffinityPreset: hard
+      podAntiAffinityPreset: soft
       ingress:
         enabled: false
     compactor:
