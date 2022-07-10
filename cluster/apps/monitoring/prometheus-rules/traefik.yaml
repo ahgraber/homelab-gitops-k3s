@@ -1,8 +1,9 @@
+---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: traefik-rules
-  namespace: monitoring
+  namespace: networking
 spec:
   groups:
     - name: traefik.rules

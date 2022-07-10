@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
       chart: crowdsec
-      version: 0.4.2
+      version: 0.5.0
       sourceRef:
         kind: HelmRepository
         name: crowdsec-charts
@@ -184,4 +184,4 @@ spec:
           # -- docker image tag
           tag: "1.35"
 
-    #service: {}
+    # service: {}

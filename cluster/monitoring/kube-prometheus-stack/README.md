@@ -72,7 +72,7 @@ Add the following to the prometheus.yaml under `additionalScrapeConfigs`:
 
 ### high memory use / OOMkilled containers
 
-- [Rancher docs on monitoring](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/k)
+- [Rancher docs on monitoring](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/)
 - [Rancher docs on debugging high memory use](https://rancher.com/docs/rancher/v2.6/en/monitoring-alerting/guides/memory-usage/)
 - [identifying metrics contributing to high use](https://www.robustperception.io/which-are-my-biggest-metrics)
 

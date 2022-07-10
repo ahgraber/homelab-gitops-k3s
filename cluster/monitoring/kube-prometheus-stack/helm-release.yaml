@@ -12,18 +12,20 @@ spec:
     spec:
       # renovate: registryUrl=https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
-      version: 36.2.0
+      version: 36.2.1
       sourceRef:
         kind: HelmRepository
         name: prometheus-community-charts
         namespace: flux-system
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   # install:
   #   remediation:
   #     retries: 3
   # upgrade:
   #   remediation:
   #     retries: 3
-
   values:
     fullnameOverride: kps
 

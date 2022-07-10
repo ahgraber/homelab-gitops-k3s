@@ -1,9 +1,10 @@
+---
 # GENERATED FILE - DO NOT EDIT
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: crunchydata-rules
-  namespace: monitoring
+  namespace: postgres
 spec:
   groups:
     # - name: rules/aggregation.rules
