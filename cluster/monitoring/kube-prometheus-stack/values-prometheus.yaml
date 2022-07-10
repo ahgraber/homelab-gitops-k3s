@@ -139,7 +139,7 @@ data:
             scheme: https
             static_configs:
               - targets:
-                  - "truenas.${SECRET_DOMAIN}:9000"
+                  - "${SECRET_S3_ENDPOINT}"
           - job_name: crunchy-postgres-exporter
             kubernetes_sd_configs:
               - role: pod
