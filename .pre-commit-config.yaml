@@ -34,14 +34,15 @@ repos:
       #   entry: .precommit/sops.sh
       #   language: script
       #   pass_filenames: false
-  - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.8.0
-    hooks:
-      - id: shellcheck
-        args:
-          - --severity=warning
-          - -e
-          - SC1071
+  ## shellcheck requires docker to run
+  # - repo: https://github.com/koalaman/shellcheck-precommit
+  #   rev: v0.8.0
+  #   hooks:
+  #     - id: shellcheck
+  #       args:
+  #         - --severity=warning
+  #         - -e
+  #         - SC1071
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.7.1 # Use the sha or tag you want to point at
     hooks:
