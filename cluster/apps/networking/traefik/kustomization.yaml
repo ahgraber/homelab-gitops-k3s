@@ -6,4 +6,5 @@ resources:
   - middlewares.d
   - tls-store.d
   - helm-release.yaml
-  - service-monitor.yaml
+  - prometheusRule.yaml
+  - serviceMonitor.yaml

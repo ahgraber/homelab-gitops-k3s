@@ -6,4 +6,5 @@ resources:
   - storagelocations/
   - helm-release.yaml
   - namespace.yaml
+  - prometheusRule.yaml
   - secret-velero.sops.yaml
