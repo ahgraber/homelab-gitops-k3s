@@ -26,6 +26,7 @@
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
+  "commitBodyTable": true,
   // set up ignored deps
   "ignoreDeps": [
     "ghcr.io/fluxcd/helm-controller",
