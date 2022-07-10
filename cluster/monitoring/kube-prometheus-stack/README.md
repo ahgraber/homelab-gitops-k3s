@@ -65,7 +65,7 @@ Add the following to the prometheus.yaml under `additionalScrapeConfigs`:
             scheme: http
             static_configs:
               - targets:
-                  - "truenas.${SECRET_DOMAIN}:9000"
+                  - "${SECRET_S3_ENDPOINT}"
 ```
 
 ## Debugging
