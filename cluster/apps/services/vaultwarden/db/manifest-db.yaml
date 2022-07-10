@@ -53,7 +53,7 @@ spec:
         - name: repo1
           s3:
             bucket: "postgres"
-            endpoint: "${SECRET_S3_ENDPOINT}"
+            endpoint: "https://${SECRET_S3_ENDPOINT}"
             region: "us-east"
           schedules:
             # take a full backup daily at 1am
