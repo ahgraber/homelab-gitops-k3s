@@ -22,7 +22,7 @@
   "repositories": ["ahgraber/homelab-gitops-k3s"],
   "onboarding": false,
   "requireConfig": false,
-  "gitAuthor": "rosey-bot <218594+UnhesitatingEffectiveBot[bot]@users.noreply.github.com>",
+  "gitAuthor": "UnhesitatingEffectiveBot <218594+UnhesitatingEffectiveBot[bot]@users.noreply.github.com>",
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
