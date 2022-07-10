@@ -68,7 +68,7 @@ spec:
           ## If undefined (the default) or set to null, no storageClass spec is
           ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
           ##   GKE, AWS & OpenStack)
-          storageClass: csi-truenas-iscsi
+          storageClass: ceph-block-retain
         disableConnectionPooling: false
         disablePostgresUtil: false
         disableMetricsExporter: false
@@ -163,7 +163,7 @@ spec:
             max_client_conn: "200"
             default_pool_size: "50"
       backupconfig:
-        create: false
+        create: true # creates SGBackupConfig resource
         baseBackups:
           retention: 5
           cronSchedule: "*/2 * * * *" # for testing
@@ -175,7 +175,7 @@ spec:
         storage:
           s3Compatible:
             bucket: postgres
-            # path: /example-cluster
+            path: /example-cluster
             awsCredentials:
               secretKeySelectors:
                 accessKeyId:
@@ -185,21 +185,16 @@ spec:
                   name: cluster-secret
                   key: secretkey
             region: us-east
-            endpoint: "<YOUR_AWS_S3_ENDPOINT>"
+            endpoint: "${SECRET_S3_ENDPOINT}"
             enablePathStyleAddressing: true
             # storageClass:
 
     distributedLogs:
-      enabled: false
+      enabled: true
       create: true
       persistentVolume:
         size: 5Gi
-        ## If defined, storageClassName: <storageClass>
-        ## If set to "-", storageClassName: "", which disables dynamic provisioning
-        ## If undefined (the default) or set to null, no storageClassName spec is
-        ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-        ##   GKE, AWS & OpenStack)
-        #  storageClass: "-"
+        storageClass: "ceph-block-retain"
       postgresServices:
         primary:
           type: ClusterIP
