@@ -27,10 +27,11 @@ env:
   RENOVATE_CONFIG_FILE: .github/renovate.json5
 
 jobs:
-  renovate-helm-releases:
-    runs-on: ubuntu-20.04
+  renovate:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Verify Renovate Configuration
         uses: tj-actions/renovate-config-validator@v1.3
@@ -54,23 +55,3 @@ jobs:
         with:
           configurationFile: "${{ env.RENOVATE_CONFIG_FILE }}"
           token: "x-access-token:${{ steps.generate-token.outputs.token }}"
-
-      # - name: Renovate Helm Releases
-      #   uses: k8s-at-home/renovate-helm-releases@v1
-      #   with:
-      #     cluster-path: "./cluster"
-
-      # - name: Create pull request for renovatebot helm-release annotations
-      #   uses: peter-evans/create-pull-request@v4
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: renovate-annotations
-      #     delete-branch: true
-      #     title: "chore(deps): update renovate annotations"
-      #     signoff: false
-      #     committer: GitHub <noreply@github.com>
-      #     author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-      #     commit-message: "chore(deps): update renovate annotations"
-      #     body: |
-      #       Update HelmReleases inorder for Renovate to pick up new versions of Helm charts
-      #     labels: renovate/annotations
