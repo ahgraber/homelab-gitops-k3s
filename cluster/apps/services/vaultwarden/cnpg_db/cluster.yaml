@@ -12,15 +12,6 @@ spec:
   instances: 2
   # no. replicas = instances - 1 (where  instances > 0)
 
-  # postgresql:
-  #   parameters:
-  #     shared_buffers: 256MB
-  #     pg_stat_statements.max: "10000"
-  #     pg_stat_statements.track: all
-  #     auto_explain.log_min_duration: "10s"
-  #   pg_hba:
-  #     - host all all 10.244.0.0/16 md5
-
   bootstrap:
     initdb:
       database: vaultwarden
@@ -50,13 +41,22 @@ spec:
   superuserSecret:
     name: vaultwarden-superuser-secret
 
+  # postgresql:
+  #   parameters:
+  #     shared_buffers: 256MB
+  #     pg_stat_statements.max: "10000"
+  #     pg_stat_statements.track: all
+  #     auto_explain.log_min_duration: "10s"
+  #   pg_hba:
+  #     - host all all 10.244.0.0/16 md5
+
   storage:
     storageClass: ceph-block-retain
     size: 1Gi
 
   backup:
     barmanObjectStore:
-      destinationPath: s3://cnpg/
+      destinationPath: /cnpg/
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
       s3Credentials:
         accessKeyId:
