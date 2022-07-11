@@ -56,7 +56,7 @@ spec:
 
   backup:
     barmanObjectStore:
-      destinationPath: "s3://cnpg"
+      destinationPath: "cnpg"
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
       s3Credentials:
         accessKeyId:
