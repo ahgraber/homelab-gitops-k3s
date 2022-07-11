@@ -65,7 +65,7 @@ spec:
         secretAccessKey:
           name: s3-secret
           key: ACCESS_SECRET_KEY
-        region: us-east
+        # region: us-east
       wal:
         compression: gzip
         encryption: AES256
