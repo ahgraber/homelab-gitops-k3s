@@ -5,7 +5,8 @@ metadata:
   name: vaultwarden-cnpg-backup
   namespace: vaultwarden
 spec:
-  schedule: "0 0 0 * * *"
+  # schedule: "0 0 0 * * *" # midnight
+  schedule: "0 */5 * * * *" # every 5 min (testing)
   backupOwnerReference: self
   cluster:
     name: vaultwarden
