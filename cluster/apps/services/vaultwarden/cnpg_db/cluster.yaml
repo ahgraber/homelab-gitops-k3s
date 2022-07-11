@@ -9,7 +9,8 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:14.3
   primaryUpdateStrategy: unsupervised
 
-  instances: 1
+  instances: 2
+  # no. replicas = instances - 1 (where  instances > 0)
 
   # postgresql:
   #   parameters:
