@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: example-db
-  namespace: stackgres
+  name: <app>-db
+  namespace: <namespace>
 spec:
   interval: 5m
   chart:
@@ -111,7 +111,7 @@ spec:
           - name: create-stackgres-user
             scriptFrom:
               secretKeyRef: # read the user from a Secret to maintain credentials in a safe place
-                name: stackgres-secret-sqls-scripts
+                name: user-sqlscript-secret
                 key: create-stackgres-user.sql
           - name: create-stackgres-database
             script: |
@@ -175,14 +175,14 @@ spec:
         storage:
           s3Compatible:
             bucket: postgres
-            path: /example-cluster
+            path: /<app>
             awsCredentials:
               secretKeySelectors:
                 accessKeyId:
-                  name: cluster-secret
+                  name: s3-secret
                   key: accesskey
                 secretAccessKey:
-                  name: cluster-secret
+                  name: s3-secret
                   key: secretkey
             region: us-east
             endpoint: "${SECRET_S3_ENDPOINT}"
