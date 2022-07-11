@@ -5,6 +5,5 @@ resources:
   - backup.yaml
   - cluster.yaml
   # - configmap-metrics.yaml
-  - helm-release.yaml
   - secret-s3.sops.yaml
   - secret-user.sops.yaml
