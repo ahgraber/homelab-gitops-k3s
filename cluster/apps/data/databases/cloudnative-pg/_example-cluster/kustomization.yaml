@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - backup.yaml
   - cluster.yaml
-  - configmap-metrics.yaml
-  - helm-release.yaml
+  # - configmap-metrics.yaml
   - secret-s3.sops.yaml
   - secret-user.sops.yaml
