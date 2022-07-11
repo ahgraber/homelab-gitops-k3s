@@ -1,0 +1,71 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: vaultwarden-cnpg
+  namespace: cnpg-system
+spec:
+  description: "Vaultwarden CNPG cluster"
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.3
+  primaryUpdateStrategy: unsupervised
+
+  instances: 1
+
+  # postgresql:
+  #   parameters:
+  #     shared_buffers: 256MB
+  #     pg_stat_statements.max: "10000"
+  #     pg_stat_statements.track: all
+  #     auto_explain.log_min_duration: "10s"
+  #   pg_hba:
+  #     - host all all 10.244.0.0/16 md5
+
+  bootstrap:
+    initdb:
+      database: vaultwarden
+      owner: vaultwarden
+      secret:
+        name: vaultwarden-user-secret
+    # # Alternative bootstrap method: start from a backup
+    # recovery:
+    #   backup:
+    #     name: backup-example
+
+  superuserSecret:
+    name: vaultwarden-superuser-secret
+
+  storage:
+    storageClass: ceph-block-retain
+    size: 1Gi
+
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://postgres/vaultwarden
+      endpointURL: ${SECRET_S3_ENDPOINT}
+      s3Credentials:
+        accessKeyId:
+          name: s3-secret
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: s3-secret
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+        encryption: AES256
+      data:
+        compression: gzip
+        encryption: AES256
+        immediateCheckpoint: false
+        jobs: 2
+    retentionPolicy: "30d"
+
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 1
+    limits:
+      memory: 1Gi
+
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: failure-domain.beta.kubernetes.io/zone
