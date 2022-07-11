@@ -3,7 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: example-cluster
-  namespace: cnpg-system
+  namespace: <namespace>
 spec:
   description: "Example of cluster"
   imageName: ghcr.io/cloudnative-pg/postgresql:14.3
@@ -29,14 +29,14 @@ spec:
       database: app
       owner: app
       secret:
-        name: cluster-example-app-user
+        name: <app>-user-secret
     # # Alternative bootstrap method: start from a backup
     # recovery:
     #   backup:
     #     name: backup-example
 
   superuserSecret:
-    name: cluster-example-superuser
+    name: <app>-superuser-secret
 
   storage:
     storageClass: ceph-block-retain

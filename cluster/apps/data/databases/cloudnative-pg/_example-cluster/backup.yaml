@@ -3,7 +3,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: backup-example
-  namespace: cnpg-system
+  namespace: <namespace>
 spec:
   schedule: "0 0 0 * * *"
   backupOwnerReference: self
