@@ -27,26 +27,26 @@ spec:
       owner: vaultwarden
       secret:
         name: vaultwarden-user-secret
-    # Alternative bootstrap method: start from a backup
-    recovery:
-      backup:
-        # bootstrap from s3 backup
-        source: clusterBackup
+  #   # Alternative bootstrap method: start from a backup
+  #   recovery:
+  #     backup:
+  #       # bootstrap from s3 backup
+  #       source: clusterBackup
 
-  externalClusters:
-    - name: clusterBackup
-      barmanObjectStore:
-        destinationPath: s3://postgres/pgbackrest/services/vaultwarden-db/repo1
-        endpointURL: ${SECRET_S3_ENDPOINT}
-        s3Credentials:
-          accessKeyId:
-            name: s3-secret
-            key: ACCESS_KEY_ID
-          secretAccessKey:
-            name: s3-secret
-            key: ACCESS_SECRET_KEY
-        wal:
-          maxParallel: 8
+  # externalClusters:
+  #   - name: clusterBackup
+  #     barmanObjectStore:
+  #       destinationPath: s3://postgres/pgbackrest/services/vaultwarden-db/repo1
+  #       endpointURL: ${SECRET_S3_ENDPOINT}
+  #       s3Credentials:
+  #         accessKeyId:
+  #           name: s3-secret
+  #           key: ACCESS_KEY_ID
+  #         secretAccessKey:
+  #           name: s3-secret
+  #           key: ACCESS_SECRET_KEY
+  #       wal:
+  #         maxParallel: 8
 
   superuserSecret:
     name: vaultwarden-superuser-secret
