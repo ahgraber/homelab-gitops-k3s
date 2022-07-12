@@ -58,6 +58,9 @@ spec:
     barmanObjectStore:
       destinationPath: "s3://cnpg"
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
+      endpointCA:
+        name: letsencrypt-ca
+        key: ca.crt
       s3Credentials:
         accessKeyId:
           name: s3-secret
