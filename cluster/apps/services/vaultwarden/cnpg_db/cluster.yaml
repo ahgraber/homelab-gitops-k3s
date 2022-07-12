@@ -57,7 +57,7 @@ spec:
   backup:
     barmanObjectStore:
       destinationPath: "s3://cnpg"
-      endpointURL: "${SECRET_S3_ENDPOINT}"
+      endpointURL: "https://${SECRET_S3_ENDPOINT}"
       s3Credentials:
         accessKeyId:
           name: s3-secret
@@ -65,7 +65,7 @@ spec:
         secretAccessKey:
           name: s3-secret
           key: ACCESS_SECRET_KEY
-        # region: us-east
+        region: us-east
       wal:
         compression: gzip
         encryption: AES256
