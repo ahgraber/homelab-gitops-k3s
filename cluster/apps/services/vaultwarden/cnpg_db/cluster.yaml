@@ -59,7 +59,7 @@ spec:
       destinationPath: "s3://cnpg"
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
       endpointCA:
-        name: letsencrypt-ca
+        name: letsencrypt-root-ca
         key: ca.crt
       s3Credentials:
         accessKeyId:
