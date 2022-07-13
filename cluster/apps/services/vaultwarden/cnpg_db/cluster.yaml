@@ -13,33 +13,11 @@ spec:
   # no. replicas = instances - 1 (where instances > 0)
 
   bootstrap:
-    # initdb:
-    #   database: vaultwarden
-    #   owner: vaultwarden
-    #   secret:
-    #     name: vaultwarden-user-secret
-    # Alternative bootstrap method: start from a backup
-    recovery:
-      # bootstrap from s3 backup
-      source: clusterBackup
-
-  externalClusters:
-    - name: clusterBackup
-      barmanObjectStore:
-        destinationPath: s3://postgres/pgbackrest/services/vaultwarden-db/repo1
-        endpointURL: "https://${SECRET_S3_ENDPOINT}"
-        s3Credentials:
-          accessKeyId:
-            name: s3-secret
-            key: ACCESS_KEY_ID
-          secretAccessKey:
-            name: s3-secret
-            key: ACCESS_SECRET_KEY
-          region:
-            name: s3-secret
-            key: REGION
-        wal:
-          maxParallel: 8
+    initdb:
+      database: vaultwarden
+      owner: vaultwarden
+      secret:
+        name: vaultwarden-user-secret
 
   superuserSecret:
     name: vaultwarden-superuser-secret
