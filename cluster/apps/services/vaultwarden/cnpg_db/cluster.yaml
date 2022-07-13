@@ -56,7 +56,7 @@ spec:
 
   backup:
     barmanObjectStore:
-      destinationPath: "s3://cnpg"
+      destinationPath: "s3://cnpg/vaultwarden"
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
       # endpointCA:
       #   name: letsencrypt-key
@@ -73,7 +73,7 @@ spec:
           key: REGION
       wal:
         compression: gzip
-        # encryption: AES256w
+        # encryption: AES256
       data:
         compression: gzip
         # encryption: AES256
