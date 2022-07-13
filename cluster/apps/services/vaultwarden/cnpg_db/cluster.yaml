@@ -35,6 +35,9 @@ spec:
   #         secretAccessKey:
   #           name: s3-secret
   #           key: ACCESS_SECRET_KEY
+  #         region:
+  #           name: s3-secret
+  #           key: REGION
   #       wal:
   #         maxParallel: 8
 
@@ -56,11 +59,8 @@ spec:
 
   backup:
     barmanObjectStore:
-      destinationPath: "s3://cnpg/vaultwarden"
+      destinationPath: "s3://cnpg"
       endpointURL: "https://${SECRET_S3_ENDPOINT}"
-      # endpointCA:
-      #   name: letsencrypt-key
-      #   key: key
       s3Credentials:
         accessKeyId:
           name: s3-secret
