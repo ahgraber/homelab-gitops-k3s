@@ -6,7 +6,7 @@ metadata:
   namespace: vaultwarden
 spec:
   # schedule: "0 0 0 * * *" # midnight
-  schedule: "0 */5 * * * *" # every 5 min (testing)
+  schedule: "0 0 */4 * * *" # every 4 hr
   backupOwnerReference: self
   cluster:
     name: vaultwarden
