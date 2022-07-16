@@ -22,7 +22,7 @@ spec:
   values:
     image:
       repository: ghcr.io/k8s-at-home/vaultwarden
-      tag: v1.25.0
+      tag: v1.25.1
     initContainers:
       wait-database:
         image: busybox:1.35.0
