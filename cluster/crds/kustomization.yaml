@@ -6,7 +6,6 @@ resources:
   - external-snapshotter/ # AKA snapshot-controller
   - kube-prometheus-stack/
   - kyverno/
-  - metallb/
   - rook-ceph/
   # - system-upgrade-controller/
   - traefik/
