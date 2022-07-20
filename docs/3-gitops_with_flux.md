@@ -36,7 +36,8 @@ kubectl --kubeconfig="${KUBECONFIG}" create namespace flux-system --dry-run=clie
 ## 3. Add the Age key in-order for Flux to decrypt SOPS secrets
 
 ```sh
-cat ~/.config/sops/age/keys.txt |
+# cat ~/.config/sops/age/keys.txt |
+cat "${SOPS_AGE_KEY_FILE}" |
     kubectl --kubeconfig="${KUBECONFIG}" \
     -n flux-system create secret generic sops-age \
     --from-file=age.agekey=/dev/stdin
