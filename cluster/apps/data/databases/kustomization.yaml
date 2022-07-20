@@ -5,5 +5,5 @@ resources:
   - cloudnative-pg/
   - crunchydata-operator/
   - pgadmin/
-  - stackgres/
+  # - stackgres/
   - namespace.yaml
