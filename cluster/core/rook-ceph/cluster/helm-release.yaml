@@ -81,15 +81,15 @@ spec:
           # - name: datto2
           #   devices:
           #     - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
-          - name: optiplex0
-            devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000028"
-          - name: optiplex1
+          - name: optiplex3
             devices:
               - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000052"
-          - name: optiplex2
+          - name: optiplex4
             devices:
               - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
+          - name: optiplex5
+            devices:
+              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000028"
 
       resources:
         mgr:
