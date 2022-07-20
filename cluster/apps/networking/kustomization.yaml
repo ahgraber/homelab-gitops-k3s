@@ -5,4 +5,4 @@ resources:
   - cloudflared/
   - traefik/
   - wildcard-certificate/
-  - namespace.yaml
+  # - namespace.yaml # created in /core
