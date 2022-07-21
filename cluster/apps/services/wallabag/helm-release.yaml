@@ -35,7 +35,7 @@ spec:
             until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
         env:
           - name: POSTGRES_HOST
-            value: vaultwarden-cnpg-rw
+            value: wallabag-cnpg-rw
         resources:
           requests:
             cpu: 11m
