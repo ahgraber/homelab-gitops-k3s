@@ -10,7 +10,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi # use csi-truenas-iscsi-retain if redeploy
+  storageClassName: ceph-block-retain
   resources:
     requests:
-      storage: 1Gi
+      storage: 0.25Gi

@@ -46,11 +46,11 @@ spec:
           limits:
             memory: 53M
     env:
-      DATABASE_URL:
-        valueFrom:
-          secretKeyRef:
-            name: vaultwarden-db-pguser-vaultwarden
-            key: uri
+      # DATABASE_URL:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: vaultwarden-db-pguser-vaultwarden
+      #       key: uri
       DATA_FOLDER: "config"
       DOMAIN: https://vaultwarden.${SECRET_DOMAIN}
       SIGNUPS_ALLOWED: "false"
