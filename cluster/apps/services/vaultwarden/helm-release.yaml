@@ -32,13 +32,11 @@ spec:
         args:
           - -c
           - >-
-            until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
+            until nc -w 1 -v "${DATABASE_URL}"; do echo "Waiting for database"; done
         env:
-          - name: POSTGRES_HOST
-            value: vaultwarden-db-primary
-        # envFrom:
-        #   - secretRef:
-        #       name: vaultwarden-secret
+        envFrom:
+          - secretRef:
+              name: vaultwarden-secret
         resources:
           requests:
             cpu: 11m
