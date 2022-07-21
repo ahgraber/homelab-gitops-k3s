@@ -1,0 +1,12 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: wallabag-cnpg-backup
+  namespace: services
+spec:
+  schedule: "0 0 0 * * *" # midnight
+  # schedule: "0 0 */4 * * *" # every 4 hr
+  backupOwnerReference: self
+  cluster:
+    name: wallabag
