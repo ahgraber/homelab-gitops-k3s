@@ -4,6 +4,3 @@ kind: Kustomization
 resources:
   - cloudnative-pg/
   - crunchydata-operator/
-  - pgadmin/
-  # - stackgres/
-  - namespace.yaml
