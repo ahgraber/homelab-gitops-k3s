@@ -4,10 +4,13 @@
   - [1. Verify Flux can be installed](#1-verify-flux-can-be-installed)
   - [2. Pre-create the `flux-system` namespace](#2-pre-create-the-flux-system-namespace)
   - [3. Add the Age key in-order for Flux to decrypt SOPS secrets](#3-add-the-age-key-in-order-for-flux-to-decrypt-sops-secrets)
+  - [4. Create deploy key & add to github](#4-create-deploy-key--add-to-github)
   - [4. Export more environment variables for application configuration](#4-export-more-environment-variables-for-application-configuration)
   - [5. Create required files based on ALL exported environment variables](#5-create-required-files-based-on-all-exported-environment-variables)
   - [6. :mag:&nbsp; **Verify** all the above files have the correct information present](#6-mag-verify-all-the-above-files-have-the-correct-information-present)
   - [7. :closed_lock_with_key:&nbsp; Encrypt secrets with SOPS](#7-closed_lock_with_key-encrypt-secrets-with-sops)
+    - [Create deploy key](#create-deploy-key)
+    - [Encrypting with SOPS](#encrypting-with-sops)
   - [8. :mag:&nbsp; **Verify** all the above files are **encrypted** with SOPS](#8-mag-verify-all-the-above-files-are-encrypted-with-sops)
   - [9. Push your changes to git](#9-push-your-changes-to-git)
   - [10. Install Flux](#10-install-flux)
@@ -42,6 +45,17 @@ cat "${SOPS_AGE_KEY_FILE}" |
     -n flux-system create secret generic sops-age \
     --from-file=age.agekey=/dev/stdin
 ```
+
+## 4. Create deploy key & add to github
+
+Generate key with :
+
+```sh
+ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./cluster/github-deploy-key -q -P ""
+```
+
+Copy contents of `cluster/github-deploy-key.pub` to `deploy keys` section of github repo
+`https://github.com/<username>/<repo_name>/settings/keys`
 
 ## 4. Export more environment variables for application configuration
 
@@ -104,8 +118,15 @@ bash ./scripts/substitute.sh
 
 ## 7. :closed_lock_with_key:&nbsp; Encrypt secrets with SOPS
 
-:round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
-usable anywhere in your YAML manifests under `./cluster`
+> :round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
+> usable anywhere in your YAML manifests under `./cluster`
+
+### Create deploy key
+
+Create sops secret in `cluster/base/flux-system/github-deploy-key.sops.yaml` following
+[template](../cluster/flux/flux-system/github-deploy-key.sops.yaml.example)
+
+### Encrypting with SOPS
 
 General procedure:
 
@@ -132,18 +153,22 @@ git push
 
 ## 10. Install Flux
 
-- [ ] Generate a new Github Personal Access Token with all `repository` permissions and add/update
-      .envrc
-
-:round*pushpin: Due to race conditions with the Flux CRDs you will have to _run the below command_
-_**twice**_. There should be no errors on this second run.
+Apply deploy-key and sops-age secrets to cluster
 
 ```sh
-kubectl --kubeconfig=${KUBECONFIG} apply --kustomize=./cluster/base/flux-system
+cat "${SOPS_AGE_KEY_FILE}" |
+    kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
+sops -d cluster/flux/flux-system/github-deploy-key.sops.yaml | kubectl apply -f -
 ```
 
-:tada: **Congratulations** you have a Kubernetes cluster managed by Flux, your Git repository is
-driving the state of your cluster.
+Apply bootstrap and cluster kustomizations & force reconciliation
+
+```sh
+kubectl apply --kustomize ./cluster/bootstrap/
+kubectl apply --kustomize ./cluster/flux/flux-system/
+flux reconcile -n flux-system source git flux-cluster
+flux reconcile -n flux-system kustomization flux-cluster
+```
 
 ## Verify Flux
 
