@@ -182,7 +182,7 @@ flux --kubeconfig=${KUBECONFIG} get sources git
 Manually sync Flux with your Git repository
 
 ```sh
-flux --kubeconfig=${KUBECONFIG} reconcile source git flux-system
+flux --kubeconfig=${KUBECONFIG} reconcile source git flux-cluster
 ```
 
 Check status
@@ -200,7 +200,7 @@ flux --kubeconfig=${KUBECONFIG} get helmrelease -A
 ```sh
 cat >> ~/.aliases.local << EOF
 flux-update () {
-flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-system
+flux --kubeconfig=$(pwd)/kubeconfig reconcile source git flux-cluster
 sleep 50
 kubectl --kubeconfig=$(pwd)/kubeconfig get kustomization -A
 sleep 10
