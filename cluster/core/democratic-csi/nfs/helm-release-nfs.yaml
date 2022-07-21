@@ -15,6 +15,9 @@ spec:
         kind: HelmRepository
         name: democratic-csi-charts
         namespace: flux-system
+  dependsOn:
+    - name: snapshot-controller
+      namespace: kube-system
   values:
     csiDriver:
       name: "org.democratic-csi.truenas-nfs"
