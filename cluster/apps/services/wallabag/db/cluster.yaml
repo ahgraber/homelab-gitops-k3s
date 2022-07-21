@@ -1,0 +1,74 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: wallabag-cnpg
+  namespace: services
+spec:
+  description: "wallabag CNPG cluster"
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.3
+  primaryUpdateStrategy: unsupervised
+
+  instances: 2
+  # no. replicas = instances - 1 (where instances > 0)
+
+  bootstrap:
+    initdb:
+      database: wallabag
+      owner: wallabag
+      secret:
+        name: wallabag-user-secret
+
+  superuserSecret:
+    name: wallabag-superuser-secret
+
+  # postgresql:
+  #   parameters:
+  #     shared_buffers: 256MB
+  #     pg_stat_statements.max: "10000"
+  #     pg_stat_statements.track: all
+  #     auto_explain.log_min_duration: "10s"
+  #   pg_hba:
+  #     - host all all 10.244.0.0/16 md5
+
+  storage:
+    storageClass: ceph-block
+    size: 1Gi
+
+  backup:
+    barmanObjectStore:
+      destinationPath: "s3://cnpg"
+      endpointURL: "https://${SECRET_S3_ENDPOINT}"
+      s3Credentials:
+        accessKeyId:
+          name: s3-secret
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: s3-secret
+          key: ACCESS_SECRET_KEY
+        region:
+          name: s3-secret
+          key: REGION
+      wal:
+        compression: gzip
+        # encryption: AES256
+      data:
+        compression: gzip
+        # encryption: AES256
+        immediateCheckpoint: false
+        jobs: 2
+    retentionPolicy: "30d"
+
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 256Mi
+
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: failure-domain.beta.kubernetes.io/zone
+
+  monitoring:
+    enablePodMonitor: true

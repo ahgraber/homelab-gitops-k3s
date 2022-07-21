@@ -38,10 +38,7 @@ spec:
             until nc -w 1 -v $POSTGRES_HOST:5432; do echo "Waiting for database"; done
         env:
           - name: POSTGRES_HOST
-            value: wallabag-db-primary
-        # envFrom:
-        #   - secretRef:
-        #       name: wallabag-secret
+            value: vaultwarden-cnpg-rw
         resources:
           requests:
             cpu: 11m
@@ -61,40 +58,28 @@ spec:
       SYMFONY__ENV__REDIS_PORT: "6379"
       # postgres stuff
       SYMFONY__ENV__DATABASE_DRIVER: pdo_pgsql
-      SYMFONY__ENV__DATABASE_HOST:
-        valueFrom:
-          secretKeyRef:
-            name: wallabag-db-pguser-wallabag
-            key: host
-      SYMFONY__ENV__DATABASE_PORT:
-        valueFrom:
-          secretKeyRef:
-            name: wallabag-db-pguser-wallabag
-            key: port
-      SYMFONY__ENV__DATABASE_NAME:
-        valueFrom:
-          secretKeyRef:
-            name: wallabag-db-pguser-wallabag
-            key: dbname
+      SYMFONY__ENV__DATABASE_HOST: vaultwarden-cnpg-rw
+      SYMFONY__ENV__DATABASE_PORT: 5432
+      SYMFONY__ENV__DATABASE_NAME: wallabag
       SYMFONY__ENV__DATABASE_USER:
         valueFrom:
           secretKeyRef:
-            name: wallabag-db-pguser-wallabag
-            key: user
+            name: wallabag-user-secret
+            key: username
       SYMFONY__ENV__DATABASE_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: wallabag-db-pguser-wallabag
+            name: wallabag-user-secret
             key: password
       POSTGRES_USER:
         valueFrom:
           secretKeyRef:
-            name: wallabag-db-pguser-postgres
-            key: user
+            name: wallabag-superuser-secret
+            key: username
       POSTGRES_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: wallabag-db-pguser-postgres
+            name: wallabag-superuser-secret
             key: password
       POPULATE_DATABASE: "true"
     envFrom:
