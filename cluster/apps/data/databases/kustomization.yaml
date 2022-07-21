@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - _namespaces/
   - cloudnative-pg/
-  - crunchydata-operator/
   - pgadmin/
