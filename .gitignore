@@ -10,6 +10,7 @@ bin
 *.iso
 # k8s
 kubeconfig
+*key*
 # vscode-sops
 .decrypted~*.yaml
 # env
@@ -26,4 +27,7 @@ report/
 # Local archives
 **/archive
 **/wip
+
+# retain files
 !**.gitkeep
+!*sops*
