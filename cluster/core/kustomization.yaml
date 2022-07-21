@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - _namespaces/
   - cert-manager/
-  - db-operators/
   - democratic-csi/
   - flux-system/
   - kube-system/
