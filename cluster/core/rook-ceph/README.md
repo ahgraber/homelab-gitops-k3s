@@ -24,6 +24,58 @@ and file storage in one unified system.
 
 [stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
 [cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
+[pgcalc](https://old.ceph.com/pgcalc/)
+
+> run the following commands against the ceph-toolbox pod
+
+Show current PGs/OSD:
+
+<!-- markdownlint-disable -->
+```sh
+ceph pg dump | awk '
+BEGIN { IGNORECASE = 1 }
+ /^PG_STAT/ { col=1; while($col!="UP") {col++}; col++ }
+ /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;
+ up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
+ for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}
+}
+END {
+ printf("\n");
+ printf("pool :\t"); for (i in poollist) printf("%s\t",i); printf("| SUM \n");
+ for (i in poollist) printf("--------"); printf("----------------\n");
+ for (i in osdlist) { printf("osd.%i\t", i); sum=0;
+   for (j in poollist) { printf("%i\t", array[i,j]); sum+=array[i,j]; sumpool[j]+=array[i,j] }; printf("| %i\n",sum) }
+ for (i in poollist) printf("--------"); printf("----------------\n");
+ printf("SUM :\t"); for (i in poollist) printf("%s\t",sumpool[i]); printf("|\n");
+}'
+```
+<!-- markdownlint-enable -->
+
+List current OSD pools:
+
+```sh
+ceph osd pool ls
+```
+
+Based on PGcalc, and 3-drive cluster with 3 replicas, we basically want 4, 8, or 16 pgs per osd pool,
+depending on anticipated use (larger # for pools with anticipated larger data requirements).
+This may take a few runs for rook-ceph to sort out the changes on the back end
+
+```sh
+# for each pool name -- this will depend on ceph cluster deployment
+ceph osd pool set .mgr pg_num 4
+ceph osd pool set .rgw.root pg_num 32
+ceph osd pool set ceph-blockpool pg_num 16
+ceph osd pool set ceph-blockpool-retain pg_num 16
+ceph osd pool set ceph-filesystem-metadata pg_num 16
+ceph osd pool set ceph-filesystem-data0 pg_num 16
+ceph osd pool set ceph-objectstore.rgw.buckets.index pg_num 16
+ceph osd pool set ceph-objectstore.rgw.buckets.non-ec pg_num 16
+ceph osd pool set ceph-objectstore.rgw.buckets.data pg_num 16
+ceph osd pool set ceph-objectstore.rgw.control pg_num 16
+ceph osd pool set ceph-objectstore.rgw.log pg_num 16
+ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
+```
 
 ## Teardown and Cleanup
 
