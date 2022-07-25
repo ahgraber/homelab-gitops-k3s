@@ -53,9 +53,9 @@ spec:
       bdev_async_discard = true
 
     cephClusterSpec:
-      cephVersion:
-        image: quay.io/ceph/ceph:v17.2.2
-      dataDirHostPath: /var/lib/rook
+      # cephVersion:
+      #   image: quay.io/ceph/ceph:v17.2.2
+      # dataDirHostPath: /var/lib/rook
 
       crashCollector:
         disable: false
@@ -74,15 +74,6 @@ spec:
         config:
           osdsPerDevice: "1"
         nodes:
-          # - name: datto0
-          #   devices:
-          #     - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB42182"
-          # - name: datto1
-          #   devices:
-          #     - name: /dev/disk/by-id/nvme-PM991_NVMe_Samsung_128GB__S50CNF0NB71697"
-          # - name: datto2
-          #   devices:
-          #     - name: /dev/disk/by-id/nvme-PM991a_NVMe_Samsung_128GB__S65YNE0R103233"
           - name: optiplex3
             devices:
               - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000052"
