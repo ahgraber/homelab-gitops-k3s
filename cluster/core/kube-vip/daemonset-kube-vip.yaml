@@ -21,7 +21,7 @@ spec:
       containers:
         - name: kube-vip
           # renovate: registryUrl=https://ghcr.io/kube-vip
-          image: ghcr.io/kube-vip/kube-vip:v0.4.4
+          image: ghcr.io/kube-vip/kube-vip:v0.5.0
           imagePullPolicy: IfNotPresent
           args:
             - manager
