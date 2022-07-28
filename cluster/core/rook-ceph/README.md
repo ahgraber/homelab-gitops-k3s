@@ -20,6 +20,18 @@ and file storage in one unified system.
 
 ## Troubleshooting
 
+### Integrate with Prometheus/Alertmanager
+
+> run the following commands against the ceph-toolbox pod
+
+```sh
+ceph
+dashboard set-alertmanager-api-host 'http://alertmanager-operated.monitoring.svc:9093'
+dashboard set-alertmanager-api-ssl-verify False
+dashboard set-prometheus-api-host 'http://prometheus-operated.monitoring.svc:9090'
+dashboard set-prometheus-api-ssl-verify False
+```
+
 ### Too many PGs per OSD
 
 [stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
@@ -88,20 +100,24 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 4. Check crds for remaining objects
 
 ```sh
+flux suspend kustomization core
 kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"spec":{"cleanupPolicy":{"confirmation":"yes-really-destroy-data"}}}'
 kubectl delete hr rook-ceph-cluster -n rook-ceph
 kubectl delete cephcluster rook-ceph -n rook-ceph
+kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
 # clean up CRDS
-for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do kubectl delete "$CRD"; done;
-# NOTE: may have to edit/patch custom resources to delete them prior to force-removing finalzers for crds
 for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do
+  kubectl delete "$CRD"
   kubectl patch "$CRD" --type merge -p '{"metadata":{"finalizers": []}}'
-done
+done;
 
-for RES in $(kubectl get configmap,secret -n rook-ceph -o name); do kubectl delete "$RES" -n rook-ceph; done;
 for RES in $(kubectl get configmap,secret -n rook-ceph -o name); do
+  kubectl delete "$RES" -n rook-ceph
   kubectl patch "$RES" -n rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
 done
+
 kubectl delete ns rook-ceph
 kubectl patch ns rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
+
+### RUN ROOK-CEPH-CLEANUP ANSIBLE SCRIPT
 ```
