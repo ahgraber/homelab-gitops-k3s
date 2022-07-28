@@ -15,10 +15,10 @@ spec:
         name: bitnami-charts
         namespace: flux-system
   dependsOn:
-    - name: kube-prometheus-stack
-      namespace: monitoring
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    # - name: kube-prometheus-stack
+    #   namespace: monitoring
   values:
     objstoreConfig:
       type: s3
