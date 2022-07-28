@@ -23,7 +23,7 @@ spec:
       containers:
         - name: karma
           # renovate: registryUrl=https://github.com/prymitive/karma
-          image: ghcr.io/prymitive/karma:v0.105
+          image: ghcr.io/prymitive/karma:v0.106
           imagePullPolicy: IfNotPresent
           env:
             - name: ALERTMANAGER_URI
