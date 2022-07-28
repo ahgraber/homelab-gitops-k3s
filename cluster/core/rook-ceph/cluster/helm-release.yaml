@@ -51,6 +51,10 @@ spec:
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
+      dashboard set-alertmanager-api-host 'http://alertmanager-operated.monitoring.svc:9093'
+      dashboard set-alertmanager-api-ssl-verify False
+      dashboard set-prometheus-api-host 'http://prometheus-operated.monitoring.svc:9090'
+      dashboard set-prometheus-api-ssl-verify False
 
     cephClusterSpec:
       # cephVersion:
