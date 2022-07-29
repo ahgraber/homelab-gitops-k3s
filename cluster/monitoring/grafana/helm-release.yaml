@@ -158,7 +158,7 @@ spec:
     persistence:
       enabled: true
       size: 2Gi
-      storageClassName: "csi-truenas-iscsi"
+      storageClassName: "ceph-block" # "csi-truenas-iscsi"
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: "grafana"
