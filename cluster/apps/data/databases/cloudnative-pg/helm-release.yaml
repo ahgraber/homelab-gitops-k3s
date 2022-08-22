@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://github.com/cloudnative-pg/charts
       chart: cloudnative-pg
-      version: 0.14.0
+      version: 0.14.3
       sourceRef:
         kind: HelmRepository
         name: cloudnativepg-charts
