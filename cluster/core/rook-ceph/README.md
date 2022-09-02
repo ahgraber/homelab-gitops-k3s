@@ -18,6 +18,46 @@ and file storage in one unified system.
 [Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
 [Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
 
+## Updating
+
+[Upgrade docs](https://rook.github.io/docs/rook/v1.9/Upgrade/health-verification/)
+
+### Rook version update
+
+<!-- markdownlint-disable -->
+```sh
+ROOK_CLUSTER_NAMESPACE="rook-ceph"
+
+# watch update occur
+watch --exec kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployments \
+  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
+  -o jsonpath='{range .items[*]}{.metadata.name}{"  \treq/upd/avl: "}{.spec.replicas}{"/"}{.status.updatedReplicas}{"/"}{.status.readyReplicas}{"  \trook-version="}{.metadata.labels.rook-version}{"\n"}{end}'
+
+# check only a single version is left
+kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
+  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
+  -o jsonpath='{range .items[*]}{"rook-version="}{.metadata.labels.rook-version}{"\n"}{end}' | sort | uniq
+```
+<!-- markdownlint-enable -->
+
+### Ceph version update
+
+<!-- markdownlint-disable -->
+```sh
+ROOK_CLUSTER_NAMESPACE="rook-ceph"
+
+# watch update occur
+watch --exec kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployments \
+  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
+  -o jsonpath='{range .items[*]}{.metadata.name}{"  \treq/upd/avl: "}{.spec.replicas}{"/"}{.status.updatedReplicas}{"/"}{.status.readyReplicas}{"  \tceph-version="}{.metadata.labels.ceph-version}{"\n"}{end}'
+
+# check only a single version is left
+kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
+  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
+  -o jsonpath='{range .items[*]}{"ceph-version="}{.metadata.labels.ceph-version}{"\n"}{end}' | sort | uniq
+```
+<!-- markdownlint-enable -->
+
 ## Troubleshooting
 
 ### Integrate with Prometheus/Alertmanager
