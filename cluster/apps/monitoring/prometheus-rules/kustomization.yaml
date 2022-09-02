@@ -5,7 +5,7 @@ resources:
   ### loading in /apps ensures rules are installed after prometheus is available
   ## core/ services
   - cert-manager.yaml
-  - https://raw.githubusercontent.com/rook/rook/v1.9.8/deploy/examples/monitoring/localrules.yaml
+  - https://raw.githubusercontent.com/rook/rook/v1.10.0/deploy/examples/monitoring/localrules.yaml
   ## monitoring/ services
   - etcd.yaml
   # - loki.yaml
