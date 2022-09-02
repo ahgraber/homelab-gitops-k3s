@@ -17,6 +17,13 @@ spec:
         kind: HelmRepository
         name: prometheus-community-charts
         namespace: flux-system
+  install:
+    # createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
