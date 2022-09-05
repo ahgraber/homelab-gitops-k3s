@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
+  # - namespace.yaml # created with CRDs
   - helm-release.yaml
-  - ipAddressPool.yaml
-  - l2Advertisement.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/
+  # - ipAddressPool.yaml
+  # - l2Advertisement.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/

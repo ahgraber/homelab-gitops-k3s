@@ -14,7 +14,7 @@ spec:
     # exclude all
     /*
     # include templates directory with crds.yaml
-    !/charts/metallb/charts/crds/templates
+    !/config/manifests/metallb-native.yaml
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
