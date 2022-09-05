@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://metallb.github.io/metallb
       chart: metallb
-      version: 0.13.3
+      version: 0.13.5
       sourceRef:
         kind: HelmRepository
         name: metallb-charts
@@ -43,17 +43,17 @@ spec:
           operator: "Exists"
         - effect: "NoSchedule"
           operator: "Exists"
-      frr:
-        enabled: true
-        image:
-          repository: docker.io/frrouting/frr
-          tag: v8.2.2
+      # frr:
+      #   enabled: true
+      #   image:
+      #     repository: docker.io/frrouting/frr
+      #     tag: v8.2.2
 
-  postRenderers:
-    - kustomize:
-        patchesStrategicMerge:
-          - $patch: delete
-            apiVersion: admissionregistration.k8s.io/v1
-            kind: ValidatingWebhookConfiguration
-            metadata:
-              name: validating-webhook-configuration
+  # postRenderers:
+  #   - kustomize:
+  #       patchesStrategicMerge:
+  #         - $patch: delete
+  #           apiVersion: admissionregistration.k8s.io/v1
+  #           kind: ValidatingWebhookConfiguration
+  #           metadata:
+  #             name: validating-webhook-configuration
