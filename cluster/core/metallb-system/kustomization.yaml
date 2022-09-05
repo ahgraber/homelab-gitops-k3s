@@ -5,4 +5,4 @@ resources:
   - namespace.yaml
   - helm-release.yaml
   - ipAddressPool.yaml
-  - l2Advertiesment.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/
+  - l2Advertisement.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/
