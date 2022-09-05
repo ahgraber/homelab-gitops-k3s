@@ -7,5 +7,5 @@ resources:
   - hammond/
   - httpbin/
   # - mealie/  # wait for v1 (https://github.com/hay-kot/mealie/discussions/645)
-  - wallabag/
+  # - wallabag/
   - namespace.yaml
