@@ -5,7 +5,7 @@ metadata:
   name: traefik
   namespace: networking
   annotations:
-    metallb.universe.tf/address-pool: frontend
+    metallb.universe.tf/address-pool: ingress
 spec:
   interval: 5m
   chart:
@@ -26,8 +26,7 @@ spec:
       spec:
         # expects IP only, no netmask
         # externalIPs:
-        #   - "${METALLB_FRONTEND}" # this should be the metallb IP reserved for Ingress
-        loadBalancerIP: "${METALLB_FRONTEND}" # this should be the metallb IP reserved for Ingress
+        loadBalancerIP: "${LB_INGRESS}" # this should be the load balancer IP reserved for Ingress
         # externalTrafficPolicy: Local  # Cluster
       # annotations:
     logs:
@@ -63,8 +62,8 @@ spec:
       - "--api.insecure=true"
       - "--serverstransport.insecureskipverify=true"
       # - "--providers.kubernetesingress.ingressclass=traefik"
-      # - "--providers.kubernetesingress.ingressendpoint.ip=${METALLB_FRONTEND}"
-      # - "--providers.kubernetescrd.endpoint=${METALLB_FRONTEND}"
+      # - "--providers.kubernetesingress.ingressendpoint.ip=${LB_INGRESS}"
+      # - "--providers.kubernetescrd.endpoint=${LB_INGRESS}"
       # - "--providers.kubernetescrd.endpoint=websecure"
       # - "--providers.kubernetescrd.allowcrossnamespace=true"
       ### Set trusted Proxy IPs for headers

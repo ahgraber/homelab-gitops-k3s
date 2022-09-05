@@ -6,15 +6,15 @@ metadata:
   namespace: kube-system
 data:
   ## CIDR-based range which can be used in any Namespace
-  cidr-global: ${METALLB_LB_RANGE}
+  cidr-global: ${LB_DEFAULT_RANGE}
   ## single IP per namespace for exposing services directly
   ## without requiring ingressRoute
-  cidr-networking: ${METALLB_FRONTEND}/32
-  cidr-monitoring: ${METALLB_GUI}/32
-  # cidr-mariadb: ${METALLB_MARIADB}/32
-  # cidr-postgres: ${METALLB_POSTGRES}/32
+  cidr-networking: ${LB_INGRESS}/32
+  cidr-monitoring: ${LB_GUI}/32
+  # cidr-mariadb: ${LB_MARIADB}/32
+  # cidr-postgres: ${LB_POSTGRES}/32
   # ## CIDR-based IP range for use in the default Namespace
-  # cidr-default: ${METALLB_LB_RANGE}
+  # cidr-default: ${LB_DEFAULT_RANGE}
   # ## Range-based IP range for use in the development Namespace
   # range-development: 192.168.0.210-192.168.0.219
   # ## Multiple CIDR-based ranges for use in the finance Namespace

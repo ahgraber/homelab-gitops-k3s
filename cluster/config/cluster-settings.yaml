@@ -5,6 +5,5 @@ metadata:
   name: cluster-settings
   namespace: flux-system
 data:
-  METALLB_LB_RANGE: 10.2.113.128-10.2.113.250
-  METALLB_FRONTEND: 10.2.113.2
-  # METALLB_GUI: 10.2.113.3
+  LB_INGRESS: 10.2.113.2
+  LB_DEFAULT_RANGE: 10.2.113.128-10.2.113.250
