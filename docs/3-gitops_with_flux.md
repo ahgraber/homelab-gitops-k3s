@@ -84,11 +84,11 @@ export BOOTSTRAP_CLOUDFLARE_TOKEN="kpG6iyg3FS_du_8KRShdFuwfbwu3zMltbvmJV6cD"
 
 # Pick a range of *UNUSED* IPs that are on the same network as your nodes
 # Note: these cannot overlap with the kube-vip IP
-export BOOTSTRAP_METALLB_FRONTEND="10.42.42.43"
-export BOOTSTRAP_METALLB_RANCHER="10.42.42.44"
-export SETTINGS_METALLB_MARIADB="10.42.42.45"
-export SETTINGS_METALLB_POSTGRES="10.42.42.46"
-export BOOTSTRAP_METALLB_LB_RANGE="10.42.42.200-10.42.42.242"
+export BOOTSTRAP_LB_INGRESS="10.42.42.43"
+export BOOTSTRAP_LB_RANCHER="10.42.42.44"
+export SETTINGS_LB_MARIADB="10.42.42.45"
+export SETTINGS_LB_POSTGRES="10.42.42.46"
+export BOOTSTRAP_LB_DEFAULT_RANGE="10.42.42.200-10.42.42.242"
 
 
 # Generate hashed user/password for traefik basicauth
@@ -219,7 +219,7 @@ If your cluster is not accessible to outside world you can provide a dns overrid
 file to verify the ingress controller is working.
 
 ```sh
-echo "${BOOTSTRAP_METALLB_FRONTEND} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
+echo "${BOOTSTRAP_LB_INGRESS} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
 ``` -->
 
 Head over to your browser and you _should_ be able to access `https://homer.${BOOTSTRAP_DOMAIN}`
