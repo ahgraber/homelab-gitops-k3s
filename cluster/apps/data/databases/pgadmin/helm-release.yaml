@@ -21,6 +21,9 @@ spec:
       # can be email or nickname
       email: admin@${SECRET_DOMAIN}
     existingSecret: pgadmin-secret
+    secretKeys:
+      pgadminPasswordKey: password
+      # pgadminPasswordKey: PGADMIN_DEFAULT_PASSWORD
 
     serverDefinitions:
       enabled: false
