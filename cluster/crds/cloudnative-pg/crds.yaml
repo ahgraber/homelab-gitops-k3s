@@ -13,7 +13,7 @@ spec:
   ignore: |
     # exclude all
     /*
-    # include crd directory
+    # include crds directory with crds.yaml
     !/charts/cloudnative-pg/templates/crds
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
