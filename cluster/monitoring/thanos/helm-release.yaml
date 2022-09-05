@@ -33,7 +33,7 @@ spec:
         insecure: true
     query:
       enabled: true
-      replicaCount: 3
+      replicaCount: 2
       podAntiAffinityPreset: soft
       replicaLabels:
         - __replica__
@@ -46,8 +46,8 @@ spec:
       enabled: false
     bucketweb:
       enabled: true
-      replicaCount: 3
-      podAntiAffinityPreset: soft
+      # replicaCount: 3
+      # podAntiAffinityPreset: soft
       ingress:
         enabled: false
     compactor:
@@ -66,8 +66,8 @@ spec:
         size: 10Gi
     storegateway:
       enabled: true
-      replicaCount: 3
-      podAntiAffinityPreset: hard
+      # replicaCount: 3
+      # podAntiAffinityPreset: hard
       ingress:
         enabled: false
       persistence:
@@ -76,8 +76,8 @@ spec:
         size: 10Gi
     ruler:
       enabled: true
-      replicaCount: 3
-      podAntiAffinityPreset: hard
+      # replicaCount: 3
+      # podAntiAffinityPreset: hard
       dnsDiscovery:
         enabled: true
       alertmanagers:
