@@ -17,6 +17,11 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    image:
+      repository: k8s.gcr.io/node-problem-detector/node-problem-detector
+      tag: v0.8.10
+      pullPolicy: IfNotPresent
+
     metrics:
       serviceMonitor:
         enabled: true
