@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   # - namespace.yaml # created with CRDs
   - helm-release.yaml
-  # - ipAddressPool.yaml
-  # - l2Advertisement.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/
+  - ipAddressPool.yaml
+  - l2Advertisement.yaml # not needed with calico? see: https://metallb.universe.tf/configuration/calico/
