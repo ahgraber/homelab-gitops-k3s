@@ -57,11 +57,11 @@ spec:
       #     repository: docker.io/frrouting/frr
       #     tag: v8.2.2
 
-  # postRenderers:
-  #   - kustomize:
-  #       patchesStrategicMerge:
-  #         - $patch: delete
-  #           apiVersion: admissionregistration.k8s.io/v1
-  #           kind: ValidatingWebhookConfiguration
-  #           metadata:
-  #             name: validating-webhook-configuration
+  postRenderers:
+    - kustomize:
+        patchesStrategicMerge:
+          - $patch: delete
+            apiVersion: admissionregistration.k8s.io/v1
+            kind: ValidatingWebhookConfiguration
+            metadata:
+              name: validating-webhook-configuration
