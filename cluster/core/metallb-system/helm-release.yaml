@@ -16,11 +16,9 @@ spec:
         name: metallb-charts
         namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 5
   upgrade:
-    crds: CreateReplace
     remediation:
       retries: 5
   values:
@@ -34,6 +32,7 @@ spec:
         enabled: false
 
     controller:
+      webhookMode: enabled
       tolerations:
         # - effect: NoSchedule
         #   key: node-role.kubernetes.io/master
