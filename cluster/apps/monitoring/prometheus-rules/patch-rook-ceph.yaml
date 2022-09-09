@@ -1,5 +1,5 @@
 ---
-### https://raw.githubusercontent.com/rook/rook/v1.10.0/deploy/examples/monitoring/localrules.yaml
+### https://raw.githubusercontent.com/rook/rook/v1.10.1/deploy/examples/monitoring/localrules.yaml
 # ref: https://rook.github.io/docs/rook/v1.9/ceph-monitoring.html#customize-alerts
 # CephNodeNetworkPacketDrops
 - op: replace
