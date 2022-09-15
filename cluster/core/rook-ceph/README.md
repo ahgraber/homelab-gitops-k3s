@@ -20,7 +20,9 @@ and file storage in one unified system.
 
 ## Updating
 
-[Upgrade docs](https://rook.github.io/docs/rook/v1.9/Upgrade/health-verification/)
+[Health verification](https://rook.github.io/docs/rook/v1.10/Upgrade/health-verification/)
+[Rook upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/rook-upgrade/)
+[Ceph upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/ceph-upgrade/)
 
 ### Rook version update
 
