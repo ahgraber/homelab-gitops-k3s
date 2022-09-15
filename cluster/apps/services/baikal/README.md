@@ -5,6 +5,10 @@ It offers an extensive web interface with easy management of users, address book
 It is fast and simple to install and only needs a basic php capable server.
 The data can be stored in a MySQL or a SQLite database.
 
+## Server URL for DAV applications
+
+`https://baikal.<SECRET_DOMAIN>.com/dav.php/principals/<ACCOUNT_NAME/EMAIL>/`
+
 ## Configuration
 
 May have to set permissions on mounted volumes
