@@ -4,7 +4,7 @@ apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
   name: ingress
-  namespace: networking
+  namespace: metallb-system
 spec:
   addresses:
     - ${LB_INGRESS}/32
