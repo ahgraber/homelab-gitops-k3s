@@ -33,7 +33,6 @@ spec:
         enabled: false
 
     controller:
-      # webhookMode: enabled
       tolerations:
         # - effect: NoSchedule
         #   key: node-role.kubernetes.io/master
@@ -56,12 +55,3 @@ spec:
       #   image:
       #     repository: docker.io/frrouting/frr
       #     tag: v8.2.2
-
-  # postRenderers:
-  #   - kustomize:
-  #       patchesStrategicMerge:
-  #         - $patch: delete
-  #           apiVersion: admissionregistration.k8s.io/v1
-  #           kind: ValidatingWebhookConfiguration
-  #           metadata:
-  #             name: validating-webhook-configuration
