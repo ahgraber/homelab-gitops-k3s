@@ -24,7 +24,7 @@ spec:
       remediateLastFailure: true
   values:
     crds:
-      enabled: false # installed in crds kustomization
+      enabled: true # installed in crds kustomization
 
     prometheus:
       podMonitor:
