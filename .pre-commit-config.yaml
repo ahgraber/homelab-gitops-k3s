@@ -18,23 +18,23 @@ repos:
     hooks:
       - id: fix-smartquotes
       - id: fix-ligatures
-  - repo: local
-    hooks:
-      - id: fix-yml
-        name: yml-to-yaml
-        entry: .precommit/yml_to_yaml.sh
-        language: script
-        pass_filenames: false
-      # - id: env-substitute
-      #   name: envvar-substitute
-      #   entry: .precommit/substitute.sh
-      #   language: script
-      #   pass_filenames: false
-      # - id: sops
-      #   name: sops-encrypt
-      #   entry: .precommit/sops.sh
-      #   language: script
-      #   pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: fix-yml
+  #       name: yml-to-yaml
+  #       entry: .precommit/yml_to_yaml.sh
+  #       language: script
+  #       pass_filenames: false
+  #     - id: env-substitute
+  #       name: envvar-substitute
+  #       entry: .precommit/substitute.sh
+  #       language: script
+  #       pass_filenames: false
+  #     - id: sops
+  #       name: sops-encrypt
+  #       entry: .precommit/sops.sh
+  #       language: script
+  #       pass_filenames: false
   ## shellcheck requires docker to run
   # - repo: https://github.com/koalaman/shellcheck-precommit
   #   rev: v0.8.0
