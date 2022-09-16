@@ -19,6 +19,12 @@
   path: /spec/groups/6/rules/1/for
   value: 1m
 
+# CephPoolGrowthWarning
+- op: replace
+  path: /spec/groups/7/rules/0/expr
+  value: |
+    (predict_linear((max(ceph_pool_percent_used) without (pod, instance))[2d:1h], 3600 * 24 * 5) * on(pool_id)
+
 # # CephNodeNetworkPacketErrors
 - op: add
   path: /spec/groups/6/rules/2/for
