@@ -22,9 +22,8 @@
 # CephPoolGrowthWarning
 - op: replace
   path: /spec/groups/7/rules/0/expr
-  value: |
-    (predict_linear((max(ceph_pool_percent_used) without (pod, instance))[2d:1h], 3600 * 24 * 5) * on(pool_id)
-
+  # value: "(predict_linear((max(ceph_pool_percent_used) without (pod, instance))[2d:1h], 3600 * 24 * 5) * on(pool_id)""
+  value: "(predict_linear(ceph_pool_percent_used[2d], 3600 * 24 * 5) * on(pool_id)    group_right ceph_pool_metadata) >= 95"
 # # CephNodeNetworkPacketErrors
 - op: add
   path: /spec/groups/6/rules/2/for
