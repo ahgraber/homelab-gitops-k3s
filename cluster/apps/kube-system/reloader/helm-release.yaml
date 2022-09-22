@@ -22,7 +22,7 @@ spec:
     reloader:
       deployment:
         image:
-          name: ghcr.io/k8s-at-home/reloader
+          name: stakater/reloader
         tolerations:
           - effect: NoSchedule
             key: node-role.kubernetes.io/master
