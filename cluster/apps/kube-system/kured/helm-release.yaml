@@ -8,17 +8,17 @@ spec:
   interval: 5m
   chart:
     spec:
-      # renovate: registryUrl=https://weaveworks.github.io/kured
+      # renovate: registryUrl=https://kubereboot.github.io/kured
       chart: kured
       version: 3.0.1
       sourceRef:
         kind: HelmRepository
-        name: weaveworks-kured-charts
+        name: kubereboot-kured-charts
         namespace: flux-system
       interval: 5m
   values:
     image:
-      repository: weaveworks/kured
+      repository: ghcr.io/kubereboot/kured
     updateStrategy: RollingUpdate
     configuration:
       timeZone: "America/New_York"
