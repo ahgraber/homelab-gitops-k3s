@@ -27,6 +27,7 @@ resources:
   - jetstack-charts.yaml
   - k8s-at-home-charts.yaml
   - kasten-charts.yaml
+  - kubereboot-kured-charts.yaml
   - kuberhealthy-charts.yaml
   - kyverno-charts.yaml
   - lwolf-charts.yaml
@@ -48,4 +49,3 @@ resources:
   - traefik-charts.yaml
   # - victoriametrics-charts.yaml
   - vmware-tanzu-charts.yaml
-  - weaveworks-kured-charts.yaml
