@@ -21,7 +21,7 @@ spec:
       repository: wallabag/wallabag
       # Upgrading the wallabag version generally requires a migration.
       # see https://doc.wallabag.org/en/admin/upgrade.html
-      tag: 2.5.1
+      tag: 2.5.2
 
     initContainers:
       wait-database:
