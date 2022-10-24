@@ -119,7 +119,7 @@ spec:
         mgr-sidecar:
           requests:
             cpu: 50m
-            memory: 94m
+            memory: 94Mi
           limits:
             memory: 256Mi
         crashcollector:
