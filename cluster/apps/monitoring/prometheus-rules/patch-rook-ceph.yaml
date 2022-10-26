@@ -21,12 +21,12 @@
 
 # # CephNodeNetworkPacketErrors
 # - op: add
-#   path: /spec/groups/6/rules/3/for
+#   path: /spec/groups/6/rules/2/for
 #   value: 1m
 
 # CephNodeInconsistentMTU
 - op: remove
-  path: /spec/groups/6/rules/5
+  path: /spec/groups/6/rules/4
 #
 # # CephPoolGrowthWarning
 # - op: replace
