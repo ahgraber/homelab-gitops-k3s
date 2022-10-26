@@ -11,13 +11,12 @@ resources:
   # - loki.yaml
   - node-exporter.yaml
   ## app/ services should be deployed with application
-
-# patchesJson6902:
-patches:
-  - path: patch-rook-ceph.yaml
-    target:
-      group: monitoring.coreos.com
-      version: v1
-      kind: PrometheusRule
-      name: prometheus-ceph-rules
-      namespace: rook-ceph
+# # patchesJson6902:
+# patches:
+#   - path: patch-rook-ceph.yaml
+#     target:
+#       group: monitoring.coreos.com
+#       version: v1
+#       kind: PrometheusRule
+#       name: prometheus-ceph-rules
+#       namespace: rook-ceph
