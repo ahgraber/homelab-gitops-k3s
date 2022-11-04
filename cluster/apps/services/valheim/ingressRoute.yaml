@@ -63,7 +63,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: route-valheim
+  name: route-valheim-supervisor
   namespace: networking
 spec:
   entryPoints:
