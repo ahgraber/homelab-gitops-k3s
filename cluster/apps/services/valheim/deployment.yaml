@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valheim
+  namespace: services
+  labels:
+    app.kubernetes.io/name: valheim
+    app.kubernetes.io/instance: valheim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: valheim
+      app.kubernetes.io/instance: valheim
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: valheim
+        app.kubernetes.io/instance: valheim
+      annotations:
+        backup.velero.io/backup-volumes: valheim-data
+        # pre.hook.backup.velero.io/container: fsfreeze
+        # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
+        # post.hook.backup.velero.io/container: fsfreeze
+        # post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
+    spec:
+      containers:
+        # renovate: datasource=docker image=lloesche/valheim-server
+        - name: valheim-server
+          image: lloesche/valheim-server
+          imagePullPolicy: Always
+
+          envFrom:
+            - secretRef:
+                name: valheim-secret
+            - configMapRef:
+                name: valheim-config
+            - configMapRef:
+                name: valheimplus-config
+
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+            - containerPort: 2456
+              name: steam1
+              protocol: UDP
+            - containerPort: 2457
+              name: steam2
+              protocol: UDP
+            - containerPort: 2458
+              name: steam3
+              protocol: UDP
+            - containerPort: 9001
+              name: supervisor
+              protocol: TCP
+
+          resources:
+            requests:
+              cpu: 25m
+              memory: 105M
+            limits:
+              memory: 105M
+
+          volumeMounts:
+            - name: valheim-data
+              subPath: config
+              mountPath: /config
+            - name: valheim-data
+              subPath: data
+              mountPath: /opt/valheim
+
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - "pidof valheim_server.x86_64 || exit 1"
+            initialDelaySeconds: 210
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - "pidof valheim_server.x86_64 || exit 1"
+            initialDelaySeconds: 120
+            periodSeconds: 60
+
+      restartPolicy: Always
+      volumes:
+        - name: valheim-data
+          persistentVolumeClaim:
+            claimName: valheim-data
