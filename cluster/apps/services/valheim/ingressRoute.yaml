@@ -31,7 +31,7 @@ spec:
   routes:
     - match: Host(`valheim.${SECRET_DOMAIN}`)
       kind: Rule
-    - services:
+      services:
         - name: valheim
           namespace: services
           port: 2456
@@ -51,7 +51,7 @@ spec:
   routes:
     - match: Host(`valheim.${SECRET_DOMAIN}`)
       kind: Rule
-    - services:
+      services:
         - name: valheim
           namespace: services
           port: 2457
