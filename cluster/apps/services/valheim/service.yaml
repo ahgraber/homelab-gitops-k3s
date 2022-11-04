@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: valheim
   namespace: services
+  annotations:
+    metallb.universe.tf/address-pool: default
   labels:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/instance: valheim
@@ -40,3 +42,5 @@ spec:
       # nodePort: 9001
       protocol: TCP
       name: supervisor
+  type: LoadBalancer
+  loadBalancerIP: 10.2.113.128
