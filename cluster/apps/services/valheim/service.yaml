@@ -17,29 +17,29 @@ spec:
     # status
     - port: 80
       targetPort: 80
-      nodePort: 80
+      # nodePort: 31080
       protocol: TCP
       name: http
     # steam
     - port: 2456
       targetPort: 2456
-      nodePort: 2456
+      # nodePort: 32456
       protocol: UDP
       name: steam1
     - port: 2457
       targetPort: 2457
-      nodePort: 2457
+      # nodePort: 32457
       protocol: UDP
       name: steam2
     - port: 2458
       targetPort: 2458
-      nodePort: 2458
+      # nodePort: 32458
       protocol: UDP
       name: steam3
     # supervisor
     - port: 9001
       targetPort: 9001
-      nodePort: 9001
+      # nodePort: 31091
       protocol: TCP
       name: supervisor
   type: LoadBalancer
