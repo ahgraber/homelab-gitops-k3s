@@ -23,6 +23,7 @@ data:
   # SERVER_PORT: 2456
   SERVER_PUBLIC: true
   STATUS_HTTP: true # Only useful on public server
+  SUPERVISOR_HTTP: true
   ### other
   PUID: 1000
   PGID: 1000
