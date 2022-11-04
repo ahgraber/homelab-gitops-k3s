@@ -47,5 +47,6 @@ resources:
   - stackgres-charts.yaml
   - stakater-charts.yaml
   - traefik-charts.yaml
+  - valheim-charts.yaml
   # - victoriametrics-charts.yaml
   - vmware-tanzu-charts.yaml

@@ -118,6 +118,20 @@ spec:
         expose: true
         exposedPort: 9100
 
+      ### valheim
+      steam1:
+        port: 2456
+        expose: true
+        exposedPort: 2456
+      steam2:
+        port: 2457
+        expose: true
+        exposedPort: 2457
+      steam3:
+        port: 2458
+        expose: true
+        exposedPort: 2458
+
       # mysql:
       #   port: 3306
       #   expose: true
