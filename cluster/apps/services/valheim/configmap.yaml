@@ -6,27 +6,27 @@ metadata:
   namespace: services
 data:
   ### backups
-  BACKUPS: true
+  BACKUPS: "true"
   BACKUPS_DIRECTORY: /config/backups
-  BACKUPS_DIRECTORY_PERMISSIONS: 755
-  BACKUPS_FILE_PERMISSIONS: 644
-  BACKUPS_IDLE_GRACE_PERIOD: 3600 # max(1200, BACKUPS_INTERVAL)
-  BACKUPS_IF_IDLE: false # only back up if recent activity
-  BACKUPS_INTERVAL: 3600 # every hour
-  BACKUPS_MAX_AGE: 14 # days
-  BACKUPS_MAX_COUNT: 72
+  BACKUPS_DIRECTORY_PERMISSIONS: "755"
+  BACKUPS_FILE_PERMISSIONS: "644"
+  BACKUPS_IDLE_GRACE_PERIOD: "3600" # max(1200, BACKUPS_INTERVAL)
+  BACKUPS_IF_IDLE: "false" # only back up if recent activity
+  BACKUPS_INTERVAL: "3600" # every hour
+  BACKUPS_MAX_AGE: "14" # days
+  BACKUPS_MAX_COUNT: "72"
   ### files
-  CONFIG_DIRECTORY_PERMISSIONS: 755
-  WORLDS_DIRECTORY_PERMISSIONS: 755
-  WORLDS_FILE_PERMISSIONS: 644
+  CONFIG_DIRECTORY_PERMISSIONS: "755"
+  WORLDS_DIRECTORY_PERMISSIONS: "755"
+  WORLDS_FILE_PERMISSIONS: "644"
   ### server//steam
-  # SERVER_PORT: 2456
-  SERVER_PUBLIC: true
-  STATUS_HTTP: true # Only useful on public server
-  SUPERVISOR_HTTP: true
+  # SERVER_PORT: "2456"
+  SERVER_PUBLIC: "true"
+  STATUS_HTTP: "true" # Only useful on public server
+  SUPERVISOR_HTTP: "true"
   ### other
-  PUID: 1000
-  PGID: 1000
+  PUID: "1000"
+  PGID: "1000"
   TZ: America/New_York
 
 ---
@@ -37,52 +37,51 @@ metadata:
   namespace: services
 data:
   ### valheim plus: https://valheim.plus/documentation/list
-  VALHEIM_PLUS: true
+  VALHEIM_PLUS: "true"
   ### camera
-  VPCFG_Camera_enabled: true
-  VPCFG_Camera_cameraMaximumZoomDistance: 8 # default 6
-  VPCFG_Camera_cameraBoatMaximumZoomDistance: 8 # default 6
-  VPCFG_Camera_cameraFOV: 90 # default 65
+  VPCFG_Camera_enabled: "true"
+  VPCFG_Camera_cameraMaximumZoomDistance: "8" # default 6
+  VPCFG_Camera_cameraBoatMaximumZoomDistance: "8" # default 6
+  VPCFG_Camera_cameraFOV: "90" # default 65
   ### craft from chest
-  VPCFG_CraftFromChest_enabled: true
-  VPCFG_CraftFromChest_disableCookingStation: false
-  VPCFG_CraftFromChest_checkFromWorkbench: true
-  VPCFG_CraftFromChest_range: 20 # default 20, max 50
-  VPCFG_CraftFromChest_lookupInterval: 3 # default 20, max 50
-  VPCFG_CraftFromChest_allowCraftingFromCarts: true
-  VPCFG_CraftFromChest_allowCraftingFromShips: true
+  VPCFG_CraftFromChest_enabled: "true"
+  VPCFG_CraftFromChest_disableCookingStation: "false"
+  VPCFG_CraftFromChest_checkFromWorkbench: "true"
+  VPCFG_CraftFromChest_range: "20" # default 20, max 50
+  VPCFG_CraftFromChest_lookupInterval: "3" # default 20, max 50
+  VPCFG_CraftFromChest_allowCraftingFromCarts: "true"
+  VPCFG_CraftFromChest_allowCraftingFromShips: "true"
   ### map
-  VPCFG_Map_enabled: true
-  VPCFG_Map_shareMapProgression: true
-  VPCFG_Map_exploreRadius: 150 # default 100
-  VPCFG_Map_preventPlayerFromTurningOffPublicPosition: true
-  VPCFG_Map_shareAllPins: true
-  VPCFG_Map_showCartsAndBoats: true
+  VPCFG_Map_enabled: "true"
+  VPCFG_Map_shareMapProgression: "true"
+  VPCFG_Map_exploreRadius: "150" # default 100
+  VPCFG_Map_preventPlayerFromTurningOffPublicPosition: "true"
+  VPCFG_Map_shareAllPins: "true"
+  VPCFG_Map_showCartsAndBoats: "true"
   ### player
-  VPCFG_Player_enabled: true
-  VPCFG_Player_baseMaximumWeight: 400 # default 300
-  # VPCFG_Player_baseMegingjordBuff: 150 # default 150
-  # VPCFG_Player_baseAutoPickUpRange: 2 # default 2
-  VPCFG_Player_cropNotifier: true # do not plant in grow-range of other crops
-  # VPCFG_Player_restSecondsPerComfortLevel: 60 # default 60
-  # VPCFG_Player_deathPenaltyMultiplier: 0 # default 0
-  # VPCFG_Player_autoRepair: false
-  # VPCFG_Player_guardianBuffDuration: 300 # default 300
-  # VPCFG_Player_guardianBuffCooldown: 1200 # default 1200
-  # VPCFG_Player_autoEquipShield: false
-  # VPCFG_Player_autoUnequipShield: false
-  # VPCFG_Player_skipIntro: false
-  # VPCFG_Player_dontUnequipItemsWhenSwimming: false
-  VPCFG_Player_reequipItemsAfterSwimming: true
+  VPCFG_Player_enabled: "true"
+  VPCFG_Player_baseMaximumWeight: "400" # default 300
+  # VPCFG_Player_baseMegingjordBuff: "150" # default 150
+  # VPCFG_Player_baseAutoPickUpRange: "2" # default 2
+  VPCFG_Player_cropNotifier: "true" # do not plant in grow-range of other crops
+  # VPCFG_Player_restSecondsPerComfortLevel: "60" # default 60
+  # VPCFG_Player_deathPenaltyMultiplier: "0" # default 0
+  # VPCFG_Player_autoRepair: "false"
+  # VPCFG_Player_guardianBuffDuration: "300" # default 300
+  # VPCFG_Player_guardianBuffCooldown: "1200" # default 1200
+  # VPCFG_Player_autoEquipShield: "false"
+  # VPCFG_Player_autoUnequipShield: "false"
+  # VPCFG_Player_skipIntro: "false"
+  # VPCFG_Player_dontUnequipItemsWhenSwimming: "false"
+  VPCFG_Player_reequipItemsAfterSwimming: "true"
   ### PlayerProjectile
-  VPCFG_PlayerProjectile_enabled: true
-  VPCFG_PlayerProjectile_playerMinChargeVelocityMultiplier: 20 # default 0%
-  VPCFG_PlayerProjectile_playerMaxChargeVelocityMultiplier: 50 # default 0%
-  VPCFG_PlayerProjectile_playerMinChargeAccuracyMultiplier: 20 # default 0%
-  VPCFG_PlayerProjectile_playerMaxChargeAccuracyMultiplier: 25 # default 0%
+  VPCFG_PlayerProjectile_enabled: "true"
+  VPCFG_PlayerProjectile_playerMinChargeVelocityMultiplier: "20" # default 0%
+  VPCFG_PlayerProjectile_playerMaxChargeVelocityMultiplier: "50" # default 0%
+  VPCFG_PlayerProjectile_playerMinChargeAccuracyMultiplier: "20" # default 0%
+  VPCFG_PlayerProjectile_playerMaxChargeAccuracyMultiplier: "25" # default 0%
   # VPCFG_PlayerProjectile_enableScaleWithSkillLevel: true
   ### server
-  VPCFG_Server_enabled: true
-  VPCFG_Server_maxPlayers: 4
-  VPCFG_Server_enforceMod: true
-  VPCFG_Server_dataRate: 500
+  VPCFG_Server_enabled: "true"
+  VPCFG_Server_maxPlayers: "4"
+  VPCFG_Server_enforceMod: "true"
