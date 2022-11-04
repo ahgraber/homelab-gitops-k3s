@@ -29,9 +29,9 @@ spec:
   entryPoints:
     - steam1
   routes:
-    - match: Host(`valheim.${SECRET_DOMAIN}`)
-      kind: Rule
-      services:
+    # - match: Host(`valheim.${SECRET_DOMAIN}`)
+    #   kind: Rule
+    - services:
         - name: valheim
           namespace: services
           port: 2456
@@ -49,9 +49,9 @@ spec:
   entryPoints:
     - steam2
   routes:
-    - match: Host(`valheim.${SECRET_DOMAIN}`)
-      kind: Rule
-      services:
+    # - match: Host(`valheim.${SECRET_DOMAIN}`)
+    #   kind: Rule
+    - services:
         - name: valheim
           namespace: services
           port: 2457
