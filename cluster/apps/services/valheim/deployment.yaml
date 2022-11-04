@@ -61,9 +61,9 @@ spec:
           resources:
             requests:
               cpu: 25m
-              memory: 105M
+              memory: 128M
             limits:
-              memory: 105M
+              memory: 4G
 
           volumeMounts:
             - name: valheim-data
@@ -72,23 +72,6 @@ spec:
             - name: valheim-data
               subPath: data
               mountPath: /opt/valheim
-
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #       - /bin/bash
-          #       - -c
-          #       - "pidof valheim_server.x86_64 || exit 1"
-          #   initialDelaySeconds: 210
-          #   periodSeconds: 60
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #       - /bin/bash
-          #       - -c
-          #       - "pidof valheim_server.x86_64 || exit 1"
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 60
 
           livenessProbe:
             tcpSocket:
