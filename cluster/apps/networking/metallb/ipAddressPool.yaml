@@ -14,7 +14,7 @@ apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
   name: default
-  namespace: networking
+  namespace: metallb-system
 spec:
   addresses:
     - ${LB_DEFAULT_RANGE}
