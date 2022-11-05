@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - configmap.yaml
   - deployment.yaml
-  - ingressRoute - supervisor.yaml
+  # - ingressRoute - supervisor.yaml
   - pvc.yaml
   - secret.sops.yaml
   - service.yaml
