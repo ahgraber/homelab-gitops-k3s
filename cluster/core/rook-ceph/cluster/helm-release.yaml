@@ -54,6 +54,8 @@ spec:
       createPrometheusRules: false
       # rulesNamespaceOverride: monitoring
 
+    pspEnable: false
+
     configOverride: |
       [global]
       bdev_enable_discard = true
