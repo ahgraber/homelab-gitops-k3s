@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: valheim-config
   namespace: services
+  # annotations:
+  #   reloader.stakater.com/match: "true"
 data:
   ### backups
   BACKUPS: "true"
