@@ -4,6 +4,10 @@ kind: Deployment
 metadata:
   name: valheim
   namespace: services
+  annotations:
+    # reloader.stakater.com/search: "true"
+    configmap.reloader.stakater.com/reload: "valheim-config"
+    secret.reloader.stakater.com/reload: "valheim-secret"
   labels:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/instance: valheim
@@ -22,6 +26,7 @@ spec:
         app.kubernetes.io/instance: valheim
       annotations:
         backup.velero.io/backup-volumes: valheim-data
+        # secret.reloader.stakater.com/reload: "valheim-secret"
         # pre.hook.backup.velero.io/container: fsfreeze
         # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
         # post.hook.backup.velero.io/container: fsfreeze
