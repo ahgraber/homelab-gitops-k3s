@@ -27,25 +27,37 @@ spec:
       # -- docker image tag
       tag: "latest"
 
-    # If you want to specify secrets that will be used for all your crowdsec-agents
-    # secrets can be provided be env variables
-    secrets:
-      # -- agent username (default is generated randomly)
-      username: ""
-      # -- agent password (default is generated randomly)
-      password: ""
+    # # If you want to specify secrets that will be used for all your crowdsec-agents
+    # # secrets can be provided be env variables
+    # secrets:
+    #   # -- agent username (default is generated randomly)
+    #   username: ""
+    #   # -- agent password (default is generated randomly)
+    #   password: ""
 
     # lapi (local api) will deploy pod with crowdsec lapi and dashboard as deployment
     lapi:
-      # -- environment variables from crowdsecurity/crowdsec docker image
       env:
-        # by default disable the agent because it only the local API.
+        # by default disable the agent for local API pods
         - name: DISABLE_AGENT
           value: "true"
+        - name: ENROLL_KEY
+          valueFrom:
+            secretKeyRef:
+              name: crowdsec-secret
+              key: ENROLL_KEY
+        - name: ENROLL_INSTANCE_NAME
+          value: "k8s_cluster"
+        # - name: ENROLL_TAGS
+        #   value: "k8s linux test"
+        # # If it's a test, we don't want to share signals with CrowdSec so disable the Online API.
+        # - name: DISABLE_ONLINE_API
+        #   value: "true"
       dashboard:
         # -- Enable Metabase Dashboard (by default disabled)
         enabled: false
         ingress:
+          # note: dashboard only supports http
           enabled: false
 
       resources:
@@ -72,6 +84,12 @@ spec:
           storageClassName: "csi-truenas-iscsi"
           size: 100Mi
 
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
       metrics:
         enabled: true
@@ -85,18 +103,9 @@ spec:
         - namespace: networking
           podName: traefik-*
           program: traefik
-        - namespace: vaultwarden
-          podName: vaultwarden-*
-          program: vaultwarden
-        - namespace: nextcloud
-          podName: nextcloud-*-*
-          program: nextcloud
-        - namespace: nextcloud
-          podName: nextcloud-postgresql-*
-          program: pgsql
-        - namespace: security
-          podName: keycloak-postgresql-*
-          program: pgsql
+        # - namespace: security
+        #   podName: keycloak-postgresql-*
+        #   program: pgsql
       resources:
         limits:
           memory: 100Mi
@@ -124,36 +133,17 @@ spec:
         - name: COLLECTIONS
           value: "crowdsecurity/http-cve"
         - name: COLLECTIONS
-          value: "crowdsecurity/vaultwarden"
-        - name: COLLECTIONS
-          value: "crowdsecurity/nextcloud"
-        # - name: COLLECTIONS
-        #   value: "crowdsecurity/mariadb"
+          value: "crowdsecurity/mariadb"
         - name: COLLECTIONS
           value: "crowdsecurity/pgsql"
         - name: COLLECTIONS
           value: "crowdsecurity/sshd"
 
-        # by default we the docker-logs parser to be able to parse docker logs in k8s
-        # by default we disable local API on the agent pod
-        # - name: SCENARIOS
-        #   value: "scenario/name otherScenario/name"
-        # - name: PARSERS
-        #   value: "parser/name otherParser/name"
-        # - name: POSTOVERFLOWS
-        #   value: "postoverflow/name otherPostoverflow/name"
-        # - name: CONFIG_FILE
-        #   value: "/etc/crowdsec/config.yaml"
-        # - name: DSN
-        #   value: "file:///var/log/toto.log"
-        # - name: TYPE
-        #   value: "Labels.type_for_time-machine_mode"
-        # - name: TEST_MODE
-        #   value: "false"
+        - name: PARSERS
+          value: "crowdsecurity/cri-logs"
+
         - name: TZ
           value: "America/New_York"
-        # - name: DISABLE_AGENT
-        #   value: "false"
         - name: DISABLE_ONLINE_API
           value: "false"
         # - name: LEVEL_TRACE
@@ -183,5 +173,3 @@ spec:
           pullPolicy: IfNotPresent
           # -- docker image tag
           tag: "1.35"
-
-    # service: {}
