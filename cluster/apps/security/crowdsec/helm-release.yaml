@@ -74,14 +74,14 @@ spec:
           enabled: true
           accessModes:
             - ReadWriteOnce
-          storageClassName: "csi-truenas-iscsi"
+          storageClassName: "ceph-fs"
           size: 1Gi
         # -- Persistent volume for config folder. Stores e.g. online api credentials
         config:
           enabled: true
           accessModes:
             - ReadWriteOnce
-          storageClassName: "csi-truenas-iscsi"
+          storageClassName: "ceph-fs"
           size: 100Mi
 
       nodeSelector:
@@ -116,11 +116,11 @@ spec:
       persistentVolume:
         # -- Persistent volume for config folder. Stores local config (parsers, scenarios etc.)
         config:
-          enabled: false
-          # accessModes:
-          #   - ReadWriteOnce
-          # storageClassName: "local-path"
-          # size: 100Mi
+          enabled: true
+          accessModes:
+            - ReadWriteMany
+          storageClassName: "ceph-fs"
+          size: 100Mi
       # -- environment variables from crowdsecurity/crowdsec docker image
       env:
         # As we are running Traefik, we want to install the Traefik collection
@@ -163,13 +163,3 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
-
-      # -- wait-for-lapi init container
-      wait_for_lapi:
-        image:
-          # -- docker image repository name
-          repository: busybox
-          # -- pullPolicy
-          pullPolicy: IfNotPresent
-          # -- docker image tag
-          tag: "1.35"
