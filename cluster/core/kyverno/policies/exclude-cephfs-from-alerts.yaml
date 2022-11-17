@@ -10,13 +10,12 @@ spec:
   rules:
     - name: exclude-cephfs-from-alerts
       match:
-        all:
+        any:
           - resources:
-              annotations:
-                volume.kubernetes.io/storage-provisioner: rook-ceph.cephfs.csi.ceph.com
               kinds:
                 - PersistentVolumeClaim
-
+              annotations:
+                volume.kubernetes.io/storage-provisioner: "rook-ceph.cephfs.csi.ceph.com"
       mutate:
         patchStrategicMerge:
           metadata:
