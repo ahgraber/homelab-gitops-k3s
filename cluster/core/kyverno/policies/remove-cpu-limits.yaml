@@ -2,7 +2,7 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: resources
+  name: remove-cpu-limits
 spec:
   rules:
     - name: remove-cpu-limits
