@@ -1,0 +1,21 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: exclude-cephfs-from-alerts
+spec:
+  rules:
+    - name: exclude-cephfs-from-alerts
+      match:
+        all:
+          - resources:
+              annotations:
+                volume.kubernetes.io/storage-provisioner: rook-ceph.cephfs.csi.ceph.com
+              kinds:
+                - PersistentVolumeClaim
+
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              excluded_from_alerts: "true"
