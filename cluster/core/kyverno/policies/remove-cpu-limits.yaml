@@ -4,6 +4,9 @@ kind: ClusterPolicy
 metadata:
   name: remove-cpu-limits
 spec:
+  mutateExistingOnPolicyUpdate: true
+  generateExistingOnPolicyUpdate: true
+
   rules:
     - name: remove-cpu-limits
       match:

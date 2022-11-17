@@ -4,6 +4,9 @@ kind: ClusterPolicy
 metadata:
   name: exclude-cephfs-from-alerts
 spec:
+  mutateExistingOnPolicyUpdate: true
+  generateExistingOnPolicyUpdate: true
+
   rules:
     - name: exclude-cephfs-from-alerts
       match:
