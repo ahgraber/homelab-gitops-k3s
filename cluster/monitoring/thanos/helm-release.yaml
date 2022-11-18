@@ -45,11 +45,7 @@ spec:
     queryFrontend:
       enabled: false
     bucketweb:
-      enabled: true
-      # replicaCount: 3
-      # podAntiAffinityPreset: soft
-      ingress:
-        enabled: false
+      enabled: false
     compactor:
       enabled: true
       extraFlags:
