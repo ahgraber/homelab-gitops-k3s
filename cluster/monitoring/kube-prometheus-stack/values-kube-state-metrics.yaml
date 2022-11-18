@@ -16,6 +16,10 @@ data:
       ## set to true to add the release label so scraping of the servicemonitor with kube-prometheus-stack works out of the box
       releaseLabel: true
 
+      # allow labels to be parsed from listed types
+      metricLabelsAllowlist:
+        - persistentvolumeclaims=[*]
+
       ## enable prometheus serviceMonitor
       prometheus:
         monitor:
@@ -29,7 +33,13 @@ data:
           # selectorOverride: {}
           # honorLabels: false
           # metricRelabelings: []
-          # relabelings: []
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels:
+                - __meta_kubernetes_pod_node_name
+              targetLabel: kubernetes_node
 
       # Enable self metrics configuration for service and Service Monitor
       # Default values for telemetry configuration can be overridden
