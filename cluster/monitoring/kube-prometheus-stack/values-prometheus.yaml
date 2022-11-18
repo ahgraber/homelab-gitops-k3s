@@ -9,55 +9,46 @@ data:
     ## Deploy a Prometheus instance
     prometheus:
       enabled: true
-
       nameOverride: prometheus
 
       ingress:
         enabled: false # see ingressRoute
 
-      thanosService:
-        enabled: true
-      thanosServiceMonitor:
-        enabled: true
-      thanosServiceExternal:
-          enabled: false
-      thanosIngress:
-        enabled: false
-
       ## Settings affecting prometheusSpec
       ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#prometheusspec
       prometheusSpec:
-        ## If true, pass --storage.tsdb.max-block-duration=2h to prometheus. This is already done if using Thanos
-        disableCompaction: false
-        ## Interval between consecutive scrapes. Default 30s.
-        scrapeInterval: ""
-        ## Number of seconds to wait for target to respond before erroring
-        scrapeTimeout: ""
-        ## EnableAdminAPI enables Prometheus the administrative HTTP API which includes functionality such as deleting time series.
+        replicas: 1
+        replicaExternalLabelName: __replica__
+
         enableAdminAPI: true
+        logLevel: info
 
         ## External URL at which Prometheus will be reachable.
         # externalUrl: "https://prometheus.${SECRET_DOMAIN}""
 
-        # tolerations: []
-        # nodeSelector: {}
-        podAntiAffinity: soft
-        podAntiAffinityTopologyKey: kubernetes.io/hostname
+        ## Interval between consecutive scrapes. Default 30s.
+        scrapeInterval: ""
+        scrapeTimeout: ""
 
-        ## Resource limits & requests
-        resources:
-          requests:
-            cpu: 763m
-            memory: 7Gi
-          limits:
-            memory: 7Gi
+        ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
+        ## prometheus resource to be created with selectors based on values in the helm deployment,
+        ## which will also match the Prometheus___resources created
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+
+        ## retention & compression
+        retention: 3d
+        retentionSize: 6GiB
+        walCompression: true
 
         ## Prometheus StorageSpec for persistent data
         ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block # local-path # csi-truenas-iscsi
+              storageClassName: ceph-block
               resources:
                 requests:
                   storage: 10Gi
@@ -67,57 +58,18 @@ data:
               #     app.kubernetes.io/instance: kps-prometheus
               #     app.kubernetes.io/name: prometheus
 
-        thanos:
-          image: quay.io/thanos/thanos:v0.29.0
-          # renovate: datasource=docker depName=quay.io/thanos/thanos
-          version: "v0.29.0"
-          objectStorageConfig:
-            name: thanos-objstore-secret
-            key: objstore.yml
+        # tolerations: []
+        # nodeSelector: {}
+        podAntiAffinity: hard
+        podAntiAffinityTopologyKey: kubernetes.io/hostname
 
-        ## Number of replicas of each shard to deploy for a Prometheus deployment.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        replicas: 1
-        ## Name of the external label used to denote replica name
-        replicaExternalLabelName: replica
-
-        ## EXPERIMENTAL: Number of shards to distribute targets onto.
-        ## Number of replicas multiplied by shards is the total number of Pods created.
-        ## Note that scaling down shards will not reshard data onto remaining instances, it must be manually moved.
-        ## Increasing shards will not reshard data either but it will continue to be available from the same instances.
-        ## To query globally use Thanos sidecar and Thanos querier or remote write data to a central location.
-        ## Sharding is done on the content of the `__address__` target meta-label.
-        shards: 1
-
-        ## How long to retain metrics
-        retention: 3d
-        ## Maximum size of metrics
-        retentionSize: 6GiB
-        ## Enable compression of the write-ahead log using Snappy.
-        walCompression: true
-
-        ## Log level for Prometheus be configured in
-        logLevel: info
-
-        # ## Alertmanagers to which alerts will be sent (default - use integrated alertmanager)
-        # ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#alertmanagerendpoints
-        # alertingEndpoints:
-        #   - name: alertmanager
-        #     namespace: monitoring
-        #     port: http
-        #     # scheme: http
-        #     # pathPrefix: ""
-        #     # tlsConfig: {}
-        #     # bearerTokenFile: ""
-        #     # apiVersion: v2
-
-        ## If true, a nil or {} value for prometheus.prometheusSpec.___Selector will cause the
-        ## prometheus resource to be created with selectors based on values in the helm deployment,
-        ## which will also match the Prometheus___resources created
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
+        ## Resource limits & requests
+        resources:
+          requests:
+            cpu: 763m
+            memory: 7Gi
+          limits:
+            memory: 7Gi
 
         ## AdditionalScrapeConfigs allows specifying additional Prometheus scrape configurations.
         ## Scrape configurations are appended to the configurations generated by the Prometheus Operator.
@@ -140,87 +92,76 @@ data:
             static_configs:
               - targets:
                   - "${SECRET_S3_ENDPOINT}"
-          - job_name: crunchy-postgres-exporter
-            kubernetes_sd_configs:
-              - role: pod
-            relabel_configs:
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_crunchy_postgres_exporter,__meta_kubernetes_pod_label_crunchy_postgres_exporter]
-                action: keep
-                regex: true
-                separator: ""
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 5432
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 10000
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 8009
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: 2022
-              - source_labels: [__meta_kubernetes_pod_container_port_number]
-                action: drop
-                regex: ^$
-              - source_labels: [__meta_kubernetes_namespace]
-                action: replace
-                target_label: kubernetes_namespace
-              - source_labels: [__meta_kubernetes_pod_name]
-                target_label: pod
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster,__meta_kubernetes_pod_label_pg_cluster]
-                target_label: cluster
-                separator: ""
-                replacement: '$1'
-              - source_labels: [__meta_kubernetes_namespace,cluster]
-                target_label: pg_cluster
-                separator: ":"
-                replacement: '$1$2'
-              - source_labels: [__meta_kubernetes_pod_ip]
-                target_label: ip
-                replacement: '$1'
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance,__meta_kubernetes_pod_label_deployment_name]
-                target_label: deployment
-                replacement: '$1'
-                separator: ""
-              - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role,__meta_kubernetes_pod_label_role]
-                target_label: role
-                replacement: '$1'
-                separator: ""
-              - source_labels: [dbname]
-                target_label: dbname
-                replacement: '$1'
-              - source_labels: [relname]
-                target_label: relname
-                replacement: '$1'
-              - source_labels: [schemaname]
-                target_label: schemaname
-                replacement: '$1'
+          # - job_name: crunchy-postgres-exporter
+          #   kubernetes_sd_configs:
+          #     - role: pod
+          #   relabel_configs:
+          #     - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_crunchy_postgres_exporter,__meta_kubernetes_pod_label_crunchy_postgres_exporter]
+          #       action: keep
+          #       regex: true
+          #       separator: ""
+          #     - source_labels: [__meta_kubernetes_pod_container_port_number]
+          #       action: drop
+          #       regex: 5432
+          #     - source_labels: [__meta_kubernetes_pod_container_port_number]
+          #       action: drop
+          #       regex: 10000
+          #     - source_labels: [__meta_kubernetes_pod_container_port_number]
+          #       action: drop
+          #       regex: 8009
+          #     - source_labels: [__meta_kubernetes_pod_container_port_number]
+          #       action: drop
+          #       regex: 2022
+          #     - source_labels: [__meta_kubernetes_pod_container_port_number]
+          #       action: drop
+          #       regex: ^$
+          #     - source_labels: [__meta_kubernetes_namespace]
+          #       action: replace
+          #       target_label: kubernetes_namespace
+          #     - source_labels: [__meta_kubernetes_pod_name]
+          #       target_label: pod
+          #     - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_cluster,__meta_kubernetes_pod_label_pg_cluster]
+          #       target_label: cluster
+          #       separator: ""
+          #       replacement: '$1'
+          #     - source_labels: [__meta_kubernetes_namespace,cluster]
+          #       target_label: pg_cluster
+          #       separator: ":"
+          #       replacement: '$1$2'
+          #     - source_labels: [__meta_kubernetes_pod_ip]
+          #       target_label: ip
+          #       replacement: '$1'
+          #     - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_instance,__meta_kubernetes_pod_label_deployment_name]
+          #       target_label: deployment
+          #       replacement: '$1'
+          #       separator: ""
+          #     - source_labels: [__meta_kubernetes_pod_label_postgres_operator_crunchydata_com_role,__meta_kubernetes_pod_label_role]
+          #       target_label: role
+          #       replacement: '$1'
+          #       separator: ""
+          #     - source_labels: [dbname]
+          #       target_label: dbname
+          #       replacement: '$1'
+          #     - source_labels: [relname]
+          #       target_label: relname
+          #       replacement: '$1'
+          #     - source_labels: [schemaname]
+          #       target_label: schemaname
+          #       replacement: '$1'
 
-        ## prometheus.prometheusSpec.thanos allows configuring various aspects of a Prometheus server in a Thanos environment.
-        ## This section is experimental, it may change significantly without deprecation notice in any release.
-        ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#thanosspec
-        # thanos:
-        #   secretProviderClass:
-        #     provider: gcp
-        #     parameters:
-        #       secrets: |
-        #         - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
-        #           fileName: "objstore.yaml"
-        #   objectStorageConfigFile: /var/secrets/object-store.yaml
+        thanos:
+          image: quay.io/thanos/thanos:v0.29.0
+          # renovate: datasource=docker depName=quay.io/thanos/thanos
+          version: "v0.29.0"
+          objectStorageConfig:
+            name: thanos-objstore-secret
+            key: objstore.yml
 
-      # ## Thanos service discovery defined in prometheus.thanos___ of sidecar
-      # ## (Please remember to change $${kube-prometheus-stack.fullname} and $${namespace}. Not just copy and paste!)
-      # thanosService:
-      #   enabled: true
-      # ## ServiceMonitor to scrape Sidecar metrics
-      # ## Needs thanosService to be enabled as well
-      # thanosServiceMonitor:
-      #   enabled: true
-      # ## Service for external access to sidecar
-      # ## Enabling this creates a service to expose thanos-sidecar outside the cluster.
-      # thanosServiceExternal:
-      #   enabled: false
-      # ## Ingress exposes thanos sidecar outside the cluster
-      # thanosIngress:
-      #   enabled: false # use ingressRoute if required
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true
+      thanosServiceExternal:
+          enabled: false
+      thanosIngress:
+        enabled: false
