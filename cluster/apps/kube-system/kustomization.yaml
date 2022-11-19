@@ -5,6 +5,7 @@ resources:
   - descheduler/
   - kube-cleanup-operator/
   # - kured/
+  - kyverno/
   - node-feature-discovery/
   - reflector/
   - reloader/
