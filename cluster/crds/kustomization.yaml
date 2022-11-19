@@ -8,6 +8,6 @@ resources:
   - kube-prometheus-stack/
   - kyverno/
   - rook-ceph/
-  # - system-upgrade-controller/
+  - system-upgrade-controller/
   - traefik/
   - velero/
