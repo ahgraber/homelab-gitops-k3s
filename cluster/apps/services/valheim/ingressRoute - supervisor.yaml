@@ -11,6 +11,8 @@ spec:
   routes:
     - match: Host(`valheim-supervisor.${SECRET_DOMAIN}`)
       kind: Rule
+      middlewares:
+        - name: crowdsec-traefik-bouncer
       services:
         - name: valheim
           namespace: services

@@ -12,7 +12,8 @@ spec:
     - match: Host(`httpbin.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
-      # middlewares:
+      middlewares:
+        - name: crowdsec-traefik-bouncer
       # - name: rfc1918
       # - name: headers-sts
       # - name: basicauth
