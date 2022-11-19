@@ -6,7 +6,7 @@ resources:
   ## core/ services
   - cert-manager.yaml
   - flux.yaml
-  - https://raw.githubusercontent.com/rook/rook/v1.10.5/deploy/examples/monitoring/localrules.yaml
+  - https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
   ## monitoring/ services
   - etcd.yaml
   # - loki.yaml
