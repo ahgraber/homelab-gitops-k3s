@@ -18,21 +18,19 @@ spec:
   dependsOn:
     - name: crowdsec
       namespace: security
+  valuesFrom:
+    - kind: Secret
+      name: crowdsec-traefik-bouncer-secret
+      targetPath: bouncer.crowdsec_bouncer_api_key
   values:
     # Required parameters to be passed to the image env variables
     bouncer:
       # -- bouncer api key (need to be generated from crowdsec agent with cscli bouncers add -n <bouncer_name>)
-      - name: crowdsec_bouncer_api_key
-        valueFrom:
-          secretKeyRef:
-            name: crowdsec-traefik-bouncer-secret
-            key: crowdsec_bouncer_api_key
+      # crowdsec_bouncer_api_key: ""
       # -- crowdsec lapi host (ie: crowdsec-service.crowdsec.svc.cluster.local:8080)
-      - name: crowdsec_agent_host
-        value: "crowdsec-service.security.svc.cluster.local:8080"
+      crowdsec_agent_host: "crowdsec-service.security.svc.cluster.local:8080"
       # crowdsec_bouncer_gin_mode sets the mode of the app
-      - name: crowdsec_bouncer_gin_mode
-        value: "debug"
+      crowdsec_bouncer_gin_mode: "debug"
 
     replicaCount: 1
 
