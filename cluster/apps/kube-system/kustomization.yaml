@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - descheduler/
   - kube-cleanup-operator/
-  - kured/
+  # - kured/
   - node-feature-discovery/
   - reflector/
   - reloader/
