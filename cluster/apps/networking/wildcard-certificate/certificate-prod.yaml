@@ -8,9 +8,12 @@ spec:
   secretName: "${SECRET_DOMAIN/./-}-tls"
   secretTemplate:
     annotations:
-      # kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
+      # allow replication?
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
+      # automatically create replicated resources?
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "security"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
@@ -32,5 +35,10 @@ spec:
 #   name: ${SECRET_DOMAIN/./-}-tls
 #   namespace: networking
 #   annotations:
-#     kubed.appscode.com/sync: "${SECRET_DOMAIN/./-}-tls=kubed" # Sync certificate to matching namespaces
+#     # allow replication?
+#     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
+#     # automatically create replicated resources?
+#     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "ns1,ns2"
 # type: kubernetes.io/tls
