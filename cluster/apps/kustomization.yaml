@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - data/
   - flux-system/
-  - kube-system/
   - monitoring/
   - networking/
   - security/
   - services/
+  - system/
