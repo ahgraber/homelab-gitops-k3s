@@ -22,9 +22,9 @@ spec:
       global: true
     args:
       # - --namespace=default
-      - --delete-successful-after=5m
-      - --delete-failed-after=120m
-      - --delete-pending-pods-after=60m
-      - --delete-evicted-pods-after=60m
-      - --delete-orphaned-pods-after=60m
+      - --delete-successful-after=3m
+      - --delete-failed-after=60m
+      - --delete-pending-pods-after=15m
+      - --delete-evicted-pods-after=15m
+      - --delete-orphaned-pods-after=15m
       - --legacy-mode=false
