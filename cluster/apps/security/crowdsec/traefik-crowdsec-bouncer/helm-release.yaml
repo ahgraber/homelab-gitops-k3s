@@ -1,0 +1,65 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: traefik-crowdsec-bouncer
+  namespace: security
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
+      chart: traefik-crowdsec-bouncer
+      version: 0.1.2
+      sourceRef:
+        kind: HelmRepository
+        name: crowdsec-charts
+        namespace: flux-system
+  dependsOn:
+    - name: crowdsec
+      namespace: security
+  values:
+    # Required parameters to be passed to the image env variables
+    bouncer:
+      # -- bouncer api key (need to be generated from crowdsec agent with cscli bouncers add -n <bouncer_name>)
+      - name: crowdsec_bouncer_api_key
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secret
+            key: crowdsec_bouncer_api_key
+      # -- crowdsec lapi host (ie: crowdsec-service.crowdsec.svc.cluster.local:8080)
+      - name: crowdsec_agent_host
+        value: "crowdsec-service.security.svc.cluster.local:8080"
+      # crowdsec_bouncer_gin_mode sets the mode of the app
+      - name: crowdsec_bouncer_gin_mode
+        value: "debug"
+
+    replicaCount: 1
+
+    image:
+      repository: fbonalair/traefik-crowdsec-bouncer
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: ""
+    imagePullSecrets: []
+    podAnnotations: {}
+
+    podSecurityContext: {}
+    securityContext: {}
+
+    service:
+      type: ClusterIP
+      port: 80
+
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
