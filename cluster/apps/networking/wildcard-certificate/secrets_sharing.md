@@ -3,7 +3,7 @@
 Cluster can use `reflector` to copy secrets across namespaces. In particular, this can share the tls
 certificates from `networking` to `security`.
 
-- Cert-manager's [faq](https://cert-manager.io/docs/faq/kubed/)
+- Cert-manager's [faq](https://cert-manager.io/docs/tutorials/syncing-secrets-across-namespaces/)
 - [Emberstack Reflector](https://github.com/emberstack/kubernetes-reflector)
 
 ## Process
