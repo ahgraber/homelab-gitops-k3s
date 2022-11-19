@@ -24,6 +24,8 @@ spec:
   values:
     adminUser:
       create: true
+      createClusterRole: true
+      createSecret: true
       username: admin
     ingress:
       enabled: false
