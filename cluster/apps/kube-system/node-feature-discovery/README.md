@@ -1,11 +1,8 @@
-# [node feature discovery](https://github.com/kubernetes-sigs/node-feature-discovery)
+# [Node Feature Discovery](https://github.com/kubernetes-sigs/node-feature-discovery)
 
-This software enables node feature discovery for Kubernetes.
-It detects hardware features available on each node in a Kubernetes cluster,
-and advertises those features using node labels.
+[Documentation](https://kubernetes-sigs.github.io/node-feature-discovery/stable/get-started/index.html)
 
-NFD consists of three software components:
-
-1. nfd-master
-2. nfd-worker
-3. nfd-topology-updater
+Node Feature Discovery manages the detection of hardware features and configuration
+in a Kubernetes cluster by labeling the nodes with hardware-specific information.
+Node Feature Discovery (NFD) will label the host with node-specific attributes,
+like PCI cards, kernel, or OS version, and more.
