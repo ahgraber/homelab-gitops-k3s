@@ -7,4 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: https://charts.fairwinds.com/stable
-  timeout: 3m

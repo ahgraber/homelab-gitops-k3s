@@ -7,4 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: https://oauth2-proxy.github.io/manifests
-  timeout: 3m
