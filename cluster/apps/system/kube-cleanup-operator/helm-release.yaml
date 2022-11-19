@@ -28,3 +28,8 @@ spec:
       - --delete-evicted-pods-after=15m
       - --delete-orphaned-pods-after=15m
       - --legacy-mode=false
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
+    tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists

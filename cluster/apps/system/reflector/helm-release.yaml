@@ -20,3 +20,8 @@ spec:
     configuration:
       logging:
         minimumLevel: Debug
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
+    tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
