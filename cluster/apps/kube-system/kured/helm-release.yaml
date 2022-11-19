@@ -44,6 +44,8 @@ spec:
 
     metrics:
       create: true
+      labels:
+        release: kube-prometheus-stack
 
     tolerations:
       - key: "node-role.kubernetes.io/control-plane"
