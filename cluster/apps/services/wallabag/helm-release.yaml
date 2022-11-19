@@ -44,7 +44,7 @@ spec:
             memory: 53M
 
     env:
-      TZ: "America/New_York"
+      TZ: "${TIMEZONE}"
       SYMFONY__ENV__DOMAIN_NAME: https://wallabag.${SECRET_DOMAIN}
       # SYMFONY__ENV__SENTRY_DSN:
       SYMFONY__ENV__SERVER_NAME: wallabag
