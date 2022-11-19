@@ -80,7 +80,7 @@ spec:
 
     env:
       - name: TZ
-        value: "America/New_York"
+        value: "${TIMEZONE}"
 
     # experimental:
     #   plugins:
