@@ -76,12 +76,12 @@ spec:
       configmap.reloader.stakater.com/reload: *name
 
     affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/master
-                  operator: Exists
+      # nodeAffinity:
+      #   requiredDuringSchedulingIgnoredDuringExecution:
+      #     nodeSelectorTerms:
+      #       - matchExpressions:
+      #           - key: node-role.kubernetes.io/master
+      #             operator: Exists
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100
@@ -92,7 +92,8 @@ spec:
                     operator: In
                     values: [*name]
               topologyKey: kubernetes.io/hostname
-
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
     tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
