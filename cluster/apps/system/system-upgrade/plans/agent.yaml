@@ -9,7 +9,6 @@ metadata:
 spec:
   # renovate: datasource=github-releases depName=k3s-io/k3s
   version: "v1.25.3+k3s1"
-  serviceAccountName: system-upgrade
   concurrency: 1
   nodeSelector:
     matchExpressions:
@@ -19,6 +18,11 @@ spec:
         operator: DoesNotExist
       - key: node-role.kubernetes.io/master
         operator: DoesNotExist
+  serviceAccountName: system-upgrade
+  # cordon: true # ignored if `drain` is sset
+  drain:
+    force: true
+    skipWaitForDeleteTimeout: 60 # 1.18+ (honor pod disruption budgets up to 60 seconds per pod then moves on)
   prepare:
     image: rancher/k3s-upgrade
     args: ["prepare", "k3s-server"]
