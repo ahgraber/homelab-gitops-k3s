@@ -143,7 +143,7 @@ spec:
           value: "crowdsecurity/cri-logs"
 
         - name: TZ
-          value: "America/New_York"
+          value: "${TIMEZONE}"
         - name: DISABLE_ONLINE_API
           value: "false"
         # - name: LEVEL_TRACE

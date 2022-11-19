@@ -7,7 +7,7 @@ This Git repository will be specifies the state of the cluster. In addition, wit
 [Flux SOPS integration](https://toolkit.fluxcd.io/guides/mozilla-sops/) GPG encrypted secrets can be
 committed to this public repo.
 
-_With inspiration from the k8s-at-home community, especially the [cluster template](https://github.com/k8s-at-home/template-cluster-k3s)_
+_With inspiration from the k8s-at-home community, especially the [onedr0p's cluster template](https://github.com/onedr0p/flux-cluster-template)_
 
 ## Overview
 
