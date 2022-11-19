@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: kube-cleanup-operator
-  namespace: kube-system
+  name: &name kube-cleanup-operator
+  namespace: &namespace system
 spec:
   interval: 5m
   chart:

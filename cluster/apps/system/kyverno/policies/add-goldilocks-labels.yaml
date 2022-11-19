@@ -26,6 +26,7 @@ spec:
                 - networking
                 - security
                 - services
+                - system
       mutate:
         targets:
           - apiVersion: v1

@@ -10,3 +10,4 @@ resources:
   - reflector/
   - reloader/
   - system-upgrade/ # or manage w/ ansible
+  - namespace.yaml
