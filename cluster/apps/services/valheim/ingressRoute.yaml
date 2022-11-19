@@ -13,6 +13,7 @@ spec:
       kind: Rule
       middlewares:
         - name: crowdsec-traefik-bouncer
+        - name: rfc1918
       services:
         - name: valheim
           namespace: services
@@ -33,6 +34,9 @@ spec:
   routes:
     - match: Host(`valheim.${SECRET_DOMAIN}`)
       kind: Rule
+      middlewares:
+        - name: crowdsec-traefik-bouncer
+        - name: rfc1918
       services:
         - name: valheim
           namespace: services
@@ -53,6 +57,9 @@ spec:
   routes:
     - match: Host(`valheim.${SECRET_DOMAIN}`)
       kind: Rule
+      middlewares:
+        - name: crowdsec-traefik-bouncer
+        - name: rfc1918
       services:
         - name: valheim
           namespace: services
