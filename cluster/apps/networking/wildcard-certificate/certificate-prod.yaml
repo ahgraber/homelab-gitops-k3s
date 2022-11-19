@@ -12,8 +12,8 @@ spec:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
       # automatically create replicated resources?
-      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "security"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "false"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ""
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
