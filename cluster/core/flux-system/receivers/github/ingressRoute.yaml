@@ -12,7 +12,8 @@ spec:
     - match: Host(`flux-receiver.${SECRET_DOMAIN}`) && PathPrefix(`/hook`)
       kind: Rule
       # Enable auth middleware
-      # middlewares:
+      middlewares:
+        - name: crowdsec-traefik-bouncer
       #   - name: rfc1918
       #   # - name: basicauth
       services:

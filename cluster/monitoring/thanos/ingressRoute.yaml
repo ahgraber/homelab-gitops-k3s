@@ -13,6 +13,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
+        - name: crowdsec-traefik-bouncer
         - name: rfc1918
         # - name: basicauth
       services:
@@ -38,6 +39,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
+        - name: crowdsec-traefik-bouncer
         - name: rfc1918
         # - name: basicauth
       services:
@@ -63,6 +65,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
+        - name: crowdsec-traefik-bouncer
         - name: rfc1918
         # - name: basicauth
       services:
@@ -88,6 +91,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
+        - name: crowdsec-traefik-bouncer
         - name: rfc1918
         # - name: basicauth
       services:
@@ -113,6 +117,7 @@ spec:
       kind: Rule
       # Enable auth middleware
       middlewares:
+        - name: crowdsec-traefik-bouncer
         - name: rfc1918
         # - name: basicauth
       services:
