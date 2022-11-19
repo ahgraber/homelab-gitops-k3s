@@ -43,6 +43,6 @@ spec:
         operator: "Exists"
   valuesFrom:
     - kind: Secret
-      name: weave-gitops
+      name: gitops-secret
       valuesKey: admin-password
       targetPath: adminUser.passwordHash
