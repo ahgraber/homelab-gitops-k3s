@@ -45,6 +45,8 @@ spec:
       # rebootCommand: "/bin/systemctl reboot"
 
       ### notify
+      messageTemplateDrain: "⏳ Draining node %s"
+      messageTemplateReboot: "♻️ Rebooted node %s"
       notify-url: smtp://${SECRET_SMTP_USER}:${SECRET_SMTP_PWD}@in-v3.mailjet.com:587/?fromAddress=${SECRET_SMTP_ADDRESS}&toAddresses=${SECRET_DEFAULT_EMAIL}
 
     metrics:
