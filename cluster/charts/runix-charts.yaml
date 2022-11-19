@@ -7,4 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: https://helm.runix.net
-  timeout: 3m

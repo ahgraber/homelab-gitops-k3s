@@ -7,4 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: https://percona.github.io/percona-helm-charts/
-  timeout: 3m

@@ -7,4 +7,3 @@ metadata:
 spec:
   interval: 1h
   url: https://mysql.github.io/mysql-operator/
-  timeout: 3m
