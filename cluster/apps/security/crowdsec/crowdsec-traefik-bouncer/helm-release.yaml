@@ -2,14 +2,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: traefik-crowdsec-bouncer
+  name: crowdsec-traefik-bouncer
   namespace: security
 spec:
   interval: 5m
   chart:
     spec:
       # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
-      chart: traefik-crowdsec-bouncer
+      chart: crowdsec-traefik-bouncer
       version: 0.1.2
       sourceRef:
         kind: HelmRepository
