@@ -25,7 +25,7 @@ spec:
       - name: crowdsec_bouncer_api_key
         valueFrom:
           secretKeyRef:
-            name: crowdsec-secret
+            name: crowdsec-traefik-bouncer-secret
             key: crowdsec_bouncer_api_key
       # -- crowdsec lapi host (ie: crowdsec-service.crowdsec.svc.cluster.local:8080)
       - name: crowdsec_agent_host
