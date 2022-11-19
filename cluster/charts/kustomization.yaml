@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # - appscode-charts.yaml
-  - appuio-charts.yaml
+  # - appuio-charts.yaml
   - authentik-charts.yaml
   - backube-charts.yaml
   - bitnami-charts.yaml
@@ -11,32 +11,32 @@ resources:
   - cloudflare-charts.yaml
   - cloudnativepg-charts.yaml
   - crowdsec-charts.yaml
-  - crunchydata-charts.yaml
-  - dashboard-charts.yaml
-  - deliveryhero-charts.yaml
+  # - crunchydata-charts.yaml
+  # - dashboard-charts.yaml
+  - deliveryhero-charts.yaml # node-problem-detector (and others)
   - democratic-csi-charts.yaml
   - descheduler-charts.yaml
-  - dex-charts.yaml
-  - ealenn-charts.yaml
-  - emberstack-charts.yaml
-  - fairwinds-charts.yaml
+  # - dex-charts.yaml
+  - ealenn-charts.yaml # echo-server
+  - emberstack-charts.yaml # reflector
+  - fairwinds-charts.yaml # goldilocks (and others)
   # - falco-security-charts.yaml
   # - fydrah-charts.yaml
   - grafana-charts.yaml
-  - infracloudio-charts.yaml
+  # - infracloudio-charts.yaml
   # - ingress-nginx-charts.yaml
-  - jetstack-charts.yaml
-  - k8s-at-home-charts.yaml
-  - kasten-charts.yaml
-  - kubereboot-charts.yaml
-  - kuberhealthy-charts.yaml
+  - jetstack-charts.yaml # cert-manager
+  # - kasten-charts.yaml
+  - kubereboot-charts.yaml # kured
+  # - kuberhealthy-charts.yaml
   - kyverno-charts.yaml
-  - lwolf-charts.yaml
+  - lwolf-charts.yaml # kube-cleanup-operator
   - metallb-charts.yaml
   - metrics-server-charts.yaml
-  - mintel-dex-charts.yaml
+  # - mintel-dex-charts.yaml
+  - minio-charts.yaml
   - mysql-charts.yaml
-  - nextcloud-charts.yaml
+  # - nextcloud-charts.yaml
   # - nfs-subdir-external-provisioner-charts.yaml
   - node-feature-discovery-charts.yaml
   - oauth2-proxy-charts.yaml
@@ -44,10 +44,10 @@ resources:
   - project-calico-charts.yaml
   - prometheus-community-charts.yaml
   - rook-ceph-charts.yaml
-  - runix-charts.yaml
-  - stackgres-charts.yaml
-  - stakater-charts.yaml
+  - runix-charts.yaml # pgadmin
+  # - stackgres-charts.yaml
+  - stakater-charts.yaml # reloader
   - traefik-charts.yaml
   - valheim-charts.yaml
   # - victoriametrics-charts.yaml
-  - vmware-tanzu-charts.yaml
+  - vmware-tanzu-charts.yaml # velero
