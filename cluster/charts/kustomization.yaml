@@ -34,7 +34,7 @@ resources:
   - metallb-charts.yaml
   - metrics-server-charts.yaml
   # - mintel-dex-charts.yaml
-  - minio-charts.yaml
+  # - minio-charts.yaml
   - mysql-charts.yaml
   # - nextcloud-charts.yaml
   # - nfs-subdir-external-provisioner-charts.yaml
