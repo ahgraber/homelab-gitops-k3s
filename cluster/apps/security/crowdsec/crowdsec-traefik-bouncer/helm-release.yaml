@@ -21,6 +21,7 @@ spec:
   valuesFrom:
     - kind: Secret
       name: crowdsec-traefik-bouncer-secret
+      valuesKey: crowdsec_bouncer_api_key
       targetPath: bouncer.crowdsec_bouncer_api_key
   values:
     # Required parameters to be passed to the image env variables
