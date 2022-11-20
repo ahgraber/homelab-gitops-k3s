@@ -5,6 +5,7 @@ resources:
   ### loading in /apps ensures rules are installed after prometheus is available
   ## core/ services
   - cert-manager.yaml
+  - cloudnative-pg.yaml
   - flux.yaml
   - https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
   ## monitoring/ services
