@@ -10,7 +10,7 @@ metadata:
     policies.kyverno.io/minversion: 1.6.0
     policies.kyverno.io/subject: Namespace
     policies.kyverno.io/description: >-
-      This policy assigns the labels `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if those labels are not included.
+      This policy assigns the label `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if the label does not already exist.
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
@@ -24,6 +24,8 @@ spec:
               names:
                 - monitoring
                 - networking
+                - postgres
+                - redis
                 - security
                 - services
                 - system
