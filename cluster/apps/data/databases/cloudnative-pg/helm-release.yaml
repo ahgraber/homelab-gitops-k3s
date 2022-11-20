@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cnpg-controller-manager
-  namespace: cnpg-system
+  name: cnpg-operator
+  namespace: postgres
 spec:
   interval: 15m
   chart:
@@ -47,34 +47,34 @@ spec:
       # INHERITED_LABELS: environment, workload, app
 
       data: {}
-      name: cnpg-controller-manager-config
+      name: cnpg-operator-config
 
-    # -- Additinal arguments to be added to the operator's args list
-    additionalArgs: []
+    # # -- Additinal arguments to be added to the operator's args list
+    # additionalArgs: []
 
-    webhook:
-      port: 9443
-      mutating:
-        create: true
-        failurePolicy: Fail
-      validating:
-        create: true
-        failurePolicy: Fail
+    # webhook:
+    #   port: 9443
+    #   mutating:
+    #     create: true
+    #     failurePolicy: Fail
+    #   validating:
+    #     create: true
+    #     failurePolicy: Fail
 
-    serviceAccount:
-      create: true
-    rbac:
-      create: true
-    podSecurityContext:
-      runAsUser: 1001
-      # fsGroup: 2000
+    # serviceAccount:
+    #   create: true
+    # rbac:
+    #   create: true
+    # podSecurityContext:
+    #   runAsUser: 1001
+    #   # fsGroup: 2000
 
-    service:
-      type: ClusterIP
-      # -- DO NOT CHANGE THE SERVICE NAME as it is currently used to generate the certificate
-      # and can not be configured
-      name: cnpg-webhook-service
-      port: 443
+    # service:
+    #   type: ClusterIP
+    #   # -- DO NOT CHANGE THE SERVICE NAME as it is currently used to generate the certificate
+    #   # and can not be configured
+    #   name: cnpg-webhook-service
+    #   port: 443
 
     resources:
       limits:
@@ -83,11 +83,8 @@ spec:
         cpu: 25m
         memory: 100Mi
 
-    # -- Nodeselector for the operator to be installed
-    nodeSelector: {}
-
-    # -- Tolerations for the operator to be installed
-    tolerations: []
-
-    # -- Affinity for the operator to be installed
-    affinity: {}
+    nodeSelector:
+      node-role.kubernetes.io/master: "true"
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
