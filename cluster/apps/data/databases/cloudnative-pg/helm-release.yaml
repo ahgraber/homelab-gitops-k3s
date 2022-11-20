@@ -15,6 +15,7 @@ spec:
         kind: HelmRepository
         name: cloudnativepg-charts
         namespace: flux-system
+
   # ### disable installing CRDs from helm chart
   # postRenderers:
   #   - kustomize:
@@ -29,20 +30,11 @@ spec:
   #             kind: CustomResourceDefinition
   #             metadata:
   #               name: not-used
-  values:
-    replicaCount: 1
 
+  values:
     crds:
       create: true
-
-    webhook:
-      port: 9443
-      mutating:
-        create: true
-        failurePolicy: Fail
-      validating:
-        create: true
-        failurePolicy: Fail
+    replicaCount: 1
 
     # Operator configuration
     config:
@@ -60,13 +52,19 @@ spec:
     # -- Additinal arguments to be added to the operator's args list
     additionalArgs: []
 
+    webhook:
+      port: 9443
+      mutating:
+        create: true
+        failurePolicy: Fail
+      validating:
+        create: true
+        failurePolicy: Fail
+
     serviceAccount:
       create: true
-
     rbac:
       create: true
-
-    # -- Security Context for the whole pod
     podSecurityContext:
       runAsUser: 1001
       # fsGroup: 2000
@@ -79,13 +77,11 @@ spec:
       port: 443
 
     resources:
-      {}
-      # limits:
-      #   cpu: 100m
-      #   memory: 200Mi
-      # requests:
-      #   cpu: 100m
-      #   memory: 100Mi
+      limits:
+        memory: 200Mi
+      requests:
+        cpu: 25m
+        memory: 100Mi
 
     # -- Nodeselector for the operator to be installed
     nodeSelector: {}
