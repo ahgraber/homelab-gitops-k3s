@@ -22,6 +22,10 @@ spec:
     # ** Goldilocks only requires the recommender component
     recommender:
       enabled: true
+
+      image:
+        tag: "0.12.0"
+
       extraArgs:
         storage: prometheus
         prometheus-address: |-
