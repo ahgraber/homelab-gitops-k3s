@@ -33,7 +33,7 @@ spec:
     # # Alternative bootstrap method: start from a backup
     # recovery:
     #   backup:
-    #     name: backup-example
+    #     name: <app>-backup
 
   superuserSecret:
     name: <app>-superuser-secret
