@@ -17,6 +17,7 @@ resources:
   - democratic-csi-charts.yaml
   - descheduler-charts.yaml
   # - dex-charts.yaml
+  - dysnix-charts.yaml
   - ealenn-charts.yaml # echo-server
   - emberstack-charts.yaml # reflector
   - fairwinds-charts.yaml # goldilocks (and others)
