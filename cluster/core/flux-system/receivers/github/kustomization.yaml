@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ingressRoute.yaml
   - receiver.yaml
-  - secret-webhook.sops.yaml
+  - secret.sops.yaml
