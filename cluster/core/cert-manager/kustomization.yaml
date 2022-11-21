@@ -7,4 +7,4 @@ resources:
   - letsencrypt-production.yaml
   - letsencrypt-staging.yaml
   - namespace.yaml
-  - secret-certmanager.sops.yaml
+  - secret.sops.yaml

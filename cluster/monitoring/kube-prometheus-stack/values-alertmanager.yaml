@@ -51,7 +51,7 @@ data:
             email_configs:
               - to: "${SECRET_DEFAULT_EMAIL}"
                 from: "${SECRET_SMTP_ADDRESS}"
-                smarthost: in-v3.mailjet.com:587
+                smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}""
                 auth_username: "${SECRET_SMTP_USER}"
                 auth_password: "${SECRET_SMTP_PWD}"
                 # auth_identity: "${SECRET_SMTP_ADDRESS}"
