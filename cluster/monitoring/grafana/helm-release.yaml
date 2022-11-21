@@ -139,11 +139,13 @@ spec:
       - grafana-worldmap-panel
       - grafana-clock-panel
 
-    serviceMonitor:
-      enabled: true
-
     ingress:
       enabled: false
+
+    persistence:
+      enabled: true
+      size: 2Gi
+      storageClassName: "ceph-fs"
 
     resources:
       requests:
@@ -152,10 +154,11 @@ spec:
       limits:
         memory: 81Mi
 
-    persistence:
+    serviceMonitor:
       enabled: true
-      size: 2Gi
-      storageClassName: "ceph-fs"
+
+    rbac:
+      pspEnabled: false
 
     podAnnotations:
       configmap.reloader.stakater.com/reload: "grafana"
