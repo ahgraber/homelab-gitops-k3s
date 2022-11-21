@@ -1,0 +1,140 @@
+---
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: <app>-redis
+  namespace: &namespace redis
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: raw
+      version: v0.3.1
+      sourceRef:
+        kind: HelmRepository
+        name: dysnix-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: redis-operator
+      namespace: redis
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    resources:
+      - apiVersion: redis.redis.opstreelabs.in/v1beta1
+        kind: RedisCluster
+        metadata:
+          name: <app>-redis
+        spec:
+          kubernetesConfig:
+            image: quay.io/opstree/redis:v7.0.5
+            imagePullPolicy: IfNotPresent
+            resources:
+              limits:
+                memory: 512Mi
+              requests:
+                cpu: 101m
+                memory: 128Mi
+            # redisConfig:
+            #     additionalRedisConfig: redis-external-config
+            redisSecret:
+              name: redis-secret
+              key: password
+
+          clusterSize: 3
+          clusterVersion: v7
+          persistenceEnabled: true
+
+          storage:
+            volumeClaimTemplate:
+              spec:
+                storageClassName: ceph-block
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 1Gi
+
+          # priorityClassName:
+          securityContext:
+            runAsUser: 1000
+            fsGroup: 1000
+          # nodeSelector: {}
+          redisLeader:
+            readinessProbe:
+              failureThreshold: 5
+              initialDelaySeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              timeoutSeconds: 5
+            livenessProbe:
+              failureThreshold: 5
+              initialDelaySeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              timeoutSeconds: 5
+            affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis-cluster-leader
+                    topologyKey: "kubernetes.io/hostname"
+          redisFollower:
+            readinessProbe:
+              failureThreshold: 5
+              initialDelaySeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              timeoutSeconds: 5
+            livenessProbe:
+              failureThreshold: 5
+              initialDelaySeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              timeoutSeconds: 5
+            affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - redis-cluster-follower
+                    topologyKey: "kubernetes.io/hostname"
+          # Tolerations: []
+
+          # monitoring
+          redisExporter:
+            enabled: true
+            image: quay.io/opstree/redis-exporter:v1.44.0
+            imagePullPolicy: Always
+            # env: # for redis exporter
+            # - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
+            #   value: "true"
+            # - name: UI_PROPERTIES_FILE_NAME
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       name: game-demo
+            #       key: ui_properties_file_name
+            # - name: SECRET_USERNAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: mysecret
+            #       key: username
+            resources: # for redis exporter
+              limits:
+                memory: 128Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
