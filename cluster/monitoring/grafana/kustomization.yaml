@@ -5,4 +5,4 @@ resources:
   # - dashboards/ # not k8s resources; just preserved dashboard json
   - helm-release.yaml
   - ingressRoute.yaml
-  - secret-admin.sops.yaml
+  - secret.sops.yaml
