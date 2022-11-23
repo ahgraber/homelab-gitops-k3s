@@ -29,7 +29,7 @@ spec:
           - /bin/bash
           - -c
           - |-
-            until [ -f /snapshots/kopia.repository.f ]; do
+            until [ -f /backups/kopia.repository.f ]; do
                 printf "\e[1;32m%-6s\e[m\n" "Awaiting for the Kopia repo to become ready ..."
                 sleep 1
             done
