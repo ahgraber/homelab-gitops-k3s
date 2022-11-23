@@ -13,6 +13,8 @@ Thanos is made of a set of components with each filling a specific role.
 - Query Frontend: implements Prometheus's v1 API proxies it to Query while caching the response
   and optional splitting by queries day.
 
+See also [prometheus-operator notes](https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/thanos.md)
+
 ## Architecture
 
 This charts allows you install several Thanos components, so you deploy an architecture as the one below:
