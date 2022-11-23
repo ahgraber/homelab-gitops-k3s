@@ -16,7 +16,7 @@ configMapGenerator:
 
   - name: node-exporter-full
     files:
-      - node-exporter-full.json= https://grafana.com/api/dashboards/1860/revisions/29
+      - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29
   - name: pod-resources-max
     files:
       - pod-resources-max.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/pod-resources-max.json
