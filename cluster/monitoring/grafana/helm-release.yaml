@@ -77,45 +77,45 @@ spec:
         #   - name: Loki
         #     orgId: 1
 
-    dashboards:
-      default:
-        flux-cluster:
-          url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/cluster.json
-          datasource: Prometheus
-        flux-control-plane:
-          url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/control-plane.json
-          datasource: Prometheus
-        node-exporter-full:
-          # url: https://grafana.com/api/dashboards/1860/revisions/22/download
-          gnetId: 1860
-          revision: 29
-          datasource: Prometheus
-        pod-resources-max:
-          url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/pod-resources-max.json
-          datasource: Prometheus
-        cert-manager:
-          # url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/cert-manager.json
-          url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
-        speedtest:
-          gnetId: 13665
-          revision: 1
-          datasource: Prometheus
-        # # Ref: https://grafana.com/grafana/dashboards/2842
-        # ceph-cluster:
-        #   gnetId: 2842
-        #   revision: 14
-        #   datasource: Prometheus
-        # # Ref: https://grafana.com/grafana/dashboards/5336
-        # ceph-osd:
-        #   gnetId: 5336
-        #   revision: 5
-        #   datasource: Prometheus
-        # # Ref: https://grafana.com/grafana/dashboards/5342
-        # ceph-pools:
-        #   gnetId: 5342
-        #   revision: 5
-        #   datasource: Prometheus
-        # # Ref: https://grafana.com/grafana/dashboards/13665
+    # dashboards:
+    #   default:
+    #     flux-cluster:
+    #       url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/cluster.json
+    #       datasource: Prometheus
+    #     flux-control-plane:
+    #       url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/control-plane.json
+    #       datasource: Prometheus
+    #     node-exporter-full:
+    #       # url: https://grafana.com/api/dashboards/1860/revisions/22/download
+    #       gnetId: 1860
+    #       revision: 29
+    #       datasource: Prometheus
+    #     pod-resources-max:
+    #       url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/pod-resources-max.json
+    #       datasource: Prometheus
+    #     cert-manager:
+    #       # url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/cert-manager.json
+    #       url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
+    #     speedtest:
+    #       gnetId: 13665
+    #       revision: 1
+    #       datasource: Prometheus
+    #     # # Ref: https://grafana.com/grafana/dashboards/2842
+    #     # ceph-cluster:
+    #     #   gnetId: 2842
+    #     #   revision: 14
+    #     #   datasource: Prometheus
+    #     # # Ref: https://grafana.com/grafana/dashboards/5336
+    #     # ceph-osd:
+    #     #   gnetId: 5336
+    #     #   revision: 5
+    #     #   datasource: Prometheus
+    #     # # Ref: https://grafana.com/grafana/dashboards/5342
+    #     # ceph-pools:
+    #     #   gnetId: 5342
+    #     #   revision: 5
+    #     #   datasource: Prometheus
+    #     # # Ref: https://grafana.com/grafana/dashboards/13665
 
     sidecar:
       dashboards:
