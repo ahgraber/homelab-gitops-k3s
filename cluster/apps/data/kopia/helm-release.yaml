@@ -67,9 +67,9 @@ spec:
       main:
         enabled: false
 
-    podSecurityContext:
-      supplementalGroups:
-        - 100
+    # podSecurityContext:
+    #   supplementalGroups:
+    #     - 100
 
     persistence:
       config:
@@ -86,9 +86,9 @@ spec:
         path: /mnt/deadpool/kopia
         mountPath: /backups
 
-    resources:
-      requests:
-        cpu: 10m
-        memory: 250Mi
-      limits:
-        memory: 500Mi
+    resources: {}
+    #   requests:
+    #     cpu: 10m
+    #     memory: 250Mi
+    #   limits:
+    #     memory: 500Mi
