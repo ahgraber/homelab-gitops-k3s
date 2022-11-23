@@ -10,11 +10,11 @@ configMapGenerator:
 
   - name: cnpg-dashboard
     files:
-      - cert-manager-dashboard.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/cloudnative-postgres.json
+      - cnpg-dashboard.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/cloudnative-postgres.json
 
   - name: speedtest-dashboard
     files:
-      - speedtest-dashboard.json=https://grafana.com/api/dashboards/13665/revisions/4
+      - speedtest-dashboard.json=https://grafana.com/api/dashboards/13665/revisions/4/download
 
 generatorOptions:
   disableNameSuffixHash: true

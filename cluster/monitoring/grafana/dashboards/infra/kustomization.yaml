@@ -5,7 +5,7 @@ namespace: monitoring
 configMapGenerator:
   - name: node-exporter-full-dashboard
     files:
-      - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29
+      - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
   - name: pod-resources-max-dashboard
     files:
       - pod-resources-max.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/pod-resources-max.json
