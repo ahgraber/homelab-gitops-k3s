@@ -15,7 +15,6 @@ spec:
         name: bjw-s-charts
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 5
   upgrade:
@@ -29,13 +28,13 @@ spec:
           - /bin/bash
           - -c
           - |-
-            until [ -f /backups/kopia.repository.f ]; do
+            until [ -f /snapshots/kopia.repository.f ]; do
                 printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
                 sleep 1
             done
         volumeMounts:
-          - name: backups
-            mountPath: /backups
+          - name: snapshots
+            mountPath: /snapshots
     image:
       repository: ghcr.io/onedr0p/kopia
       tag: 0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
@@ -54,6 +53,8 @@ spec:
       - --metrics-listen-addr
       - 0.0.0.0:8080
       - --without-password
+      - --log-level
+      - debug
 
     service:
       main:
@@ -63,13 +64,23 @@ spec:
           metrics:
             enabled: true
             port: 8080
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
+
     ingress:
       main:
         enabled: false
 
-    # podSecurityContext:
-    #   supplementalGroups:
-    #     - 100
+    podSecurityContext:
+      supplementalGroups:
+        - 100
 
     persistence:
       config:
@@ -79,16 +90,16 @@ spec:
         subPath: repository.config
         mountPath: /config/repository.config
         readOnly: true
-      backups:
+      snapshots:
         enabled: true
         type: nfs
-        server: "truenas.${SECRET_DOMAIN}"
+        server: "{SECRET_TRUENAS_IP}"
         path: /mnt/deadpool/kopia
-        mountPath: /backups
+        mountPath: /snapshots
 
-    resources: {}
-    #   requests:
-    #     cpu: 10m
-    #     memory: 250Mi
-    #   limits:
-    #     memory: 500Mi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        memory: 500Mi
