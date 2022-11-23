@@ -15,18 +15,31 @@ spec:
         kind: HelmRepository
         name: grafana-charts
         namespace: flux-system
-      interval: 5m
-  timeout: 20m
   values:
     replicas: 1
     deploymentStrategy:
       type: Recreate
 
     env:
-      GF_EXPLORE_ENABLED: true
-      GF_PANELS_DISABLE_SANITIZE_HTML: true
-      GF_LOG_FILTERS: rendering:debug
+      GF_ANALYTICS_CHECK_FOR_UPDATES: false
+      # GF_DATABASE_HOST: postgres-rw.default.svc.cluster.local:5432
+      # GF_DATABASE_NAME: grafana
+      # GF_DATABASE_SSL_MODE: disable
+      # GF_DATABASE_TYPE: postgres
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
+      GF_DATE_FORMATS_FULL_DATE: "MMM Do, YYYY hh:mm:ss a"
+      GF_EXPLORE_ENABLED: true
+      GF_GRAFANA_NET_URL: https://grafana.net
+      GF_LOG_FILTERS: rendering:debug
+      GF_LOG_MODE: console
+      GF_PANELS_DISABLE_SANITIZE_HTML: true
+      GF_PATHS_DATA: /var/lib/grafana/data
+      GF_PATHS_LOGS: /var/log/grafana
+      GF_PATHS_PLUGINS: /var/lib/grafana/plugins
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_SECURITY_ALLOW_EMBEDDING: true
+      GF_SECURITY_COOKIE_SAMESITE: grafana
+      GF_SERVER_ROOT_URL: "https://grafana.${SECRED_DOMAIN}"
 
     admin:
       existingSecret: grafana-admin-secret
@@ -34,19 +47,6 @@ spec:
       passwordKey: admin-password
 
     grafana.ini:
-      server:
-        root_url: "https://grafana.${SECRET_DOMAIN}"
-      paths:
-        data: /var/lib/grafana/data
-        logs: /var/log/grafana
-        plugins: /var/lib/grafana/plugins
-        provisioning: /etc/grafana/provisioning
-      analytics:
-        check_for_updates: false
-      log:
-        mode: console
-      grafana_net:
-        url: https://grafana.net
       auth.basic:
         disable_login_form: false
 
@@ -66,22 +66,16 @@ spec:
     datasources:
       datasources.yaml:
         apiVersion: 1
-        deleteDatasources:
-          - name: Loki
-            orgId: 1
         datasources:
           - name: Prometheus
             type: prometheus
-            url: http://prometheus-operated.monitoring:9090/
             access: proxy
+            url: http://thanos-query.monitoring.svc.cluster.local:9090
+            # url: http://prometheus-operated.monitoring:9090/
             isDefault: true
-            # url: http://thanos-query.monitoring:9090/
-            # access: proxy
-            # isDefault: true
-          # - name: Loki
-          #   type: loki
-          #   access: proxy
-          #   url: http://loki.monitoring:3100
+        # deleteDatasources:
+        #   - name: Loki
+        #     orgId: 1
 
     dashboards:
       default:
@@ -92,13 +86,16 @@ spec:
           url: https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/control-plane.json
           datasource: Prometheus
         node-exporter-full:
-          url: https://grafana.com/api/dashboards/1860/revisions/22/download
+          # url: https://grafana.com/api/dashboards/1860/revisions/22/download
+          gnetId: 1860
+          revision: 29
           datasource: Prometheus
         pod-resources-max:
           url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/pod-resources-max.json
           datasource: Prometheus
         cert-manager:
-          url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/cert-manager.json
+          # url: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/cert-manager.json
+          url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
         speedtest:
           gnetId: 13665
           revision: 1
@@ -128,8 +125,8 @@ spec:
         enabled: true
         searchNamespace: ALL
 
-    imageRenderer:
-      enabled: true
+    # imageRenderer:
+    #   enabled: true
 
     plugins:
       - natel-discrete-panel
