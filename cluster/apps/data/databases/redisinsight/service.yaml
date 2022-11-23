@@ -1,0 +1,16 @@
+---
+# RedisInsight service with name 'redisinsight-service'
+apiVersion: v1
+kind: Service
+metadata:
+  # name should not be 'redisinsight'  since the service creates environment variables
+  # that conflicts with redisinsight application's environment variables:
+  # `REDISINSIGHT_HOST` and `REDISINSIGHT_PORT`
+  name: redisinsight-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8001
+  selector:
+    app.kubernetes.io/name: redisinsight
