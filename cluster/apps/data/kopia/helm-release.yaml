@@ -22,20 +22,20 @@ spec:
     remediation:
       retries: 5
   values:
-    # initContainers:
-    #   wait-for-repo:
-    #     image: ghcr.io/onedr0p/kopia:0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
-    #     command:
-    #       - /bin/bash
-    #       - -c
-    #       - |-
-    #         until [ -f /backups/kopia.repository.f ]; do
-    #             printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
-    #             sleep 1
-    #         done
-    #     volumeMounts:
-    #       - name: backups
-    #         mountPath: /backups
+    initContainers:
+      wait-for-repo:
+        image: ghcr.io/onedr0p/kopia:0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
+        command:
+          - /bin/bash
+          - -c
+          - |-
+            until [ -f /backups/kopia.repository.f ]; do
+                printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
+                sleep 1
+            done
+        volumeMounts:
+          - name: backups
+            mountPath: /backups
     image:
       repository: ghcr.io/onedr0p/kopia
       tag: 0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
