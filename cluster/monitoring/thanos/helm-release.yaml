@@ -31,9 +31,11 @@ spec:
       type: s3
       config:
         insecure: true
+
+    # query aggregates metrics across multiple prometheus instances
     query:
       enabled: true
-      replicaCount: 2
+      replicaCount: 1
       podAntiAffinityPreset: soft
       replicaLabels:
         - __replica__
@@ -44,8 +46,17 @@ spec:
         enabled: false
     queryFrontend:
       enabled: false
+
     bucketweb:
-      enabled: false
+      enabled: true
+      resources:
+        requests:
+          cpu: 15m
+          memory: 64M
+        limits:
+          memory: 64M
+
+    # compactor compacts, downsamples, and applies retention on data stored in s3
     compactor:
       enabled: true
       extraFlags:
@@ -53,13 +64,21 @@ spec:
         - "4"
       retentionResolutionRaw: 14d
       retentionResolution5m: 14d
-      retentionResolution1h: 14d
+      retentionResolution1h: 30d
       ingress:
         enabled: false
       persistence:
         enabled: true
         storageClass: "ceph-block"
-        size: 10Gi
+        size: 15Gi
+      resources:
+        requests:
+          cpu: 15m
+          memory: 204M
+        limits:
+          memory: 270M
+
+    # storegateway serves metrics from inside s3 bucket
     storegateway:
       enabled: true
       # replicaCount: 3
@@ -69,7 +88,15 @@ spec:
       persistence:
         enabled: true
         storageClass: "ceph-block"
-        size: 10Gi
+        size: 512Mi
+      resources:
+        requests:
+          cpu: 23m
+          memory: 204M
+        limits:
+          memory: 226M
+
+    # evaluates alerting rules from data in thanos
     ruler:
       enabled: true
       # replicaCount: 3
@@ -92,13 +119,21 @@ spec:
       persistence:
         enabled: true
         storageClass: "ceph-block"
-        size: 10Gi
+        size: 512Mi
+      resources:
+        requests:
+          cpu: 23m
+          memory: 94M
+        limits:
+          memory: 113M
+
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
 
   valuesFrom:
+    # created by rook-ceph in ObjectBucketClaim thanos-ceph-bucket
     - targetPath: objstoreConfig.config.bucket
       kind: ConfigMap
       name: thanos-ceph-bucket
