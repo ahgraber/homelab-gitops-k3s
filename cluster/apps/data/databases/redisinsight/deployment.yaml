@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisinsight
+  namespace: redis
+  labels:
+    app.kubernetes.io/name: redisinsight
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redisinsight
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redisinsight
+    spec:
+      volumes:
+        - name: db
+          emptyDir: {} # node-ephemeral volume https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+          # persistentVolumeClaim:
+          #     claimName: redisinsight
+
+      containers:
+        - name: redisinsight
+          image: redislabs/redisinsight:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8001
+              protocol: TCP
+
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 204Mi
+          volumeMounts:
+            - name: db
+              mountPath: /db
