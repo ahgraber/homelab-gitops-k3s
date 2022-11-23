@@ -5,4 +5,5 @@ resources:
   - _namespaces/
   - cloudnative-pg/
   - pgadmin/
+  - redisinsight/
   # - redis-operator/
