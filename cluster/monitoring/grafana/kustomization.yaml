@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  # - dashboards/ # not k8s resources; just preserved dashboard json
+  - dashboards/
   - helm-release.yaml
   - ingressRoute.yaml
   - secret.sops.yaml
