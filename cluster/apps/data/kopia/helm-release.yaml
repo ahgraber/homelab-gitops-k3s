@@ -93,7 +93,7 @@ spec:
       snapshots:
         enabled: true
         type: nfs
-        server: "{SECRET_TRUENAS_IP}"
+        server: "${SECRET_TRUENAS_IP}"
         path: /mnt/deadpool/kopia
         mountPath: /snapshots
 
