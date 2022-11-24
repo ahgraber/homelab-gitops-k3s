@@ -14,12 +14,12 @@ spec:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-  install:
-    remediation:
-      retries: 5
-  upgrade:
-    remediation:
-      retries: 5
+  # install:
+  #   remediation:
+  #     retries: 5
+  # upgrade:
+  #   remediation:
+  #     retries: 5
   values:
     initContainers:
       wait-for-repo:
@@ -94,10 +94,13 @@ spec:
         readOnly: true
       snapshots:
         enabled: true
-        type: nfs
-        server: "${SECRET_TRUENAS_IP}"
-        path: /mnt/deadpool/kopia
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "${SECRET_TRUENAS_IP}"
+            path: /mnt/deadpool/kopia
         mountPath: /snapshots
+        readOnly: false
 
     resources:
       requests:
