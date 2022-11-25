@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - ./policies/
   - ./helm-release.yaml
-  - ./namespace.yaml

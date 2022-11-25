@@ -5,3 +5,10 @@ metadata:
   name: postgres
   labels:
     goldilocks.fairwinds.com/enabled: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redis
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
