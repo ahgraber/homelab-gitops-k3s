@@ -2,17 +2,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  ### loading in /apps ensures rules are installed after prometheus is available
-  ## core/ services
   - ./cert-manager.yaml
   - ./cloudnative-pg.yaml
-  - ./flux.yaml
-  - ./https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
-  ## monitoring/ services
   - ./etcd.yaml
-  # - ./loki.yaml
+  - ./flux.yaml
+    # - ./loki.yaml
   - ./node-exporter.yaml
-  ## app/ services should be deployed with application
+  - https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
 
 # patchesJson6902:
 patches:
