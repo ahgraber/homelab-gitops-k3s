@@ -6,7 +6,7 @@ resources:
   - ./ingressRoute.yaml
 namespace: system
 configMapGenerator:
-  - ./name: kopia-config
+  - name: kopia-config
     files:
       - ./config/repository.config
 generatorOptions:
