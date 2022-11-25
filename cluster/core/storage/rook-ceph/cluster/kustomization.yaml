@@ -2,7 +2,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./dashboards/
   - ./helm-release.yaml
   - ./ingressRoute.yaml
-  - ./secret.sops.yaml
+  - ./storageClass-block.yaml
+  - ./storageClass-filesystem.yaml
+  - ./storageClass-object.yaml
