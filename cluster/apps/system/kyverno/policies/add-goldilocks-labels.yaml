@@ -5,9 +5,6 @@ metadata:
   name: add-goldilocks-labels
   annotations:
     policies.kyverno.io/title: Add Goldilocks Labels
-    policies.kyverno.io/category: Pod Security Admission
-    policies.kyverno.io/severity: medium
-    policies.kyverno.io/minversion: 1.6.0
     policies.kyverno.io/subject: Namespace
     policies.kyverno.io/description: >-
       This policy assigns the label `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if the label does not already exist.
@@ -16,6 +13,11 @@ spec:
   generateExistingOnPolicyUpdate: true
   rules:
     - name: add-goldilocks-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
       exclude:
         any:
           - resources:

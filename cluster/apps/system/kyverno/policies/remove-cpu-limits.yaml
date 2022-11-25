@@ -3,6 +3,11 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: remove-cpu-limits
+  annotations:
+    policies.kyverno.io/title: Remove CPU Limits
+    policies.kyverno.io/subject: Pods
+    policies.kyverno.io/description: >-
+      This policy searches for resource definitions and removes set CPU limits.
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
