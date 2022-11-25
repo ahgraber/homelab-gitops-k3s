@@ -10,5 +10,5 @@ resources:
   - ./node-feature-discovery/
   - ./reflector/
   - ./reloader/
-  - ./system-upgrade/ # or manage w/ ansible
+  - ./system-upgrade-controller/ # or manage w/ ansible
   - ./namespace.yaml
