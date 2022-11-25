@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kopia
-  namespace: kopia
+  namespace: system
 spec:
   interval: 15m
   chart:
@@ -15,6 +15,7 @@ spec:
         name: bjw-s-charts
         namespace: flux-system
   # install:
+  #   createNamespace: true
   #   remediation:
   #     retries: 5
   # upgrade:
@@ -22,19 +23,19 @@ spec:
   #     retries: 5
   values:
     initContainers:
-      # wait-for-repo:
-      #   image: ghcr.io/onedr0p/kopia:0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
-      #   command:
-      #     - /bin/bash
-      #     - -c
-      #     - |-
-      #       until [ -f /snapshots/kopia.repository.f ]; do
-      #           printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
-      #           sleep 1
-      #       done
-      #   volumeMounts:
-      #     - name: snapshots
-      #       mountPath: /snapshots
+      wait-for-repo:
+        image: ghcr.io/onedr0p/kopia:0.12.1@sha256:88106e6bb642ee4cb58b61a335ff55992ee2c03493f1aec804422774cf7cf063
+        command:
+          - /bin/bash
+          - -c
+          - |-
+            until [ -f /snapshots/kopia.repository.f ]; do
+                printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
+                sleep 1
+            done
+        volumeMounts:
+          - name: snapshots
+            mountPath: /snapshots
     image:
       repository: ghcr.io/onedr0p/kopia
       tag: 0.12.1@sha256:298d9319dc0e6ce37c902b8999db8712d42d073962ef745380c7595ae2010937
@@ -42,7 +43,7 @@ spec:
       configmap.reloader.stakater.com/reload: kopia-config
     env:
       TZ: "${TIMEZONE}"
-      KOPIA_PASSWORD: "none"
+      KOPIA_PASSWORD: "${SECRET_DEFAULT_PWD}"
 
     command: kopia
     args:

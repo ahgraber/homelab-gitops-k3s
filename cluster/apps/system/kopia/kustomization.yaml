@@ -2,12 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - helm-release.yaml
-  - ingressRoute.yaml
-  - namespace.yaml
-namespace: kopia
+  - ./helm-release.yaml
+  - ./ingressRoute.yaml
+namespace: system
 configMapGenerator:
-  - name: kopia-config
+  - ./name: kopia-config
     files:
       - ./config/repository.config
 generatorOptions:
