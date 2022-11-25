@@ -16,6 +16,7 @@ spec:
         name: metallb-charts
         namespace: flux-system
   install:
+    createNamespace: true
     remediation:
       retries: 5
   upgrade:

@@ -16,19 +16,20 @@ spec:
   generateExistingOnPolicyUpdate: true
   rules:
     - name: add-goldilocks-labels
-      match:
+      exclude:
         any:
           - resources:
               kinds:
                 - Namespace
               names:
-                - monitoring
-                - networking
-                - postgres
-                - redis
-                - security
-                - services
-                - system
+                - calico-apiserver
+                # - calico-system
+                # - cert-manager
+                - kube-node-lease
+                - kube-public
+                # - kube-system
+                # - metallb-system
+                - tigera-operator
       mutate:
         targets:
           - apiVersion: v1
