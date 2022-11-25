@@ -6,5 +6,3 @@ resources:
   - ./kube-system/
   - ./networking/
   - ./storage/
-  - ./namespaces.yaml
-  - ./storage-class-local.yaml # overwrite local-path StorageClass to set as NOT default

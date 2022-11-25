@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./iscsi/
   - ./nfs/
+  - ./namespace.yaml
