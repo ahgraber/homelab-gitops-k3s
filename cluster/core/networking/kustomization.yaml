@@ -5,3 +5,4 @@ resources:
   - ./cert-manager/
   - ./metallb-system/
   - ./tigera-operator/ # may conflict from version managed in ansible k3s install
+  - ./namespace.yaml
