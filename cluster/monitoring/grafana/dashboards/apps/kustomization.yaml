@@ -6,7 +6,7 @@ configMapGenerator:
   - name: cert-manager-dashboard
     files:
       - cert-manager-dashboard.json=https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
-      # - cert-manager-dashboard.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/cert-manager.json
+      # - ./cert-manager-dashboard.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/cert-manager.json
 
   - name: cnpg-dashboard
     files:

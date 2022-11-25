@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: democratic-csi-iscsi
+  name: democratic-csi-nfs
   namespace: democratic-csi
 spec:
   interval: 5m
@@ -18,25 +18,33 @@ spec:
   dependsOn:
     - name: snapshot-controller
       namespace: kube-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
   values:
     csiDriver:
-      name: "org.democratic-csi.truenas-iscsi"
+      name: "org.democratic-csi.truenas-nfs"
       installCRD: false
 
     driver:
       # see the driver-config-secret.yaml template for syntax
-      existingConfigSecret: secret-democratic-csi-driver-config-iscsi
+      existingConfigSecret: secret-democratic-csi-driver-config-nfs
       config:
         ## NOTE: if setting an existing secret you must still set `driver.config.driver`
         ## to the appropriate (equivalent) 'driver' value used in the secret,
         ## as the value is used by the chart for other purposes beyond secret creation
-        driver: freenas-api-iscsi
+        driver: freenas-api-nfs
+
     controller:
       enabled: true
-      hostNetwork: true
-      hostIPC: true
+      hostNetwork: true # set false if fails
+      hostIPC: true # set false if fails
       podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       strategy: deployment
       externalAttacher:
         enabled: true
@@ -53,6 +61,17 @@ spec:
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
+        # ### for the controller, manually mount from the remote NFS server on start,
+        # ### so it can dynamically create PVC (the "crude" part)
+        # ### ref: https://gist.github.com/admun/4372899f20421a947b7544e5fc9f9117
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["/bin/sh", "-c", "mkdir -p /mnt/nfs; mount ${SECRET_TRUENAS_IP}:/mnt/ssdpool/csi/nfs/v /mnt/nfs"]
+        #   preStop:
+        #     exec:
+        #       command: ["/bin/sh","-c","umount /mnt/nfs"]
+        resources:
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
@@ -61,9 +80,9 @@ spec:
           privileged: true
 
       tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/master
+        - key: node-role.kubernetes.io/master
           operator: Exists
+          # effect: NoSchedule
       nodeSelector:
         node-role.kubernetes.io/master: "true"
       affinity:
@@ -85,7 +104,7 @@ spec:
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
       podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
+        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       livenessProbe:
         enabled: true
       mount:
@@ -106,38 +125,21 @@ spec:
           # effect: NoSchedule
 
     storageClasses:
-      - name: csi-truenas-iscsi
+      - name: csi-truenas-nfs
         defaultClass: false
         reclaimPolicy: Delete # Delete, Retain
         volumeBindingMode: Immediate
         allowVolumeExpansion: true
         parameters:
-          # for block-based storage can be ext3, ext4, xfs
-          fsType: xfs
-        mountOptions: []
-
-      - name: csi-truenas-iscsi-retain
-        defaultClass: false
-        reclaimPolicy: Retain # Delete, Retain
-        volumeBindingMode: Immediate
-        allowVolumeExpansion: true
-        parameters:
-          # for block-based storage can be ext3, ext4, xfs
-          fsType: xfs
-        mountOptions: []
+          fsType: nfs
+        mountOptions:
+          - noatime
+          - nfsvers=4
+          - sec=sys
 
     volumeSnapshotClasses:
-      - name: csi-truenas-iscsi
+      - name: csi-truenas-nfs
         deletionPolicy: Delete # Delete, Retain
-        annotations:
-          velero.io/csi-volumesnapshot-class: "true"
-        labels:
-          velero.io/csi-volumesnapshot-class: "true"
-        # secrets:
-        #   snapshotter-secret:
-
-      - name: csi-truenas-iscsi-retain
-        deletionPolicy: Retain # Delete, Retain
         annotations:
           velero.io/csi-volumesnapshot-class: "true"
         labels:
