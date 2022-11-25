@@ -5,5 +5,5 @@ resources:
   - ./cloudnative-pg/
   - ./pgadmin/
   - ./redisinsight/
-  # - ./redis-operator/
+  - ./redis-operator/
   - ./namespaces.yaml
