@@ -27,9 +27,10 @@ spec:
                 - calico-apiserver
                 # - calico-system
                 # - cert-manager
+                - flux-system
                 - kube-node-lease
                 - kube-public
-                # - kube-system
+                - kube-system
                 # - metallb-system
                 - tigera-operator
       mutate:
