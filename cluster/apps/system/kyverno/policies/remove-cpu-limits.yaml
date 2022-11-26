@@ -26,6 +26,7 @@ spec:
                 kyverno.io/ignore: "true"
           - resources:
               namespaces:
+                - calico-apiserver
                 - calico-system
                 - flux-system
                 - kube-node-lease
