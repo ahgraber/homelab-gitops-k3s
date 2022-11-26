@@ -29,10 +29,12 @@ spec:
           - /bin/bash
           - -c
           - |-
-            until [ -f /snapshots/kopia.repository.f ]; do
-                printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
-                sleep 1
-            done
+            # until [ -f /snapshots/kopia.repository.f ]; do
+            #     printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
+            #     sleep 1
+            # done
+            printf "\e[1;32m%-6s\e[m\n" "Creating repo ..."                    && [[ ! -f /snapshots/kopia.repository.f ]] && kopia repository create filesystem --path=/snapshots
+            printf "\e[1;32m%-6s\e[m\n" "Connecting to repo ..."               && kopia repo connect filesystem --path=/snapshots --override-hostname=cluster --override-username=root
         volumeMounts:
           - name: snapshots
             mountPath: /snapshots
