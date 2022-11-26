@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   # renovate: datasource=docker image=rancher/system-upgrade-controller
   - https://github.com/rancher/system-upgrade-controller/releases/download/v0.10.0/crd.yaml
+  - ./namespace.yaml
