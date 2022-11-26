@@ -25,13 +25,11 @@ spec:
                 - Namespace
               names:
                 - calico-apiserver
-                # - calico-system
-                # - cert-manager
+                - calico-system
                 - flux-system
                 - kube-node-lease
                 - kube-public
                 - kube-system
-                # - metallb-system
                 - tigera-operator
       mutate:
         targets:
