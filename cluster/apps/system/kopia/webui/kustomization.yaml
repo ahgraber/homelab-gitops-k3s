@@ -2,15 +2,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ./configmap-repository.yaml
   - ./helm-release.yaml
   - ./ingressRoute.yaml
-configMapGenerator:
-  - name: kopia-config
-    namespace: system
-    files:
-      - ./config/repository.config
-generatorOptions:
-  disableNameSuffixHash: true
-commonLabels:
-  app.kubernetes.io/name: kopia
-  app.kubernetes.io/instance: kopia
