@@ -25,7 +25,7 @@ spec:
       remediateLastFailure: true
   values:
     crds:
-      enabled: true
+      enabled: false
 
     prometheus:
       podMonitor:
