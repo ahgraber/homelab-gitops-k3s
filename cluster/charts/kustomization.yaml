@@ -53,4 +53,4 @@ resources:
   - ./valheim-charts.yaml
   # - ./victoriametrics-charts.yaml
   - ./vmware-tanzu-charts.yaml # velero
-  - ./weave-gitops-charts.yaml
+  # - ./weave-gitops-charts.yaml
