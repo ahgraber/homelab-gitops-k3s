@@ -4,9 +4,9 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./ingressRoute.yaml
-namespace: system
 configMapGenerator:
   - name: kopia-config
+    namespace: system
     files:
       - ./config/repository.config
 generatorOptions:
