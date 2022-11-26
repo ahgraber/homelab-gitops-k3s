@@ -12,4 +12,4 @@ resources:
   - ./thanos/
   # # - ./uptimerobot-prometheus/
   # # - ./vector/
-  - ./namespace.yaml
+  # - ./namespace.yaml # in crds/kube-prometheus-stack
