@@ -27,6 +27,10 @@ spec:
           - resources:
               namespaces:
                 - calico-system
+                - flux-system
+                - kube-node-lease
+                - kube-public
+                - kube-system
                 - tigera-operator
           - resources:
               kinds: ["Pod"]
