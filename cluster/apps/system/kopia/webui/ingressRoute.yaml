@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: route-kopia
+  name: route-kopia2
   namespace: networking
 spec:
   entryPoints:
