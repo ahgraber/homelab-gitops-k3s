@@ -23,18 +23,17 @@ spec:
   #     retries: 5
   values:
     initContainers:
-      wait-for-repo:
+      init-repo:
         image: ghcr.io/onedr0p/kopia:0.12.1@sha256:ed13c180efbe3bbaf9101ebf6951666eddf9d97a08e695d366088fee9b60d508
+        env:
+          TZ: "${TIMEZONE}"
+          KOPIA_PASSWORD: "${SECRET_DEFAULT_PWD}"
         command:
           - /bin/bash
           - -c
           - |-
-            # until [ -f /snapshots/kopia.repository.f ]; do
-            #     printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
-            #     sleep 1
-            # done
-            printf "\e[1;32m%-6s\e[m\n" "Creating repo ..."                    && [[ ! -f /snapshots/kopia.repository.f ]] && kopia repository create filesystem --path=/snapshots
-            printf "\e[1;32m%-6s\e[m\n" "Connecting to repo ..."               && kopia repo connect filesystem --path=/snapshots --override-hostname=cluster --override-username=root
+            printf "\e[1;32m%-6s\e[m\n" "Ensuring repo exists..." && \
+            [[ ! -f /snapshots/kopia.repository.f ]] && kopia repository create filesystem --path=/snapshots
         volumeMounts:
           - name: snapshots
             mountPath: /snapshots
