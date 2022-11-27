@@ -38,11 +38,11 @@ spec:
               selector:
                 matchLabels:
                   job-name: "*"
-          - resources:
-              kinds: ["Pod"]
-              selector:
-                matchLabels:
-                  statefulset.kubernetes.io/pod-name: "*"
+          # - resources:
+          #     kinds: ["Pod"]
+          #     selector:
+          #       matchLabels:
+          #         statefulset.kubernetes.io/pod-name: "*"
 
       mutate:
         patchStrategicMerge:
