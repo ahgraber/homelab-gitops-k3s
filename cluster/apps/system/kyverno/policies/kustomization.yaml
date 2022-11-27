@@ -5,3 +5,4 @@ resources:
   - ./add-goldilocks-labels.yaml
   - ./exclude-cephfs-from-alerts.yaml
   - ./remove-cpu-limits.yaml
+  - ./unset-localpath-as-default.yaml
