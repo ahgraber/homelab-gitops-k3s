@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cnpg-basic-monitoring
-  namespace: <namespace>
+  namespace: postgres
   labels:
     cnpg.io/reload: ""
 data:
