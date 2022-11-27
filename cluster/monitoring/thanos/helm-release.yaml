@@ -40,7 +40,7 @@ spec:
       replicaLabels:
         - __replica__
       dnsDiscovery:
-        sidecarsService: kube-prometheus-stack-thanos-discovery
+        sidecarsService: kps-thanos-discovery
         sidecarsNamespace: monitoring
       ingress:
         enabled: false
@@ -104,7 +104,7 @@ spec:
       dnsDiscovery:
         enabled: true
       alertmanagers:
-        - http://kube-prometheus-stack-alertmanager.monitoring:9093
+        - http://kps-alertmanager.monitoring:9093
       # clusterName: home-ops
       extraFlags:
         - "--web.prefix-header=X-Forwarded-Prefix"
@@ -113,7 +113,7 @@ spec:
           - name: "PrometheusWatcher"
             rules:
               - alert: "PrometheusDown"
-                expr: absent(up{job="kube-prometheus-stack-prometheus"})
+                expr: absent(up{job="kps-prometheus"})
       ingress:
         enabled: false
       persistence:
