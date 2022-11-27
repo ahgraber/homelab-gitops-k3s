@@ -39,7 +39,8 @@ them.
 The Git repository contains the following directories under `cluster` and are ordered below by how
 Flux will apply them.
 
-- **base** directory is the entrypoint to Flux
+- **bootstrap** directory helps initialize Flux
+- **flux** directory installs Flux and defines macro dependencies
 - **charts** directory containing pointers to helm charts
 - **config** directory with cluster secrets and settings
 - **crds** directory containing custom resource definitions (CRDs) that need to exist globally in your
@@ -53,28 +54,29 @@ Flux will apply them.
 ```txt
 cluster
 ├── apps
-│   ├── data
 |   ├── flux-system
-|   ├── kube-system
+|   ├── monitoring
 │   ├── networking
 │   ├── security
-│   └── services
-├── base
-│   └── flux-system
+│   ├── services
+│   └── system
+├── bootstrap
 ├── charts
+├── config
 ├── core
-│   ├── cert-manager
+│   ├──
 |   ├── flux-system
 |   ├── kube-system
-|   ├── kube-vip
-│   ├── metallb-system
-│   ├── tigera-operator
-│   └── <storage classes>
-├──crds
-│   ├── cert-manager
-|   ├── kube-prometheus-stack
-|   ├── <networking>
-│   └── <storage classes>
+|   ├── networking
+|   |   ├── cert-manager
+|   |   ├── kube-vip
+│   |   ├── metallb-system
+│   |   └── tigera-operator
+│   └── storage
+|       └── <storage classes>
+├── crds
+├── flux
 └──monitoring
-    └── kube-prometheus-stack
+    ├── kube-prometheus-stack
+    └── ...
 ```
