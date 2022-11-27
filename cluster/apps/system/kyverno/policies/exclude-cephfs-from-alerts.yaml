@@ -3,6 +3,12 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: exclude-cephfs-from-alerts
+  annotations:
+    policies.kyverno.io/title: Exclude cephfs from alerts
+    policies.kyverno.io/subject: PersistentVolumeClaims
+    policies.kyverno.io/description: >-
+      This policy adds the label 'excluded_from_alerts: "true"' to PVCs backed by cephfs. This is needed because cephfs does not track inode use appropriately which will trigger alerts.
+
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
