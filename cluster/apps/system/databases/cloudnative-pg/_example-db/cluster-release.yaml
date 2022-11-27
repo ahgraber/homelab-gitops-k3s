@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: <app>-cnpgdb
+  name: &name <app>-cnpgdb
   namespace: &namespace postgres
 spec:
   interval: 15m
@@ -30,14 +30,14 @@ spec:
       - apiVersion: postgresql.cnpg.io/v1
         kind: Cluster
         metadata:
-          name: postgres
+          name: *name
           namespace: *namespace
           annotations:
             kyverno.io/ignore: "true"
         spec:
           description: "Example of cluster"
           imageName: ghcr.io/cloudnative-pg/postgresql:14.5
-          instances: 3
+          instances: 1
           startDelay: 300
           stopDelay: 300
           primaryUpdateStrategy: unsupervised
@@ -53,8 +53,8 @@ spec:
 
           bootstrap:
             initdb:
-              database: app
-              owner: app
+              database: <app>
+              owner: <app>
               secret:
                 name: <app>-user-secret
             # # Alternative bootstrap method: start from a backup
@@ -63,26 +63,27 @@ spec:
             #     name: <app>-backup
 
           superuserSecret:
-            # name: <app>-superuser-secret
-            name: postgres-superuser
+            name: postgres-superuser-secret
 
           storage:
-            size: 20Gi
+            size: 5Gi
             storageClass: ceph-block-retain
 
           backup:
             retentionPolicy: 30d
             barmanObjectStore:
-              destinationPath: s3://postgres/
+              destinationPath: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc
               # serverName: postgres-v1
-              endpointURL: ${SECRET_S3_ENDPOINT}
+              # endpointURL: ${SECRET_S3_ENDPOINT}
               s3Credentials:
                 accessKeyId:
-                  name: s3-secret
-                  key: ACCESS_KEY_ID
+                  # created by rook-ceph ObjectBucketClaim
+                  name: db-ceph-bucket
+                  key: AWS_ACCESS_KEY_ID
                 secretAccessKey:
-                  name: s3-secret
-                  key: ACCESS_SECRET_KEY
+                  # created by rook-ceph ObjectBucketClaim
+                  name: db-ceph-bucket
+                  key: AWS_SECRET_ACCESS_KEY
               wal:
                 compression: bzip2
                 maxParallel: 8
@@ -108,3 +109,26 @@ spec:
           nodeMaintenanceWindow:
             inProgress: false
             reusePVC: false
+
+  valuesFrom:
+    # created by rook-ceph in ObjectBucketClaim thanos-ceph-bucket
+    - targetPath: resources.0.spec.backup.barmanObjectStore.destinationPath
+      kind: ConfigMap
+      name: db-ceph-bucket
+      valuesKey: BUCKET_NAME
+    - targetPath: resources.0.spec.backup.barmanObjectStore.endpointURL
+      kind: ConfigMap
+      name: db-ceph-bucket
+      valuesKey: BUCKET_HOST
+    # - targetPath: resources.0.spec.backup.barmanObjectStore.<region>
+    #   kind: ConfigMap
+    #   name: db-ceph-bucket
+    #   valuesKey: BUCKET_REGION
+    # - targetPath: resources.0.spec.backup.barmanObjectStore.s3Credentials.accessKeyId
+    #   kind: Secret
+    #   name: db-ceph-bucket
+    #   valuesKey: AWS_ACCESS_KEY_ID
+    # - targetPath: resources.0.spec.backup.barmanObjectStore.s3Credentials.secretAccessKey
+    #   kind: Secret
+    #   name: db-ceph-bucket
+    #   valuesKey: AWS_SECRET_ACCESS_KEY

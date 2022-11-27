@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: postgres-scheduled-backup
+  name: &name app-cnpgdb-backup
   namespace: &namespace postgres
 spec:
   interval: 15m
@@ -28,7 +28,7 @@ spec:
       - apiVersion: postgresql.cnpg.io/v1
         kind: ScheduledBackup
         metadata:
-          name: <app>-backup
+          name: *name
           namespace: *namespace
         spec:
           # schedule: "@weekly"
@@ -36,4 +36,4 @@ spec:
           immediate: true
           backupOwnerReference: self
           cluster:
-            name: <app>-cnpgdb
+            name: app-cnpgdb
