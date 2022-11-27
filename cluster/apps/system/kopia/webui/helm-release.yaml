@@ -32,8 +32,10 @@ spec:
           - /bin/bash
           - -c
           - |-
-            printf "\e[1;32m%-6s\e[m\n" "Ensuring repo exists..." && \
-            [[ ! -f /snapshots/kopia.repository.f ]] && kopia repository create filesystem --path=/snapshots
+            until [ -f /snapshots/kopia.repository.f ]; do
+                printf "\e[1;32m%-6s\e[m\n" "Waiting for the Kopia repo to become ready ..."
+                sleep 1
+            done
         volumeMounts:
           - name: snapshots
             mountPath: /snapshots

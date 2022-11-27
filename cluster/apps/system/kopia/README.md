@@ -22,8 +22,8 @@ Kopia is a storage-agnostic fast and secure open-source backup/restore tool.
 ## Kopia on K8s
 
 Since `kopia` is deployed as a container, it can only back up volumes that are mounted to the container.
-The webui, therefore, is generally not used to set up snapshots,
-but rather simply for snapshot introspection and review.
+The webui, therefore, is not used to set up snapshots, but simply for snapshot introspection and review.
+Therefore, the should not be expected to start unless the repository has been established by a snapshot job.
 
 See the [poor-man's backup](#poor-mans-backup) solution for automated snapshotting of PVCs.
 
