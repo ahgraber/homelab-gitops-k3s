@@ -9,7 +9,7 @@ metadata:
     policies.kyverno.io/description: |
       This policy creates a Kopia snapshot CronJob for labeled PersistentVolumeClaims.
       The following label on PVCs are required for this to run:
-        - snapshot.home.arpa/enabled
+        - snapshot.home.arpa/enabled='true'
 spec:
   generateExistingOnPolicyUpdate: true
   mutateExistingOnPolicyUpdate: true
