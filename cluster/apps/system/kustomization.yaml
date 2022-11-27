@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./databases/
   - ./descheduler/
-  # - ./kopia/
+  - ./kopia/
   - ./kube-cleanup-operator/
   - ./kyverno/
   - ./node-feature-discovery/
