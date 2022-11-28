@@ -8,3 +8,4 @@ resources:
   - ./security/
   - ./services/
   - ./system/
+  - ./namespaces.yaml
