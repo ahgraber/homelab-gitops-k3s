@@ -29,7 +29,9 @@ spec:
           imagePullPolicy: IfNotPresent
 
           env:
-            RITRUSTEDORIGINS: https://${SECRET_DOMAIN}
+            - name: RITRUSTEDORIGINS
+              value: https://${SECRET_DOMAIN}
+
           ports:
             - containerPort: 8001
               protocol: TCP
