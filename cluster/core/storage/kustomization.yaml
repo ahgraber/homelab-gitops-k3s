@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./democratic-csi/
   - ./rook-ceph/
-  - ./storage-class-local.yaml # overwrite local-path StorageClass to set as NOT default
+  - ./storageclass-local.yaml # overwrite local-path StorageClass to set as NOT default
