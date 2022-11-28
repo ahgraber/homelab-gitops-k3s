@@ -1,5 +1,9 @@
 # kopia
 
+## Policies
+
+[Policies](policies/) rely on Kyverno to add the `snapshot.home.arpa/enabled='true'` label that
+
 ## Setup CronJob repository replication
 
 This will set up replication to have your backups sent to a [backblaze](https://www.backblaze.com/) b2 bucket.

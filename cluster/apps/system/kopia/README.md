@@ -29,18 +29,15 @@ See the [poor-man's backup](#poor-mans-backup) solution for automated snapshotti
 
 ### Poor-Man's Backup
 
-The "Poor-Man's Backup" solution relies on Kyverno
+The "Poor-Man's Backup" solution depends on Kyverno
 to automatically generate cronjobs that will run kopia snapshots
 on PVCs with the label `snapshot.home.arpa/enabled="true"`
 
-1. Kyvero identifies PVCs with the appropriate labels and generates a cronjob
+1. The [snapshot-cronjob-controller.yaml](./jobs/snapshot-cronjob-controller.yaml) identifies PVCs
+   with the appropriate labels and generates a cronjob
 2. The cronjob runs daily and creates a kopia snapshot
 3. Kopia snapshots are saved to local NAS on an NFS share
 4. Kopia snapshots are [backed up](#offsite-backups) to an offsite, s3-compatible blob
-
-#### Snapshots
-
-See kyverno policy [snapshot-cronjob-controller.yaml](./jobs/snapshot-cronjob-controller.yaml)
 
 #### Offsite Backups
 
