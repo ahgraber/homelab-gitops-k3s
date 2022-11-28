@@ -26,6 +26,11 @@ spec:
       repository: redislabs/redisinsight
       tag: latest
       imagePullPolicy: IfNotPresent
+    env:
+      RIHOST: 0.0.0.0
+      RIPORT: 8001
+      RIHOMEDIR: /db
+      RILOGDIR: /db
 
     service:
       main:
