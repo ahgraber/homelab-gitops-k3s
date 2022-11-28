@@ -28,6 +28,8 @@ spec:
           tag: 1.13.1
           imagePullPolicy: IfNotPresent
 
+          env:
+            RITRUSTEDORIGINS: https://${SECRET_DOMAIN}
           ports:
             - containerPort: 8001
               protocol: TCP
