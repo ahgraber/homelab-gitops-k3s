@@ -26,11 +26,6 @@ data:
               resources:
                 requests:
                   storage: 1Gi
-              ## for attaching retained PV
-              # selector:
-              #   matchLabels:
-              #     app.kubernetes.io/name: alertmanager
-              #     app.kubernetes.io/instance: kps-alertmanager
         resources:
           requests:
             cpu: 23m
