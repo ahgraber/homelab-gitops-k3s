@@ -24,15 +24,6 @@ data:
       prometheus:
         monitor:
           enabled: true
-          # additionalLabels: {}
-          # namespace: ""
-          # jobLabel: ""
-          # interval: ""
-          # scrapeTimeout: ""
-          # proxyUrl: ""
-          # selectorOverride: {}
-          # honorLabels: false
-          # metricRelabelings: []
           relabelings:
             - action: replace
               regex: (.*)
@@ -58,8 +49,3 @@ data:
       tolerations:
         - effect: NoSchedule
           operator: Exists
-        # - effect: NoExecute
-        #   operator: Exists
-        # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
-        #   operator: Exists

@@ -31,11 +31,6 @@ data:
       tolerations:
         - effect: NoSchedule
           operator: Exists
-        # - effect: NoExecute
-        #   operator: Exists
-        # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
-        #   operator: Exists
 
       resources:
         requests:
