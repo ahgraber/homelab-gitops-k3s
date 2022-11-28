@@ -32,11 +32,11 @@ spec:
               protocol: TCP
 
           resources:
-            limits:
-              memory: 1Gi
             requests:
               cpu: 50m
               memory: 204Mi
+            limits:
+              memory: 1Gi
           volumeMounts:
             - name: db
               mountPath: /db

@@ -74,11 +74,12 @@ spec:
       # image: quay.io/opstree/redis-exporter
       imagePullPolicy: IfNotPresent
       resources: # for redis exporter
-        limits:
-          memory: 128Mi
         requests:
           cpu: 100m
           memory: 128Mi
+        limits:
+          memory: 128Mi
+
       # env: # for redis exporter
       # - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
       #   value: "true"

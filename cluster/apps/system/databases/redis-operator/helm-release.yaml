@@ -8,8 +8,8 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://github.com/cloudnative-pg/charts
-      chart: redis
+      # renovate: registryUrl=https://ot-container-kit.github.io/helm-charts chart=redis-operator
+      chart: redis-operator
       version: 0.12.0
       sourceRef:
         kind: HelmRepository
@@ -46,10 +46,10 @@ spec:
     serviceAccountName: redis-operator
 
     resources:
-      limits:
-        memory: 500Mi
       requests:
         cpu: 50m
+        memory: 500Mi
+      limits:
         memory: 500Mi
 
     nodeSelector:

@@ -1,5 +1,13 @@
 # Redis
 
+Redis is an in-memory data structure store, used as a distributed, in-memory key–value database,
+cache and message broker, with optional durability.
+
+## Redis Operator
+
+The OT-container-kit Redis operator supports HA in a leader/follower arrangement.
+For Redis Sentinel, use the Bitnami helm chart
+
 ## Redis Sentinel Configuration (bitnami chart)
 
 1. Create base64 encoded Redis configuation
