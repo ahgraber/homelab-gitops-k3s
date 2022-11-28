@@ -12,4 +12,3 @@ resources:
   - ./thanos/
   # # - ./uptimerobot-prometheus/
   # # - ./vector/
-  - ./namespace.yaml

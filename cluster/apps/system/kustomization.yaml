@@ -11,4 +11,3 @@ resources:
   - ./reflector/
   - ./reloader/
   - ./system-upgrade-controller/ # or manage w/ ansible
-  - ./namespace.yaml

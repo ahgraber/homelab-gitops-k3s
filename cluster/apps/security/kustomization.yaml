@@ -8,4 +8,3 @@ resources:
   # - ./oauth2-proxy/
   - ./rbac-manager/
   # - ./traefik-forward-auth/
-  - ./namespace.yaml
