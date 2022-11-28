@@ -24,13 +24,13 @@ spec:
   values:
     image:
       repository: redislabs/redisinsight
-      tag: v1.13.1
+      tag: 1.13.1
       imagePullPolicy: IfNotPresent
     # env:
     #   - name: RIHOST
-    #     value: 0.0.0.0
+    #     value: "0.0.0.0"
     #   - name: RIPORT
-    #     value: 8001
+    #     value: "8001"
     #   # - name: RIHOMEDIR
     #   #   value: /db
     #   # - name: RILOGDIR
