@@ -6,4 +6,3 @@ resources:
   - ./metallb/
   - ./traefik/
   - ./wildcard-certificate/
-  # - ./namespace.yaml # created in /core
