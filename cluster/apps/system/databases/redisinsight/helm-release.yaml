@@ -46,7 +46,7 @@ spec:
         enabled: true
         mountPath: /db
         accessMode: ReadWriteOnce
-        # size: 1Gi
+        size: 1Gi
 
     resources:
       requests:
