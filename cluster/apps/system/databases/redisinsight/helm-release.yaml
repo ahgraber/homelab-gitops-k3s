@@ -27,10 +27,14 @@ spec:
       tag: latest
       imagePullPolicy: IfNotPresent
     env:
-      RIHOST: 0.0.0.0
-      RIPORT: 8001
-      RIHOMEDIR: /db
-      RILOGDIR: /db
+      - name: RIHOST
+        value: 0.0.0.0
+      - name: RIPORT
+        value: 8001
+      # - name: RIHOMEDIR
+      #   value: /db
+      # - name: RILOGDIR
+      #   value: /db
 
     service:
       main:
