@@ -1,16 +1,25 @@
 # Monitoring and Observability
 
 - [Monitoring and Observability](#monitoring-and-observability)
-  - [Prometheus](#prometheus)
   - [Grafana](#grafana)
+  - [Prometheus](#prometheus)
+  - [Thanos](#thanos)
   - [Loki](#loki)
-
-## Prometheus
 
 ## Grafana
 
---------
+Provides dashboards.  Queries from Prometheus (or Thanos)
+
+## Prometheus
+
+Time-series database for metrics.
+Exporters / serviceMonitors ship metrics to Prometheus.
+
+## Thanos
+
+Long-term storage and compaction of metrics (in an s3 bucket).  Use if Prometheus gets expensive.
 
 ## Loki
 
-[ref](https://github.com/cablespaghetti/k3s-monitoring)
+Prometheus, but for logs.
+Currently not used.
