@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./db/
   - ./redis/
-  # - ./configmap-nginx.yaml
-  # - ./helm-release.yaml
-  # - ./ingressRoute.yaml
-  # - ./secret-linkace.sops.yaml
+  - ./configmap-nginx.yaml
+  - ./helm-release.yaml
+  - ./ingressRoute.yaml
+  - ./secret-linkace.sops.yaml
