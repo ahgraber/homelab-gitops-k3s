@@ -1,0 +1,9 @@
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: linkace-db-ceph-bucket
+  namespace: postgres
+spec:
+  generateBucketName: linkace-db
+  storageClassName: ceph-bucket
