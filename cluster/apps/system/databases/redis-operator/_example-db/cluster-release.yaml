@@ -33,9 +33,9 @@ spec:
       clusterVersion: v7
       clusterSize: 3
 
-      # redisSecret:
-      #   secretName: redis-secret
-      #   secretKey: password
+      redisSecret:
+        secretName: <app>-redis-secret
+        secretKey: password
 
       leader:
         replicas: 3
