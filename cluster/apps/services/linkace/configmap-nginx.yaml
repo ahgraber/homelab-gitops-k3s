@@ -60,7 +60,7 @@ data:
             fastcgi_pass 127.0.0.1:9000;
 
             try_files $uri /index.php;
-            include fastcgi.conf;
+            include /etc/nginx/fastcgi.conf;
             fastcgi_keep_conn on;
             fastcgi_intercept_errors on;
             fastcgi_index index.php;
