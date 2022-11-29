@@ -22,6 +22,9 @@ spec:
   #   remediation:
   #     retries: 5
   values:
+    global:
+      nameOverride: linkace
+
     initContainers:
       init-shared-vol:
         image: linkace/linkace:v1.10.5
@@ -70,7 +73,7 @@ spec:
 
     additionalContainers:
       # recursively uses main container's template
-      - name: linkace-php
+      - name: linkace
         image: linkace/linkace
         tag: v1.10.5
 
