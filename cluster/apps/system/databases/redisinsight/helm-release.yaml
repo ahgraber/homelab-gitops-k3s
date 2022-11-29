@@ -26,7 +26,8 @@ spec:
       repository: redislabs/redisinsight
       tag: 1.13.1
 
-    # env:
+    env:
+      RITRUSTEDORIGINS: "https://redisinsight.${SECRET_DOMAIN}"
     #   RIHOST: "0.0.0.0"
     #   RIPORT: "8001"
     #   RIHOMEDIR: /db
@@ -34,6 +35,10 @@ spec:
 
     service:
       main:
+        # name should not be 'redisinsight'  since the service creates environment variables
+        # that conflicts with redisinsight application's environment variables:
+        # `REDISINSIGHT_HOST` and `REDISINSIGHT_PORT`
+        nameOverride: redisinsight-svc
         ports:
           http:
             port: 80
