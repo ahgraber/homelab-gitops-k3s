@@ -7,6 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/instance: linkace
     app.kubernetes.io/name: nginx
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   nginx.conf: |
     server {

@@ -6,6 +6,8 @@ metadata:
   namespace: postgres
   labels:
     cnpg.io/reload: ""
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   custom-queries: |
     backends:

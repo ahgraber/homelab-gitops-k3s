@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: ceph-values-object
   namespace: rook-ceph
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   values.yaml: |
     cephObjectStores:
