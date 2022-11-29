@@ -19,6 +19,8 @@ secret token.
    metadata:
      name: hammond-secret
      namespace: services
+     annotations:
+       reloader.stakater.com/match: "true"
    stringData:
      JWT_SECRET: < some very strong secret - `openssl rand -base64 36` >
    ```

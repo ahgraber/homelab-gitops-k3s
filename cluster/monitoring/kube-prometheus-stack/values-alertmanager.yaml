@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: values-alertmanager
   namespace: monitoring
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   values.yaml: |
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml

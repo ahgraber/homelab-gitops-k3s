@@ -5,6 +5,8 @@ kind: ConfigMap
 metadata:
   name: cluster-settings
   namespace: flux-system
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   TIMEZONE: "${TIMEZONE}"
   LB_INGRESS: ${SETTINGS_LB_INGRESS}
