@@ -32,11 +32,6 @@ spec:
   values:
     fullnameOverride: kps
 
-    annotations:
-      reloader.stakater.com/search: "true"
-      # configmap.reloader.stakater.com/reload:
-      #   "values-alertmanager, values-grafana, values-kube-state-metrics, values-node-exporter, values-prometheus-exporters, values-prometheus-operator, values-prometheus, values-rules"
-
     global:
       rbac:
         create: true
