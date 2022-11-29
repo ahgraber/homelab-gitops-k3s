@@ -24,6 +24,11 @@ spec:
   values:
     global:
       nameOverride: linkace
+      annotations:
+        reloader.stakater.com/search: "true"
+        # configmap.reloader.stakater.com/reload: linkace-nginx-config
+        # configmap.reloader.stakater.com/reload: linkace-config
+        # secret.reloader.stakater.com/reload: linkace-secret
 
     initContainers:
       init-shared-vol:
@@ -64,7 +69,7 @@ spec:
         type: configMap
         name: linkace-nginx-config
         subPath: nginx.conf
-        mountPath: /etc/nginx/http.d/default.conf
+        mountPath: /etc/nginx/conf.d/linkace.conf
         readOnly: true
       share:
         enabled: true
