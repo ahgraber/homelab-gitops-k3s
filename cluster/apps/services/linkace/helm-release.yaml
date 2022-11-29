@@ -71,6 +71,10 @@ spec:
         subPath: env
         mountPath: /app/.env
         readOnly: false
+      share:
+        enabled: true
+        type: emptyDir
+        # mountPath: /app/public
 
     resources:
       requests:
