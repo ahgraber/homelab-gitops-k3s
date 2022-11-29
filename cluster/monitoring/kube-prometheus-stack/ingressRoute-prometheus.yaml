@@ -17,7 +17,6 @@ spec:
         - name: rfc1918
         # - name: basicauth
       services:
-        # - name: prometheus-operated
         - name: kps-prometheus
           namespace: monitoring
           port: 9090
