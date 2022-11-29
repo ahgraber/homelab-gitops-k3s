@@ -81,7 +81,8 @@ spec:
 
     additionalContainers:
       # recursively uses main container's template
-      - image: nginx/nginx
+      - name: nginx
+        image: nginx/nginx
         tag: latest
 
         env:
