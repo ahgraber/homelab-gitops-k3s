@@ -13,9 +13,9 @@ export PROJECT_DIR SOPS_AGE_KEY_FILE AGE_PUBLIC_KEY
 
 main() {
 
-  # assumes files requiring substitution will be named ".yml.tmpl" or ".yaml.tmpl"
+  # assumes files requiring encryption will be named ".sops.yaml"
   templates=()
-  while IFS='' read -r line; do templates+=("${line}"); done < <(fd ".sops.y[a]ml$" "${PROJECT_DIR}")
+  while IFS='' read -r line; do templates+=("${line}"); done < <(fd ".sops.yaml$" "${PROJECT_DIR}/cluster")
 
   echo "Encrypting: "
   for tmpl in "${templates[@]}"; do
