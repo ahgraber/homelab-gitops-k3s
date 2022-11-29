@@ -54,3 +54,7 @@ spec:
         memory: 204Mi
       limits:
         memory: 1024Mi
+
+    annotations:
+      reloader.stakater.com/search: "true"
+      # secret.reloader.stakater.com/reload: "pgadmin-secret"

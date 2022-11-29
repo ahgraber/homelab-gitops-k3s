@@ -7,6 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/name: hammond
     app.kubernetes.io/instance: hammond
+  annotations:
+    reloader.stakater.com/search: "true"
 spec:
   replicas: 1
   selector:
@@ -20,12 +22,6 @@ spec:
       labels:
         app.kubernetes.io/name: hammond
         app.kubernetes.io/instance: hammond
-      annotations:
-        backup.velero.io/backup-volumes: hammond-data
-        # pre.hook.backup.velero.io/container: fsfreeze
-        # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
-        # post.hook.backup.velero.io/container: fsfreeze
-        # post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
     spec:
       containers:
         # ref: https://github.com/akhilrex/hammond
