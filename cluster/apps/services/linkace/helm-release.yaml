@@ -24,7 +24,7 @@ spec:
   values:
     initContainers:
       init-shared-vol:
-        image: linkace/linkace:1.10.5
+        image: linkace/linkace:v1.10.5
         command:
           - /bin/bash
           - -c
@@ -36,7 +36,7 @@ spec:
 
     image:
       repository: linkace/linkace
-      tag: 1.5.2
+      tag: v1.10.5
 
     annotations:
       reloader.stakater.com/search: "true"
