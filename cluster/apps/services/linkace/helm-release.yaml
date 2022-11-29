@@ -35,15 +35,14 @@ spec:
             mountPath: /share
 
     ### main image
-    image: nginx
-    tag: stable
-
-    env:
-      NGINX_HOST: "linkace.${SECRET_DOMAIN}"
-
+    image:
+      repository: nginx
+      tag: stable
     annotations:
       reloader.stakater.com/search: "true"
       # configmap.reloader.stakater.com/reload: linkace-nginx-config
+    env:
+      NGINX_HOST: "linkace.${SECRET_DOMAIN}"
 
     service:
       main:
