@@ -70,7 +70,7 @@ spec:
 
     additionalContainers:
       # recursively uses main container's template
-      - name: linkace
+      - name: linkace-php
         image: linkace/linkace
         tag: v1.10.5
 
