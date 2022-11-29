@@ -26,7 +26,7 @@ spec:
       init-shared-vol:
         image: linkace/linkace:v1.10.5
         command:
-          - /bin/bash
+          - /bin/sh
           - -c
           - |-
             cp -r /app/public/. /share
