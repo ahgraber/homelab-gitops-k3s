@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: values-node-exporter
   namespace: monitoring
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   values.yaml: |
     nodeExporter:

@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: cluster-settings
   namespace: flux-system
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   TIMEZONE: "America/New_York"
   # IP reservations

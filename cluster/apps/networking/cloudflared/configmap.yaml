@@ -10,6 +10,8 @@ metadata:
   namespace: networking
   labels:
     app.kubernetes.io/name: cloudflared
+  annotations:
+    reloader.stakater.com/match: "true"
 data:
   config.yaml: |
     # Name of the tunnel you want to run
