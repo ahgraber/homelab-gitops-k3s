@@ -9,13 +9,14 @@ export PROJECT_DIR=$(git rev-parse --show-toplevel)
 
 main() {
 
-  # assumes files requiring substitution will be named ".yml.tmpl" or ".yaml.tmpl"
+  # assumes files requiring substitution will be named or ".yaml.tmpl"
   templates=()
-  while IFS='' read -r line; do templates+=("${line}"); done < <(fd ".y[a]ml.tmpl" "${PROJECT_DIR}")
+  while IFS='' read -r line; do templates+=("${line}"); done < <(fd ".yaml.tmpl$" "${PROJECT_DIR}/cluster")
 
   echo "Substituting: "
   for tmpl in "${templates[@]}"; do
-    rename="${tmpl/ml.tmpl/ml}"
+    # remove final '.tmpl' extension
+    rename="${tmpl/yaml.tmpl/yaml}"
     [[ -f "${rename}" ]] && rm "${rename}"
     envsubst <"${tmpl}" >"${rename}"
     echo "${tmpl} --> ${rename}"
