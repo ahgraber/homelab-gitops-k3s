@@ -32,9 +32,11 @@ spec:
       imagePullPolicy: IfNotPresent
       clusterVersion: v7
       clusterSize: 3
+
       # redisSecret:
       #   secretName: redis-secret
       #   secretKey: password
+
       leader:
         replicas: 3
         serviceType: ClusterIP
