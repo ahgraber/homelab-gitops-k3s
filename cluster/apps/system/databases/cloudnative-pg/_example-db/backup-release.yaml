@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &name app-cnpgdb-backup
+  name: &name <app>-cnpgdb-backup
   namespace: &namespace postgres
 spec:
   interval: 15m
@@ -36,4 +36,4 @@ spec:
           immediate: true
           backupOwnerReference: self
           cluster:
-            name: app-cnpgdb
+            name: <app>-cnpgdb

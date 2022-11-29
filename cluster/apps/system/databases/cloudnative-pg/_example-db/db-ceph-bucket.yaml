@@ -5,5 +5,5 @@ metadata:
   name: <app>-db-ceph-bucket
   namespace: postgres
 spec:
-  generateBucketName: app-db
+  generateBucketName: <app>-db
   storageClassName: ceph-bucket
