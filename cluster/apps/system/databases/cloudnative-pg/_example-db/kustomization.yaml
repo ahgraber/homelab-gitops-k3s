@@ -5,5 +5,4 @@ resources:
   - ./backup.yaml
   - ./db-ceph-bucket.yaml
   - ./cluster.yaml
-  - ./secret-s3.sops.yaml
   - ./secret-user.sops.yaml
