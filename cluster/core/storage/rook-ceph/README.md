@@ -68,9 +68,9 @@ kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
 
 ```sh
 ceph
-dashboard set-alertmanager-api-host 'http://alertmanager-operated.monitoring.svc:9093'
+dashboard set-alertmanager-api-host 'http://kps-alertmanager.monitoring.svc:9093'
 dashboard set-alertmanager-api-ssl-verify False
-dashboard set-prometheus-api-host 'http://prometheus-operated.monitoring.svc:9090'
+dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc:9090'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
