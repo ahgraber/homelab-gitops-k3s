@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   - ./cloudnative-pg/
   - ./pgadmin/
-  # - ./redisinsight/
+  - ./redisinsight/
   - ./redis-operator/
   - ./namespaces.yaml
