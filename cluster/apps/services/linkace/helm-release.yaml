@@ -34,18 +34,16 @@ spec:
           - name: share
             mountPath: /share
 
-    image:
-      repository: linkace/linkace
-      tag: v1.10.5
+    ### main image
+    image: nginx
+    tag: stable
+
+    env:
+      NGINX_HOST: "linkace.${SECRET_DOMAIN}"
 
     annotations:
       reloader.stakater.com/search: "true"
-      # configmap.reloader.stakater.com/reload: linkace-config
-      # secret.reloader.stakater.com/reload: linkace-secret
-
-    # env:
-    #   DB_PASSWORD: "${TIMEZONE}"
-    #   REDIS_PASSWORD: "${SECRET_DEFAULT_PWD}"
+      # configmap.reloader.stakater.com/reload: linkace-nginx-config
 
     ingress:
       main:
@@ -53,72 +51,43 @@ spec:
 
     service:
       main:
-        enabled: false
-
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
+        ports:
+          http:
+            port: 8080
+            targetPort: 80
 
     persistence:
-      config:
+      nginx:
         enabled: true
-        type: secret
-        name: linkace-secret
-        subPath: env
-        mountPath: /app/.env
-        readOnly: false
+        type: configMap
+        name: linkace-nginx-config
+        subPath: nginx.conf
+        mountPath: /etc/nginx/nginx.conf
+        readOnly: true
       share:
         enabled: true
         type: emptyDir
-        # mountPath: /app/public
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 100Mi
-      limits:
-        memory: 500Mi
+        mountPath: /app/public
 
     additionalContainers:
       # recursively uses main container's template
-      - name: nginx
-        image: nginx
-        tag: stable
-
-        env:
-          NGINX_HOST: "linkace.${SECRET_DOMAIN}"
+      - name: linkace
+        image: linkace/linkace
+        tag: v1.10.5
 
         annotations:
           reloader.stakater.com/search: "true"
-          # configmap.reloader.stakater.com/reload: linkace-nginx-config
-
-        ingress:
-          main:
-            enabled: false
-
-        service:
-          main:
-            ports:
-              http:
-                port: 8080
-                targetPort: 80
+          # configmap.reloader.stakater.com/reload: linkace-config
+          # secret.reloader.stakater.com/reload: linkace-secret
 
         persistence:
-          nginx:
+          config:
             enabled: true
-            type: configMap
-            name: linkace-nginx-config
-            subPath: nginx.conf
-            mountPath: /etc/nginx/nginx.conf
-            readOnly: true
-          share:
-            enabled: true
-            type: emptyDir
-            mountPath: /app/public
+            type: secret
+            name: linkace-secret
+            subPath: env
+            mountPath: /app/.env
+            readOnly: false
 
         resources:
           requests:
