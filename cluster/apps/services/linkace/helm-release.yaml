@@ -69,43 +69,43 @@ spec:
 
     additionalContainers:
       # recursively uses main container's template
-      image: nginx/nginx
-      tag: latest
+      - image: nginx/nginx
+        tag: latest
 
-      env:
-        NGINX_HOST: "linkace.${SECRET_DOMAIN}"
+        env:
+          NGINX_HOST: "linkace.${SECRET_DOMAIN}"
 
-      annotations:
-        reloader.stakater.com/search: "true"
-        # configmap.reloader.stakater.com/reload: linkace-nginx-config
+        annotations:
+          reloader.stakater.com/search: "true"
+          # configmap.reloader.stakater.com/reload: linkace-nginx-config
 
-      ingress:
-        main:
-          enabled: false
+        ingress:
+          main:
+            enabled: false
 
-      service:
-        main:
-          ports:
-            http:
-              port: 8080
-              targetPort: 80
+        service:
+          main:
+            ports:
+              http:
+                port: 8080
+                targetPort: 80
 
-      persistence:
-        nginx:
-          enabled: true
-          type: configMap
-          name: linkace-nginx-config
-          subPath: nginx.conf
-          mountPath: /etc/nginx/nginx.conf
-          readOnly: true
-        share:
-          enabled: true
-          type: emptyDir
-          mountPath: /app/public
+        persistence:
+          nginx:
+            enabled: true
+            type: configMap
+            name: linkace-nginx-config
+            subPath: nginx.conf
+            mountPath: /etc/nginx/nginx.conf
+            readOnly: true
+          share:
+            enabled: true
+            type: emptyDir
+            mountPath: /app/public
 
-      resources:
-        requests:
-          cpu: 100m
-          memory: 100Mi
-        limits:
-          memory: 500Mi
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            memory: 500Mi
