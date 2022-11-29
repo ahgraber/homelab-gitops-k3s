@@ -86,8 +86,8 @@ spec:
     additionalContainers:
       # recursively uses main container's template
       - name: nginx
-        image: nginx/nginx
-        tag: latest
+        image: nginx
+        tag: stable
 
         env:
           NGINX_HOST: "linkace.${SECRET_DOMAIN}"
