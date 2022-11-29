@@ -29,7 +29,7 @@ spec:
       extraArgs:
         storage: prometheus
         prometheus-address: |-
-          http://prometheus-operated.monitoring.svc.cluster.local:9090
+          http://kps-prometheus.monitoring.svc.cluster.local:9090
 
       resources:
         requests:

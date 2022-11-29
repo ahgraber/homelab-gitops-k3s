@@ -17,7 +17,6 @@ spec:
         - name: rfc1918
         # - name: basicauth
       services:
-        # - name: alertmanager-operated
         - name: kps-alertmanager
           namespace: monitoring
           port: 9093

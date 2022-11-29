@@ -71,7 +71,7 @@ spec:
             type: prometheus
             access: proxy
             url: http://thanos-query.monitoring.svc.cluster.local:9090
-            # url: http://prometheus-operated.monitoring:9090/
+            # url: http://kps-prometheus.monitoring:9090/
             isDefault: true
         # deleteDatasources:
         #   - name: Loki
