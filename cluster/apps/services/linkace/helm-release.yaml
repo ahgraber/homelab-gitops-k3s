@@ -51,6 +51,10 @@ spec:
       main:
         enabled: false
 
+    service:
+      main:
+        enabled: false
+
     persistence:
       config:
         enabled: true
