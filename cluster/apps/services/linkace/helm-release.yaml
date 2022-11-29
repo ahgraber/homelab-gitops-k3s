@@ -55,6 +55,14 @@ spec:
       main:
         enabled: false
 
+    probes:
+      liveness:
+        enabled: false
+      readiness:
+        enabled: false
+      startup:
+        enabled: false
+
     persistence:
       config:
         enabled: true
