@@ -69,7 +69,7 @@ spec:
         type: configMap
         name: linkace-nginx-config
         subPath: nginx.conf
-        mountPath: /etc/nginx/conf.d/linkace.conf
+        mountPath: /etc/nginx/conf.d/default.conf
         readOnly: true
       share:
         enabled: true
