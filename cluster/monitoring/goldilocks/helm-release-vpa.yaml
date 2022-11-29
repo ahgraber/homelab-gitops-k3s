@@ -49,3 +49,6 @@ spec:
       enabled: false
       cleanupOnDelete:
         enabled: true
+
+    annotations:
+      reloader.stakater.com/search: "true"

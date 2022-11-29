@@ -38,9 +38,10 @@ spec:
       repository: linkace/linkace
       tag: 1.5.2
 
-    podAnnotations:
+    annotations:
+      reloader.stakater.com/search: "true"
       # configmap.reloader.stakater.com/reload: linkace-config
-      secret.reloader.stakater.com/reload: linkace-secret
+      # secret.reloader.stakater.com/reload: linkace-secret
 
     # env:
     #   DB_PASSWORD: "${TIMEZONE}"
@@ -74,8 +75,9 @@ spec:
       env:
         NGINX_HOST: "linkace.${SECRET_DOMAIN}"
 
-      podAnnotations:
-        configmap.reloader.stakater.com/reload: linkace-nginx-config
+      annotations:
+        reloader.stakater.com/search: "true"
+        # configmap.reloader.stakater.com/reload: linkace-nginx-config
 
       ingress:
         main:

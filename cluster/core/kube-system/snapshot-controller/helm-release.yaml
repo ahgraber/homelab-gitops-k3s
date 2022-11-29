@@ -35,6 +35,8 @@ spec:
         repository: k8s.gcr.io/sig-storage/snapshot-validation-webhook
         tag: v6.1.0
 
+    # annotations:
+    #   reloader.stakater.com/search: "true"
     # tolerations:
     #   - effect: NoSchedule
     #     key: node-role.kubernetes.io/master

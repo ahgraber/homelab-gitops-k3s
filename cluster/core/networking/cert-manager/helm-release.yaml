@@ -57,6 +57,9 @@ spec:
       limits:
         memory: 128Mi
 
+    deploymentAnnotations:
+      reloader.stakater.com/search: "true"
+
     webhook:
       enabled: true
       resources:

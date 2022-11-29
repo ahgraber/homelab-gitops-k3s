@@ -42,8 +42,6 @@ spec:
       enabled: true
       hostNetwork: true
       hostIPC: true
-      podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
       strategy: deployment
       externalAttacher:
         enabled: true
@@ -66,6 +64,10 @@ spec:
             add:
               - SYS_ADMIN
           privileged: true
+
+      annotations:
+        reloader.stakater.com/search: "true"
+        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
 
       tolerations:
         - effect: NoSchedule
@@ -91,8 +93,6 @@ spec:
       hostNetwork: true
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
-      podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
       livenessProbe:
         enabled: true
       mount:
@@ -106,6 +106,10 @@ spec:
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
+
+      annotations:
+        reloader.stakater.com/search: "true"
+        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-iscsi"
 
       tolerations:
         - key: node-role.kubernetes.io/master

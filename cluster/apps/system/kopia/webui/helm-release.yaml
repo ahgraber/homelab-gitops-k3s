@@ -42,7 +42,8 @@ spec:
     image:
       repository: ghcr.io/onedr0p/kopia
       tag: 0.12.1@sha256:ed13c180efbe3bbaf9101ebf6951666eddf9d97a08e695d366088fee9b60d508
-    podAnnotations:
+    annotations:
+      reloader.stakater.com/search: "true"
       configmap.reloader.stakater.com/reload: kopia-config
     env:
       TZ: "${TIMEZONE}"

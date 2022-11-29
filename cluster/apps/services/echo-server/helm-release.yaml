@@ -30,3 +30,6 @@ spec:
         memory: 64Mi
       limits:
         memory: 96Mi
+
+    annotations:
+      reloader.stakater.com/search: "true"

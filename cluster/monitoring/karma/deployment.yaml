@@ -7,6 +7,8 @@ metadata:
   labels:
     app.kubernetes.io/name: karma
     app.kubernetes.io/instance: karma
+  annotations:
+    reloader.stakater.com/search: "true"
 spec:
   selector:
     matchLabels:
