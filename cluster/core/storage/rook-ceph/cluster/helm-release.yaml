@@ -30,7 +30,8 @@ spec:
   values:
     annotations:
       all:
-        configmap.reloader.stakater.com/reload: "ceph-values-block,ceph-values-filesystem,ceph-values-object"
+        reloader.stakater.com/search: "true"
+        # configmap.reloader.stakater.com/reload: "ceph-values-block,ceph-values-filesystem,ceph-values-object"
 
     toolbox:
       enabled: true

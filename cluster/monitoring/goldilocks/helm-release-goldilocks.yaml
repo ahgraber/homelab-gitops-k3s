@@ -49,3 +49,6 @@ spec:
 
     ingress:
       enabled: false
+
+    annotations:
+      reloader.stakater.com/search: "true"

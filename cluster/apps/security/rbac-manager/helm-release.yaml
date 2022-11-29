@@ -34,3 +34,6 @@ spec:
         memory: 105M
       limits:
         memory: 105M
+
+    annotations:
+      reloader.stakater.com/search: "true"

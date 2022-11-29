@@ -72,8 +72,10 @@ spec:
       enabled: true
     serviceMonitor:
       enabled: true
-    podAnnotations:
-      configmap.reloader.stakater.com/reload: *name
+
+    annotations:
+      reloader.stakater.com/search: "true"
+      # configmap.reloader.stakater.com/reload: *name
 
     affinity:
       # nodeAffinity:

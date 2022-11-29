@@ -175,6 +175,9 @@ spec:
       limits:
         memory: 105M
 
+    annotations:
+      reloader.stakater.com/search: "true"
+
     tolerations:
       - key: "node-role.kubernetes.io/master"
         operator: "Exists"

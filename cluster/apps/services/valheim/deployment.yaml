@@ -5,9 +5,9 @@ metadata:
   name: valheim
   namespace: services
   annotations:
-    # reloader.stakater.com/search: "true"
-    configmap.reloader.stakater.com/reload: "valheim-config"
-    secret.reloader.stakater.com/reload: "valheim-secret"
+    reloader.stakater.com/search: "true"
+    # configmap.reloader.stakater.com/reload: "valheim-config"
+    # secret.reloader.stakater.com/reload: "valheim-secret"
   labels:
     app.kubernetes.io/name: valheim
     app.kubernetes.io/instance: valheim
@@ -24,13 +24,7 @@ spec:
       labels:
         app.kubernetes.io/name: valheim
         app.kubernetes.io/instance: valheim
-      annotations:
-        backup.velero.io/backup-volumes: valheim-data
-        # secret.reloader.stakater.com/reload: "valheim-secret"
-        # pre.hook.backup.velero.io/container: fsfreeze
-        # pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config", "/assets"]'
-        # post.hook.backup.velero.io/container: fsfreeze
-        # post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config", "/assets]'
+
     spec:
       containers:
         # renovate: datasource=docker image=lloesche/valheim-server

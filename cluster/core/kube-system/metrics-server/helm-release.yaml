@@ -26,3 +26,6 @@ spec:
       enabled: true
     serviceMonitor:
       enabled: true
+
+    # annotations:
+    #   reloader.stakater.com/search: "true"

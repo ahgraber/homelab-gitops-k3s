@@ -43,8 +43,6 @@ spec:
       enabled: true
       hostNetwork: true # set false if fails
       hostIPC: true # set false if fails
-      podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       strategy: deployment
       externalAttacher:
         enabled: true
@@ -79,6 +77,10 @@ spec:
               - SYS_ADMIN
           privileged: true
 
+      annotations:
+        reloader.stakater.com/search: "true"
+        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
+
       tolerations:
         - key: node-role.kubernetes.io/master
           operator: Exists
@@ -103,8 +105,6 @@ spec:
       hostNetwork: true
       hostIPC: true
       kubeletHostPath: /var/lib/kubelet
-      podAnnotations:
-        secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
       livenessProbe:
         enabled: true
       mount:
@@ -118,6 +118,10 @@ spec:
       driver:
         image: docker.io/democraticcsi/democratic-csi:latest
         logLevel: info
+
+      annotations:
+        reloader.stakater.com/search: "true"
+        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
 
       tolerations:
         - key: node-role.kubernetes.io/master

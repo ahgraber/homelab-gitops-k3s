@@ -52,6 +52,9 @@ spec:
       limits:
         memory: 500Mi
 
+    annotations:
+      reloader.stakater.com/search: "true"
+
     nodeSelector:
       node-role.kubernetes.io/master: "true"
     tolerations:

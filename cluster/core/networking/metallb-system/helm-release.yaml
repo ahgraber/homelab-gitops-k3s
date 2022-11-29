@@ -34,6 +34,8 @@ spec:
         enabled: false
 
     controller:
+      annotations:
+        reloader.stakater.com/search: "true"
       tolerations:
         # - effect: NoSchedule
         #   key: node-role.kubernetes.io/master
@@ -43,6 +45,8 @@ spec:
         - effect: "NoSchedule"
           operator: "Exists"
     speaker:
+      annotations:
+        reloader.stakater.com/search: "true"
       tolerations:
         # - effect: NoSchedule
         #   key: node-role.kubernetes.io/master
