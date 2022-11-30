@@ -33,7 +33,7 @@ spec:
     # env:
     #   ...
     envFrom:
-      - secretKeyRef:
+      - secretRef:
           name: shiori-secret
 
     ingress:
