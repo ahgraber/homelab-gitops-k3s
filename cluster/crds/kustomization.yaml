@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./cert-manager/
   # - ./cloudnative-pg/ # deployed in operator helm chart
+  - ./democratic-csi/
   - ./external-snapshotter/ # AKA snapshot-controller
   - ./kube-prometheus-stack/
   - ./kyverno/
