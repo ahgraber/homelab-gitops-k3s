@@ -11,7 +11,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: csi-truenas-iscsi
+  storageClassName: ceph-block
   resources:
     requests:
       storage: 1Gi
