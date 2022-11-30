@@ -12,7 +12,7 @@ spec:
       version: 1.1.3
       sourceRef:
         kind: HelmRepository
-        name: bjw-s
+        name: bjw-s-charts
         namespace: flux-system
   install:
     remediation:
@@ -36,6 +36,9 @@ spec:
       secretKeyRef:
         name: shiori-secret
 
+    ingress:
+      main:
+        enabled: false
     service:
       main:
         ports:
@@ -46,9 +49,6 @@ spec:
         enabled: true
         existingClaim: shiori-data
         mountPath: /shiori
-    ingress:
-      main:
-        enabled: false
 
     podSecurityContext:
       fsGroup: 1000
