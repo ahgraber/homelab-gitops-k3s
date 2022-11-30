@@ -33,7 +33,7 @@ spec:
 
     env:
       - name: ALERTMANAGER_URI
-        value: http://kps-alertmanager:9093
+        value: http://kps-alertmanager.monitoring.svc.cluster.local:9093
 
     ingress:
       main:
