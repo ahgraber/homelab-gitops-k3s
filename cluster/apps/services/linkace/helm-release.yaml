@@ -22,35 +22,22 @@ spec:
   #   remediation:
   #     retries: 5
   values:
-    global:
-      nameOverride: linkace
-      annotations:
-        reloader.stakater.com/search: "true"
-        # configmap.reloader.stakater.com/reload: linkace-nginx-config
-        # configmap.reloader.stakater.com/reload: linkace-config
-        # secret.reloader.stakater.com/reload: linkace-secret
-
-    initContainers:
-      init-shared-vol:
-        image: linkace/linkace:v1.10.5
-        command:
-          - /bin/sh
-          - -c
-          - |-
-            cp -r /app/public/. /share
-        volumeMounts:
-          - name: share
-            mountPath: /share
-
-    ### main image
     image:
-      repository: nginx
-      tag: stable
+      repository: linkace/linkace
+      tag: v1.10.5-simple
+
     annotations:
       reloader.stakater.com/search: "true"
-      # configmap.reloader.stakater.com/reload: linkace-nginx-config
-    env:
-      NGINX_HOST: "linkace.${SECRET_DOMAIN}"
+      # configmap.reloader.stakater.com/reload: linkace-config
+      # secret.reloader.stakater.com/reload: linkace-secret
+
+    # env:
+    #   DB_PASSWORD: "${TIMEZONE}"
+    #   REDIS_PASSWORD: "${SECRET_DEFAULT_PWD}"
+
+    ingress:
+      main:
+        enabled: false
 
     service:
       main:
@@ -59,46 +46,26 @@ spec:
             port: 8080
             targetPort: 80
 
-    ingress:
-      main:
-        enabled: false
+    # probes:
+    #   liveness:
+    #     enabled: true
+    #   readiness:
+    #     enabled: true
+    #   startup:
+    #     enabled: true
 
     persistence:
-      nginx:
+      config:
         enabled: true
-        type: configMap
-        name: linkace-nginx-config
-        subPath: nginx.conf
-        mountPath: /etc/nginx/conf.d/default.conf
-        readOnly: true
-      share:
-        enabled: true
-        type: emptyDir
-        mountPath: /app/public
+        type: secret
+        name: linkace-secret
+        subPath: env
+        mountPath: /app/.env
+        readOnly: false
 
-    additionalContainers:
-      # recursively uses main container's template
-      - name: linkace-php
-        image: linkace/linkace
-        tag: v1.10.5
-
-        annotations:
-          reloader.stakater.com/search: "true"
-          # configmap.reloader.stakater.com/reload: linkace-config
-          # secret.reloader.stakater.com/reload: linkace-secret
-
-        persistence:
-          config:
-            enabled: true
-            type: secret
-            name: linkace-secret
-            subPath: env
-            mountPath: /app/.env
-            readOnly: false
-
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            memory: 500Mi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        memory: 500Mi
