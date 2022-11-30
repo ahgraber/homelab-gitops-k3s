@@ -7,6 +7,4 @@ resources:
   - ./configmap-valheimplus.yaml
   - ./pvc.yaml
   - ./secret.sops.yaml
-  # - ./deployment.yaml
-  # - ./service.yaml
   # note: ingress not needed due to loadbalancer externalIP
