@@ -1,0 +1,9 @@
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: shiori-db-ceph-bucket
+  namespace: postgres
+spec:
+  generateBucketName: shiori-db
+  storageClassName: ceph-bucket
