@@ -33,9 +33,9 @@ spec:
     env:
       - name: TZ
         value: ${TIMEZONE}
-      - CONFIG:
+      - name: CONFIG
         value: /mnt/config
-      - DATA:
+      - name: DATA
         value: /mnt/assets
       - name: JWT_SECRET
         valueFrom:
