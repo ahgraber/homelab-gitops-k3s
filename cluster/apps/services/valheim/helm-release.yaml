@@ -28,7 +28,7 @@ spec:
 
     image:
       repository: lloesche/valheim-server
-      # tag: latest
+      tag: latest
 
     # env:
     #   ...
