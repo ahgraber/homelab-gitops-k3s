@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: hammond
+  namespace: services
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.1.3
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    global:
+      nameOverride: akhilrex/hammond
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      repository: ghcr.io/go-shiori/shiori
+      tag: v1.5.3
+
+    env:
+      - name: TZ
+        value: ${TIMEZONE}
+      - name: JWT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: hammond-secret
+            key: JWT_SECRET
+
+    ingress:
+      main:
+        enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
+            targetPort: 3000
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: hammond-data
+        subPath: config
+        mountPath: /config
+      data:
+        enabled: true
+        existingClaim: hammond-data
+        subPath: data
+        mountPath: /assets
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 105M
+      limits:
+        memory: 105M
