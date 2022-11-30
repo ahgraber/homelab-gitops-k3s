@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: shiori
     app.kubernetes.io/instance: shiori
+    snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
     - ReadWriteOnce
