@@ -5,5 +5,6 @@ metadata:
   name: shiori-db-ceph-bucket
   namespace: postgres
 spec:
-  generateBucketName: shiori-db
+  bucketName: shiori-db-archive
+  # generateBucketName: shiori-db
   storageClassName: ceph-bucket
