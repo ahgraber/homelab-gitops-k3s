@@ -72,9 +72,8 @@ spec:
           backup:
             retentionPolicy: 30d
             barmanObjectStore:
-              destinationPath: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc
-              # serverName: postgres-v1
-              # endpointURL: ${SECRET_S3_ENDPOINT}
+              endpointURL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc
+              destinationPath: s3://<app>-db-archive
               s3Credentials:
                 accessKeyId:
                   # created by rook-ceph ObjectBucketClaim
@@ -109,26 +108,3 @@ spec:
           nodeMaintenanceWindow:
             inProgress: false
             reusePVC: false
-
-  valuesFrom:
-    # created by rook-ceph in ObjectBucketClaim thanos-ceph-bucket
-    - targetPath: resources.0.spec.backup.barmanObjectStore.destinationPath
-      kind: ConfigMap
-      name: <app>-db-ceph-bucket
-      valuesKey: BUCKET_NAME
-    - targetPath: resources.0.spec.backup.barmanObjectStore.endpointURL
-      kind: ConfigMap
-      name: <app>-db-ceph-bucket
-      valuesKey: BUCKET_HOST
-    # - targetPath: resources.0.spec.backup.barmanObjectStore.<region>
-    #   kind: ConfigMap
-    #   name: <app>-db-ceph-bucket
-    #   valuesKey: BUCKET_REGION
-    # - targetPath: resources.0.spec.backup.barmanObjectStore.s3Credentials.accessKeyId
-    #   kind: Secret
-    #   name: <app>-db-ceph-bucket
-    #   valuesKey: AWS_ACCESS_KEY_ID
-    # - targetPath: resources.0.spec.backup.barmanObjectStore.s3Credentials.secretAccessKey
-    #   kind: Secret
-    #   name: <app>-db-ceph-bucket
-    #   valuesKey: AWS_SECRET_ACCESS_KEY
