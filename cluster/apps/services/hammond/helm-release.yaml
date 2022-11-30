@@ -83,5 +83,4 @@ spec:
           command:
             - /bin/sh
             - -c
-            - mkdir -p /mnt/config
-            - mkdir -p /mnt/assets
+            - mkdir -p /mnt/config && mkdir -p /mnt/assets
