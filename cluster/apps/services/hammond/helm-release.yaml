@@ -22,13 +22,13 @@ spec:
       retries: 3
   values:
     global:
-      nameOverride: akhilrex/hammond
+      # nameOverride: hammond
       annotations:
         reloader.stakater.com/search: "true"
 
     image:
-      repository: ghcr.io/go-shiori/shiori
-      tag: v1.5.3
+      repository: akhilrex/hammond
+      tag: "1.0.0"
 
     env:
       - name: TZ
