@@ -28,7 +28,7 @@ spec:
 
     image:
       repository: akhilrex/hammond
-      tag: "1.0.0"
+      tag: 1.0.0
 
     env:
       - name: TZ
