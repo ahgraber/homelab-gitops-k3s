@@ -78,6 +78,7 @@ spec:
         memory: 105M
 
     lifecycle:
+      # set up subdirectories in PVC
       postStart:
         exec:
           command:
