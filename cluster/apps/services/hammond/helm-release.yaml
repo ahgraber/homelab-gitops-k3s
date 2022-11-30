@@ -33,8 +33,10 @@ spec:
     env:
       - name: TZ
         value: ${TIMEZONE}
-      - CONFIG: /mnt/config
-      - DATA: /mnt/assets
+      - CONFIG:
+        value: /mnt/config
+      - DATA:
+        value: /mnt/assets
       - name: JWT_SECRET
         valueFrom:
           secretKeyRef:
