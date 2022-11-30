@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shiori-data
+  namespace: services
+  labels:
+    app.kubernetes.io/name: shiori
+    app.kubernetes.io/instance: shiori
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ceph-block
