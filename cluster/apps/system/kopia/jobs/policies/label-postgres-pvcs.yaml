@@ -27,5 +27,5 @@ spec:
             name: "{{request.object.metadata.name}}"
         patchStrategicMerge:
           metadata:
-            annotations:
+            labels:
               +(snapshot.home.arpa/enabled): "true"
