@@ -33,10 +33,10 @@ spec:
     env:
       - name: TZ
         value: ${TIMEZONE}
-      - name: CONFIG
-        value: /mnt/config
-      - name: DATA
-        value: /mnt/assets
+      # - name: CONFIG
+      #   value: /mnt/config
+      # - name: DATA
+      #   value: /mnt/assets
       - name: JWT_SECRET
         valueFrom:
           secretKeyRef:
@@ -54,10 +54,16 @@ spec:
             targetPort: 3000
 
     persistence:
+      config:
+        enabled: true
+        existingClaim: hammond-data
+        mountPath: /config
+        subPath: config
       data:
         enabled: true
         existingClaim: hammond-data
-        mountPath: /mnt
+        mountPath: /assets
+        subPath: data
 
     resources:
       requests:
@@ -65,11 +71,3 @@ spec:
         memory: 105M
       limits:
         memory: 105M
-
-    lifecycle:
-      postStart:
-        exec:
-          command:
-            - /bin/sh
-            - -c
-            - mkdir -p /mnt/{config,assets}
