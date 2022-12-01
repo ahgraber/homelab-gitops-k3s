@@ -84,6 +84,10 @@ spec:
               wal:
                 compression: bzip2
                 maxParallel: 8
+              data:
+                compression: bzip2
+                immediateCheckpoint: false
+                jobs: 4
 
           resources:
             requests:
