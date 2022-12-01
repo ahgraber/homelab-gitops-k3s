@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: route-linkace
+  name: route-shiori
   namespace: networking
 spec:
   entryPoints:
