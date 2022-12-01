@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - ./backup-release.yaml
   - ./cnpgdb-release.yaml
-  - ./db-ceph-bucket.yaml
+  # - ./db-ceph-bucket.yaml
   - ./secret-user.sops.yaml
