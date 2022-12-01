@@ -80,7 +80,7 @@ spec:
                   key: ACCESS_KEY_ID
                 secretAccessKey:
                   name: s3-secret
-                  key: SECRET_ACCESS_KEY
+                  key: ACCESS_SECRET_KEY
               # endpointURL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc
               # destinationPath: s3://<app>-db-archive
               # s3Credentials:

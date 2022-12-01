@@ -80,7 +80,7 @@ spec:
                   key: ACCESS_KEY_ID
                 secretAccessKey:
                   name: s3-secret
-                  key: SECRET_ACCESS_KEY
+                  key: ACCESS_SECRET_KEY
               wal:
                 compression: bzip2
                 maxParallel: 8
