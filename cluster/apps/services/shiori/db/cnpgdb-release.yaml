@@ -72,7 +72,7 @@ spec:
           backup:
             retentionPolicy: 30d
             barmanObjectStore:
-              endpointURL: ${SECRET_S3_ENDPOINT}
+              endpointURL: http://${SECRET_S3_ENDPOINT}
               destinationPath: s3://postgres
               s3Credentials:
                 accessKeyId:
