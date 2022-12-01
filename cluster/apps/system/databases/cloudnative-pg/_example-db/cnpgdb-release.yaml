@@ -72,7 +72,7 @@ spec:
           backup:
             retentionPolicy: 30d
             barmanObjectStore:
-              endpointURL: ${SECRET_S3_ENDPOINT}
+              endpointURL: https://${SECRET_S3_ENDPOINT}
               destinationPath: s3://postgres/<app>-db-archive
               s3Credentials:
                 accessKeyId:
@@ -95,6 +95,10 @@ spec:
               wal:
                 compression: bzip2
                 maxParallel: 8
+              data:
+                compression: bzip2
+                immediateCheckpoint: false
+                jobs: 4
 
           resources:
             requests:
