@@ -73,7 +73,7 @@ spec:
             retentionPolicy: 30d
             barmanObjectStore:
               endpointURL: ${SECRET_S3_ENDPOINT}
-              destinationPath: s3://postgres/shiori-db-archive
+              destinationPath: s3://postgres
               s3Credentials:
                 accessKeyId:
                   name: s3-secret
