@@ -77,9 +77,9 @@ data:
         #       - targets:
         #           - "opnsense.${SECRET_DOMAIN}:9100"
 
-        additionalScrapeSecrets:
+        additionalScrapeConfigsSecret:
           enabled: true
-          name: kps-prometheus-additionalScrapeSecrets
+          name: prometheus-addl-scrape-configs
           key: additionalScrapeConfigs
 
         thanos:
