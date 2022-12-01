@@ -15,3 +15,4 @@ resources:
   - ./values-prometheus-operator.yaml
   - ./values-prometheus.yaml
   - ./values-rules.yaml
+  - ./secret-additionalScrapeSecrets.sops.yaml
