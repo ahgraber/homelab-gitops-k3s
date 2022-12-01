@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - ./configmap-metrics.yaml # global monitoring configuration
   - ./helm-release.yaml
-  - ./secret.sops.yaml # global superuser
+  - ./secret-postgres.sops.yaml # global superuser
+  - ./secret-s3.sops.yaml

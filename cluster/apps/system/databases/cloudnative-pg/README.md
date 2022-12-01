@@ -10,7 +10,8 @@ The operator is deployed via helm release
 ## Cluster & Backups
 
 The CRDs are deployed as helm releases using dynsix's 'raw' chart to wrap the CRD.
-This allows the use of Rook-Ceph ObjectBucketClaims as an S3 stand-in
+S3-compatible storage can be used as a live WAL backup.
+Since the native PVC/PV is using k8s-local rook-ceph, the backup should use NAS-based s3.
 
 An example of a db deployment can be found in [_example-db](_example-db/)
 
