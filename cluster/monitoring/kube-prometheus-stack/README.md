@@ -80,3 +80,13 @@ Add the following to the prometheus.yaml under `additionalScrapeConfigs`:
 
 Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
 repeated etcd alerts may be raised.  To fix, use a custom [PrometheusRule](./prometheus-rules/etcd.yaml)
+
+### Remove metric
+
+To remove a metric (e.g., in the case that it causes a warning that does not time out),
+run:
+
+```sh
+# update <METRIC_NAME>
+curl -X POST -g "https://prometheus.${SECRET_DOMAIN}/api/v1/admin/tsdb/delete_series?match[]=<METRIC_NAME>"
+```
