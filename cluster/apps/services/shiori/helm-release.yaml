@@ -20,6 +20,9 @@ spec:
   upgrade:
     remediation:
       retries: 3
+  dependsOn:
+    - name: shiori-cnpgdb
+      namespace: postgres
   values:
     global:
       nameOverride: shiori
