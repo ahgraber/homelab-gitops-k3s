@@ -34,8 +34,8 @@ spec:
       config:
         namespaceSelector:
           any: true
-        #   matchNames:
-        #   - stakater
+          matchNames: null # [*]
+          # - stakater
         headerBackground: "#2A2C2B"
         headerForeground: "#F4B300"
         title: Forecastle
