@@ -40,6 +40,7 @@ spec:
         headerForeground: "#F4B300"
         title: Forecastle
         instanceName:
+        crdEnabled: true
         customApps: {}
 
       deployment:
