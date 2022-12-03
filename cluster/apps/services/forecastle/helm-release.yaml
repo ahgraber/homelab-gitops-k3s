@@ -37,12 +37,15 @@ spec:
         #   matchNames:
         #   - stakater
         headerBackground: "#2A2C2B"
-        headerForeground: "F4B300"
+        headerForeground: "#F4B300"
         title: Forecastle
         instanceName:
         customApps: {}
 
       deployment:
+        annotations:
+          # reloader.stakater.com/search: "true"
+          configmap.reloader.stakater.com/reload: forecastle
         resources:
           requests:
             cpu: 100m
