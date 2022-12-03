@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   # - ./echo-server/
   - ./hammond/
+  - ./heimdall
   - ./httpbin/
   - ./mealie/
   - ./shiori/
