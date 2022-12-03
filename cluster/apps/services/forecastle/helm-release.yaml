@@ -8,7 +8,8 @@ spec:
   interval: 15m
   chart:
     spec:
-      chart: forecastle
+      # since sourceRef is GitRepository, use full path to chart from
+      chart: ./deployments/kubernetes/chartforecastle
       version: v1.0.111
       sourceRef:
         kind: GitRepository
