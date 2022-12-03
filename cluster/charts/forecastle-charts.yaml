@@ -14,4 +14,4 @@ spec:
     # exclude all
     /*
     # include deploy crds dir
-    !/deployments/kubernetes/chart/
+    !/deployments/kubernetes/chart/*
