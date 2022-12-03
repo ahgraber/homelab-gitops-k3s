@@ -33,6 +33,7 @@ spec:
         ports:
           http:
             port: 8080
+            targetPort: 80
 
     ingress:
       main:
@@ -45,3 +46,9 @@ spec:
         accessMode: ReadWriteOnce
         size: 1Gi
         mountPath: /config
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
