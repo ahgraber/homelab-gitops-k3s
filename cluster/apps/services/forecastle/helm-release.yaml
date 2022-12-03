@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       # since sourceRef is GitRepository, use full path to chart from
-      chart: ./deployments/kubernetes/chartforecastle
+      chart: ./deployments/kubernetes/chart/forecastle
       version: v1.0.111
       sourceRef:
         kind: GitRepository
