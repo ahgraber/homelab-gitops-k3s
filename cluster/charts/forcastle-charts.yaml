@@ -1,0 +1,30 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: forecastle-chart-source
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://github.com/stakater/Forecastle.git
+  ref:
+    # renovate: registryUrl=https://github.com/stakater/Forecastle chart=forecastle
+    tag: v1.0.111
+  ignore: |
+    # exclude all
+    /*
+    # include deploy crds dir
+    !/deployments/kubernetes/chart/
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: forecastle-charts
+  namespace: flux-system
+spec:
+  interval: 15m
+  prune: false
+  # wait: true
+  sourceRef:
+    kind: GitRepository
+    name: forecastle-chart-source

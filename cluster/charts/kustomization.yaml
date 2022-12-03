@@ -22,6 +22,7 @@ resources:
   - ./emberstack-charts.yaml # reflector
   - ./fairwinds-charts.yaml # goldilocks (and others)
   # - ./falco-security-charts.yaml
+  - ./forecastle-charts.yaml
   # - ./fydrah-charts.yaml
   - ./grafana-charts.yaml
   # - ./infracloudio-charts.yaml
