@@ -13,7 +13,7 @@ spec:
       version: v1.0.111
       sourceRef:
         kind: GitRepository
-        name: forecastle-chart-source
+        name: forecastle-chart
         namespace: flux-system
   install:
     # createNamespace: true
@@ -25,27 +25,30 @@ spec:
     remediation:
       retries: 3
   values:
-    image:
-      repository: stakater/forecastle
-      tag: v1.0.111
-    config:
-      namespaceSelector:
-        any: true
-      #   matchNames:
-      #   - stakater
-      headerBackground: "#2A2C2B"
-      headerForeground: "F4B300"
-      title: Forecastle
-      instanceName:
-      customApps: {}
+    forecastle:
+      namespace: services
+      image:
+        repository: stakater/forecastle
+        tag: v1.0.111
 
-    deployment:
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          memory: 256Mi
+      config:
+        namespaceSelector:
+          any: true
+        #   matchNames:
+        #   - stakater
+        headerBackground: "#2A2C2B"
+        headerForeground: "F4B300"
+        title: Forecastle
+        instanceName:
+        customApps: {}
 
-    ingress:
-      enabled: false
+      deployment:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+
+      ingress:
+        enabled: false
