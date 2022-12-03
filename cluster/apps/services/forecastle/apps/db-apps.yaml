@@ -1,0 +1,30 @@
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: pgadmin
+  namespace: services
+spec:
+  name: pgadmin
+  group: databases
+  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/master/cluster/apps/services/forecastle/apps/icons/pgadmin.png"
+  url: "https://pgadmin.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: redisinsight
+  namespace: services
+spec:
+  name: redisinsight
+  group: databases
+  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/master/cluster/apps/services/forecastle/apps/icons/redis-logo-full-color-rgp.png"
+  url: "https://redisinsight.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
