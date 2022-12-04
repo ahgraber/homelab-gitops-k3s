@@ -71,6 +71,6 @@ spec:
       postStart:
         exec:
           command:
-            - /bin/bash
+            - /bin/sh
             - -c
             - rm /app/config/docker.yaml
