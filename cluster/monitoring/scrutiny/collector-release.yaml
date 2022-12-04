@@ -35,6 +35,9 @@ spec:
 
     # nodeSelector:
     #   kubernetes.io/hostname: harambe
+    # tolerations:
+    #   - key: "node-role.kubernetes.io/master"
+    #     operator: "Exists"
 
     env:
       - name: COLLECTOR_API_ENDPOINT
