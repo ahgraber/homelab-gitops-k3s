@@ -22,7 +22,7 @@ resources:
   - ./emberstack-charts.yaml # reflector
   - ./fairwinds-charts.yaml # goldilocks (and others)
   # - ./falco-security-charts.yaml
-  - ./forecastle-charts.yaml
+  # - ./forecastle-charts.yaml
   # - ./fydrah-charts.yaml
   - ./grafana-charts.yaml
   # - ./infracloudio-charts.yaml
@@ -53,5 +53,5 @@ resources:
   - ./traefik-charts.yaml
   - ./valheim-charts.yaml
   # - ./victoriametrics-charts.yaml
-  - ./vmware-tanzu-charts.yaml # velero
+  # - ./vmware-tanzu-charts.yaml # velero
   # - ./weave-gitops-charts.yaml
