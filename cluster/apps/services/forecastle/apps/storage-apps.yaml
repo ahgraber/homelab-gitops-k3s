@@ -7,7 +7,7 @@ metadata:
 spec:
   name: truenas
   group: storage
-  icon: "https://static.ixsystems.co/uploads/2020/07/truenas-logo-full-color-rgb-1024x172.png"
+  icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/truenas-logo.png"
   url: "https://truenas.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
@@ -22,7 +22,7 @@ metadata:
 spec:
   name: minio
   group: storage
-  icon: "https://min.io/resources/img/logo/MINIO_wordmark.png"
+  icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/minio-wordmark.png"
   url: "https://truenas.${SECRET_DOMAIN}:9001"
   networkRestricted: true
   # properties:
@@ -37,7 +37,7 @@ metadata:
 spec:
   name: rook-ceph
   group: storage
-  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/rook-ceph-logos.png"
+  icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/rook-ceph-logos.png"
   url: "https://rook.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
@@ -52,7 +52,7 @@ metadata:
 spec:
   name: kopia
   group: storage
-  icon: "https://github.com/kopia/kopia/blob/master/icons/kopia-app-1024.png"
+  icon: "https://raw.githubusercontent.com/kopia/kopia/master/icons/kopia-1024.png"
   url: "https://kopia.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
