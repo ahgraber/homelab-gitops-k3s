@@ -6,9 +6,7 @@ resources:
   - ./grafana/
   - ./karma/
   - ./kube-prometheus-stack/
-  # - ./loki/
   - ./node-problem-detector/
-  # # - ./speedtest-exporter/
+  - ./scrutiny/
+  - ./speedtest-exporter/
   - ./thanos/
-  # # - ./uptimerobot-prometheus/
-  # # - ./vector/
