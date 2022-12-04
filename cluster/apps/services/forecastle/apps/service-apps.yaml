@@ -7,7 +7,7 @@ metadata:
 spec:
   name: hammond
   group: services
-  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/golf.png"
+  icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/golf.png"
   url: "https://hammond.${SECRET_DOMAIN}"
   networkRestricted: false
   # properties:
@@ -22,7 +22,7 @@ metadata:
 spec:
   name: mealie
   group: services
-  icon: "https://github.com/hay-kot/mealie/raw/mealie-next/frontend/static/icon.png"
+  icon: "https://raw.githubusercontent.com/hay-kot/mealie/mealie-next/frontend/static/icon.png"
   url: "https://mealie.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
@@ -37,7 +37,7 @@ metadata:
 spec:
   name: shiori
   group: services
-  icon: "https://github.com/go-shiori/shiori/raw/master/internal/view/res/apple-touch-icon-152x152.png"
+  icon: "https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png"
   url: "https://shiori.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
