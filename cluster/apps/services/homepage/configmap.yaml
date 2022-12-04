@@ -46,7 +46,7 @@ data:
         # icon: home-assistant.png
         # headerStyle: boxed
 
-  services.yaml: |
+  widgets.yaml: |
     ---
     - logo:
     - search:
@@ -60,6 +60,9 @@ data:
         longitude: -75.290233
         units: imperial # or metric
         cache: 5 # Time in minutes to cache API responses, to stay within limits
+
+  services.yaml: |
+    ---
     - Infrastructure:
         - OPNsense:
             href: https://opnsense.${SECRET_DOMAIN}
@@ -147,3 +150,9 @@ data:
             href: https://shiori.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png
             description: Mealie is a self-hosted recipe manager and meal planner
+
+  bookmarks.yaml: |
+    ---
+
+  docker.yaml: |
+    ---
