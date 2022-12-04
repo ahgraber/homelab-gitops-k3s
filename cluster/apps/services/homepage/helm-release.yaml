@@ -45,11 +45,11 @@ spec:
         type: configmap
         name: homepage-config
         mountPath: /app/config
-        # subPath:
-        #   - path: services.yaml
-        #     mountPath: /app/config/services.yaml
-        #   - path: settings.yaml
-        #     mountPath: /app/config/settings.yaml
+        subPath:
+          - path: services.yaml
+            mountPath: /app/config/services.yaml
+          - path: settings.yaml
+            mountPath: /app/config/settings.yaml
 
     resources:
       requests:
