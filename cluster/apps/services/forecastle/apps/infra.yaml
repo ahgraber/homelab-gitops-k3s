@@ -32,7 +32,7 @@ spec:
 apiVersion: forecastle.stakater.com/v1alpha1
 kind: ForecastleApp
 metadata:
-  name: truenas
+  name: homeassistant
   namespace: services
 spec:
   name: homeassistant
