@@ -1,0 +1,92 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: scrutiny-collector
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.1.3
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    # createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: scrutiny
+      namespace: monitoring
+  values:
+    image:
+      repository: ghcr.io/analogj/scrutiny
+      tag: master-collector
+
+    controller:
+      type: daemonset
+
+    # nodeSelector:
+    #   kubernetes.io/hostname: harambe
+
+    env:
+      - name: COLLECTOR_API_ENDPOINT
+        value: http://scrutiny.monitoring.svc.cluster.local:8080
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+
+    service:
+      main:
+        enabled: false
+
+    securityContext:
+      privileged: true
+      # capabilities:
+      #   add: ["SYS_RAWIO"] # allow access to smartctl
+
+    persistence:
+      udev:
+        enabled: true
+        mountPath: /run/udev
+        type: hostPath
+        hostPath: /run/udev
+        readOnly: true
+      sda:
+        enabled: true
+        mountPath: /dev/sda
+        type: hostPath
+        hostPath: /dev/sda
+        readOnly: true
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 128Mi
+
+    lifecycle:
+      # set up subdirectories in PVC
+      postStart:
+        exec:
+          command:
+            - /bin/bash
+            - -c
+            - |
+              mkdir -p /opt/scrutiny/config &&
+              cat << EOF > /opt/scrutiny/config/collector.yaml
+              ---
+              # config piped from lifecycle.postStart script
+              version: 1
+              host:
+                id: "${NODE_NAME}"
+              EOF
