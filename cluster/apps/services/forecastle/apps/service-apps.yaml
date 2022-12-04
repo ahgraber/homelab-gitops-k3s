@@ -1,0 +1,45 @@
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: hammond
+  namespace: services
+spec:
+  name: hammond
+  group: services
+  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/golf.png"
+  url: "https://hammond.${SECRET_DOMAIN}"
+  networkRestricted: false
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: mealie
+  namespace: services
+spec:
+  name: mealie
+  group: services
+  icon: "https://github.com/hay-kot/mealie/raw/mealie-next/frontend/static/icon.png"
+  url: "https://mealie.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: shiori
+  namespace: services
+spec:
+  name: shiori
+  group: services
+  icon: "https://github.com/go-shiori/shiori/raw/master/internal/view/res/apple-touch-icon-152x152.png"
+  url: "https://shiori.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
