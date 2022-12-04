@@ -22,7 +22,7 @@ metadata:
 spec:
   name: redisinsight
   group: databases
-  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/redis-logo-full-color-rgp.png"
+  icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/redis-logo.png"
   url: "https://redisinsight.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
