@@ -9,7 +9,7 @@ spec:
   group: infra
   icon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/opnsense-logo.png"
   url: "https://opnsense.${SECRET_DOMAIN}"
-  networkRestricted: false
+  networkRestricted: true
   # properties:
   #   Version: 1.0
   # instance: "" # Optional
