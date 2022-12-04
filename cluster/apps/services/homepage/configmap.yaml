@@ -4,8 +4,8 @@ kind: ConfigMap
 metadata:
   name: homepage-config
   namespace: services
-  labels:
-    app.kubernetes.io/name: homepage
+  # labels:
+  #   app.kubernetes.io/name: homepage
   annotations:
     reloader.stakater.com/match: "true"
 data:

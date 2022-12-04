@@ -42,9 +42,13 @@ spec:
     persistence:
       config:
         enabled: true
-        type: configmap
-        name: homepage-config
+        # type: configmap
+        # name: homepage-config
         # mountPath: /app/config
+        type: custom
+        volumeSpec:
+          configMap:
+            name: homepage-config
         subPath:
           - path: services.yaml
             mountPath: /app/config/services.yaml
