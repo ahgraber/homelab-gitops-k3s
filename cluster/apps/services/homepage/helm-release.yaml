@@ -50,10 +50,14 @@ spec:
           configMap:
             name: homepage-config
         subPath:
-          - path: services.yaml
-            mountPath: /app/config/services.yaml
           - path: settings.yaml
             mountPath: /app/config/settings.yaml
+          - path: widgets.yaml
+            mountPath: /app/config/widgets.yaml
+          - path: services.yaml
+            mountPath: /app/config/services.yaml
+          - path: bookmarks.yaml
+            mountPath: /app/config/bookmarks.yaml
 
     resources:
       requests:
@@ -61,3 +65,12 @@ spec:
         memory: 105M
       limits:
         memory: 225M
+
+    lifecycle:
+      # set up subdirectories in PVC
+      postStart:
+        exec:
+          command:
+            - /bin/bash
+            - -c
+            - rm /app/config/docker.yaml
