@@ -1,0 +1,149 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: services
+  labels:
+    app.kubernetes.io/name: homepage
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  settings.yaml: |
+    ---
+    # title:
+    # background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
+    # background: /images/background.png # in /app/public
+    # backgroundOpacity: 0.5
+    favicon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png"
+    # favicon: /images/favicon.ico
+    theme: dark
+    color: slate
+    layout:
+      Infrastructure: # group name in services.yaml
+        style: row
+        columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Monitoring: # group name in services.yaml
+        style: row
+        columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Storage: # group name in services.yaml
+        style: row
+        columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Databases: # group name in services.yaml
+        style: row
+        columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Apps & Services: # group name in services.yaml
+        style: row
+        columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+
+  services.yaml: |
+    ---
+    - logo:
+    - search:
+        provider: custom
+        url: https://lougle.com/?q=
+        target: _blank
+        focus: true # Optional, will set focus to the search bar on page load
+    - openmeteo:
+        label: Home # optional
+        latitude: 40.008378
+        longitude: -75.290233
+        units: imperial # or metric
+        cache: 5 # Time in minutes to cache API responses, to stay within limits
+    - Infrastructure:
+        - OPNsense:
+            href: https://opnsense.${SECRET_DOMAIN}
+            icon: opnsense.png
+            # description: This is my service
+        - AdGuard:
+            href: https://opnsense.${SECRET_DOMAIN}:44353
+            icon: adguard-home.png
+            # description: This is my service
+            widget:
+              type: adguard
+              url: https://opnsense.${SECRET_DOMAIN}:44353
+              username: ${SECRET_ADMIN_USER}
+              password: ${SECRET_DEFAULT_PWD}
+        - HomeAssistant:
+            href: https://homeassistant.${SECRET_DOMAIN}:8123
+            icon: home-assistant-circle.png
+            # description: This is my service
+    - Monitoring:
+        - Karma:
+            href: https://karma.${SECRET_DOMAIN}
+            icon: alertmanager.png
+            description: Alertmanager dashboard
+        - Grafana:
+            href: https://grafana.${SECRET_DOMAIN}
+            icon: grafana.png
+            # description: This is my service
+        - Goldilocks:
+            href: https://goldilocks.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
+            description: Helps identify a starting point for resource requests and limits
+        - Scrutiny:
+            href: https://scrutiny.${SECRET_DOMAIN}
+            icon: scrutiny.png
+            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
+        - Alertmanager:
+            href: https://alertmanager.${SECRET_DOMAIN}
+            icon: alertmanager.png
+            # description: This is my service
+        - Prometheus:
+            href: https://prometheus.${SECRET_DOMAIN}
+            icon: prometheus.png
+            # description: This is my service
+    - Storage:
+        - TrueNAS:
+            href: https://truenas.${SECRET_DOMAIN}
+            icon: truenas-scale.png
+            # description: This is my service
+            widget:
+                type: truenas
+                url: https://truenas.${SECRET_DOMAIN}
+                username: ${SECRET_ADMIN_USER}
+                password: ${SECRET_DEFAULT_PWD}
+        - MinIO:
+            href: https://truenas.${SECRET_DOMAIN}:9001
+            icon: minio.png
+            # description: This is my service
+        - Rook-Ceph:
+            href: https://rook.${SECRET_DOMAIN}
+            icon: ceph.png
+            # description: This is my service
+    - Databases:
+        - pgAdmin:
+            href: https://pgadmin.${SECRET_DOMAIN}
+            icon: pgadmin.png
+            # description: This is my service
+        - cloudbeaver:
+            href: https://cloudbeaver.${SECRET_DOMAIN}
+            icon: cloudbeaver.png
+            # description: This is my service
+        - RedisInsight:
+            href: https://redisinsight.${SECRET_DOMAIN}
+            icon: redis.png
+            # description: This is my service
+    - Apps & Services:
+        - Hammond:
+            href: https://hammond.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/golf.png
+            description: Hammond is a mileage-tracking utility; like Clarkson, but better
+        - Mealie:
+            href: https://mealie.${SECRET_DOMAIN}
+            icon: mealie.png
+            description: Mealie is a self-hosted recipe manager and meal planner
+        - Shiori:
+            href: https://shiori.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png
+            description: Mealie is a self-hosted recipe manager and meal planner

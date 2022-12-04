@@ -1,0 +1,59 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: homepage
+  namespace: services
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.1.3
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  values:
+    global:
+      # nameOverride: hammond
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      repository: ghcr.io/benphelps/homepage
+      tag: v0.5.3
+      pullPolicy: IfNotPresent
+
+    # env:
+    #   TZ: America/New_York
+
+    ingress:
+      main:
+        enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
+            targetPort: 3000
+
+    persistence:
+      config:
+        enabled: true
+        type: configmap
+        name: homepage-config
+        mountPath: /app/config
+        # subPath:
+        #   - path: services.yaml
+        #     mountPath: /app/config/services.yaml
+        #   - path: settings.yaml
+        #     mountPath: /app/config/settings.yaml
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 105M
+      limits:
+        memory: 225M
