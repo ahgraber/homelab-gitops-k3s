@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - ./db-apps.yaml
   - ./monitoring-apps.yaml
+  - ./service-apps.yaml
+  - ./storage-apps.yaml
+  - ./infra.yaml

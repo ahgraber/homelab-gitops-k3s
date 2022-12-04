@@ -1,0 +1,45 @@
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: opnsense
+  namespace: services
+spec:
+  name: opnsense
+  group: infra
+  icon: "https://opnsense.org/wp-content/uploads/2014/11/opnsense_logo-zilver_grijs.png"
+  url: "https://opnsense.${SECRET_DOMAIN}"
+  networkRestricted: false
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: adguard
+  namespace: services
+spec:
+  name: adguard
+  group: infra
+  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/adguard-logo.png"
+  url: "https://opnsense.${SECRET_DOMAIN}:44353"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: truenas
+  namespace: services
+spec:
+  name: homeassistant
+  group: infra
+  icon: "https://github.com/home-assistant/frontend/blob/dev/public/static/icons/favicon-512x512.png"
+  url: "https://homeassistant.${SECRET_DOMAIN}:8123"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional

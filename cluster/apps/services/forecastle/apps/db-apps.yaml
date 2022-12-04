@@ -7,7 +7,7 @@ metadata:
 spec:
   name: pgadmin
   group: databases
-  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/pgadmin.png"
+  icon: "https://github.com/stakater/ForecastleIcons/raw/master/pgadmin.png"
   url: "https://pgadmin.${SECRET_DOMAIN}"
   networkRestricted: true
   # properties:
