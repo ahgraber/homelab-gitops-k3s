@@ -14,7 +14,7 @@ configMapGenerator:
 
   - name: speedtest-dashboard
     files:
-      - speedtest-dashboard.json=https://grafana.com/api/dashboards/13665/revisions/4/download
+      - speedtest-dashboard.json=https://raw.githubusercontent.com/MiguelNdeCarvalho/speedtest-exporter/main/Dashboard/Speedtest-Exporter.json
 
 generatorOptions:
   disableNameSuffixHash: true
