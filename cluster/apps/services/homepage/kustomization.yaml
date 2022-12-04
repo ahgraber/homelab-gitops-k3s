@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./ingressRoute.yaml
-  - ./apps/
+  - ./configmap.yaml
