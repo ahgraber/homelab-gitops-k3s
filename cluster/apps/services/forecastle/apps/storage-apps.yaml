@@ -1,0 +1,60 @@
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: truenas
+  namespace: services
+spec:
+  name: truenas
+  group: storage
+  icon: "https://static.ixsystems.co/uploads/2020/07/truenas-logo-full-color-rgb-1024x172.png"
+  url: "https://truenas.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: minio
+  namespace: services
+spec:
+  name: minio
+  group: storage
+  icon: "https://min.io/resources/img/logo/MINIO_wordmark.png"
+  url: "https://truenas.${SECRET_DOMAIN}:9001"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: rook-ceph
+  namespace: services
+spec:
+  name: rook-ceph
+  group: storage
+  icon: "https://github.com/ahgraber/homelab-gitops-k3s/raw/main/cluster/apps/services/forecastle/apps/icons/rook-ceph-logos.png"
+  url: "https://rook.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
+---
+apiVersion: forecastle.stakater.com/v1alpha1
+kind: ForecastleApp
+metadata:
+  name: kopia
+  namespace: services
+spec:
+  name: kopia
+  group: storage
+  icon: "https://github.com/kopia/kopia/blob/master/icons/kopia-app-1024.png"
+  url: "https://kopia.${SECRET_DOMAIN}"
+  networkRestricted: true
+  # properties:
+  #   Version: 1.0
+  # instance: "" # Optional
