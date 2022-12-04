@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`mealie.ninerealmlabs.com`)
+    - match: Host(`mealie.${SECRET_DOMAIN}`)
       # - match: Host(`recipes.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
