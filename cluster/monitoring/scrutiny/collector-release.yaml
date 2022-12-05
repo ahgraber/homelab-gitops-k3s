@@ -31,7 +31,7 @@ spec:
 
     initContainers:
       init-config:
-        image: ghcr.io/onedr0p/alpine:latest
+        image: ghcr.io/onedr0p/alpine:3.17.0
         env:
           - name: COLLECTOR_API_ENDPOINT
             value: http://scrutiny.monitoring.svc.cluster.local:8080
