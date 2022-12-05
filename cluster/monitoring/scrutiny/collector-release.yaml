@@ -39,12 +39,11 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
-        command:
+        command: # double "$$" escape flux substitutions
           - /bin/bash
           - -c
           - |
             mkdir -p /opt/scrutiny/config &&
-            echo $(env) > /opt/scrutiny/config/env.txt &&
             cat << EOF > /opt/scrutiny/config/collector.yaml
             ---
             # config piped from lifecycle.postStart script
