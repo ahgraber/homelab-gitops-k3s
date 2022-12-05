@@ -17,7 +17,7 @@ data:
     # backgroundOpacity: 0.5
     favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png
     theme: dark
-    color: natural
+    color: neutral
     layout:
       Infrastructure: # group name in services.yaml
         style: row
@@ -47,12 +47,12 @@ data:
 
   widgets.yaml: |
     ---
-    # - logo:
+    - logo:
     - search:
         provider: custom
-        url: https://lougle.com/?q=
+        url: https://search.unlocked.link/search?q=
         target: _blank
-        focus: true # Optional, will set focus to the search bar on page load
+        # focus: true # Optional, will set focus to the search bar on page load
     - openmeteo:
         label: Home # optional
         latitude: 40.008378
