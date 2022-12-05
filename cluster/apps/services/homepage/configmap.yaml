@@ -4,8 +4,8 @@ kind: ConfigMap
 metadata:
   name: homepage-config
   namespace: services
-  # labels:
-  #   app.kubernetes.io/name: homepage
+  labels:
+    app.kubernetes.io/name: homepage
   annotations:
     reloader.stakater.com/match: "true"
 data:
@@ -18,7 +18,7 @@ data:
     favicon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png"
     # favicon: /images/favicon.ico
     theme: dark
-    color: slate
+    color: natural
     layout:
       Infrastructure: # group name in services.yaml
         style: row
@@ -48,7 +48,7 @@ data:
 
   widgets.yaml: |
     ---
-    - logo:
+    # - logo:
     - search:
         provider: custom
         url: https://lougle.com/?q=
@@ -114,8 +114,8 @@ data:
             widget:
                 type: truenas
                 url: https://truenas.${SECRET_DOMAIN}
-                username: ${SECRET_ADMIN_USER}
-                password: ${SECRET_DEFAULT_PWD}
+                username: ${SECRET_TRUENAS_USER}
+                password: ${SECRET_TRUENAS_APIKEY}
         - MinIO:
             href: https://truenas.${SECRET_DOMAIN}:9001
             icon: minio.png
@@ -140,7 +140,7 @@ data:
     - Apps & Services:
         - Hammond:
             href: https://hammond.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/forecastle/apps/icons/golf.png
+            icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
             description: Hammond is a mileage-tracking utility; like Clarkson, but better
         - Mealie:
             href: https://mealie.${SECRET_DOMAIN}
