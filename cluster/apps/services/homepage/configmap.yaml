@@ -16,7 +16,6 @@ data:
     # background: /images/background.png # in /app/public
     # backgroundOpacity: 0.5
     favicon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png"
-    # favicon: /images/favicon.ico
     theme: dark
     color: natural
     layout:
