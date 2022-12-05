@@ -26,8 +26,8 @@ spec:
             severity: warning
         - alert: HighResponseTime
           annotations:
-            description:
-            summary: High response time in database {{$labels.datname}}
+            description: High response time in database {{$labels.datname}}
+            summary: Transactions are taking more than 2 minutes
           expr: |-
             avg(rate(cnpg_backends_max_tx_duration_seconds{datname!~"template.*"}[5m])) by (datname) > 2 * 60
           for: 1m
