@@ -45,7 +45,7 @@ spec:
           - |
             sleep 10 &&
             mkdir -p /opt/scrutiny/config &&
-            [[ -z "${NODE_NAME}" ]] && env > env_missing_nodeName.txt ||
+            env > env.txt &&
             cat << EOF > /opt/scrutiny/config/collector.yaml
             ---
             # config piped from lifecycle.postStart script
@@ -72,10 +72,10 @@ spec:
     env:
       - name: COLLECTOR_API_ENDPOINT
         value: http://scrutiny.monitoring.svc.cluster.local:8080
-      - name: NODE_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: spec.nodeName
+      # - name: NODE_NAME
+      #   valueFrom:
+      #     fieldRef:
+      #       fieldPath: spec.nodeName
 
     service:
       main:
