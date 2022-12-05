@@ -44,6 +44,7 @@ spec:
           - -c
           - |
             mkdir -p /opt/scrutiny/config &&
+            [[ -z "${NODE_NAME}" ]] ||
             cat << EOF > /opt/scrutiny/config/collector.yaml
             ---
             # config piped from lifecycle.postStart script
@@ -51,7 +52,7 @@ spec:
             host:
               id: "${NODE_NAME}"
             api:
-              endpoint: "$COLLECTOR_API_ENDPOINT}"
+              endpoint: "${COLLECTOR_API_ENDPOINT}"
             EOF
         volumeMounts:
           - name: config
