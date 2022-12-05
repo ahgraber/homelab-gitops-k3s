@@ -26,8 +26,9 @@ spec:
       tag: v0.5.3
       pullPolicy: IfNotPresent
 
-    # env:
-    #   TZ: America/New_York
+    env:
+      TZ: ${TIMEZONE}
+      LOG_LEVEL: debug
 
     ingress:
       main:
