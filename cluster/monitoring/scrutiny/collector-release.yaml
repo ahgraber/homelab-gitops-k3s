@@ -45,7 +45,7 @@ spec:
           - |
             sleep 10 &&
             mkdir -p /opt/scrutiny/config &&
-            [[ -z "${NODE_NAME}" ]] ||
+            [[ -z "${NODE_NAME}" ]] && env > env_missing_nodeName.txt ||
             cat << EOF > /opt/scrutiny/config/collector.yaml
             ---
             # config piped from lifecycle.postStart script
@@ -111,19 +111,10 @@ spec:
       limits:
         memory: 128Mi
 
-    # lifecycle:
-    #   # set up subdirectories in PVC
-    #   postStart:
-    #     exec:
-    #       command:
-    #         - /bin/bash
-    #         - -c
-    #         - |
-    #           mkdir -p /opt/scrutiny/config &&
-    #           cat << EOF > /opt/scrutiny/config/collector.yaml
-    #           ---
-    #           # config piped from lifecycle.postStart script
-    #           version: 1
-    #           host:
-    #             id: "${NODE_NAME}"
-    #           EOF
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - /bin/bash
+            - -c
+            - /opt/scrutiny/bin/scrutiny-collector-metrics run --config /opt/scrutiny/config/collector.yaml
