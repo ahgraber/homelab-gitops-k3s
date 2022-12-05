@@ -11,11 +11,11 @@ metadata:
 data:
   settings.yaml: |
     ---
-    # title:
+    title: Dashboard
     # background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
     # background: /images/background.png # in /app/public
     # backgroundOpacity: 0.5
-    favicon: "https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png"
+    favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png
     theme: dark
     color: natural
     layout:
@@ -73,7 +73,7 @@ data:
             # description: This is my service
             widget:
               type: adguard
-              url: https://opnsense.${SECRET_DOMAIN}:44353
+              url: https://10.2.0.1:44353
               username: ${SECRET_ADMIN_USER}
               password: ${SECRET_DEFAULT_PWD}
         - HomeAssistant:
@@ -112,8 +112,8 @@ data:
             # description: This is my service
             widget:
                 type: truenas
-                url: https://truenas.${SECRET_DOMAIN}
-                username: ${SECRET_TRUENAS_USER}
+                url: https://${SECRET_TRUENAS_IP}
+                username: root
                 password: ${SECRET_TRUENAS_APIKEY}
         - MinIO:
             href: https://truenas.${SECRET_DOMAIN}:9001
@@ -140,15 +140,15 @@ data:
         - Hammond:
             href: https://hammond.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
-            description: Hammond is a mileage-tracking utility; like Clarkson, but better
+            description: A mileage-tracking utility; like Clarkson, but better
         - Mealie:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
-            description: Mealie is a self-hosted recipe manager and meal planner
+            description: A self-hosted recipe manager and meal planner
         - Shiori:
             href: https://shiori.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png
-            description: Mealie is a self-hosted recipe manager and meal planner
+            description: A simple bookmark manager and web page archive tool
 
   bookmarks.yaml: |
     ---
