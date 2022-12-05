@@ -30,18 +30,19 @@ spec:
       repository: docker.io/dbeaver/cloudbeaver
       tag: latest
     env:
-      TZ: "${TIMEZONE}"
+      # TZ: "${TIMEZONE}"
     persistence:
       data:
         enabled: true
-        existingClaim: appdata
-        mountPath: /opt/cloudbeaver/workspace
-        subPath: cloudbeaver
+        existingClaim: cloudbeaver-config
+
     service:
       main:
         ports:
           http:
             port: 8080
+            targetPort: 8978
+
     ingress:
       main:
         enabled: false
