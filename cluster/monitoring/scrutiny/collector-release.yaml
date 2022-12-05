@@ -43,17 +43,16 @@ spec:
           - /bin/bash
           - -c
           - |
-            sleep 10 &&
             mkdir -p /opt/scrutiny/config &&
-            env > env.txt &&
+            echo $(env) > /opt/scrutiny/config/env.txt &&
             cat << EOF > /opt/scrutiny/config/collector.yaml
             ---
             # config piped from lifecycle.postStart script
             version: 1
             host:
-              id: "${NODE_NAME}"
+              id: "$${NODE_NAME}"
             api:
-              endpoint: "${COLLECTOR_API_ENDPOINT}"
+              endpoint: "$${COLLECTOR_API_ENDPOINT}"
             EOF
         volumeMounts:
           - name: config
