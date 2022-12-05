@@ -7,6 +7,6 @@ resources:
   - ./karma/
   - ./kube-prometheus-stack/
   - ./node-problem-detector/
-  # - ./scrutiny/
+  - ./scrutiny/
   - ./speedtest-exporter/
   - ./thanos/
