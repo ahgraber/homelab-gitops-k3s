@@ -66,11 +66,11 @@ spec:
       limits:
         memory: 225M
 
-    lifecycle:
-      # set up subdirectories in PVC
-      postStart:
-        exec:
-          command:
-            - /bin/sh
-            - -c
-            - rm /app/config/docker.yaml
+    # lifecycle:
+    #   # set up subdirectories in PVC
+    #   postStart:
+    #     exec:
+    #       command:
+    #         - /bin/sh
+    #         - -c
+    #         - rm /app/config/docker.yaml
