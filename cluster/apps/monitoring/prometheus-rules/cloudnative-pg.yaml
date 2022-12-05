@@ -8,12 +8,28 @@ spec:
   groups:
     - name: cnp-default.rules
       rules:
+        - alert: InstanceDown
+          annotations:
+            summary: Instance down {{$labels.instance}}
+          expr: cnpg_collector_up == 0
+          for: 10m
+          labels:
+            severity: error
         - alert: LongRunningTransaction
           annotations:
             description: Pod {{ $labels.pod }} is taking more than 5 minutes (300 seconds) for a query.
             summary: A query is taking longer than 5 minutes.
           expr: |-
             cnpg_backends_max_tx_duration_seconds > 300
+          for: 1m
+          labels:
+            severity: warning
+        - alert: HighResponseTime
+          annotations:
+            description:
+            summary: High response time in database {{$labels.datname}}
+          expr: |-
+            avg(rate(cnpg_backends_max_tx_duration_seconds{datname!~"template.*"}[5m])) by (datname) > 2 * 60
           for: 1m
           labels:
             severity: warning
@@ -53,21 +69,21 @@ spec:
         #   for: 1m
         #   labels:
         #     severity: warning
-        - alert: ArchivingFailing
+        - alert: HighWALFilesArchiveErrorRate
           annotations:
-            description: Archiving failing for {{ $labels.pod }}
-            summary: Count of archive fails is increasing.
+            summary: High error rate in WAL files archiver in instance {{$labels.instance}}
           expr: |-
-            increase(cnpg_pg_stat_archiver_failed_count[5m]) > 0
-          for: 60m
+            rate(cnpg_pg_stat_archiver_failed_count[5m]) /
+            (rate(cnpg_pg_stat_archiver_archived_count[5m]) +
+              rate(cnpg_pg_stat_archiver_failed_count[5m])) > 0.1
+          for: 10m
           labels:
             severity: warning
-        - alert: DatabaseDeadlockConflicts
+        - alert: DeadlocksInDatabase
           annotations:
-            description: There are over 10 deadlock conflicts in {{ $labels.pod }}
-            summary: Checks the number of database conflicts
+            summary: Deadlocks in database {{$labels.datname}}
           expr: |-
-            cnpg_pg_stat_database_deadlocks > 10
-          for: 1m
+            rate(cnpg_pg_stat_database_deadlocks{datname!~"template.*"}[5m]) > 0
+          for: 10m
           labels:
             severity: warning
