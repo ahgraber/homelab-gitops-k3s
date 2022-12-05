@@ -26,12 +26,40 @@ spec:
     - name: scrutiny
       namespace: monitoring
   values:
+    controller:
+      type: daemonset
+
+    initContainers:
+      init-config:
+        image: ghcr.io/onedr0p/alpine:latest
+        env:
+          - name: COLLECTOR_API_ENDPOINT
+            value: http://scrutiny.monitoring.svc.cluster.local:8080
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        command:
+          - /bin/bash
+          - -c
+          - |
+            mkdir -p /opt/scrutiny/config &&
+            cat << EOF > /opt/scrutiny/config/collector.yaml
+            ---
+            # config piped from lifecycle.postStart script
+            version: 1
+            host:
+              id: "${NODE_NAME}"
+            api:
+              endpoint: "$COLLECTOR_API_ENDPOINT}"
+            EOF
+        volumeMounts:
+          - name: config
+            mountPath: /opt/scrutiny/config
+
     image:
       repository: ghcr.io/analogj/scrutiny
       tag: master-collector
-
-    controller:
-      type: daemonset
 
     # nodeSelector:
     #   kubernetes.io/hostname: harambe
@@ -57,6 +85,10 @@ spec:
       #   add: ["SYS_RAWIO"] # allow access to smartctl
 
     persistence:
+      config:
+        enabled: true
+        type: emptyDir
+        mountPath: /opt/scrutiny/config
       udev:
         enabled: true
         mountPath: /run/udev
@@ -77,19 +109,19 @@ spec:
       limits:
         memory: 128Mi
 
-    lifecycle:
-      # set up subdirectories in PVC
-      postStart:
-        exec:
-          command:
-            - /bin/bash
-            - -c
-            - |
-              mkdir -p /opt/scrutiny/config &&
-              cat << EOF > /opt/scrutiny/config/collector.yaml
-              ---
-              # config piped from lifecycle.postStart script
-              version: 1
-              host:
-                id: "${NODE_NAME}"
-              EOF
+    # lifecycle:
+    #   # set up subdirectories in PVC
+    #   postStart:
+    #     exec:
+    #       command:
+    #         - /bin/bash
+    #         - -c
+    #         - |
+    #           mkdir -p /opt/scrutiny/config &&
+    #           cat << EOF > /opt/scrutiny/config/collector.yaml
+    #           ---
+    #           # config piped from lifecycle.postStart script
+    #           version: 1
+    #           host:
+    #             id: "${NODE_NAME}"
+    #           EOF
