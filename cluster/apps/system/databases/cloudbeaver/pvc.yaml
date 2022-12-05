@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cloudbeaver-config
+  namespace: postgres
+  labels:
+    app.kubernetes.io/instance: cloudbeaver
+    app.kubernetes.io/name: cloudbeaver
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ceph-fs
+  resources:
+    requests:
+      storage: 100Mi
