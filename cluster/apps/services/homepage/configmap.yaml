@@ -114,7 +114,7 @@ data:
                 type: truenas
                 url: https://${SECRET_TRUENAS_IP}
                 username: root
-                password: ${SECRET_TRUENAS_APIKEY}
+                password: ${SECRET_DEFAULT_PWD}
         - MinIO:
             href: https://truenas.${SECRET_DOMAIN}:9001
             icon: minio.png
