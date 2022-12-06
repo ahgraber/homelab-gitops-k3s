@@ -7,5 +7,6 @@ resources:
   - ./homepage/
   - ./httpbin/
   - ./mealie/
+  - ./miniflux/
   - ./shiori/
   - ./valheim/
