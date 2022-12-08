@@ -17,7 +17,7 @@ spec:
         namespace: flux-system
   values:
     global:
-      # nameOverride: hammond
+      # nameOverride: homepage
       annotations:
         reloader.stakater.com/search: "true"
 
