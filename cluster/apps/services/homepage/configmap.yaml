@@ -145,6 +145,10 @@ data:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
             description: A self-hosted recipe manager and meal planner
+        - Miniflux:
+            href: https://miniflux.${SECRET_DOMAIN}
+            icon: miniflux.png
+            description: A self-hosted rss feed reader
         - Shiori:
             href: https://shiori.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png
