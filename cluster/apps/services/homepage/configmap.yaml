@@ -15,30 +15,30 @@ data:
     favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png
     theme: dark
     color: neutral
-    layout:
-      Infrastructure: # group name in services.yaml
-        style: row
-        columns: 3
+    layout: # key by group name in services.yaml
+      Infrastructure:
+        # style: row
+        # columns: 3
         # icon: home-assistant.png
         # headerStyle: boxed
-      Monitoring: # group name in services.yaml
-        style: row
-        columns: 3
+      Monitoring:
+        # style: row
+        # columns: 3
         # icon: home-assistant.png
         # headerStyle: boxed
-      Storage: # group name in services.yaml
-        style: row
-        columns: 4
+      Storage:
+        # style: row
+        # columns: 4
         # icon: home-assistant.png
         # headerStyle: boxed
-      Databases: # group name in services.yaml
-        style: row
-        columns: 3
+      Databases:
+        # style: row
+        # columns: 3
         # icon: home-assistant.png
         # headerStyle: boxed
-      Apps & Services: # group name in services.yaml
-        style: row
-        columns: 3
+      Apps & Services:
+        # style: row
+        # columns: 3
         # icon: home-assistant.png
         # headerStyle: boxed
 
