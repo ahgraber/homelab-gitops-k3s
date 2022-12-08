@@ -102,6 +102,10 @@ data:
             href: https://prometheus.${SECRET_DOMAIN}
             icon: prometheus.png
             # description: This is my service
+        - Crowdsec:
+            href: https://app.crowdsec.net/
+            icon: crowdsec.png
+            description: Crowd-based cyber security threat detection & mitigation
     - Storage:
         - TrueNAS:
             href: https://truenas.${SECRET_DOMAIN}
@@ -137,6 +141,10 @@ data:
             icon: redis.png
             # description: This is my service
     - Apps & Services:
+        - HomeAssistant:
+            href: https://homeassistant.${SECRET_DOMAIN}:8123
+            icon: homeassistant.png
+            # description: This is my service
         - Hammond:
             href: https://hammond.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
