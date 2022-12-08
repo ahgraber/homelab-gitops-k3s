@@ -18,3 +18,10 @@ Refs:
    ```sh
    upsc <UPS_NAME>@<OPNSENSE_IP>:3493
    ```
+
+3. Test that it actually shuts devices down:
+
+   ```sh
+   # from server (OPNsense)
+   upsmon -c fsd
+   ```
