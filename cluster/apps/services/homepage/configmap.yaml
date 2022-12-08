@@ -31,7 +31,7 @@ data:
         # headerStyle: boxed
       Storage: # group name in services.yaml
         style: row
-        columns: 3
+        columns: 4
         # icon: home-assistant.png
         # headerStyle: boxed
       Databases: # group name in services.yaml
@@ -123,6 +123,9 @@ data:
             href: https://rook.${SECRET_DOMAIN}
             icon: ceph.png
             # description: This is my service
+        - Kopia:
+            href: https://kopia.${SECRET_DOMAIN}
+            icon: kopia.png
     - Databases:
         - pgAdmin:
             href: https://pgadmin.${SECRET_DOMAIN}
