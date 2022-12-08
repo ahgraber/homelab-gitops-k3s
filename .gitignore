@@ -27,7 +27,7 @@ report/
 # Local archives
 **/archive
 **/wip
-
+todo.md
 # retain files
 !**.gitkeep
 !*sops*
