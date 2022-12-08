@@ -6,6 +6,7 @@ resources:
   - ./grafana/
   - ./karma/
   - ./kube-prometheus-stack/
+  - ./network-ups-tools/
   - ./node-problem-detector/
   - ./scrutiny/
   - ./speedtest-exporter/

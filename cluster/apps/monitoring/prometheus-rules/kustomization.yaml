@@ -6,7 +6,7 @@ resources:
   - ./cloudnative-pg.yaml
   - ./etcd.yaml
   - ./flux.yaml
-    # - ./loki.yaml
+  - ./network-ups-tools.yaml
   - ./node-exporter.yaml
   - https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
 
