@@ -12,9 +12,6 @@ data:
   settings.yaml: |
     ---
     title: Dashboard
-    # background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
-    # background: /images/background.png # in /app/public
-    # backgroundOpacity: 0.5
     favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/favicon.png
     theme: dark
     color: neutral
@@ -47,7 +44,7 @@ data:
 
   widgets.yaml: |
     ---
-    - logo:
+    # - logo:
     - search:
         provider: custom
         url: https://search.unlocked.link/search?q=
