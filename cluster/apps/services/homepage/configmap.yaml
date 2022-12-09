@@ -141,6 +141,10 @@ data:
             icon: redis.png
             # description: This is my service
     - Apps & Services:
+        - ChangeDetection:
+            href: https://changedetection.${SECRET_DOMAIN}
+            icon: changedetection-io.png
+            description: Monitor which websites had a text change (for free)
         - Hammond:
             href: https://hammond.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
