@@ -1,26 +1,40 @@
 {
   packageRules: [
     {
+      matchDatasources: ["docker"],
       matchUpdateTypes: ["major"],
-      semanticCommitType: "feat!",
-    },
-    {
-      matchUpdateTypes: ["minor"],
-      semanticCommitType: "feat",
-    },
-    {
-      matchUpdateTypes: ["patch"],
-      semanticCommitType: "fix",
+      commitMessagePrefix: "feat(container)!: ",
     },
     {
       matchDatasources: ["docker"],
-      semanticCommitScope: "",
+      matchUpdateTypes: ["minor"],
+      semanticCommitType: "feat",
+      semanticCommitScope: "container",
+    },
+    {
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["digest", "patch"],
+      semanticCommitType: "fix",
+      semanticCommitScope: "container",
     },
     {
       matchDatasources: ["helm"],
-      semanticCommitScope: "",
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(helm)!: ",
+    },
+    {
+      matchDatasources: ["helm"],
+      matchUpdateTypes: ["minor"],
+      semanticCommitType: "feat",
+      semanticCommitScope: "helm",
     },
 
+    {
+      matchDatasources: ["helm"],
+      matchUpdateTypes: ["patch"],
+      semanticCommitType: "fix",
+      semanticCommitScope: "helm",
+    },
     {
       matchDatasources: ["github-releases", "github-tags"],
       matchUpdateTypes: ["major"],
@@ -54,23 +68,6 @@
       matchUpdateTypes: ["patch"],
       semanticCommitType: "fix",
       semanticCommitScope: "github-action",
-    },
-    {
-      matchDatasources: ["pypi"],
-      matchUpdateTypes: ["major"],
-      commitMessagePrefix: "feat(pip)!: ",
-    },
-    {
-      matchDatasources: ["pypi"],
-      matchUpdateTypes: ["minor"],
-      semanticCommitType: "feat",
-      semanticCommitScope: "pip",
-    },
-    {
-      matchDatasources: ["pypi"],
-      matchUpdateTypes: ["patch"],
-      semanticCommitType: "fix",
-      semanticCommitScope: "pip",
     },
   ],
 }
