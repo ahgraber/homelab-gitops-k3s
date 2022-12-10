@@ -19,6 +19,7 @@ spec:
           restartPolicy: OnFailure
           initContainers:
             - name: wait-for-repo
+              # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
               image: ghcr.io/onedr0p/kopia:0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
               command:
                 - /bin/bash
@@ -33,6 +34,7 @@ spec:
                   mountPath: /snapshots
           containers:
             - name: maintenance
+              # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
               image: ghcr.io/onedr0p/kopia:0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
               env:
                 - name: TZ
@@ -82,6 +84,7 @@ spec:
           restartPolicy: OnFailure
           initContainers:
             - name: wait-for-repo
+              # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
               image: ghcr.io/onedr0p/kopia:0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
               command:
                 - /bin/bash
@@ -96,6 +99,7 @@ spec:
                   mountPath: /snapshots
           containers:
             - name: sync
+              # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
               image: ghcr.io/onedr0p/kopia:0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
               env:
                 - name: TZ

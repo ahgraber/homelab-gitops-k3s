@@ -25,6 +25,7 @@ spec:
   values:
     initContainers:
       init-repo:
+        # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
         image: ghcr.io/onedr0p/kopia:0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
         env:
           TZ: "${TIMEZONE}"
@@ -41,6 +42,7 @@ spec:
           - name: snapshots
             mountPath: /snapshots
     image:
+      # renovate: datasource=docker image=ghcr.io/onedr0p/kopia
       repository: ghcr.io/onedr0p/kopia
       tag: 0.12.1@sha256:a1c6971f9cc24b4f1f03db0558b09bd2310d4d335f3f78f785c5bced4d4a9d19
     annotations:

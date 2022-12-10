@@ -33,6 +33,15 @@
       separateMinorPatch: true,
     },
     {
+      description: "Traefik image and chart",
+      groupName: "Traefik",
+      matchPackagePatterns: ["traefik"],
+      matchDatasources: ["docker", "github-releases", "helm"],
+      matchUpdateTypes: ["minor", "patch"],
+      group: { commitMessageTopic: "{{{groupName}}} group" },
+      separateMinorPatch: true,
+    },
+    {
       description: "Thanos image and chart - mismatched versions",
       groupName: "Thanos",
       matchPackagePatterns: ["thanos"],
