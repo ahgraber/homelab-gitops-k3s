@@ -56,15 +56,19 @@ spec:
           http:
             port: 80
           steam1:
+            enabled: true
             port: 2456
             protocol: UDP
           steam2:
+            enabled: true
             port: 2457
             protocol: UDP
           steam3:
+            enabled: true
             port: 2458
             protocol: UDP
           supervisor:
+            enabled: true
             port: 9001
             protocol: TCP
 
