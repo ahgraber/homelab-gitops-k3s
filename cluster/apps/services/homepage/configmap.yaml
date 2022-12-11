@@ -149,6 +149,10 @@ data:
             href: https://hammond.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
             description: A mileage-tracking utility; like Clarkson, but better
+        - Linkding:
+            href: https://linkding.${SECRET_DOMAIN}
+            icon: linkding.png
+            description: A bookmark manager with read-it-later and archiving functionality
         - Mealie:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
