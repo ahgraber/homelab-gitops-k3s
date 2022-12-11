@@ -18,11 +18,11 @@ spec:
         any:
           - resources:
               kinds:
-                - Deployments
-                - DaemonSets
-                - ReplicaSets
-                - StatefulSets
-                - Rollouts
+                - Deployment
+                - DaemonSet
+                - ReplicaSet
+                - StatefulSet
+                - Rollout
       # exclude:
       #   any:
       #     - resources:
