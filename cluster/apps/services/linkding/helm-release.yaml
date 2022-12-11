@@ -24,7 +24,7 @@ spec:
       retries: 5
   values:
     global:
-      nameOverride: shiori
+      nameOverride: linkding
       annotations:
         reloader.stakater.com/search: "true"
 
