@@ -46,10 +46,12 @@ spec:
         enabled: false
     service:
       enable: true
-      type: LoadBalancer
-      loadBalancerIP: 10.2.113.128 # this should be the in the "default" load balancer IP range
-
       main:
+        type: LoadBalancer
+        externalIPs:
+          # this should be the in the "default" load balancer IP range
+          - 10.2.113.128
+        externalTrafficPolicy: Local
         ports:
           http:
             port: 80
