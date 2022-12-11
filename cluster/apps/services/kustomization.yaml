@@ -8,6 +8,7 @@ resources:
   - ./hammond/
   - ./homepage/
   - ./httpbin/
+  - ./linkding/
   - ./mealie/
   - ./miniflux/
   - ./shiori/
