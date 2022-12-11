@@ -2,3 +2,7 @@
 creation_rules:
   - encrypted_regex: "^(data|stringData)$"
     age: age1a7nyvwztvzudynvx92z6tegdxcmudhdh7fh6ty6sqs8n4gh2lelqkqk9aa
+  - path_regex: kubernetes/.*\.sops\.toml
+    key_groups:
+      - age:
+          - age1a7nyvwztvzudynvx92z6tegdxcmudhdh7fh6ty6sqs8n4gh2lelqkqk9aa
