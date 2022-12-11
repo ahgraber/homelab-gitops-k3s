@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app linkding
+  namespace: services
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+      interval: 15m
+  install:
+    # createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    global:
+      nameOverride: shiori
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      # https://hub.docker.com/r/sissbruecker/linkding
+      repository: docker.io/sissbruecker/linkding
+      tag: latest
+
+    # https://github.com/sissbruecker/linkding/blob/master/docs/Options.md
+    env:
+      TZ: "${TIMEZONE}"
+      LD_DISABLE_BACKGROUND_TASKS: false
+      LD_DISABLE_URL_VALIDATION: false
+      # LD_ENABLE_AUTH_PROXY: true
+      # LD_AUTH_PROXY_USERNAME_HEADER: HTTP_REMOTE_USER
+      # LD_AUTH_PROXY_LOGOUT_URL: "https://auth.${PUBLIC_DOMAIN}/logout"
+      LD_CSRF_TRUSTED_ORIGINS: "https://linkding.${SECRET_DOMAIN}"
+    envFrom:
+      - secretRef:
+          name: linkding-secret
+    # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
+    persistence:
+      data:
+        enabled: true
+        type: pvc
+        accessMode: ReadWriteOnce
+        mountPath: /datastore
+        storageClass: ceph-block
+        size: 2 Gi
+    # # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
+    # podSecurityContext:
+    #   runAsUser: 33
+    #   runAsGroup: 33
+    #   fsGroup: 33
+    service:
+      main:
+        ports:
+          http:
+            port: 9090
+    ingress:
+      main:
+        enabled: false
