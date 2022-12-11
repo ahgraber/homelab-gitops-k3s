@@ -45,6 +45,10 @@ spec:
       main:
         enabled: false
     service:
+      enable: true
+      type: LoadBalancer
+      loadBalancerIP: 10.2.113.128 # this should be the in the "default" load balancer IP range
+
       main:
         ports:
           http:
