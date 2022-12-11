@@ -53,7 +53,7 @@ spec:
         accessMode: ReadWriteOnce
         mountPath: /datastore
         storageClass: ceph-block
-        size: 2 Gi
+        size: 2Gi
     # # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
     # podSecurityContext:
     #   runAsUser: 33
