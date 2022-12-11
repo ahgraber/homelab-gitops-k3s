@@ -22,7 +22,7 @@ spec:
                 - DaemonSet
                 - ReplicaSet
                 - StatefulSet
-                - Rollout
+                # - Rollout
       # exclude:
       #   any:
       #     - resources:
