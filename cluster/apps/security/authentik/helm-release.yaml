@@ -1,0 +1,92 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: security
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.goauthentik.io/
+      chart: authentik
+      version: 2022.11.3
+      sourceRef:
+        kind: HelmRepository
+        name: authentik-charts
+        namespace: flux-system
+      interval: 5m
+
+  dependsOn:
+    - name: authentik-postgres
+      namespace: security
+    - name: authentik-redis
+      namespace: security
+
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+      remediateLastFailure: true
+
+  values:
+    fullnameOverride: authentik
+    image:
+      repository: ghcr.io/goauthentik/server
+      tag: 2022.11.3
+    geoip:
+      enabled: true
+    authentik:
+      error_reporting:
+        enabled: false
+      # outposts:
+      #   docker_image_base: ghcr.io/goauthentik/%(type)s:%(version)s
+    envFrom:
+      - authentik-secret
+    ingress:
+      enabled: false
+    service:
+      main:
+        type: LoadBalancer
+        externalIPs:
+          # this should be the load balancer IP reserved for auth
+          - "${LB_AUTH}"
+        externalTrafficPolicy: Local
+    postgresql:
+      enabled: false
+    redis:
+      enabled: false
+    prometheus:
+      rules:
+        create: true
+      serviceMonitor:
+        create: true
+    resources:
+      server:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          memory: 384Mi
+      worker:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          memory: 384Mi
+    # volumeMounts:
+    #   - name: background-image-1
+    #     mountPath: /media/sound_wave.svg
+    #     readOnly: true
+    # volumes:
+    #   - name: background-image-1
+    #     projected:
+    #       defaultMode: 0775
+    #       sources:
+    #         - configMap:
+    #             name: background-image-1
+    #             items:
+    #               - key: sound_wave.svg
+    #                 path: sound_wave.svg
