@@ -28,6 +28,7 @@ resources:
   # - ./infracloudio-charts.yaml
   # - ./ingress-nginx-charts.yaml
   - ./jetstack-charts.yaml # cert-manager
+  - ./jupyterhub-charts.yaml
   # - ./kasten-charts.yaml
   - ./kubereboot-charts.yaml # kured
   # - ./kuberhealthy-charts.yaml

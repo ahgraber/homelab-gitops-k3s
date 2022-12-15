@@ -1,0 +1,112 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &name jupyterhub-cnpgdb
+  namespace: &namespace postgres
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: raw
+      version: v0.3.1
+      sourceRef:
+        kind: HelmRepository
+        name: dysnix-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: cnpg-operator
+      namespace: postgres
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    resources:
+      - apiVersion: postgresql.cnpg.io/v1
+        kind: Cluster
+        metadata:
+          name: *name
+          namespace: *namespace
+          annotations:
+            kyverno.io/ignore: "true"
+        spec:
+          description: "jupyterhub DB"
+          imageName: ghcr.io/cloudnative-pg/postgresql:14.5
+          instances: 1
+          startDelay: 300
+          stopDelay: 300
+          primaryUpdateStrategy: unsupervised
+
+          postgresql:
+            parameters:
+              shared_buffers: 256MB
+              pg_stat_statements.max: "10000"
+              pg_stat_statements.track: all
+              auto_explain.log_min_duration: "10s"
+            pg_hba:
+              - host all all 10.244.0.0/16 md5
+
+          bootstrap:
+            initdb:
+              database: jupyterhub
+              owner: jupyterhub
+              secret:
+                name: jupyterhub-user-secret
+            # # Alternative bootstrap method: start from a backup
+            # recovery:
+            #   backup:
+            #     name: jupyterhub-backup
+
+          superuserSecret:
+            name: postgres-superuser-secret
+
+          storage:
+            size: 5Gi
+            storageClass: ceph-block-retain
+
+          backup:
+            retentionPolicy: 30d
+            barmanObjectStore:
+              endpointURL: https://${SECRET_S3_ENDPOINT}
+              destinationPath: s3://postgres
+              s3Credentials:
+                accessKeyId:
+                  name: s3-secret
+                  key: ACCESS_KEY_ID
+                secretAccessKey:
+                  name: s3-secret
+                  key: ACCESS_SECRET_KEY
+              wal:
+                compression: bzip2
+                maxParallel: 8
+              data:
+                compression: bzip2
+                immediateCheckpoint: false
+                jobs: 4
+
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 50m
+            limits:
+              memory: 256Mi
+
+          affinity:
+            enablePodAntiAffinity: true
+            topologyKey: kubernetes.io/hostname
+
+          monitoring:
+            enablePodMonitor: true
+            # note: this is 90% the same as the default monitoring config auto-deployed with the operator
+            customQueriesConfigMap:
+              - name: cnpg-basic-monitoring
+                key: custom-queries
+
+          nodeMaintenanceWindow:
+            inProgress: false
+            reusePVC: false
