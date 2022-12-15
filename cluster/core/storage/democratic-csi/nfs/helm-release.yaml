@@ -32,7 +32,7 @@ spec:
 
     driver:
       # see the driver-config-secret.yaml template for syntax
-      existingConfigSecret: secret-democratic-csi-driver-config-nfs
+      existingConfigSecret: nfs-driver-config-secret
       config:
         ## NOTE: if setting an existing secret you must still set `driver.config.driver`
         ## to the appropriate (equivalent) 'driver' value used in the secret,
@@ -79,7 +79,7 @@ spec:
 
       annotations:
         reloader.stakater.com/search: "true"
-        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
+        # secret.reloader.stakater.com/reload: "nfs-driver-config-secret"
 
       tolerations:
         - key: node-role.kubernetes.io/master
@@ -121,7 +121,7 @@ spec:
 
       annotations:
         reloader.stakater.com/search: "true"
-        # secret.reloader.stakater.com/reload: "secret-democratic-csi-driver-config-nfs"
+        # secret.reloader.stakater.com/reload: "nfs-driver-config-secret"
 
       tolerations:
         - key: node-role.kubernetes.io/master
@@ -144,7 +144,7 @@ spec:
     volumeSnapshotClasses:
       - name: csi-truenas-nfs
         deletionPolicy: Delete # Delete, Retain
-        annotations:
-          velero.io/csi-volumesnapshot-class: "true"
-        labels:
-          velero.io/csi-volumesnapshot-class: "true"
+        # annotations:
+        #   velero.io/csi-volumesnapshot-class: "true"
+        # labels:
+        #   velero.io/csi-volumesnapshot-class: "true"
