@@ -6,4 +6,4 @@ metadata:
   namespace: networking
 spec:
   basicAuth:
-    secret: secret-traefik-basicauth
+    secret: traefik-basicauth-secret
