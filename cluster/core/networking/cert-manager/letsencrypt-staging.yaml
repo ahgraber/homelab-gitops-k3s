@@ -14,5 +14,5 @@ spec:
           cloudflare:
             email: "${SECRET_CLOUDFLARE_EMAIL}"
             apiTokenSecretRef:
-              name: secret-cloudflare-token
+              name: cloudflare-token-secret
               key: cloudflare-token
