@@ -72,13 +72,13 @@ spec:
           cpu: 100m
           memory: 128Mi
         limits:
-          memory: 384Mi
+          memory: 512Mi
       worker:
         requests:
           cpu: 100m
           memory: 128Mi
         limits:
-          memory: 384Mi
+          memory: 512Mi
     # volumeMounts:
     #   - name: background-image-1
     #     mountPath: /media/sound_wave.svg
