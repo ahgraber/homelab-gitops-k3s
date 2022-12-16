@@ -7,6 +7,6 @@ resources:
   - ./helm-release.yaml
   - ./secret.sops.yaml
   - ./middleware.yaml
-  # - ./ingressRoute-admin.yaml
+  - ./ingressRoute.yaml
   # - ./ingressRoute-forwardauth.yaml
   # - ./pvc.yaml

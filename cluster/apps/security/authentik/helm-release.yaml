@@ -49,14 +49,13 @@ spec:
     #   - authentik-secret
     ingress:
       enabled: false
-    service:
-      main:
-        type: LoadBalancer
-        # this should be the load balancer IP reserved for auth
-        loadBalancerIP: "${LB_AUTH}"
-        # externalIPs:
-        #   - "${LB_AUTH}"
-        externalTrafficPolicy: Local
+    # service:
+    #   type: LoadBalancer
+    #   # this should be the load balancer IP reserved for auth
+    #   loadBalancerIP: "${LB_AUTH}"
+    #   # externalIPs:
+    #   #   - "${LB_AUTH}"
+    #   externalTrafficPolicy: Local
     postgresql:
       enabled: false
     redis:
