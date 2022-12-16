@@ -143,7 +143,6 @@ spec:
       #           - x86
 
   valuesFrom:
-    # created by rook-ceph in ObjectBucketClaim thanos-ceph-bucket
     - targetPath: hub.db
       kind: Secret
       name: jupyterhub-secret
