@@ -38,15 +38,15 @@ spec:
       tag: 2022.11.3
     geoip:
       enabled: true
-      accountId: "${SECRET_MAXMIND_ACCOUNT_ID}"
-      licenseKey: "${SECRET_MAXMIND_LICENSE_KEY}"
+      # accountId: "${SECRET_MAXMIND_ACCOUNT_ID}"
+      # licenseKey: "${SECRET_MAXMIND_LICENSE_KEY}"
     authentik:
       error_reporting:
         enabled: false
       # outposts:
       #   docker_image_base: ghcr.io/goauthentik/%(type)s:%(version)s
-    envFrom:
-      - authentik-secret
+    # envFrom:
+    #   - authentik-secret
     ingress:
       enabled: false
     service:
@@ -92,3 +92,6 @@ spec:
     #             items:
     #               - key: sound_wave.svg
     #                 path: sound_wave.svg
+  valuesFrom:
+    - kind: Secret
+      name: authentik-secret
