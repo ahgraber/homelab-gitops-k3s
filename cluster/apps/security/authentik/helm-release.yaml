@@ -65,19 +65,19 @@ spec:
         create: true
       serviceMonitor:
         create: true
-    resources:
-      server:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          memory: 384Mi
-      worker:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          memory: 384Mi
+    # resources:
+    #   server:
+    #     requests:
+    #       cpu: 100m
+    #       memory: 128Mi
+    #     limits:
+    #       memory: 384Mi
+    #   worker:
+    #     requests:
+    #       cpu: 100m
+    #       memory: 128Mi
+    #     limits:
+    #       memory: 384Mi
     # volumeMounts:
     #   - name: background-image-1
     #     mountPath: /media/sound_wave.svg
