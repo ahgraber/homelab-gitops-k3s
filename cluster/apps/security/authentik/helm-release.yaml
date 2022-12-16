@@ -18,10 +18,10 @@ spec:
       interval: 5m
 
   dependsOn:
-    - name: authentik-postgres
-      namespace: security
+    - name: authentik-cnpgdb
+      namespace: postgres
     - name: authentik-redis
-      namespace: security
+      namespace: redis
 
   install:
     remediation:
