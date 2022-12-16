@@ -38,6 +38,8 @@ spec:
       tag: 2022.11.3
     geoip:
       enabled: true
+      accountId: "${SECRET_MAXMIND_ACCOUNT_ID}"
+      licenseKey: "${SECRET_MAXMIND_LICENSE_KEY}"
     authentik:
       error_reporting:
         enabled: false
