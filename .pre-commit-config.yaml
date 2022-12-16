@@ -72,6 +72,18 @@ repos:
           - --config-file=.yamllint.yaml
           - --format=parsable
           - --strict
+  # - repo: https://github.com/hadolint/hadolint.git
+  #   rev: v2.12.1-beta
+  #   hooks:
+  #     - id: hadolint-docker
+  #       entry: hadolint/hadolint hadolint
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.8.0.4
+    hooks:
+      - id: shellcheck
+        args: ["-x"]
+        # ignore '*.zsh" scripts'
+        exclude: "^.*zsh$"
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.1.1
     hooks:
