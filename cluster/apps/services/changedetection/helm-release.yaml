@@ -55,6 +55,13 @@ spec:
       main:
         enabled: false
 
+    resources:
+      requests:
+        cpu: 25m
+        memory: 145M
+      limits:
+        memory: 145M
+
     additionalContainers:
       - name: changedetection-browser
         image: docker.io/browserless/chrome:latest
@@ -69,3 +76,9 @@ spec:
           CHROME_REFRESH_TIME: 600000
           DEFAULT_BLOCK_ADS: true
           DEFAULT_STEALTH: true
+        resources:
+          requests:
+            cpu: 25m
+            memory: 979M
+          limits:
+            memory: 979M
