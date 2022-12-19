@@ -35,7 +35,7 @@ spec:
 
     image:
       repository: docker.io/miniflux/miniflux
-      tag: 2.0.40
+      tag: 2.0.41
 
     env:
       BASE_URL: "https://miniflux.${SECRET_DOMAIN}"
