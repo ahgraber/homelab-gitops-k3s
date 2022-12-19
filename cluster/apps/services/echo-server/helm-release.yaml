@@ -27,9 +27,9 @@ spec:
     resources:
       requests:
         cpu: 50m
-        memory: 64Mi
+        memory: 64M
       limits:
-        memory: 96Mi
+        memory: 96M
 
     annotations:
       reloader.stakater.com/search: "true"

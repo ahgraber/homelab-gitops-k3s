@@ -67,3 +67,10 @@ spec:
     ingress:
       main:
         enabled: false
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 256M
+      limits:
+        memory: 256M

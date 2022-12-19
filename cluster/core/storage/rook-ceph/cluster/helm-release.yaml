@@ -46,9 +46,9 @@ spec:
       resources:
         requests:
           cpu: 100m
-          memory: 64Mi
+          memory: 64M
         limits:
-          memory: 128Mi
+          memory: 128M
 
     monitoring:
       enabled: true
@@ -116,33 +116,33 @@ spec:
         prepareosd:
           requests:
             cpu: 250m
-            memory: 50Mi
+            memory: 50M
           limits:
-            memory: 256Mi
+            memory: 256M
         mgr-sidecar:
           requests:
             cpu: 50m
-            memory: 94Mi
+            memory: 94M
           limits:
-            memory: 256Mi
+            memory: 256M
         crashcollector:
           requests:
             cpu: 15m
-            memory: 64Mi
+            memory: 64M
           limits:
-            memory: 64Mi
+            memory: 64M
         logcollector:
           requests:
             cpu: 100m
-            memory: 100Mi
+            memory: 100M
           limits:
             memory: 1Gi
         cleanup:
           requests:
             cpu: 250m
-            memory: 100Mi
+            memory: 100M
           limits:
-            memory: 1Gi
+            memory: 1G
 
   valuesFrom:
     - kind: ConfigMap
