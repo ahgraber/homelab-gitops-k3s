@@ -73,14 +73,14 @@ spec:
         data:
           enabled: true
           accessModes:
-            - ReadWriteMany
+            - ReadWriteOnce
           storageClassName: "ceph-fs"
           size: 1Gi
         # -- Persistent volume for config folder. Stores e.g. online api credentials
         config:
           enabled: true
           accessModes:
-            - ReadWriteMany
+            - ReadWriteOnce
           storageClassName: "ceph-fs"
           size: 100Mi
 
