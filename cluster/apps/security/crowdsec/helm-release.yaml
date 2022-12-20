@@ -15,6 +15,7 @@ spec:
         kind: HelmRepository
         name: crowdsec-charts
         namespace: flux-system
+      interval: 5m
   values:
     # -- for raw logs format: json or cri (docker|containerd)
     container_runtime: containerd
@@ -72,14 +73,14 @@ spec:
         data:
           enabled: true
           accessModes:
-            - ReadWriteOnce
+            - ReadWriteMany
           storageClassName: "ceph-fs"
           size: 1Gi
         # -- Persistent volume for config folder. Stores e.g. online api credentials
         config:
           enabled: true
           accessModes:
-            - ReadWriteOnce
+            - ReadWriteMany
           storageClassName: "ceph-fs"
           size: 100Mi
 
