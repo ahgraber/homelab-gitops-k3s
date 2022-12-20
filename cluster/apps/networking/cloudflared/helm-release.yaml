@@ -30,7 +30,7 @@ spec:
 
     image:
       repository: cloudflare/cloudflared
-      tag: 2022.12.0
+      tag: 2022.12.1
     args:
       - tunnel
       # provide path to config file, created by a ConfigMap below
