@@ -97,11 +97,12 @@ spec:
             name: *name
           scaleUpTriggers:
             - githubEvent:
-                checkRun:
-                  types: ["created"]
-                  status: "queued"
+                workflow_job: {}
+                # checkRun:
+                #   types: ["created"]
+                #   status: "queued"
               amount: 1
-              duration: "1m"
+              duration: "5m"
           minReplicas: 1
           maxReplicas: 3
           metrics:
