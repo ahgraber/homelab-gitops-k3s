@@ -36,6 +36,8 @@ data:
     ### Proxy traffic to the k8s Services directly
     - hostname: flux-receiver.${SECRET_DOMAIN}
       service: http://webhook-receiver.flux-system:80
+    - hostname: ghar-webhook.${SECRET_DOMAIN}
+      service: http://actions-runner-controller-github-webhook-server.actions-runner-system:80
 
     # This rule sends traffic to the built-in hello-world HTTP server. This can help debug connectivity issues.
     # If hello.${SECRET_DOMAIN} resolves and <service>.${SECRET_DOMAIN} does not, then the problem is
