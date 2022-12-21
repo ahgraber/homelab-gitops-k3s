@@ -53,13 +53,6 @@ spec:
                   - 65542
               # cache: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#pv-backed-runner-work-directory
               # docker: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#docker-image-layers-caching
-              workVolumeClaimTemplate:
-                storageClassName: csi-truenas-nfs # ceph-fs
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 10Gi
               volumeMounts:
                 # - name: cache-volume
                 #   mountPath: /cache
