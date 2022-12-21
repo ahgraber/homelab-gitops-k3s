@@ -8,7 +8,7 @@ resources:
   - ./flux.yaml
   - ./network-ups-tools.yaml
   - ./node-exporter.yaml
-  - https://raw.githubusercontent.com/rook/rook/v1.10.6/deploy/examples/monitoring/localrules.yaml
+  - https://raw.githubusercontent.com/rook/rook/v1.10.8/deploy/examples/monitoring/localrules.yaml
 
 # patchesJson6902:
 patches:
