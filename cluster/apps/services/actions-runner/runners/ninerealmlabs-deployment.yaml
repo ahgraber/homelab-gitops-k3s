@@ -97,13 +97,14 @@ spec:
             name: *name
           scaleUpTriggers:
             - githubEvent:
-                workflow_job: {}
+                workflowJob: {}
                 # checkRun:
                 #   types: ["created"]
                 #   status: "queued"
               amount: 1
-              duration: "5m"
-          minReplicas: 1
+              duration: "2m"
+          scaleDownDelaySecondsAfterScaleOut: 600 # anti-flap; # seconds
+          minReplicas: 0 # https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#autoscaling-tofrom-0
           maxReplicas: 3
           metrics:
             - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
