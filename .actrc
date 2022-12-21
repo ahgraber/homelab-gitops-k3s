@@ -1,0 +1,4 @@
+# config for https://github.com/nektos/act
+--container-architecture linux/amd64
+--platform ubuntu-latest=catthehacker/ubuntu:act-latest
+--env-file ./.env

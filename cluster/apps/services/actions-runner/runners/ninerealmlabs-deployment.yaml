@@ -1,0 +1,80 @@
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: ninerealmlabs
+  namespace: actions-runner-system
+spec:
+  # https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#runnerdeployments
+  template:
+    spec:
+      # deployment/pod spec
+      image: ghcr.io/actions-runner-controller/actions-runner-controller/actions-runner-dind:ubuntu-22.04@sha256:0c662c9ffc6770cb021e5dff91789fa481966a6d42eefb6756ff48978a9109cb
+      imagePullPolicy: Always
+      dockerdWithinRunnerContainer: true
+      ephemeral: true
+      resources:
+        requests:
+          cpu: 2
+          memory: 4G
+        limits:
+          # cpu: 4
+          memory: 8G
+      securityContext:
+        supplementalGroups:
+          - 65542
+      # cache: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#pv-backed-runner-work-directory
+      # docker: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#docker-image-layers-caching
+      workVolumeClaimTemplate:
+        storageClassName: csi-truenas-nfs # ceph-fs
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+      volumeMounts:
+        # - name: cache-volume
+        #   mountPath: /cache
+        - name: docker-volume
+          mountPath: /var/lib/docker
+        # - name: work-volume
+        #   mountPath: /runner/_work
+      volumes:
+        # - name: cache-volume
+        #   persistentVolumeClaim:
+        #     claimName: actions-runner-controller-cache
+        - name: docker-volume
+          persistentVolumeClaim:
+            claimName: actions-runner-controller-docker
+        # - name: work-volume
+        #   persistentVolumeClaim:
+        #     claimName: actions-runner-controller-work
+      # spec for GHA integration
+      group: ninerealmlabs-hosted
+      labels:
+        - self-hosted
+      organization: ninerealmlabs
+      # repository: ninerealmlabs/docker-jupyter-stacks
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: ninerealmlabs
+  namespace: actions-runner-system
+spec:
+  # https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#runnerdeployments
+  scaleTargetRef:
+    name: ninerealmlabs
+  scaleUpTriggers:
+    - githubEvent:
+        checkRun:
+          types: ["created"]
+          status: "queued"
+      amount: 1
+      duration: "1m"
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+      repositoryNames:
+        - ninerealmlabs/docker-jupyter-stacks
