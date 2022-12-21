@@ -30,19 +30,3 @@ spec:
   resources:
     requests:
       storage: 60Gi
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: actions-runner-controller-work
-#   namespace: actions-runner-system
-#   labels:
-#     app.kubernetes.io/name: &name actions-runner-controller
-#     app.kubernetes.io/instance: *name
-#     excluded_from_alerts: "true"
-# spec:
-#   storageClassName: csi-truenas-nfs # ceph-fs
-#   accessModes: ["ReadWriteMany"]
-#   resources:
-#     requests:
-#       storage: 10Gi

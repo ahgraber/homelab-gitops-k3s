@@ -53,7 +53,6 @@ spec:
               #   valueFrom:
               #     fieldRef:
               #       fieldPath: metadata.name
-
               resources:
                 requests:
                   cpu: 2
@@ -64,8 +63,8 @@ spec:
               securityContext:
                 supplementalGroups:
                   - 65542
-              # cache: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#pv-backed-runner-work-directory
-              # docker: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#docker-image-layers-caching
+              # # cache: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#pv-backed-runner-work-directory
+              # # docker: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#docker-image-layers-caching
               # volumes:
               #   # - name: cache-volume
               #   #   persistentVolumeClaim:
@@ -76,19 +75,10 @@ spec:
               #   # - name: work-volume
               #   #   persistentVolumeClaim:
               #   #     claimName: actions-runner-controller-work
-              # volumeMounts:
-              #   # - name: cache-volume
-              #   #   mountPath: /cache
-              #   # - name: work-volume
-              #   #   mountPath: /runner/_work
-              #   #   subPathExpr: $(POD_NAME)-work
               # dockerVolumeMounts:
               #   - name: docker-volume
               #     mountPath: /var/lib/docker
               #     subPathExpr: $(POD_NAME)-docker
-              #   # - name: work-volume
-              #   #   persistentVolumeClaim:
-              #   #     claimName: actions-runner-controller-work
               ### spec for GHA integration
               group: ninerealmlabs-hosted
               labels:
