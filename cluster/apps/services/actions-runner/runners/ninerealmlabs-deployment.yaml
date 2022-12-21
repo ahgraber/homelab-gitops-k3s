@@ -109,4 +109,4 @@ spec:
           metrics:
             - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
               repositoryNames:
-                - ninerealmlabs/docker-jupyter-stacks
+                - docker-jupyter-stacks
