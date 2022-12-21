@@ -22,7 +22,7 @@ spec:
     remediation:
       retries: 5
   dependsOn:
-    - name: tions-runner-controlle
+    - name: actions-runner-controlle
       namespace: actions-runner-system
   values:
     resources:
