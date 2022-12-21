@@ -36,11 +36,24 @@ spec:
           # https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#runnerdeployments
           template:
             spec:
-              # deployment/pod spec
+              ### deployment/pod spec
               image: ghcr.io/actions-runner-controller/actions-runner-controller/actions-runner-dind:ubuntu-22.04@sha256:0c662c9ffc6770cb021e5dff91789fa481966a6d42eefb6756ff48978a9109cb
               imagePullPolicy: Always
               dockerdWithinRunnerContainer: true
-              ephemeral: true
+              ephemeral: true # true --> clear data between builds
+              env:
+                - name: STARTUP_DELAY_IN_SECONDS
+                  value: "5"
+              #   - name: POD_NAME
+              #     valueFrom:
+              #       fieldRef:
+              #         fieldPath: metadata.name
+              # dockerEnv:
+              # - name: POD_NAME
+              #   valueFrom:
+              #     fieldRef:
+              #       fieldPath: metadata.name
+
               resources:
                 requests:
                   cpu: 2
@@ -53,24 +66,30 @@ spec:
                   - 65542
               # cache: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#pv-backed-runner-work-directory
               # docker: https://github.com/actions/actions-runner-controller/blob/master/docs/detailed-docs.md#docker-image-layers-caching
-              volumeMounts:
-                # - name: cache-volume
-                #   mountPath: /cache
-                - name: docker-volume
-                  mountPath: /var/lib/docker
-                # - name: work-volume
-                #   mountPath: /runner/_work
-              volumes:
-                # - name: cache-volume
-                #   persistentVolumeClaim:
-                #     claimName: actions-runner-controller-cache
-                - name: docker-volume
-                  persistentVolumeClaim:
-                    claimName: actions-runner-controller-docker
-                # - name: work-volume
-                #   persistentVolumeClaim:
-                #     claimName: actions-runner-controller-work
-              # spec for GHA integration
+              # volumes:
+              #   # - name: cache-volume
+              #   #   persistentVolumeClaim:
+              #   #     claimName: actions-runner-controller-cache
+              #   - name: docker-volume
+              #     persistentVolumeClaim:
+              #       claimName: actions-runner-controller-docker
+              #   # - name: work-volume
+              #   #   persistentVolumeClaim:
+              #   #     claimName: actions-runner-controller-work
+              # volumeMounts:
+              #   # - name: cache-volume
+              #   #   mountPath: /cache
+              #   # - name: work-volume
+              #   #   mountPath: /runner/_work
+              #   #   subPathExpr: $(POD_NAME)-work
+              # dockerVolumeMounts:
+              #   - name: docker-volume
+              #     mountPath: /var/lib/docker
+              #     subPathExpr: $(POD_NAME)-docker
+              #   # - name: work-volume
+              #   #   persistentVolumeClaim:
+              #   #     claimName: actions-runner-controller-work
+              ### spec for GHA integration
               group: ninerealmlabs-hosted
               labels:
                 - self-hosted
