@@ -123,28 +123,33 @@ spec:
           size: 100Mi
       # -- environment variables from crowdsecurity/crowdsec docker image
       env:
-        # As we are running Traefik, we want to install the Traefik collection
+        # COLLECTIONS are bundles of PARSERS and SCENARIOS
         - name: COLLECTIONS
-          value: "crowdsecurity/linux"
-        - name: COLLECTIONS
-          value: "crowdsecurity/traefik"
-        - name: COLLECTIONS
-          value: "crowdsecurity/base-http-scenarios"
-        - name: COLLECTIONS
-          value: "crowdsecurity/http-cve"
-        - name: COLLECTIONS
-          value: "crowdsecurity/mariadb"
-        - name: COLLECTIONS
-          value: "crowdsecurity/pgsql"
-        - name: COLLECTIONS
-          value: "crowdsecurity/sshd"
+          value: |
+            crowdsecurity/base-http-scenarios
+            crowdsecurity/http-cve
+            crowdsecurity/linux
+            crowdsecurity/sshd
+            crowdsecurity/traefik
+            crowdsecurity/mariadb
+            crowdsecurity/mysql
+            crowdsecurity/pgsql
+            crowdsecurity/wordpress
 
         - name: PARSERS
-          value: "crowdsecurity/cri-logs"
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
+          value: |
+            crowdsecurity/cri-logs
+            crowdsecurity/docker-logs
+
+        # - name: SCENARIOS
+        #   value: |
 
         - name: TZ
           value: "${TIMEZONE}"
-        - name: DISABLE_ONLINE_API
+
+        - name: DISABLE_ONLINE_API # default disable local API on the agent pod
           value: "false"
         # - name: LEVEL_TRACE
         #   value: "false"
