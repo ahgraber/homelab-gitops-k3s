@@ -37,6 +37,25 @@ spec:
           template:
             spec:
               ### deployment/pod spec
+              affinity:
+                podAntiAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    - topologyKey: "kubernetes.io/hostname"
+                      labelSelector:
+                        matchExpressions:
+                          - key: app.kubernetes.io/instance
+                            operator: In
+                            values:
+                              - actions-runner-controller
+
+              # topologySpreadConstraints:
+              #   - maxSkew: 1
+              #     topologyKey: kubernetes.io/hostname
+              #     whenUnsatisfiable: ScheduleAnyway
+              #     labelSelector:
+              #       matchLabels:
+              #         runner-deployment-name: actions-runner
+
               image: ghcr.io/actions-runner-controller/actions-runner-controller/actions-runner-dind:ubuntu-22.04@sha256:0c662c9ffc6770cb021e5dff91789fa481966a6d42eefb6756ff48978a9109cb
               imagePullPolicy: Always
               dockerdWithinRunnerContainer: true
