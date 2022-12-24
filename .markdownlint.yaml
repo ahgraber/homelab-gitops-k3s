@@ -28,3 +28,7 @@ MD013:
   strict: false
   # Stern length checking
   stern: false
+
+MD024:
+  # Allow heading duplication if under different parent headings
+  siblings_only: true
