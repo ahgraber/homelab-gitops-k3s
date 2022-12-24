@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://crowdsecurity.github.io/helm-charts
       chart: crowdsec
-      version: 0.8.1
+      version: 0.8.2
       sourceRef:
         kind: HelmRepository
         name: crowdsec-charts
@@ -125,23 +125,22 @@ spec:
       env:
         # COLLECTIONS are bundles of PARSERS and SCENARIOS
         - name: COLLECTIONS
-          value: |
-            crowdsecurity/base-http-scenarios
-            crowdsecurity/http-cve
-            crowdsecurity/linux
-            crowdsecurity/sshd
-            crowdsecurity/traefik
-            crowdsecurity/mariadb
-            crowdsecurity/mysql
-            crowdsecurity/pgsql
-            crowdsecurity/wordpress
+          value:
+            "crowdsecurity/traefik crowdsecurity/linux crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/sshd"
+            # crowdsecurity/linux
+            # crowdsecurity/traefik
+            # crowdsecurity/sshd
+            # crowdsecurity/base-http-scenarios
+            # crowdsecurity/http-cve
+            # crowdsecurity/mariadb
+            # crowdsecurity/mysql
+            # crowdsecurity/pgsql
+            # crowdsecurity/wordpress
 
         - name: PARSERS
           # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
           # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
-          value: |
-            crowdsecurity/cri-logs
-            crowdsecurity/docker-logs
+          value: "crowdsecurity/cri-logs" # crowdsecurity/docker-logs
 
         # - name: SCENARIOS
         #   value: |
