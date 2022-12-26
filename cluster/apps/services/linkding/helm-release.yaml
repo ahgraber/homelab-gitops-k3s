@@ -47,13 +47,17 @@ spec:
           name: linkding-secret
     # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
     persistence:
+      # data:
+      #   enabled: true
+      #   type: pvc
+      #   accessMode: ReadWriteOnce
+      #   mountPath: /datastore
+      #   storageClass: ceph-block
+      #   size: 2Gi
       data:
         enabled: true
-        type: pvc
-        accessMode: ReadWriteOnce
+        existingClaim: linkding-data
         mountPath: /datastore
-        storageClass: ceph-block
-        size: 2Gi
     # # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
     # podSecurityContext:
     #   runAsUser: 33
