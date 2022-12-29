@@ -6,7 +6,7 @@ resources:
   # - ./appscode-charts.yaml
   # - ./appuio-charts.yaml
   - ./authentik-charts.yaml
-  - ./backube-charts.yaml
+  - ./backube-charts.yaml # snapscheduler, volsync
   - ./bitnami-charts.yaml
   - ./bjws-charts.yaml
   - ./cloudflare-charts.yaml
