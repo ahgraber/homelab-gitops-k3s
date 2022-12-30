@@ -7,3 +7,5 @@ metadata:
 spec:
   generateBucketName: thanos
   storageClassName: ceph-bucket
+  # additionalConfig:
+  #   maxSize: "50Gi"
