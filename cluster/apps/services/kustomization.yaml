@@ -12,5 +12,4 @@ resources:
   - ./linkding/
   - ./mealie/
   - ./miniflux/
-  - ./shiori/
   - ./valheim/

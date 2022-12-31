@@ -63,11 +63,16 @@ data:
         - OPNsense:
             href: https://opnsense.${SECRET_DOMAIN}
             icon: opnsense.png
-            # description: This is my service
+            description: NineRealmLabs Router
+            # widget:
+            #   type: opnsense
+            #   url: https://10.2.0.1.${SECRET_DOMAIN}
+            #   username: apikey
+            #   password: apisecret
         - AdGuard:
             href: https://opnsense.${SECRET_DOMAIN}:44353
             icon: adguard-home.png
-            # description: This is my service
+            description: DNS Adblocking
             widget:
               type: adguard
               url: https://10.2.0.1:44353
@@ -76,7 +81,7 @@ data:
         - HomeAssistant:
             href: https://homeassistant.${SECRET_DOMAIN}:8123
             icon: home-assistant-circle.png
-            # description: This is my service
+            description: Smart Home Automation
     - Monitoring:
         - Karma:
             href: https://karma.${SECRET_DOMAIN}
