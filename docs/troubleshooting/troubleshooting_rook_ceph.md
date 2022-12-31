@@ -1,5 +1,7 @@
 # Troubleshooting Rook-Ceph
 
+## Remove orphan rbd images
+
 1. With `kubectl`, list all currently-in-use PVs by storage class
 
    ```sh
