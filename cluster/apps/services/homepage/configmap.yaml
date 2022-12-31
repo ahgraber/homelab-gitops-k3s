@@ -154,6 +154,10 @@ data:
             href: https://hammond.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/apps/services/homepage/icons/golf.png
             description: A mileage-tracking utility; like Clarkson, but better
+        - Homebox:
+            href: https://homebox.${SECRET_DOMAIN}
+            icon: homebox.png
+            description: A simple home inventory system
         - Linkding:
             href: https://linkding.${SECRET_DOMAIN}
             icon: linkding.png
@@ -166,10 +170,6 @@ data:
             href: https://miniflux.${SECRET_DOMAIN}
             icon: miniflux.png
             description: A self-hosted rss feed reader
-        - Shiori:
-            href: https://shiori.${SECRET_DOMAIN}
-            icon: https://raw.githubusercontent.com/go-shiori/shiori/master/internal/view/res/apple-touch-icon-152x152.png
-            description: A simple bookmark manager and web page archive tool
 
   bookmarks.yaml: |
     ---
