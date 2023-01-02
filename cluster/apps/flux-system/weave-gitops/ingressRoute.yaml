@@ -6,15 +6,15 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
-    - web
+    # - web
     - websecure
   routes:
-    - match: Host(`gitops.${SECRET_DOMAIN}`)
+    - match: Host(`gitops.${SECRET_DOMAIN}`) # && PathPrefix(`/`)"
       kind: Rule
       # Enable auth middleware
-      middlewares:
-        - name: crowdsec-traefik-bouncer
-        - name: rfc1918
+      # middlewares:
+      #   - name: crowdsec-traefik-bouncer
+      #   - name: rfc1918
       #   # - name: basicauth
       services:
         - name: weave-gitops

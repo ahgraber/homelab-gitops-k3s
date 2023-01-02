@@ -21,20 +21,39 @@ spec:
     remediation:
       retries: 3
   values:
+    podAnnotations:
+      secret.reloader.stakater.com/reload: weave-gitops-secrets
+
+    logLevel: debug
+
     adminUser:
       create: true
-      username: admin
+      username: &admin_user admin
+      # passwordHash: "" # provided in secret
+    rbac:
+      create: true
+      impersonationResourceNames:
+        - *admin_user
+
     ingress:
       enabled: false
     networkPolicy:
       create: false
+    service:
+      create: true
+      type: ClusterIP
+      port: 9001
+
     metrics:
       enabled: true
-    rbac:
-      create: true
-      impersonationResourceNames: ["admin"]
-    podAnnotations:
-      secret.reloader.stakater.com/reload: weave-gitops-secret
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64M
+      limits:
+        memory: 512M
+
   valuesFrom:
     - kind: Secret
       name: weave-gitops-secret

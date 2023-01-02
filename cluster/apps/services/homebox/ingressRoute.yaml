@@ -10,7 +10,6 @@ spec:
     - websecure
   routes:
     - match: Host(`homebox.${SECRET_DOMAIN}`)
-      # - match: Host(`recipes.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
