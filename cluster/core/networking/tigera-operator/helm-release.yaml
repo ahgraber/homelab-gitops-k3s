@@ -34,17 +34,15 @@ spec:
         # Note: The ipPools section cannot be modified post-install.
         ipPools:
           - blockSize: 26
-            cidr: "10.42.0.0/16"
+            cidr: "${NET_POD_CIDR}"
             encapsulation: "VXLANCrossSubnet"
             natOutgoing: Enabled
             nodeSelector: all()
         linuxDataplane: Iptables
         multiInterfaceMode: None
-        # nodeAddressAutodetectionV4:
-        #   cidrs:
-        #     - "10.2.118.0/24"
-        #     # - "10.2.113.0/24"
-        #     - "10.113.0.128/25"  # leave front half for metallb
+        nodeAddressAutodetectionV4:
+          cidrs:
+            - "${NET_NODE_CIDR}"
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
 
