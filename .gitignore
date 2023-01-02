@@ -17,13 +17,15 @@ kubeconfig
 .env
 .envrc
 *.pgp
-# Temp folders
+# temp folders
 *.bak
 .temp*
 .private/
 .logs/
 .task/
 report/
+#testing
+*pytest*
 # Local archives
 **/archive
 **/wip
