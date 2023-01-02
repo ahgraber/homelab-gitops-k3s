@@ -9,7 +9,7 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`gitops.${SECRET_DOMAIN}`) # && PathPrefix(`/`)"
+    - match: Host(`gitops.${SECRET_DOMAIN}`) && PathPrefix(`/`)"
       kind: Rule
       # Enable auth middleware
       # middlewares:
