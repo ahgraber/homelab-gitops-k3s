@@ -9,7 +9,7 @@ metadata:
     reloader.stakater.com/match: "true"
 data:
   TIMEZONE: "America/New_York"
-  # IP reservations
-  LB_INGRESS: 10.2.113.2
-  LB_AUTH: 10.2.113.3
+  LB_GATEWAY: 10.2.113.2
+  LB_INGRESS: 10.2.113.3
+  LB_AUTH: 10.2.113.4
   LB_DEFAULT_RANGE: 10.2.113.128-10.2.113.250
