@@ -7,8 +7,9 @@ metadata:
     policies.kyverno.io/title: Add Reloader Annotations
     policies.kyverno.io/subject: Deployments
     policies.kyverno.io/description: >-
-      This policy assigns the annotation `reloader.stakater.com/search: "true"` to matching Deployments, DaemonSets, ReplicaSets, StatefulSets, or Rollouts if the label does not already exist. This
-      will enable automatic reload if a change is detected in a ConfigMap or Secret with the annotation `reloader.stakater.com/match: "true"`.
+      This policy assigns the annotation `reloader.stakater.com/search: "true"` to matching Deployments, DaemonSets,
+      ReplicaSets, StatefulSets, or Rollouts if the label does not already exist. This will enable automatic reload if
+      a change is detected in a ConfigMap or Secret with the annotation `reloader.stakater.com/match: "true"`.
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true

@@ -7,7 +7,8 @@ metadata:
     policies.kyverno.io/title: Add Goldilocks Labels
     policies.kyverno.io/subject: Namespace
     policies.kyverno.io/description: >-
-      This policy assigns the label `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if the label does not already exist.
+      This policy assigns the label `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if the label does
+      not already exist.
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true

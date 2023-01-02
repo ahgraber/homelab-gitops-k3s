@@ -28,4 +28,5 @@ tasks:
           Head over to https://brew.sh to get up and running.
     vars:
       DEPS: >-
-        age ansible direnv fluxcd/tap/flux go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize pre-commit prettier sops stern yamllint yq
+        age ansible direnv fluxcd/tap/flux go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize pre-commit
+        prettier sops stern yamllint yq

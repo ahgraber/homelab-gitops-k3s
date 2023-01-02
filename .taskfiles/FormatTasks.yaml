@@ -11,18 +11,21 @@ tasks:
     desc: Format Markdown
     cmds:
       - >-
-        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown --parser=markdown --write '*.md' '**/*.md'
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown
+        --parser=markdown --write '*.md' '**/*.md'
 
   yaml:
     desc: Format YAML
     cmds:
       - >-
-        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown --parser=yaml --write '*.y*ml' '**/*.y*ml'
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown
+        --parser=yaml --write '*.y*ml' '**/*.y*ml'
     ignore_error: true
 
   json:
     desc: Format JSON
     cmds:
       - >-
-        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown --parser=json --write '*.json' '**/*.json'
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --list-different --ignore-unknown
+        --parser=json --write '*.json' '**/*.json'
     ignore_error: true

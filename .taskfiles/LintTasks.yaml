@@ -11,7 +11,8 @@ tasks:
     desc: Lint JSON
     cmds:
       - >-
-        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --ignore-unknown --parser=json --check '*.json' '**/*.json'
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --ignore-unknown --parser=json --check
+        '*.json' '**/*.json'
     ignore_error: true
 
   markdown:

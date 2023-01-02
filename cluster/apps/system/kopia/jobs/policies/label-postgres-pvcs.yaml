@@ -7,7 +7,8 @@ metadata:
     policies.kyverno.io/title: Label postgres PVCs
     policies.kyverno.io/subject: PersistentVolumeClaims
     policies.kyverno.io/description: >-
-      This policy adds the label 'snapshot.home.arpa/enabled="true"' to the matched PVCs so they are identified by the snapshot-cronjob-controller
+      This policy adds the label 'snapshot.home.arpa/enabled="true"' to the matched PVCs so they are identified by the
+      snapshot-cronjob-controller
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
