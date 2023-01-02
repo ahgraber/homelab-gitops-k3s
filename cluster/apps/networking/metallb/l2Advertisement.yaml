@@ -8,5 +8,6 @@ metadata:
 spec:
   ipAddressPools:
     - default
+    - gateway
     - ingress
     - auth

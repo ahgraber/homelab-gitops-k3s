@@ -193,12 +193,13 @@ spec:
     service:
       enabled: true
       type: LoadBalancer
-      spec:
-        # expects IP only, no netmask
-        # externalIPs:
-        loadBalancerIP: "${LB_INGRESS}" # this should be the load balancer IP reserved for Ingress
-        # externalTrafficPolicy: Local  # Cluster
-      # annotations:
+      # spec:
+      #   # expects IP only, no netmask
+      #   # externalIPs:
+      #   loadBalancerIP: "${LB_INGRESS}" # this should be the load balancer IP reserved for Ingress
+      #   # externalTrafficPolicy: Local  # Cluster
+      annotations:
+        metallb.universe.tf/loadBalancerIPs: "${LB_INGRESS}"
 
     resources:
       requests:
