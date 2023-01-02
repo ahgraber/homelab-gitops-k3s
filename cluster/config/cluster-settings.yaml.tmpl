@@ -8,7 +8,10 @@ metadata:
   annotations:
     reloader.stakater.com/match: "true"
 data:
-  TIMEZONE: "${TIMEZONE}"
+  TIMEZONE: ${TIMEZONE}
+  NET_NODE_CIDR: ${NET_NODE_CIDR}
+  NET_POD_CIDR: ${NET_POD_CIDR}
+  NET_SVC_CIDR: ${NET_SVC_CIDR}
   LB_GATEWAY: ${LB_GATEWAY}
   LB_INGRESS: ${LB_INGRESS}
   LB_AUTH: ${LB_AUTH}

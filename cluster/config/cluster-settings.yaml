@@ -8,7 +8,10 @@ metadata:
   annotations:
     reloader.stakater.com/match: "true"
 data:
-  TIMEZONE: "America/New_York"
+  TIMEZONE: America/New_York
+  NET_NODE_CIDR: 10.2.118.0/24
+  NET_POD_CIDR: 10.42.0.0/16
+  NET_SVC_CIDR: 10.43.0.0/16
   LB_GATEWAY: 10.2.113.2
   LB_INGRESS: 10.2.113.3
   LB_AUTH: 10.2.113.4
