@@ -10,7 +10,7 @@ env:
   KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"
 
 includes:
-  flux: .taskfiles/ClusterTasks.yaml
+  cluster: .taskfiles/ClusterTasks.yaml
   format: .taskfiles/FormatTasks.yaml
   lint: .taskfiles/LintTasks.yaml
   pre-commit: .taskfiles/PrecommitTasks.yaml
@@ -28,5 +28,5 @@ tasks:
           Head over to https://brew.sh to get up and running.
     vars:
       DEPS: >-
-        age ansible direnv fluxcd/tap/flux go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize pre-commit
-        prettier sops stern yamllint yq
+        age ansible direnv fluxcd/tap/flux gitleaks go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize
+        pre-commit prettier sops stern terraform tflint weaveworks/tap/gitops yamllint yq
