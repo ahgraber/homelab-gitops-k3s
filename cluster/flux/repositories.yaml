@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./cluster/charts
+  path: ./cluster/repositories
   prune: true
   sourceRef:
     kind: GitRepository
