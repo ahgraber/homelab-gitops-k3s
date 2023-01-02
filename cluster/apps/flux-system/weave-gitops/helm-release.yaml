@@ -38,7 +38,21 @@ spec:
         - cluster-user-auth
         # - oidc-auth
     ingress:
-      enabled: false
+      # enabled: false
+      enabled: true
+      ingressClassName: "traefik"
+      annotations:
+        # cert-manager.io/cluster-issuer: "letsencrypt-production"
+        traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+      hosts:
+        - host: &host "gitops.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
+          secretName: "${SECRET_DOMAIN/./-}-tls"
     networkPolicy:
       create: false
     service:
