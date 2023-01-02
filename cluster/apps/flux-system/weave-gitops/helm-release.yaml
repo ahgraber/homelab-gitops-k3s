@@ -22,7 +22,7 @@ spec:
       retries: 3
   values:
     podAnnotations:
-      secret.reloader.stakater.com/reload: weave-gitops-secrets
+      secret.reloader.stakater.com/reload: weave-gitops-secret
 
     logLevel: debug
 
@@ -34,7 +34,9 @@ spec:
       create: true
       impersonationResourceNames:
         - *admin_user
-
+      viewSecretsResourceNames:
+        - cluster-user-auth
+        # - oidc-auth
     ingress:
       enabled: false
     networkPolicy:
