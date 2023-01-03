@@ -12,13 +12,13 @@ _With inspiration from the k8s-at-home community, especially the [cluster templa
 ## Overview
 
 <!-- no toc -->
-- [Introduction](#wave-introduction)
-- [Repository structure](#open_file_folder-repository-structure)
+- [👋 Introduction](#-introduction)
+- [:open\_file\_folder:  Repository structure](#open_file_folder-repository-structure)
 - [Prerequisites](./1-prerequisites.md)
 - [Install k3s](./2-install_k3s_with_ansible.md)
 - [GitOps with Flux](./3-gitops_with_flux.md)
 
-## :wave:&nbsp; Introduction
+## 👋 Introduction
 
 The following components will be installed in your [k3s](https://k3s.io/) cluster by default. They
 are only included to get a minimum viable cluster up and running. You are free to add / remove
@@ -28,11 +28,13 @@ by this template.
 Feel free to read up on any of these technologies before you get started to be more familiar with
 them.
 
-- [flux](https://toolkit.fluxcd.io/)
-- [calico](https://github.com/projectcalico/calico)
-- [metallb](https://metallb.universe.tf/)
-- [cert-manager](https://cert-manager.io/) with Cloudflare DNS challenge
-- [system-upgrade-controller](https://github.com/rancher/system-upgrade-controller)
+- [flux](https://toolkit.fluxcd.io/) - GitOps operator for managing Kubernetes clusters from a Git repository
+- [kube-vip](https://kube-vip.io/) - Load balancer for the Kubernetes control plane nodes
+- [metallb](https://metallb.universe.tf/) - Load balancer for Kubernetes services
+- [cert-manager](https://cert-manager.io/) - Operator to request SSL certificates and store them as Kubernetes resources
+- [calico](https://www.tigera.io/project-calico/) - Container networking interface for inter pod and service networking
+- [external-dns](https://github.com/kubernetes-sigs/external-dns) - Operator to publish DNS records to Cloudflare (or other providers) based on Kubernetes ingresses
+- [k8s_gateway](https://github.com/ori-edge/k8s_gateway) - DNS resolver that provides local DNS to your Kubernetes ingresses
 
 ## :open_file_folder:&nbsp; Repository structure
 

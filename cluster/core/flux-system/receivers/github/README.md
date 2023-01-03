@@ -1,8 +1,8 @@
 # Github Webhook
 
-A github webhook can send notifications to a [Flux receiver](https://fluxcd.io/docs/guides/webhook-receivers/) when a git event occurs.
-This means that Flux can be notified when a commit happens and automatically reconcile,
-reducing the need to wait for the timed reconciliation or manually call for a sync.
+Flux is pull-based by design meaning it will periodically check your git repository for changes;
+instead, using a webhook can enable Flux to update the cluster on `git push` by sending
+notifications to a [Flux receiver](https://fluxcd.io/docs/guides/webhook-receivers/)
 
 ## Create receiver
 
