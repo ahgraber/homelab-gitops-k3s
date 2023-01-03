@@ -9,3 +9,5 @@ Kubernetes operator for installing Calico and Calico Enterprise
 ```sh
 zsh ./cluster/core/tigera-operator/give_helm_ownership.sh
 ```
+
+[see also](https://github.com/onedr0p/flux-cluster-template/issues/321)
