@@ -25,11 +25,6 @@ repos:
         entry: YAML file extension must be .yaml
         language: fail
         files: \.yml$
-      # - id: fix-yml
-      #   name: yml-to-yaml
-      #   entry: .precommit/yml_to_yaml.sh
-      #   language: script
-      #   pass_filenames: false
       # - id: env-substitute
       #   name: envvar-substitute
       #   entry: .precommit/substitute.sh
