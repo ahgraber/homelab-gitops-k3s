@@ -9,7 +9,7 @@ bin
 /flux
 *.iso
 # k8s
-kubeconfig
+*kubeconfig*
 *key*
 # vscode-sops
 .decrypted~*.yaml
