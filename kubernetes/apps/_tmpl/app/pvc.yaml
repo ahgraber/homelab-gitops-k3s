@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: APP
+  namespace: APP_NS
+spec:
+  storageClassName: ceph-block
+  accessModes:
+    - ReadWriteOnce
+  # storageClassName: ceph-fs
+  # accessModes:
+  #   - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
