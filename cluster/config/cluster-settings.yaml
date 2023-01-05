@@ -1,0 +1,15 @@
+---
+# yamllint disable
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  TIMEZONE: "America/New_York"
+  # IP reservations
+  LB_INGRESS: 10.2.113.2
+  LB_AUTH: 10.2.113.3
+  LB_DEFAULT_RANGE: 10.2.113.128-10.2.113.250

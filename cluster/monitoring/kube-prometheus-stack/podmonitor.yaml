@@ -1,0 +1,26 @@
+---
+# ref: https://github.com/fluxcd/flux2/blob/main/manifests/monitoring/monitoring-config/podmonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: flux-system
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/part-of: flux
+spec:
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  selector:
+    matchExpressions:
+      - key: app
+        operator: Exists
+        # values:
+        #   - helm-controller
+        #   - source-controller
+        #   - kustomize-controller
+        #   - notification-controller
+        #   - image-automation-controller
+        #   - image-reflector-controller
+  podMetricsEndpoints:
+    - port: http-prom

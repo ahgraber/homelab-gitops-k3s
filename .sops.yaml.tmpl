@@ -1,0 +1,9 @@
+---
+creation_rules:
+  - encrypted_regex: "^(data|stringData)$"
+    age: >-
+      ${AGE_PUBLIC_KEY}
+  - path_regex: kubernetes/.*\.sops\.toml
+    key_groups:
+      - age:
+          - ${AGE_PUBLIC_KEY}

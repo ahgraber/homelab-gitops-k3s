@@ -1,0 +1,31 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: unset-localpath-as-default
+  annotations:
+    policies.kyverno.io/title: Unset LocalPath StorageClass as Default
+    policies.kyverno.io/subject: StorageClass
+    policies.kyverno.io/description: >-
+      This policy removes the default label from the localpath StorageClass
+spec:
+  mutateExistingOnPolicyUpdate: true
+  generateExistingOnPolicyUpdate: true
+  rules:
+    - name: unset-localpath-as-default
+      match:
+        any:
+          - resources:
+              kinds:
+                - StorageClass
+              names:
+                - local-path
+      mutate:
+        targets:
+          - apiVersion: v1
+            kind: StorageClass
+            name: "{{request.object.metadata.name}}"
+        patchStrategicMerge:
+          metadata:
+            annotations:
+              storageclass.kubernetes.io/is-default-class: "false"

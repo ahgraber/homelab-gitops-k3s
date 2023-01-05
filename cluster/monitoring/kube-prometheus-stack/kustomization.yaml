@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # - ./prometheus-rules/
+  - ./helm-release.yaml
+  - ./ingressRoute-alertmanager.yaml
+  - ./ingressRoute-prometheus.yaml
+  - ./podmonitor.yaml
+  - ./values-alertmanager.yaml
+  - ./values-grafana.yaml
+  - ./values-kube-state-metrics.yaml
+  - ./values-node-exporter.yaml
+  - ./values-prometheus-exporters.yaml
+  - ./values-prometheus-operator.yaml
+  - ./values-prometheus.yaml
+  - ./values-rules.yaml
+  - ./secret-additionalScrapeConfigsSecret.sops.yaml

@@ -1,0 +1,20 @@
+{
+  packageRules: [
+    {
+      description: "Auto merge container digests",
+      matchDatasources: ["docker"],
+      automerge: true,
+      automergeType: "branch",
+      requiredStatusChecks: null,
+      matchUpdateTypes: ["digest"],
+      matchPackagePattern: ["ghcr.io/onedr0p"],
+    },
+    {
+      matchManagers: ["github-actions"],
+      automerge: true,
+      automergeType: "branch",
+      requiredStatusChecks: null,
+      matchUpdateTypes: ["minor", "patch"],
+    },
+  ],
+}

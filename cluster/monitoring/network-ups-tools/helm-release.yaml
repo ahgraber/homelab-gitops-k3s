@@ -1,0 +1,104 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app network-ups-tools
+  namespace: monitoring
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      repository: ghcr.io/druggeri/nut_exporter
+      tag: 2.5.2
+    env:
+      TZ: "${TZ}"
+      NUT_EXPORTER_SERVER: "10.2.0.1"
+      NUT_EXPORTER_WEB_AUTH_USERNAME: "monuser"
+      NUT_EXPORTER_PASSWORD: "${SECRET_DEFAULT_PWD}"
+    service:
+      main: # metrics
+        ports:
+          http:
+            port: 9199
+            protocol: TCP
+      # metrics:
+      #   enabled: true
+      #   ports:
+      #     metrics:
+      #       enabled: true
+      #       port: 9199
+      #       protocol: TCP
+    serviceMonitor:
+      main:
+        enabled: true
+        # serviceName: network-ups-tools-metrics
+        endpoints:
+          - port: http
+            scheme: http
+            path: /ups_metrics
+            interval: 15s
+            scrapeTimeout: 10s
+            static_configs:
+              targets: ["10.2.0.1:3493"]
+              labels:
+                ups: "PR1500RT2U"
+                # server: "10.2.0.1"
+                # username: "monuser"
+            relabelings:
+              - sourceLabels: [__param_target]
+                targetLabel: target
+    # securityContext:
+    #   privileged: true
+    # persistence:
+    #   config:
+    #     enabled: true
+    #     type: configMap
+    #     name: &config network-ups-tools-config
+    #     mountPath: /etc/nut
+    #     defaultMode: 256
+    #   # ups:
+    #   #   enabled: true
+    #   #   type: hostPath
+    #   #   hostPath: /dev/bus/usb/003/003
+    #   #   mountPath: /dev/bus/usb/001/001
+    #   #   readOnly: false
+    # configMaps:
+    #   config:
+    #     enabled: true
+    #     data:
+    #       nut.conf: |-
+    #         MODE=netclient
+    #       # upsd.conf: |-
+    #       #   MAXAGE 20
+    #       #   LISTEN 0.0.0.0
+    #       # upsd.users: |-
+    #       #   [monuser]
+    #       #     password  = "${SECRET_DEFAULT_PWD}"
+    #       #     actions = SET
+    #       #     instcmds = ALL
+    #       #     monuser slave
+    #       ups.conf: |-
+    #         [PR1500RT2U]
+    #           driver = usbhid-ups
+    #           port = auto
+    #           desc = "PR1500RT2U"
+    #           pollinterval = 10
+    #       upsmon.conf: |-
+    #         MONITOR PR1500RT2U@10.2.0.1:3493 1 monuser "${SECRET_DEFAULT_PWD}" SLAVE
+    #         SHUTDOWNCMD "/sbin/shutdown -h +0"
+    #         POWERDOWNFLAG /etc/killpower
+    #         HOSTSYNC 15

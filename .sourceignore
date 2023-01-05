@@ -1,0 +1,23 @@
+# See https://toolkit.fluxcd.io/components/source/gitrepositories/#excluding-files
+.github/
+.precommit/
+.taskfiles/
+.vscode/
+.*
+<!-- .editorconfig
+.envrc
+.gitattributes
+.gitignore
+.markdownlint.yaml
+.mega-linter.yaml
+.pre-commit-config.yaml
+,prettierignore
+.prettierrc.yaml
+.shellcheckrc
+.sops.yaml
+.sops.yaml.tmpl
+.sourceignore
+configure -->
+LICENSE
+README.md
+Taskfile.yml

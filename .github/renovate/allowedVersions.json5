@@ -1,0 +1,11 @@
+// this is an example
+// must include in .github/renovate.json5 "extends[]" section
+{
+  packageRules: [
+    {
+      matchDatasources: ["docker"],
+      matchPackagePatterns: ["kopia"],
+      allowedVersions: "<10",
+    },
+  ],
+}

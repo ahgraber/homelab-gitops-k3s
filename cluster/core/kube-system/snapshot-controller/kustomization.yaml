@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./helm-release.yaml
+
+patches:
+  # Enable this RBAC rule only when using distributed snapshotting, i.e. when the enable-distributed-snapshotting flag is set to true
+  - target:
+      kind: ClusterRole
+      name: snapshot-controller-runner
+    patch: |-
+      - op: add
+        path: '/rules/-'
+        value: { apiGroups: [""], resources: ["nodes"], verbs: ["get", "list", "watch"] }

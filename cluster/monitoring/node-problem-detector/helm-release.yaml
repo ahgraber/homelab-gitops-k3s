@@ -1,0 +1,38 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: node-problem-detector
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.deliveryhero.io/
+      chart: node-problem-detector
+      version: 2.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: deliveryhero-charts
+        namespace: flux-system
+      interval: 5m
+  values:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+    resources:
+      requests:
+        cpu: 15m
+        memory: 105M
+      limits:
+        memory: 105M
+
+    annotations:
+      reloader.stakater.com/search: "true"
+
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists

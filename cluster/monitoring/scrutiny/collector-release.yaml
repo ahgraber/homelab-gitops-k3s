@@ -1,0 +1,118 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: scrutiny-collector
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    # createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 3
+  dependsOn:
+    - name: scrutiny
+      namespace: monitoring
+  values:
+    controller:
+      type: daemonset
+
+    initContainers:
+      init-config:
+        image: ghcr.io/onedr0p/alpine:3.17.0
+        env:
+          - name: COLLECTOR_API_ENDPOINT
+            value: http://scrutiny.monitoring.svc.cluster.local:8080
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        command: # double "$$" escape flux substitutions
+          - /bin/bash
+          - -c
+          - |
+            mkdir -p /opt/scrutiny/config &&
+            cat << EOF > /opt/scrutiny/config/collector.yaml
+            ---
+            # config piped from lifecycle.postStart script
+            version: 1
+            host:
+              id: "$${NODE_NAME}"
+            api:
+              endpoint: "$${COLLECTOR_API_ENDPOINT}"
+            EOF
+        volumeMounts:
+          - name: config
+            mountPath: /opt/scrutiny/config
+
+    image:
+      repository: ghcr.io/analogj/scrutiny
+      tag: master-collector
+
+    # nodeSelector:
+    #   kubernetes.io/hostname: harambe
+    # tolerations:
+    #   - key: "node-role.kubernetes.io/master"
+    #     operator: "Exists"
+
+    env:
+      - name: COLLECTOR_API_ENDPOINT
+        value: http://scrutiny.monitoring.svc.cluster.local:8080
+      # - name: NODE_NAME
+      #   valueFrom:
+      #     fieldRef:
+      #       fieldPath: spec.nodeName
+
+    service:
+      main:
+        enabled: false
+
+    securityContext:
+      privileged: true
+      # capabilities:
+      #   add: ["SYS_RAWIO"] # allow access to smartctl
+
+    persistence:
+      config:
+        enabled: true
+        type: emptyDir
+        mountPath: /opt/scrutiny/config
+      udev:
+        enabled: true
+        mountPath: /run/udev
+        type: hostPath
+        hostPath: /run/udev
+        readOnly: true
+      sda:
+        enabled: true
+        mountPath: /dev/sda
+        type: hostPath
+        hostPath: /dev/sda
+        readOnly: true
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 128Mi
+
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - /bin/bash
+            - -c
+            - /opt/scrutiny/bin/scrutiny-collector-metrics run --config /opt/scrutiny/config/collector.yaml

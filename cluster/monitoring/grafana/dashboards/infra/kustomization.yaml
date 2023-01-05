@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+configMapGenerator:
+  - name: node-exporter-full-dashboard
+    files:
+      - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
+  - name: pod-resources-max-dashboard
+    files:
+      - pod-resources-max.json=https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/cluster/monitoring/grafana/dashboards/json/pod-resources-max.json
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    grafana_folder: default
+  labels:
+    grafana_dashboard: "true"

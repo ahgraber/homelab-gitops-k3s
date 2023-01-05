@@ -1,0 +1,82 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 5m
+  chart:
+    spec:
+      # renovate: registryUrl=https://charts.jetstack.io/
+      chart: cert-manager
+      version: v1.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    installCRDs: false
+
+    # Comma separated list of feature gates that should be enabled on the controller pod.
+    featureGates: ""
+
+    extraArgs:
+      - "--dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53"
+      - "--dns01-recursive-nameservers-only"
+
+    podDnsPolicy: "None"
+    podDnsConfig:
+      nameservers:
+        - "1.1.1.1"
+        - "8.8.8.8"
+
+    prometheus:
+      enabled: true
+      servicemonitor:
+        enabled: true
+        prometheusInstance: monitoring
+        targetPort: 9402
+        path: /metrics
+        interval: 60s
+        scrapeTimeout: 30s
+        labels: {}
+        honorLabels: false
+
+    resources:
+      requests:
+        cpu: 35m
+        memory: 128Mi
+      limits:
+        memory: 128Mi
+
+    deploymentAnnotations:
+      reloader.stakater.com/search: "true"
+
+    webhook:
+      enabled: true
+      resources:
+        requests:
+          cpu: 23m
+          memory: 105M
+        limits:
+          cpu: 23m
+          memory: 105M
+
+    cainjector:
+      enabled: true
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 36m
+          memory: 256Mi
+        limits:
+          cpu: 36m
+          memory: 256Mi

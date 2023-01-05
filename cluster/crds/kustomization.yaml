@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./cert-manager/
+  # - ./cloudnative-pg/ # deployed in operator helm chart
+  - ./democratic-csi/
+  - ./external-snapshotter/ # AKA snapshot-controller
+  - ./kube-prometheus-stack/
+  - ./kyverno/
+  - ./metallb/
+  - ./redis-operator/
+  - ./rook-ceph/
+  - ./system-upgrade-controller/
+  - ./traefik/
+  # - ./velero/

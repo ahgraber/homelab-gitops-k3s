@@ -1,0 +1,85 @@
+---
+# Project information
+site_name: ahgraber | Home Cluster
+site_description: My home Kubernetes (k3s) cluster managed by GitOps (Flux2)
+site_author: Alex Graber
+site_url: https://ahgraber.github.io/homelab-gitops-k3s/
+
+# Repository
+repo_name: ahgraber/homelab-gitops-k3s
+repo_url: https://github.com/ahgraber/homelab-gitops-k3s
+edit_uri: "edit/main/docs/"
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github-alt
+  language: en
+  features:
+    - navigation.sections
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+  palette:
+    - scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+docs_dir: ./docs
+
+# # Customization
+# extra_css:
+#   - _static/custom.css
+
+# extra:
+#   social:
+#     - icon: fontawesome/brands/github
+#       link: https://github.com/ahgraber
+#     - icon: fontawesome/brands/twitter
+#       link: https://twitter.com/namnnumbr
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+#   - macros:
+#       include_dir: docs/_snippets
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - attr_list
+  - toc:
+      permalink: true
+  # prettier-ignore
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+# Navigation structure
+nav:
+  - Introduction: index.md # formerly hardlinked to README.md
+  - Installation:
+      - Prerequisites: 1-prerequisites.md
+      - Install k3s with ansible: 2-install_k3s_with_ansible.md
+  - GitOps with Flux: 3-gitops_with_flux.md
+  - Deploy a new application: 4-new_app.md
+  - Troubleshooting:
+      - Troubleshooting flux: troubleshooting/troubleshooting_flux.md
+      - Troubleshooting nodes: troubleshooting/troubleshooting_nodes.md
+      - Troubleshooting services: troubleshooting/troubleshooting_services.md

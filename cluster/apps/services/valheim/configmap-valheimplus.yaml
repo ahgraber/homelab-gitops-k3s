@@ -1,0 +1,155 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: valheimplus-config
+  namespace: services
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  ### valheim plus: https://valheim.plus/documentation/list
+  VALHEIM_PLUS: "true"
+  ### beehive
+  VPCFG_Beehive_enabled: "true"
+  VPCFG_Beehive_honeyProductionSpeed: "300" # default 1200 s == 24 in-game hours
+  VPCFG_Beehive_maximumHoneyPerBeehive: "6" # default 4
+  VPCFG_Beehive_autoDeposit: "true"
+  VPCFG_Beehive_autoDepositRange: "10" # default 10, max 50
+  # VPCFG_Beehive_showDuration: "false"
+  ### brightness
+  VPCFG_Brightness_nightBrightnessMultiplier: "3" # default 0; 7-ish will 2x brightness at night
+  ### camera
+  VPCFG_Camera_enabled: "true"
+  VPCFG_Camera_cameraMaximumZoomDistance: "8" # default 6
+  VPCFG_Camera_cameraBoatMaximumZoomDistance: "8" # default 6
+  VPCFG_Camera_cameraFOV: "65" # default 65
+  ### craft from chest
+  VPCFG_CraftFromChest_enabled: "true"
+  VPCFG_CraftFromChest_disableCookingStation: "false" # "true" disables craft-from-cookingstation
+  VPCFG_CraftFromChest_checkFromWorkbench: "true"
+  VPCFG_CraftFromChest_range: "20" # default 20, max 50
+  VPCFG_CraftFromChest_lookupInterval: "3" # default 20, max 50
+  VPCFG_CraftFromChest_allowCraftingFromCarts: "true"
+  VPCFG_CraftFromChest_allowCraftingFromShips: "true"
+  ### experience -- % increase over base; 100 doubles
+  VPCFG_Experience_enabled: "false"
+  VPCFG_Experience_swords: "0"
+  VPCFG_Experience_knives: "0"
+  VPCFG_Experience_clubs: "0"
+  VPCFG_Experience_polearms: "0"
+  VPCFG_Experience_spears: "0"
+  VPCFG_Experience_blocking: "0"
+  VPCFG_Experience_axes: "0"
+  VPCFG_Experience_bows: "0"
+  VPCFG_Experience_fireMagic: "0"
+  VPCFG_Experience_frostMagic: "0"
+  VPCFG_Experience_unarmed: "0"
+  VPCFG_Experience_pickaxes: "0"
+  VPCFG_Experience_woodCutting: "0"
+  VPCFG_Experience_jump: "0"
+  VPCFG_Experience_sneak: "0"
+  VPCFG_Experience_run: "0"
+  VPCFG_Experience_swim: "0"
+  VPCFG_Experience_ride: "0"
+  ### fermenter
+  VPCFG_Fermenter_enabled: "true"
+  VPCFG_Fermenter_fermenterDuration: "300" # default 2400 s == 48 in-game hours
+  VPCFG_Fermenter_fermenterItemsProduced: "6"
+  # VPCFG_Fermenter_showDuration: "false"
+  VPCFG_Fermenter_autoDeposit: "true"
+  VPCFG_Fermenter_autoFuel: "true" # automatically find mead from nearby chests
+  VPCFG_Fermenter_ignorePrivateAreaCheck: "false"
+  VPCFG_Fermenter_autoRange: "10" # default 10, max 50
+  ### food
+  # VPCFG_Food_enabled: "false"
+  # VPCFG_Food_foodDurationMultiplier: "0" # percentage time-to-expire
+  # VPCFG_Food_disableFoodDegradation: "false"
+  ### furnace
+  VPCFG_Furnace_enabled: "true"
+  VPCFG_Furnace_maximumOre: "50" # default "10"
+  VPCFG_Furnace_maximumCoal: "50" # default "20"
+  VPCFG_Furnace_coalUsedPerProduct: "1" # default "2"
+  VPCFG_Furnace_productionSpeed: "1" # default "30" s
+  VPCFG_Furnace_autoDeposit: "true"
+  VPCFG_Furnace_autoFuel: "true" # look for fuel in nearby chests
+  VPCFG_Furnace_ignorePrivateAreaCheck: "false"
+  VPCFG_Furnace_autoRange: "10" # default 10, max 50
+  VPCFG_Furnace_allowAllOres: "false"
+  ### kiln
+  VPCFG_Kiln_enabled: "true"
+  VPCFG_Kiln_maximumWood: "100" # default "25"
+  VPCFG_Kiln_dontProcessFineWood: "true"
+  VPCFG_Kiln_dontProcessRoundLog: "false"
+  VPCFG_Kiln_productionSpeed: "1" # default "15" s
+  VPCFG_Kiln_autoDeposit: "true"
+  VPCFG_Kiln_autoFuel: "true"
+  VPCFG_Kiln_stopAutoFuelThreshold: "50" # Stop looking for fuel when there is >= Coal in nearby chests (ignored if set to 0)
+  VPCFG_Kiln_ignorePrivateAreaCheck: "true"
+  VPCFG_Kiln_autoRange: "10" # default 10, max 50
+  ### map
+  VPCFG_Map_enabled: "true"
+  VPCFG_Map_shareMapProgression: "true"
+  VPCFG_Map_exploreRadius: "150" # default 100
+  VPCFG_Map_preventPlayerFromTurningOffPublicPosition: "true"
+  VPCFG_Map_shareAllPins: "true"
+  VPCFG_Map_showCartsAndBoats: "true"
+  ### pickable -- % increase over base; 100 doubles
+  VPCFG_Pickable_enabled: "false"
+  VPCFG_Pickable_edibles: "0" # berries, mushrooms, onions and carrots
+  VPCFG_Pickable_flowersAndIngredients: "0" # Barley, Flax, Dandelion, Thistle, Carrot Seeds, Turnip Seeds, Turnip, Onion Seeds
+  VPCFG_Pickable_materials: "0" # Bone Fragments, Flint, Stone, Wood (ground branches)
+  VPCFG_Pickable_valuables: "0" # Amber, Amber Pearl, Coins, Ruby
+  VPCFG_Pickable_surtlingCores: "0"
+  ### player
+  VPCFG_Player_enabled: "true"
+  VPCFG_Player_baseMaximumWeight: "400" # default 300
+  # VPCFG_Player_baseMegingjordBuff: "150" # default 150
+  # VPCFG_Player_baseAutoPickUpRange: "2" # default 2
+  VPCFG_Player_cropNotifier: "true" # do not plant in grow-range of other crops
+  # VPCFG_Player_restSecondsPerComfortLevel: "60" # default 60
+  # VPCFG_Player_deathPenaltyMultiplier: "0" # default 0
+  # VPCFG_Player_autoRepair: "false"
+  # VPCFG_Player_guardianBuffDuration: "300" # default 300
+  # VPCFG_Player_guardianBuffCooldown: "1200" # default 1200
+  # VPCFG_Player_autoEquipShield: "false"
+  # VPCFG_Player_autoUnequipShield: "false"
+  # VPCFG_Player_skipIntro: "false"
+  # VPCFG_Player_dontUnequipItemsWhenSwimming: "false"
+  VPCFG_Player_reequipItemsAfterSwimming: "true"
+  ### PlayerProjectile
+  VPCFG_PlayerProjectile_enabled: "true"
+  VPCFG_PlayerProjectile_playerMinChargeVelocityMultiplier: "20" # default 0%
+  VPCFG_PlayerProjectile_playerMaxChargeVelocityMultiplier: "50" # default 0%
+  VPCFG_PlayerProjectile_playerMinChargeAccuracyMultiplier: "20" # default 0%
+  VPCFG_PlayerProjectile_playerMaxChargeAccuracyMultiplier: "25" # default 0%
+  # VPCFG_PlayerProjectile_enableScaleWithSkillLevel: true
+  ### server
+  VPCFG_Server_enabled: "true"
+  VPCFG_Server_maxPlayers: "4"
+  VPCFG_Server_enforceMod: "true"
+  ### smelter
+  VPCFG_Smelter_enabled: "true"
+  VPCFG_Smelter_maximumOre: "50" # default "10"
+  VPCFG_Smelter_maximumCoal: "50" # default "20"
+  VPCFG_Smelter_coalUsedPerProduct: "1" # default "2"
+  VPCFG_Smelter_productionSpeed: "1" # default "30" s
+  VPCFG_Smelter_autoDeposit: "true"
+  VPCFG_Smelter_autoFuel: "true"
+  VPCFG_Smelter_ignorePrivateAreaCheck: "false"
+  VPCFG_Smelter_autoRange: "10" # default "10", max "50"
+  ### spinning wheel
+  VPCFG_SpinningWheel_enabled: "true"
+  VPCFG_SpinningWheel_maximumFlax: "50" # default "40"
+  VPCFG_SpinningWheel_productionSpeed: "1" # default "30"
+  VPCFG_SpinningWheel_autoDeposit: "true"
+  VPCFG_SpinningWheel_autoFuel: "true"
+  VPCFG_SpinningWheel_ignorePrivateAreaCheck: "false"
+  VPCFG_SpinningWheel_autoRange: "10" # default "10", max "50"
+  ### windmill
+  VPCFG_Windmill_enabled: "true"
+  VPCFG_Windmill_maximumBarley: "50" # default "40"
+  VPCFG_Windmill_productionSpeed: "1" # default "30"
+  VPCFG_Windmill_autoDeposit: "true"
+  VPCFG_Windmill_autoFuel: "true"
+  VPCFG_Windmill_ignorePrivateAreaCheck: "false"
+  VPCFG_Windmill_autoRange: "10" # default "10", max "50"

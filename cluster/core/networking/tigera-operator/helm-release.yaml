@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tigera-operator
+  namespace: tigera-operator
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: tigera-operator
+      version: v3.24.5
+      sourceRef:
+        kind: HelmRepository
+        name: project-calico-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  upgrade:
+    crds: CreateReplace
+    remediation:
+      retries: 5
+  values:
+    installation:
+      enabled: true
+      registry: quay.io
+      imagePath: calico
+
+      ### from the ansible template used in bootstrap
+      calicoNetwork:
+        # Note: The ipPools section cannot be modified post-install.
+        ipPools:
+          - blockSize: 26
+            cidr: "10.42.0.0/16"
+            encapsulation: "VXLANCrossSubnet"
+            natOutgoing: Enabled
+            nodeSelector: all()
+        linuxDataplane: Iptables
+        multiInterfaceMode: None
+        # nodeAddressAutodetectionV4:
+        #   cidrs:
+        #     - "10.2.118.0/24"
+        #     # - "10.2.113.0/24"
+        #     - "10.113.0.128/25"  # leave front half for metallb
+      nodeMetricsPort: 9091
+      typhaMetricsPort: 9093
+
+    resources:
+      requests:
+        cpu: 35m
+        memory: 200Mi
+      limits:
+        memory: 200Mi

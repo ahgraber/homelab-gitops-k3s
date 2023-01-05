@@ -1,0 +1,33 @@
+---
+version: "3"
+
+tasks:
+  all:
+    desc: Lint with MegaLinter
+    cmds:
+      - mega-linter-runner --flavor=python -e MEGALINTER_CONFIG=./.mega-linter.yaml -e APPLY_FIXES=none
+
+  json:
+    desc: Lint JSON
+    cmds:
+      - >-
+        prettier --ignore-path '.prettierignore' --config '.prettierrc.yaml' --ignore-unknown --parser=json --check '*.json' '**/*.json'
+    ignore_error: true
+
+  markdown:
+    desc: Lint Markdown
+    cmds:
+      - markdownlint -c '.markdownlint.yaml' *.md **/*.md
+    ignore_errors: true
+
+  shell:
+    desc: Lint shell scripts
+    cmds:
+      - shellcheck --severity=warning **/*.sh
+    ignore_errors: true
+
+  yaml:
+    desc: Lint YAML
+    cmds:
+      - yamllint --config-file=.yamllint.yaml --format=parseable .
+    ignore_errors: true
