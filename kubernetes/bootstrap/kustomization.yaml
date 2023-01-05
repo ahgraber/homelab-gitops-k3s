@@ -1,0 +1,40 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - github.com/fluxcd/flux2/manifests/install?ref=v0.38.2
+
+patches:
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: not-used
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: NetworkPolicy
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: not-used
+      spec:
+        template:
+          spec:
+            containers:
+              - name: manager
+                resources:
+                  limits:
+                    cpu: 2000m
+                    memory: 2Gi
+            nodeSelector:
+              node-role.kubernetes.io/control-plane: "true"
+            tolerations:
+              - effect: NoSchedule
+                key: node-role.kubernetes.io/master
+                operator: Exists
+    target:
+      kind: Deployment
+      name: "(kustomize-controller|helm-controller|source-controller)"
