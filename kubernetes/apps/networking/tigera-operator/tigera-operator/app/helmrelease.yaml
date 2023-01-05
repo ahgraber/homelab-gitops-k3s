@@ -12,7 +12,7 @@ spec:
       version: v3.24.5
       sourceRef:
         kind: HelmRepository
-        name: calico
+        name: calico-charts
         namespace: flux-system
   maxHistory: 3
   install:
