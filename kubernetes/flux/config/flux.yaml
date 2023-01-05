@@ -56,4 +56,4 @@ spec:
                   operator: Exists
       target:
         kind: Deployment
-        name: "(kustomize-controller|helm-controller|source-controller)"
+        name: "(kustomize-controller|helm-controller|notification-controller|source-controller)"
