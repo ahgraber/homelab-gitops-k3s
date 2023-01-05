@@ -1,0 +1,18 @@
+# yamllint disable
+apiVersion: v1
+kind: Secret
+metadata:
+    name: github-deploy-key
+    namespace: flux-system
+stringData:
+    ### create key with `ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./cluster/github-deploy-key -q -P ""`
+    ### copy contents of `./cluster/github-deploy-key` below
+    identity: |
+        -----BEGIN ... PRVT KEY -----
+        ...
+        -----END ... -----
+    ### Output of: curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]'
+    known_hosts: |
+        github.com ssh-ed25519 ...
+        github.com ecdsa-sha2-nistp256 ...
+        github.com ssh-rsa ...
