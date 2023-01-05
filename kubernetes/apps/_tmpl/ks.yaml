@@ -1,0 +1,24 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-monitoring-<APP>
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  path: ./kubernetes/apps/<PATH/TO/APP>
+  dependsOn:
+    - name: apps-<DEPENDS-NS>-<DEPENDS-APP>
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: <APP>
+      namespace: <NAMESPACE>
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m
