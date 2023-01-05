@@ -127,7 +127,7 @@ bash ./scripts/substitute.sh
 ### Create deploy key
 
 Create sops secret in `cluster/base/flux-system/github-deploy-key.sops.yaml` following
-[template](../cluster/flux/flux-system/github-deploy-key.sops.yaml.example)
+[template](../kubernetes/bootstrap/github-deploy-key.sops.yaml.example)
 
 ### Encrypting with SOPS
 

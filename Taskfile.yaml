@@ -4,7 +4,7 @@ version: "3"
 vars:
   PROJECT_DIR:
     sh: "git rev-parse --show-toplevel"
-  CLUSTER_DIR: "{{.PROJECT_DIR}}/cluster"
+  KUBERNETES_DIR: "{{.PROJECT_DIR}}/kubernetes"
 
 env:
   KUBECONFIG: "{{.PROJECT_DIR}}/kubeconfig"

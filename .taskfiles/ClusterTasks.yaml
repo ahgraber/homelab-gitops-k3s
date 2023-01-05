@@ -13,6 +13,7 @@ tasks:
       - kubectl apply --kustomize {{.KUBERNETES_DIR}}/bootstrap
       - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age
         --from-file=age.agekey=/dev/stdin
+      - sops --decrypt kubernetes/bootstrap/flux/github-deploy-key.sops.yaml | kubectl apply -f -
       - sops --decrypt {{.KUBERNETES_DIR}}/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
       - kubectl apply -f {{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml
       - kubectl apply --kustomize {{.KUBERNETES_DIR}}/flux/config
@@ -22,13 +23,18 @@ tasks:
         msg: |
           Age key file is not found. Did you forget to create it?
     vars:
-      SOPS_AGE_KEY_FILE: ~/.config/sops/age/keys.txt
+      SOPS_AGE_KEY_FILE: "$HOME/Library/Application\\ Support/sops/age/keys.txt"
 
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
       - flux reconcile -n flux-system source git flux-cluster
       - flux reconcile -n flux-system kustomization flux-cluster
+
+  dash:
+    desc: Get secret for kubernetes-dashboard login
+    cmds:
+      - kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}'
 
   hr-restart:
     desc: Restart all failed Helm Releases
