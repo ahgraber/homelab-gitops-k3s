@@ -23,7 +23,7 @@ spec:
     remediation:
       retries: 3
   values:
-    installCRDs: false
+    installCRDs: true
 
     # Comma separated list of feature gates that should be enabled on the controller pod.
     featureGates: ""
