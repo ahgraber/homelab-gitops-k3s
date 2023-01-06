@@ -1,0 +1,44 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "${SECRET_DOMAIN/./-}"
+  namespace: networking
+spec:
+  secretName: "${SECRET_DOMAIN/./-}-tls"
+  secretTemplate:
+    annotations:
+      # allow replication?
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
+      # automatically create replicated resources?
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "false"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ""
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "${SECRET_DOMAIN}"
+  dnsNames:
+    - "${SECRET_DOMAIN}"
+    - "*.${SECRET_DOMAIN}"
+  privateKey:
+    rotationPolicy: Never
+# ---
+# # define blank secret to be filled/used by Cert
+# apiVersion: v1
+# data:
+#   ca.crt: ''
+#   tls.crt: ''
+#   tls.key: ''
+# kind: Secret
+# metadata:
+#   name: ${SECRET_DOMAIN/./-}-tls
+#   namespace: networking
+#   annotations:
+#     # allow replication?
+#     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
+#     # automatically create replicated resources?
+#     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+#     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "ns1,ns2"
+# type: kubernetes.io/tls
