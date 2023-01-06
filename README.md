@@ -1,13 +1,9 @@
-# Template for deploying k3s backed by Flux
+# Homelab cluster with k3s and Flux
 
-Deploy a single [k3s](https://k3s.io/) cluster, managed by the GitOps tool [Flux](https://toolkit.fluxcd.io/).
+This repo configures a single [k3s](https://k3s.io/) cluster, managed by the GitOps tool [Flux](https://toolkit.fluxcd.io/).
 Cluster provisioned with [pxe, ansible, and/or terraform](https://github.com/ahgraber/homelab-infra).
 
-This Git repository will be specifies the state of the cluster. In addition, with the help of the
-[Flux SOPS integration](https://toolkit.fluxcd.io/guides/mozilla-sops/) GPG encrypted secrets can be
-committed to this public repo.
-
-_With inspiration from the k8s-at-home community, especially the [onedr0p's cluster template](https://github.com/onedr0p/flux-cluster-template)_
+_With inspiration from the k8s-at-home community, especially [onedr0p's cluster template](https://github.com/onedr0p/flux-cluster-template)_
 
 ## Overview
 

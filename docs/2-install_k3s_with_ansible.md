@@ -1,4 +1,4 @@
-# :sailboat:&nbsp; Installing k3s with Ansible
+# 📡 Installing k3s with Ansible
 
 k3s can be automatically installed via Terraform provisioner, or manually leverage the playbook.
 

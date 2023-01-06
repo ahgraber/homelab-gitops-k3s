@@ -12,12 +12,9 @@
 
 ## 💻 Nodes
 
-Already provisioned Bare metal or VMs with any modern operating system like Ubuntu, Debian or
-CentOS.
+Provisioned with [pxe, ansible, and/or terraform](https://github.com/ahgraber/homelab-infra).
 
 ## 🛠 Tools
-
-:round_pushpin: You need to install the required CLI tools listed below on your workstation.
 
 | Tool                                                               | Purpose                                                             |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
@@ -47,16 +44,9 @@ This repo uses task as a framework for setting things up.
 
 ```sh
 brew install go-task/tap/go-task
-# install utilities
+# install tools & utilities
 task init
 ```
-
-<!-- > if Ansible not installed
->
-> ```sh
-> conda create --name ansible && conda activate ansible
-> conda install ansible --name ansible
-> ``` -->
 
 ## ⚠️ Activate pre-commit
 
