@@ -1,28 +1,26 @@
-# :small_blue_diamond:&nbsp; GitOps (with Flux)
+# 🤖 GitOps (with Flux)
 
-- [:small\_blue\_diamond:  GitOps (with Flux)](#small_blue_diamond-gitops-with-flux)
+- [🤖 GitOps (with Flux)](#-gitops-with-flux)
   - [1. Verify Flux can be installed](#1-verify-flux-can-be-installed)
   - [2. Pre-create the `flux-system` namespace](#2-pre-create-the-flux-system-namespace)
   - [3. Add the Age key in-order for Flux to decrypt SOPS secrets](#3-add-the-age-key-in-order-for-flux-to-decrypt-sops-secrets)
   - [4. Create deploy key \& add to github](#4-create-deploy-key--add-to-github)
   - [4. Export more environment variables for application configuration](#4-export-more-environment-variables-for-application-configuration)
   - [5. Create required files based on ALL exported environment variables](#5-create-required-files-based-on-all-exported-environment-variables)
-  - [6. :mag:  **Verify** all the above files have the correct information present](#6-mag-verify-all-the-above-files-have-the-correct-information-present)
-  - [7. :closed\_lock\_with\_key:  Encrypt secrets with SOPS](#7-closed_lock_with_key-encrypt-secrets-with-sops)
+  - [6. 🔍 **Verify** all the above files have the correct information present](#6--verify-all-the-above-files-have-the-correct-information-present)
+  - [7. 🔐 Encrypt secrets with SOPS](#7--encrypt-secrets-with-sops)
     - [Create deploy key](#create-deploy-key)
     - [Encrypting with SOPS](#encrypting-with-sops)
-  - [8. :mag:  **Verify** all the above files are **encrypted** with SOPS](#8-mag-verify-all-the-above-files-are-encrypted-with-sops)
+  - [8. 🔍 **Verify** all the above files are **encrypted** with SOPS](#8--verify-all-the-above-files-are-encrypted-with-sops)
   - [9. Push your changes to git](#9-push-your-changes-to-git)
   - [10. Install Flux](#10-install-flux)
   - [Verify Flux](#verify-flux)
+  - [Manually sync Flux with your Git repository](#manually-sync-flux-with-your-git-repository)
   - [Verify ingress](#verify-ingress)
   - [📣 Post installation](#-post-installation)
     - [🌐 DNS](#-dns)
     - [🤖 Renovate](#-renovate)
     - [🪝 Github Webhook](#-github-webhook)
-
-:round_pushpin: Here we will be installing [flux](https://toolkit.fluxcd.io/) after some quick
-bootstrap steps.
 
 > [Here](https://fluxcd.io/docs/flux-e2e/) is flux's explanation of its end-to-end commit flow.
 
@@ -70,32 +68,60 @@ before running or copying exports into .envrc**
 
 ```sh
 cat >> .envrc << EOF
+### allow direnv to import .env files
+dotenv_if_exists ./.env
 
-# The repo you created from this template
-export BOOTSTRAP_GITHUB_REPOSITORY="https://github.com/ahgraber/homelab-gitops-k3s"
-export GITHUB_USER="ahgraber"
-export GITHUB_TOKEN="qwertyuiop123456789"
-export BOOTSTRAP_DEFAULT_USER="admin"
-export BOOTSTRAP_DEFAULT_EMAIL="k8s-at-home@gmail.com"
-export BOOTSTRAP_DEFAULT_PASSWORD="changeme"
+### Flux Config
+export GITHUB_REPOSITORY=""
+export GITHUB_USER=""
+export GITHUB_TOKEN=""
 
-# Choose one of your domains or use a made up one
-export BOOTSTRAP_DOMAIN="DOMAIN.COM"
-# Cloudflare API token for DNS certification
-export BOOTSTRAP_CLOUDFLARE_EMAIL="k8s-at-home@gmail.com"
-export BOOTSTRAP_CLOUDFLARE_TOKEN="kpG6iyg3FS_du_8KRShdFuwfbwu3zMltbvmJV6cD"
+### network ip allocations (calico)
+export NET_NODE_CIDR="10.2.118.0/24"
+export NET_POD_CIDR="10.42.0.0/16"
+export NET_SVC_CIDR="10.43.0.0/16"
 
-# Pick a range of *UNUSED* IPs that are on the same network as your nodes
-# Note: these cannot overlap with the kube-vip IP
-export BOOTSTRAP_LB_INGRESS="10.42.42.43"
-export BOOTSTRAP_LB_RANCHER="10.42.42.44"
-export SETTINGS_LB_MARIADB="10.42.42.45"
-export SETTINGS_LB_POSTGRES="10.42.42.46"
-export BOOTSTRAP_LB_DEFAULT_RANGE="10.42.42.200-10.42.42.242"
+### Kube-Vip
+export KUBE_VIP_ADDRESS="10.2.113.1"
+export KUBE_VIP_IFACE="enp2s0"  # "ens192"
 
+### K8s load-balancer IP allocations (metallb / kube-vip servicelb)
+# Pick a range of unused IPs that are on the same network as your nodes
+export LB_GATEWAY="10.2.113.2"
+export LB_INGRESS="10.2.113.3"
+export LB_AUTH="10.2.113.4"
+# export LB_POSTGRES="10.2.113.5"
+export LB_DEFAULT_RANGE="10.2.113.128-10.2.113.250"
 
-# Generate hashed user/password for traefik basicauth
-export TRAEFIK_BASICAUTH='$(htpasswd -nb <USERNAME> <PASSWORD> | openssl base64)'
+### Cluster secrets
+export SECRET_ADMIN_USER="admin"
+export SECRET_ADMIN_EMAIL=""
+export SECRET_DEFAULT_USER=""
+export SECRET_DEFAULT_EMAIL=""
+export SECRET_DEFAULT_PWD=""
+
+export SECRET_DEFAULT_PWD_BASE64=''
+
+export SECRET_DEFAULT_PWD_BCRYPT=''
+
+export SECRET_DOMAIN=""
+
+### Cloudflare API token for DNS certification
+export SECRET_CLOUDFLARE_EMAIL=""
+export SECRET_CLOUDFLARE_TOKEN=""
+export SECRET_CLOUDFLARE_TUNNEL_TOKEN=""
+export SECRET_CLOUDFLARE_TUNNEL_CREDS=""
+
+### Generate hashed user/password for traefik basicauth:
+# '$(htpasswd -nb $SECRET_ADMIN_USER $SECRET_DEFAULT_PWD | openssl base64)'
+export TRAEFIK_BASICAUTH=''
+
+### Email
+export SECRET_SMTP_ADDRESS=""
+export SECRET_SMTP_USER=""
+export SECRET_SMTP_PWD=""
+export SECRET_SMTP_SRV=""
+export SECRET_SMTP_PORT=""
 EOF
 ```
 
@@ -108,7 +134,7 @@ General procedure:
 direnv allow .
 
 # create SOPS hook for secret encryption
-envsubst < /path/to/templatefile.yaml.tmpl >! /path/to/outputfile.yaml
+envsubst < ./path/to/templatefile.yaml.tmpl >! ./path/to/outputfile.yaml
 ```
 
 To run for all templates in repo:
@@ -117,9 +143,9 @@ To run for all templates in repo:
 bash ./scripts/substitute.sh
 ```
 
-## 6. :mag:&nbsp; **Verify** all the above files have the correct information present
+## 6. 🔍 **Verify** all the above files have the correct information present
 
-## 7. :closed_lock_with_key:&nbsp; Encrypt secrets with SOPS
+## 7. 🔐 Encrypt secrets with SOPS
 
 > :round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
 > usable anywhere in your YAML manifests under `./cluster`
@@ -135,7 +161,7 @@ General procedure:
 
 ```sh
 # Encrypt SOPS secrets
-sops --encrypt --in-place /path/to/unencrypted_secrets.sops.yaml
+sops --encrypt --in-place ./path/to/unencrypted_secrets.sops.yaml
 ```
 
 To run for all templates in repo:
@@ -144,7 +170,7 @@ To run for all templates in repo:
 bash ./scripts/sops.sh
 ```
 
-## 8. :mag:&nbsp; **Verify** all the above files are **encrypted** with SOPS
+## 8. 🔍 **Verify** all the above files are **encrypted** with SOPS
 
 ## 9. Push your changes to git
 
@@ -156,61 +182,45 @@ git push
 
 ## 10. Install Flux
 
-Apply deploy-key and sops-age secrets to cluster
+📍 Review [ClusterTasks](./../.taskfiles/ClusterTasks.yaml) for insight into specific commands that will be run!
 
 ```sh
-cat "${SOPS_AGE_KEY_FILE}" |
-    kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
-sops -d cluster/flux/flux-system/github-deploy-key.sops.yaml | kubectl apply -f -
-```
-
-Apply bootstrap and cluster kustomizations & force reconciliation
-
-```sh
-kubectl apply --kustomize ./cluster/bootstrap/
-kubectl apply --kustomize ./cluster/flux/flux-system/
-flux reconcile -n flux-system source git flux-cluster
-flux reconcile -n flux-system kustomization flux-cluster
+task cluster:install
 ```
 
 ## Verify Flux
 
-Verify
-
 ```sh
-kubectl --kubeconfig=${KUBECONFIG} get pods -n flux-system
-flux --kubeconfig=${KUBECONFIG} get sources git
+# check flux installation
+task cluster:pods -- -n flux-system
+
+# look at all resources
+task cluster:resources
+# or view per-resource
+task cluster:gitrepositories
+task cluster:kustomizations
+task cluster:helmreleases
+task cluster:helmrepositories
+task cluster:pods
+task cluster:certificates
+task cluster:ingresses
 ```
 
-Manually sync Flux with your Git repository
+## Manually sync Flux with your Git repository
 
 ```sh
 task cluster:reconcile
 ```
 
-Check status
-
-```sh
-kubectl --kubeconfig=${KUBECONFIG} get kustomization -A
-flux --kubeconfig=${KUBECONFIG} get helmrelease -A
-```
-
-> For objects that have been preinstalled with ansible, we patch to allow helm to manage
-> [tigera-operator](../cluster/core/tigera-operator/give_helm_ownership.sh)
+> For objects that have been preinstalled with ansible, patching may be required to allow helm management
+> eg. [tigera-operator](../kubernetes/apps/networking/tigera-operator/give_helm_ownership.sh)
 
 ## Verify ingress
 
-If your cluster is not accessible to outside world you can provide a dns override for
-`https://homer.${BOOTSTRAP_DOMAIN}` in your router
+If your cluster is not accessible to outside world you can provide a dns override
+for any service with an ingress in your router
 
-<!-- or update your hosts
-file to verify the ingress controller is working.
-
-```sh
-echo "${BOOTSTRAP_LB_INGRESS} ${BOOTSTRAP_DOMAIN} homer.${BOOTSTRAP_DOMAIN}" | sudo tee -a /etc/hosts
-``` -->
-
-Head over to your browser and you _should_ be able to access `https://homer.${BOOTSTRAP_DOMAIN}`
+Head over to your browser and you _should_ be able to access the service
 
 ## 📣 Post installation
 

@@ -1,35 +1,37 @@
 # Editors
 .vscode/
 .monokle
+*.profraw
 # Trash
 .DS_Store
 Thumbs.db
-# Binaries
-bin
-/flux
 *.iso
 # k8s
 *kubeconfig*
 *key*
+*.pem
+*.pgp
+*.pub
 # vscode-sops
 .decrypted~*.yaml
 # env
 .env
 .envrc
-*.pgp
+
 # temp folders
 *.bak
 .temp*
+.todo*
+**/.archive/
+**/.wip/
 .private/
 .logs/
 .task/
 report/
-#testing
+
+#extras
 *pytest*
-# Local archives
-**/archive
-**/wip
-todo.md
+*cache*
 # retain files
 !**.gitkeep
-!*sops*
+!*.sops.*
