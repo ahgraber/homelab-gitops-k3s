@@ -21,6 +21,8 @@ tasks:
     desc: Initialize workstation dependencies with Brew
     cmds:
       - brew install {{.DEPS}} {{.CLI_ARGS}}
+      - go install -ldflags="-s -w" github.com/drone/envsubst/cmd/envsubst@latest && echo 'PATH_add "${HOME}"/go/bin/'
+        >>! .envrc"
     preconditions:
       - sh: command -v brew
         msg: |
