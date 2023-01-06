@@ -15,3 +15,15 @@ spec:
   privateKey:
     rotationPolicy: Never
   secretName: test-tls
+# ---
+# # define blank secret to be filled/used by Cert
+# apiVersion: v1
+# data:
+#   ca.crt: ''
+#   tls.crt: ''
+#   tls.key: ''
+# kind: Secret
+# metadata:
+#   name: ${SECRET_DOMAIN/./-}-stage-tls
+#   namespace: networking
+# type: kubernetes.io/tls
