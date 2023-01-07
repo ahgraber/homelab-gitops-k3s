@@ -9,7 +9,7 @@ metadata:
 spec:
   path: ./kubernetes/apps/networking/traefik/app
   dependsOn:
-    - name: apps-networking-cert-manager
+    - name: apps-cert-manager
   prune: true
   sourceRef:
     kind: GitRepository
