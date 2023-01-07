@@ -34,3 +34,5 @@ data:
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-block
+      isDefault: true
+      deletionPolicy: Delete
