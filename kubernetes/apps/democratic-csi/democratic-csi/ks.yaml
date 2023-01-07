@@ -8,6 +8,8 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/democratic-csi/democratic-csi/iscsi
+  dependsOn:
+    - name: apps-kube-system-snapshot-controller
   prune: true
   sourceRef:
     kind: GitRepository
@@ -30,6 +32,8 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/democratic-csi/democratic-csi/nfs
+  dependsOn:
+    - name: apps-kube-system-snapshot-controller
   prune: true
   sourceRef:
     kind: GitRepository
