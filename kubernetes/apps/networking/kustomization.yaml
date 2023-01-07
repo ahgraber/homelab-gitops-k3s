@@ -9,5 +9,5 @@ resources:
   - ./cert-manager/
   - ./metallb-system/
   - ./tigera-operator/
-  - ./traefik/
+  - ./traefik/ks.yaml
   # Standard Resources
