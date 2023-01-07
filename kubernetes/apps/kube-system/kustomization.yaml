@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
+  - ./storageclass-local.yaml # overwrite local-path StorageClass to set as NOT default
   # Flux-Kustomizations
   - ./descheduler/ks.yaml
   - ./kube-cleanup-operator/ks.yaml
