@@ -7,7 +7,7 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/cert-manager/cert-manager/app
+  path: ./kubernetes/apps/cert-manager/cert-manager/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -31,7 +31,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-cert-manager
-  path: ./kubernetes/apps/networking/cert-manager/cert-manager/issuers
+  path: ./kubernetes/apps/cert-manager/cert-manager/issuers
   prune: true
   sourceRef:
     kind: GitRepository
@@ -51,7 +51,7 @@ spec:
   dependsOn:
     - name: apps-cert-manager
     - name: apps-cert-manager-issuers
-  path: ./kubernetes/apps/networking/cert-manager/cert-manager/certs
+  path: ./kubernetes/apps/cert-manager/cert-manager/certs
   prune: true
   sourceRef:
     kind: GitRepository
