@@ -6,8 +6,5 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Pre Flux-Kustomizations
-  - ./cert-manager/
-  - ./metallb-system/
-  - ./tigera-operator/
   - ./traefik/ks.yaml
   # Standard Resources

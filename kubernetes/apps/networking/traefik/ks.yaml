@@ -10,6 +10,8 @@ spec:
   path: ./kubernetes/apps/networking/traefik/app
   dependsOn:
     - name: apps-cert-manager
+    - name: apps-metallb-system
+    - name: apps-metallb-system-config
   prune: true
   sourceRef:
     kind: GitRepository

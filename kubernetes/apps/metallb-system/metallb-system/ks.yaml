@@ -2,12 +2,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps-networking-metallb-system
+  name: apps-metallb-system
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/metallb-system/metallb-system/app
+  path: ./kubernetes/apps/metallb-system/metallb-system/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -24,14 +24,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps-networking-metallb-system-config
+  name: apps-metallb-system-config
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/metallb-system/metallb-system/config
+  path: ./kubernetes/apps/metallb-system/metallb-system/config
   dependsOn:
-    - name: apps-networking-metallb-system
+    - name: apps-metallb-system
   prune: true
   sourceRef:
     kind: GitRepository
