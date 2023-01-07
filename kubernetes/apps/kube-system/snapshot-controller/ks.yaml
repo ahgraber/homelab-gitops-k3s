@@ -8,10 +8,6 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/kube-system/snapshot-controller/app
-  dependsOn:
-    - name: apps-democratic-csi-iscsi
-    - name: apps-democratic-csi-nfs
-    - name: apps-rook-ceph-cluster
   prune: true
   sourceRef:
     kind: GitRepository
