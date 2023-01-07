@@ -16,5 +16,5 @@ patches:
       group: monitoring.coreos.com
       version: v1
       kind: PrometheusRule
-      name: prometheus-ceph-rules
+      name: ceph-rules
       namespace: rook-ceph
