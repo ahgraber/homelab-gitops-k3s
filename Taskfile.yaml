@@ -11,6 +11,7 @@ env:
 
 includes:
   cluster: .taskfiles/ClusterTasks.yaml
+  flux: .taskfiles/ClusterTasks.yaml
   format: .taskfiles/FormatTasks.yaml
   lint: .taskfiles/LintTasks.yaml
   pre-commit: .taskfiles/PrecommitTasks.yaml
