@@ -34,41 +34,41 @@ spec:
     replicaCount: 3
     serviceMonitor:
       create: true
-    volumeSnapshotClasses:
-      - name: csi-democratic-csi-iscsi
-        driver: org.democratic-csi.truenas-iscsi
-        annotations:
-          snapshot.storage.kubernetes.io/is-default-class: "false"
-        deletionPolicy: Delete
-      - name: csi-democratic-csi-nfs
-        driver: org.democratic-csi.truenas-nfs
-        annotations:
-          snapshot.storage.kubernetes.io/is-default-class: "false"
-        deletionPolicy: Delete
-      - name: csi-ceph-blockpool
-        driver: rook-ceph.rbd.csi.ceph.com
-        annotations:
-          snapshot.storage.kubernetes.io/is-default-class: "true"
-        parameters:
-          clusterID: rook-ceph
-          csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
-          csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
-        deletionPolicy: Delete
-      - name: csi-ceph-filesystem
-        driver: rook-ceph.cephfs.csi.ceph.com
-        annotations:
-          snapshot.storage.kubernetes.io/is-default-class: "false"
-        parameters:
-          clusterID: rook-ceph
-          csi.storage.k8s.io/snapshotter-secret-name: rook-csi-cephfs-provisioner
-          csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
-        deletionPolicy: Delete
-      - name: csi-ceph-blockpool
-        driver: rook-ceph.rbd.csi.ceph.com
-        annotations:
-          snapshot.storage.kubernetes.io/is-default-class: "false"
-        parameters:
-          clusterID: rook-ceph
-          csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
-          csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
-        deletionPolicy: Delete
+    # volumeSnapshotClasses:
+    #   - name: csi-democratic-csi-iscsi
+    #     driver: org.democratic-csi.truenas-iscsi
+    #     annotations:
+    #       snapshot.storage.kubernetes.io/is-default-class: "false"
+    #     deletionPolicy: Delete
+    #   - name: csi-democratic-csi-nfs
+    #     driver: org.democratic-csi.truenas-nfs
+    #     annotations:
+    #       snapshot.storage.kubernetes.io/is-default-class: "false"
+    #     deletionPolicy: Delete
+    #   - name: csi-ceph-block
+    #     driver: rook-ceph.rbd.csi.ceph.com
+    #     annotations:
+    #       snapshot.storage.kubernetes.io/is-default-class: "true"
+    #     parameters:
+    #       clusterID: rook-ceph
+    #       csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
+    #       csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
+    #     deletionPolicy: Delete
+    #   - name: csi-ceph-fs
+    #     driver: rook-ceph.cephfs.csi.ceph.com
+    #     annotations:
+    #       snapshot.storage.kubernetes.io/is-default-class: "false"
+    #     parameters:
+    #       clusterID: rook-ceph
+    #       csi.storage.k8s.io/snapshotter-secret-name: rook-csi-cephfs-provisioner
+    #       csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
+    #     deletionPolicy: Delete
+    #   - name: csi-ceph-bucket
+    #     driver: rook-ceph.rbd.csi.ceph.com
+    #     annotations:
+    #       snapshot.storage.kubernetes.io/is-default-class: "false"
+    #     parameters:
+    #       clusterID: rook-ceph
+    #       csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
+    #       csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
+    #     deletionPolicy: Delete
