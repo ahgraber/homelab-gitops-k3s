@@ -39,3 +39,7 @@ data:
           reclaimPolicy: Delete
           parameters:
             region: us-east-1
+
+    cephBlockPoolsVolumeSnapshotClass:
+      enabled: true
+      name: csi-ceph-bucket

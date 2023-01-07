@@ -126,10 +126,9 @@ spec:
           - nfsvers=4
           - sec=sys
 
-    # # defined in snapshot-controller
-    # volumeSnapshotClasses:
-    #   - name: csi-truenas-nfs
-    #     deletionPolicy: Delete # Delete, Retain
+    volumeSnapshotClasses:
+      - name: csi-truenas-nfs
+        deletionPolicy: Delete # Delete, Retain
 
     annotations:
       reloader.stakater.com/search: "true"

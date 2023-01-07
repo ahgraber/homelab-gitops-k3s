@@ -112,10 +112,9 @@ spec:
           fsType: xfs
         mountOptions: []
 
-    # # defined in snapshot-controller
-    # volumeSnapshotClasses:
-    #   - name: csi-truenas-iscsi
-    #     deletionPolicy: Delete # Delete, Retain
+    volumeSnapshotClasses:
+      - name: csi-truenas-iscsi
+        deletionPolicy: Delete # Delete, Retain
 
     annotations:
       reloader.stakater.com/search: "true"

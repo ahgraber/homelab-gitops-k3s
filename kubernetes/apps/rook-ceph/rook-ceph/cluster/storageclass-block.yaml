@@ -33,4 +33,4 @@ data:
 
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
-      name: csi-rook-ceph-block
+      name: csi-ceph-block
