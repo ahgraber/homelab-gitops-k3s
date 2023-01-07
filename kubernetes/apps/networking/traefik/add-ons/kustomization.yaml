@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./error-pages/
   - ./middlewares/
+  - ./ingressroute.yaml
