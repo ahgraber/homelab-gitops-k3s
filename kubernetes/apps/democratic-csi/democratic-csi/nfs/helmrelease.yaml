@@ -128,6 +128,8 @@ spec:
 
     volumeSnapshotClasses:
       - name: csi-truenas-nfs
+        annotations:
+          snapshot.storage.kubernetes.io/is-default-class: "false"
         deletionPolicy: Delete # Delete, Retain
 
     annotations:

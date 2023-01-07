@@ -114,6 +114,8 @@ spec:
 
     volumeSnapshotClasses:
       - name: csi-truenas-iscsi
+        annotations:
+          snapshot.storage.kubernetes.io/is-default-class: "false"
         deletionPolicy: Delete # Delete, Retain
 
     annotations:
