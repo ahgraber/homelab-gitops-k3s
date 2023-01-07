@@ -15,9 +15,9 @@ spec:
         name: piraeus-charts
         namespace: flux-system
   maxHistory: 3
-  dependsOn:
-    - name: snapshot-validation-webhook
-      namespace: kube-system
+  # dependsOn:
+  #   - name: snapshot-validation-webhook
+  #     namespace: kube-system
   install:
     createNamespace: true
     crds: CreateReplace
