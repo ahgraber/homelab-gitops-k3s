@@ -34,6 +34,7 @@ spec:
     replicaCount: 3
     serviceMonitor:
       create: true
+    # ## maanged with storage application deployments
     # volumeSnapshotClasses:
     #   - name: csi-democratic-csi-iscsi
     #     driver: org.democratic-csi.truenas-iscsi
