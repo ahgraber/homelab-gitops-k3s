@@ -11,7 +11,7 @@ resources:
 
 # patchesJson6902:
 patches:
-  - path: patch-rook-ceph.yaml
+  - path: patch-prometheusrule.yaml
     target:
       group: monitoring.coreos.com
       version: v1
