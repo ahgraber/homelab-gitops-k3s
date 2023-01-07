@@ -112,10 +112,6 @@ export SECRET_CLOUDFLARE_TOKEN=""
 export SECRET_CLOUDFLARE_TUNNEL_TOKEN=""
 export SECRET_CLOUDFLARE_TUNNEL_CREDS=""
 
-### Generate hashed user/password for traefik basicauth:
-# '$(htpasswd -nb $SECRET_ADMIN_USER $SECRET_DEFAULT_PWD | openssl base64)'
-export TRAEFIK_BASICAUTH=''
-
 ### Email
 export SECRET_SMTP_ADDRESS=""
 export SECRET_SMTP_USER=""

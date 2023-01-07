@@ -9,4 +9,5 @@ resources:
   - ./cert-manager/
   - ./metallb-system/
   - ./tigera-operator/
+  - ./traefik/
   # Standard Resources
