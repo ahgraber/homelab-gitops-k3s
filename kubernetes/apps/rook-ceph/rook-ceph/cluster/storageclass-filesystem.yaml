@@ -44,6 +44,8 @@ data:
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
 
-    cephBlockPoolsVolumeSnapshotClass:
+    cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-fs
+      isDefault: false
+      deletionPolicy: Delete
