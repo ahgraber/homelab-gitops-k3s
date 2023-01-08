@@ -34,7 +34,8 @@ tasks:
   dash:
     desc: Get secret for kubernetes-dashboard login
     cmds:
-      - kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}'
+      - kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
+      - echo "Token is in clipboard ready to paste!"
 
   hr-restart:
     desc: Restart all failed Helm Releases
