@@ -5,13 +5,17 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
-configMapGenerator:
-  - name: cert-manager-dashboard
-    files:
-      - cert-manager-dashboard.json=https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-  labels:
-    grafana_dashboard: "true"
+# configMapGenerator:
+#   - name: cert-manager-dashboard
+#     namespace: monitoring
+#     files:
+#       - cert-manager-dashboard.json=https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
+#       # - cert-manager-dashboard.json=https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
+#       # - ./cert-manager.json
+
+# generatorOptions:
+#   disableNameSuffixHash: true
+#   annotations:
+#     kustomize.toolkit.fluxcd.io/substitute: disabled
+#   labels:
+#     grafana_dashboard: "true"
