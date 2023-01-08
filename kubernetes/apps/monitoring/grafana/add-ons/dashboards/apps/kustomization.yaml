@@ -19,21 +19,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 configMapGenerator:
-  - name: cnpg-dashboard
-    files:
-      - ./cloudnative-postgres.json
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-    grafana_folder: postgres
-  labels:
-    grafana_dashboard: "true"
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: monitoring
-configMapGenerator:
   - name: ceph-cluster-dashboard
     files:
       - ceph-cluster-dashboard.json=https://grafana.com/api/dashboards/2842/revisions/14/download
@@ -51,5 +36,20 @@ generatorOptions:
   annotations:
     kustomize.toolkit.fluxcd.io/substitute: disabled
     grafana_folder: rook-ceph
+  labels:
+    grafana_dashboard: "true"
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+configMapGenerator:
+  - name: cnpg-dashboard
+    files:
+      - ./cloudnative-postgres.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    grafana_folder: postgres
   labels:
     grafana_dashboard: "true"
