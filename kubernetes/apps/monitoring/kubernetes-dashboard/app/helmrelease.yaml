@@ -1,0 +1,48 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &name kubernetes-dashboard
+  namespace: &namespace monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      version: 6.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-dashboard-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    env:
+      TZ: "${TIMEZONE}"
+    extraArgs:
+      - --enable-skip-login
+      - --disable-settings-authorizer
+      - --enable-insecure-login
+      - --token-ttl=43200
+    ingress:
+      enabled: false
+      # className: traefik
+      # annotations:
+      #   #  cert-manager.io/cluster-issuer: letsencrypt-production
+      #   traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      #   traefik.ingress.kubernetes.io/router.middlewares: crowdsec-traefik-bouncer, rfc1918
+      # hosts:
+      #   - &host "kubernetes.${SECRET_DOMAIN}"
+      # tls:
+      #   - hosts:
+      #       - *host
+      #     secretName: "${SECRET_DOMAIN/./-}-tls"
+    metricsScraper:
+      enabled: true
+    serviceMonitor:
+      enabled: false
