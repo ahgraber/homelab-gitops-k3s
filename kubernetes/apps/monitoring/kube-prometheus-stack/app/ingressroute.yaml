@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: -alertmanager
+  name: alertmanager
   namespace: networking
 spec:
   entryPoints:
@@ -14,7 +14,7 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
-        - - name: ipfilter-internal
+        - name: ipfilter-internal
         # - name: basicauth
       services:
         - name: kps-alertmanager
@@ -35,12 +35,12 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`alertmanager.${SECRET_DOMAIN}`)
+    - match: Host(`prometheus.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
-        - - name: ipfilter-internal
+        - name: ipfilter-internal
         # - name: basicauth
       services:
         - name: kps-prometheus
