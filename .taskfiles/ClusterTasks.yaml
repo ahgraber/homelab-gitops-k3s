@@ -105,6 +105,20 @@ tasks:
     cmds:
       - kubectl delete pods --field-selector status.phase=Failed -A --ignore-not-found=true
 
+  bounce-hr:
+    desc: Suspend and resume helmrelease
+    cmds:
+      - flux suspend hr {{.CLI_ARGS}}
+      - sleep 5
+      - flux resume hr {{.CLI_ARGS}}
+
+  bounce-ks:
+    desc: Suspend and resume kustomization
+    cmds:
+      - flux suspend kustomization -n flux-system {{.CLI_ARGS}}
+      - sleep 5
+      - flux resume kustomization -n flux-system {{.CLI_ARGS}}
+
   delete-jobs:
     desc: Delete all jobs
     cmds:

@@ -15,12 +15,13 @@ unset pvcs
 unset pvs
 
 kubectl delete ns "${debug_ns}" && sleep 30
+# ref: https://stackoverflow.com/questions/52369247/namespace-stuck-as-terminating-how-i-removed-it
 function ns_cleanup {
   declare -a terminating=($(kubectl get ns -o json | jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | xargs -n1))
   for ns in "${terminating[@]}"; do
     echo "$ns"
     # kubectl get ns "$ns"  -o json | jq '.spec.finalizers = []' | kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
-    kubectl patch ns "${ns}" -p '{"metadata":{"finalizers":null}}'
+    kubectl patch ns "${ns}" -p '{"spec":{"finalizers":null}}'
   done
   unset terminating
 }
