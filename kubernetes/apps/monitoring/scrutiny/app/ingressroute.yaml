@@ -14,7 +14,7 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
-        - - name: ipfilter-internal
+        - name: ipfilter-internal
         # - name: basicauth
       services:
         - name: scrutiny
