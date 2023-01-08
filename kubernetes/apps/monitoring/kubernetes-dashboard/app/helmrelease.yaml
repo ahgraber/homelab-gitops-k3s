@@ -31,17 +31,6 @@ spec:
       - --token-ttl=43200
     ingress:
       enabled: false
-      # className: traefik
-      # annotations:
-      #   #  cert-manager.io/cluster-issuer: letsencrypt-production
-      #   traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      #   traefik.ingress.kubernetes.io/router.middlewares: crowdsec-traefik-bouncer, rfc1918
-      # hosts:
-      #   - &host "kubernetes.${SECRET_DOMAIN}"
-      # tls:
-      #   - hosts:
-      #       - *host
-      #     secretName: "${SECRET_DOMAIN/./-}-tls"
     metricsScraper:
       enabled: true
     serviceMonitor:
