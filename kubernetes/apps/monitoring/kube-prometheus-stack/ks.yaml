@@ -26,7 +26,7 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps-monitoring-kube-prometheus-stack
+  name: apps-monitoring-kube-prometheus-stack-addons
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
