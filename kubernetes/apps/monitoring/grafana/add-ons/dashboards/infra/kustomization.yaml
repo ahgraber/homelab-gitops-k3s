@@ -1,9 +1,9 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
 configMapGenerator:
   - name: node-exporter-full-dashboard
+    namespace: monitoring
     files:
       - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
 generatorOptions:
@@ -16,9 +16,9 @@ generatorOptions:
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
 configMapGenerator:
   - name: pod-resources-max-dashboard
+    namespace: monitoring
     files:
       - ./pod-resources-max.json
 generatorOptions:
@@ -31,9 +31,9 @@ generatorOptions:
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
 configMapGenerator:
   - name: speedtest-dashboard
+    namespace: monitoring
     files:
       - speedtest-dashboard.json=https://raw.githubusercontent.com/MiguelNdeCarvalho/speedtest-exporter/main/Dashboard/Speedtest-Exporter.json
 generatorOptions:

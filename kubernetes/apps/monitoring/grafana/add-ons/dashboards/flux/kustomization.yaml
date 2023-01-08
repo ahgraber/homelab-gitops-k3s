@@ -1,15 +1,17 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
 configMapGenerator:
   - name: flux-cluster-dashboard
+    namespace: monitoring
     files:
       - flux-cluster-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/cluster.json
   - name: flux-control-plane-dashboard
+    namespace: monitoring
     files:
       - flux-control-plane-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/control-plane.json
   - name: flux-logs-dashboard
+    namespace: monitoring
     files:
       - flux-logs-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/logs.json
 generatorOptions:
