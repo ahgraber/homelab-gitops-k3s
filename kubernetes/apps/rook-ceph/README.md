@@ -74,11 +74,22 @@ dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc:9090'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
-### Too many PGs per OSD
+### Crash
 
-[stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
-[cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
-[pgcalc](https://old.ceph.com/pgcalc/)
+> run the following commands against the ceph-toolbox pod
+
+```sh
+# get new crashes
+ceph crash ls-new
+# get crash info
+ceph crash info <crashid>
+# archive crash so it doesn't keep triggering warnings or show in 'ls-new'
+ceph crash archive-all
+```
+
+[docs](https://docs.ceph.com/en/quincy/mgr/crash/)
+
+### Too many PGs per OSD
 
 > run the following commands against the ceph-toolbox pod
 
@@ -111,16 +122,29 @@ List current OSD pools:
 ceph osd pool ls
 ```
 
-Based on PGcalc, and 3-drive cluster with 3 replicas, we basically want 4, 8, or 16 pgs per osd pool,
-depending on anticipated use (larger # for pools with anticipated larger data requirements).
+Get current autoscale status (and coincidentally pg_num):
+
+```sh
+ceph osd pool autoscale-status
+```
+
+> The general rules for deciding how many PGs your pool(s) should contain is:
+>
+> - Fewer than 5 OSDs set pg_num to 128
+> - Between 5 and 10 OSDs set pg_num to 512
+> - Between 10 and 50 OSDs set pg_num to 1024
+
+For more specifics, we can specify pg_num per osd pool.
+Based on [PGcalc](https://old.ceph.com/pgcalc/), assuming a 3-drive cluster with 3 replicas,
+we want 4, 8, or 16 pgs per osd pool, depending on anticipated utilization
+(larger # for pools with anticipated larger data requirements).
 This may take a few runs for rook-ceph to sort out the changes on the back end
 
 ```sh
 # for each pool name -- this will depend on ceph cluster deployment
 ceph osd pool set .mgr pg_num 4
 ceph osd pool set .rgw.root pg_num 32
-ceph osd pool set ceph-blockpool pg_num 16
-ceph osd pool set ceph-blockpool-retain pg_num 16
+ceph osd pool set ceph-blockpool pg_num 32
 ceph osd pool set ceph-filesystem-metadata pg_num 16
 ceph osd pool set ceph-filesystem-data0 pg_num 16
 ceph osd pool set ceph-objectstore.rgw.buckets.index pg_num 16
@@ -130,6 +154,12 @@ ceph osd pool set ceph-objectstore.rgw.control pg_num 16
 ceph osd pool set ceph-objectstore.rgw.log pg_num 16
 ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 ```
+
+[docs - configuring pools](https://rook.io/docs/rook/v1.9/Storage-Configuration/Advanced/ceph-configuration/#configuring-pools)
+[docs - placement groups](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#a-preselection-of-pg-num)
+[stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
+[cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
+[pgcalc](https://old.ceph.com/pgcalc/)
 
 ## Teardown and Cleanup
 
