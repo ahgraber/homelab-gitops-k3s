@@ -7,5 +7,6 @@ resources:
   - ./namespace.yaml
   # Pre Flux-Kustomizations
   - ./crowdsec/ks.yaml
+  - ./crowdsec-traefik-bouncer/ks.yaml
   - ./traefik/ks.yaml
   # Standard Resources
