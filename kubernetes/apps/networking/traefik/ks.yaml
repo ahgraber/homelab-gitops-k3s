@@ -10,9 +10,9 @@ spec:
   path: ./kubernetes/apps/networking/traefik/app
   dependsOn:
     - name: apps-cert-manager
-    - name: crowdsec-traefik-bouncer
     - name: apps-metallb-system
     - name: apps-metallb-system-config
+    - name: apps-networking-crowdsec-traefik-bouncer
   prune: true
   sourceRef:
     kind: GitRepository

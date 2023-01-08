@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./ingressroute.yaml
-  - ./secret-additionalScrapeConfigsSecret.sops.yaml
+  - ./secret-additionalScrapeConfigs.sops.yaml
   - ./values-alertmanager.yaml
   - ./values-grafana.yaml
   - ./values-kube-state-metrics.yaml
