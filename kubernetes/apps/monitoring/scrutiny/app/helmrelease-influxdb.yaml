@@ -1,0 +1,72 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: scrutiny-influxdb
+  namespace: monitoring
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: docker.io/library/influxdb
+      tag: 2.6-alpine
+
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8086
+    probes:
+      liveness: &health
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: *port
+      readiness: *health
+      startup:
+        enabled: true
+        custom: true
+        spec:
+          initialDelaySeconds: 0
+          timeoutSeconds: 1
+          periodSeconds: 5
+          failureThreshold: 30
+          httpGet:
+            path: /health
+            port: *port
+
+    persistence:
+      data:
+        enabled: true
+        mountPath: /var/lib/influxdb2
+        existingClaim: scrutiny-data
+        subPath: scrutiny_influxdb
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128M
+      limits:
+        memory: 384M

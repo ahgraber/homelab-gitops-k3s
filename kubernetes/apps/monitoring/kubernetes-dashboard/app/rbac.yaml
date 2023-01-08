@@ -1,0 +1,41 @@
+# For dashboard sign in token:
+# kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}'
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: &name kubernetes-dashboard
+  namespace: &namespace monitoring
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: *name
+    meta.helm.sh/release-namespace: *namespace
+secrets:
+  - name: kubernetes-dashboard
+---
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: &name kubernetes-dashboard
+  namespace: &namespace monitoring
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    meta.helm.sh/release-name: *name
+    meta.helm.sh/release-namespace: *namespace
+    kubernetes.io/service-account.name: *name
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: kubernetes-dashboard
+    namespace: monitoring
