@@ -12,7 +12,7 @@ CrowdSec offers a crowd-based cybersecurity suite to protect your online service
    cscli bouncers add k8s-traefik
    ```
 
-References:
+## References
 
 - [1. crowdsec with k8s - integration](https://crowdsec.net/blog/kubernetes-crowdsec-integration/)
 - [2. crowdsec with k8s - remediation](https://crowdsec.net/blog/kubernetes-crowdsec-integration-remediation/)

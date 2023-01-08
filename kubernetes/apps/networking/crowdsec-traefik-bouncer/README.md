@@ -11,7 +11,12 @@ Crowdsec bouncer API key must be (manually) generated from crowdsec LAPI.
 cscli bouncers add traefik-ingress
 ```
 
-References:
+## Integration with traefik
+
+Traefik middleware is created automatically by deployment, and can be used by ingresses and ingressroutes,
+or applied to all traffic on specific endpoints
+
+## References
 
 - [1. crowdsec with k8s - integration](https://crowdsec.net/blog/kubernetes-crowdsec-integration/)
 - [2. crowdsec with k8s - remediation](https://crowdsec.net/blog/kubernetes-crowdsec-integration-remediation/)
