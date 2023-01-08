@@ -2,14 +2,14 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: route-rook
+  name: rook-ceph
   namespace: networking
 spec:
   entryPoints:
     - web
     - websecure
   routes:
-    - match: Host(`rook.${SECRET_DOMAIN}`)
+    - match: Host(`rook-ceph.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
