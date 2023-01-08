@@ -11,10 +11,11 @@ resources:
 
 # patchesJson6902:
 patches:
-  - path: patch-prometheusrule.yaml
+  # see also /kubernetes/apps/monitoring/kube-prometheus-stack/add-ons/rules/patch/kps-kubernetes-storage.yaml
+  - path: ./patch/prometheus-ceph-rules.yaml
     target:
       group: monitoring.coreos.com
       version: v1
       kind: PrometheusRule
-      name: ceph-rules
+      name: prometheus-ceph-rules
       namespace: rook-ceph

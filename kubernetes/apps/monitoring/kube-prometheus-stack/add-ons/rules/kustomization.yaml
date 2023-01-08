@@ -7,3 +7,13 @@ resources:
   - ./etcd.yaml
   - ./flux.yaml
   - ./node-exporter.yaml
+
+# patchesJson6902:
+patches:
+  - path: ./patch/kps-kubernetes-storage.yaml
+    target:
+      group: monitoring.coreos.com
+      version: v1
+      kind: PrometheusRule
+      name: kps-kubernetes-storage
+      namespace: monitoring
