@@ -5,7 +5,7 @@ CrowdSec offers a crowd-based cybersecurity suite to protect your online service
 ## Secrets
 
 1. Crowsec secret must be (manually) created from the centralized [web portal](https://app.crowdsec.net/instances).
-2. Crowdsec bouncer API key must be (manually) generated from crowdsec agent.
+2. Crowdsec bouncer API key must be (manually) generated from crowdsec LAPI.
 
    ```sh
    # in crowdsec pod cli
@@ -14,6 +14,6 @@ CrowdSec offers a crowd-based cybersecurity suite to protect your online service
 
 References:
 
-- [crowdsec with k8s - integration](https://crowdsec.net/blog/kubernetes-crowdsec-integration/)
-- [how to mitigate security threats with crowdsec and traefik](https://www.crowdsec.net/blog/how-to-mitigate-security-threats-with-crowdsec-and-traefik)
-- [crowdsec with k8s - remediation](https://crowdsec.net/blog/kubernetes-crowdsec-integration-remediation/)
+- [1. crowdsec with k8s - integration](https://crowdsec.net/blog/kubernetes-crowdsec-integration/)
+- [2. crowdsec with k8s - remediation](https://crowdsec.net/blog/kubernetes-crowdsec-integration-remediation/)
+- [3. how to mitigate security threats with crowdsec and traefik](https://www.crowdsec.net/blog/how-to-mitigate-security-threats-with-crowdsec-and-traefik)
