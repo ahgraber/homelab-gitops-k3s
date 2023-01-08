@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./helmrelease-goldilocks.yaml
   - ./helmrelease-vpa.yaml
-  # - ./ingressroute.yaml
+  - ./ingressroute.yaml
