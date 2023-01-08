@@ -12,7 +12,7 @@ resources:
 # patchesJson6902:
 patches:
   # see also /kubernetes/apps/monitoring/kube-prometheus-stack/add-ons/rules/patch/kps-kubernetes-storage.yaml
-  - path: ./patch/prometheus-ceph-rules.yaml
+  - path: ./patches/prometheus-ceph-rules.yaml
     target:
       group: monitoring.coreos.com
       version: v1
