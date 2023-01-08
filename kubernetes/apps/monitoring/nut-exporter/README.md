@@ -1,7 +1,10 @@
-# Network UPS Tools (NUT)
+# Network UPS Tools (NUT) Exporter
 
-The helm-release here simply enables a Prometheus Service Monitor to watch the UPS and track metrics.
-See ansible role in `homelab-ansible` for `nut-client` configuration on k3s nodes
+The helm-release acts as a translation layer between the NUT server (on OPNSense) and prometheus.
+An AdditionalScrapeConfig job is configured to watch this exporter and track metrics.
+
+> See ansible role in `homelab-ansible` for `nut-client` configuration on k3s nodes,
+> which handles node configuration and shutdown
 
 ## Network UPS Tools integration
 

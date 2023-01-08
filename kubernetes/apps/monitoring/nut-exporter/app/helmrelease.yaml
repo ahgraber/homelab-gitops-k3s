@@ -26,41 +26,35 @@ spec:
       tag: 2.5.2
     env:
       TZ: "${TZ}"
-      NUT_EXPORTER_SERVER: "10.2.0.1"
-      NUT_EXPORTER_WEB_AUTH_USERNAME: "monuser"
-      NUT_EXPORTER_PASSWORD: "${SECRET_DEFAULT_PWD}"
+    envFrom:
+      - secretRef:
+          name: *app
     service:
-      main: # metrics
+      main:
         ports:
-          http:
+          metrics:
             port: 9199
             protocol: TCP
-      # metrics:
-      #   enabled: true
-      #   ports:
-      #     metrics:
-      #       enabled: true
-      #       port: 9199
-      #       protocol: TCP
-    serviceMonitor:
-      main:
-        enabled: true
-        # serviceName: network-ups-tools-metrics
-        endpoints:
-          - port: http
-            scheme: http
-            path: /ups_metrics
-            interval: 15s
-            scrapeTimeout: 10s
-            static_configs:
-              targets: ["10.2.0.1:3493"]
-              labels:
-                ups: "PR1500RT2U"
-                # server: "10.2.0.1"
-                # username: "monuser"
-            relabelings:
-              - sourceLabels: [__param_target]
-                targetLabel: target
+
+    # serviceMonitor:
+    #   main:
+    #     enabled: true
+    #     # serviceName: network-ups-tools-metrics
+    #     endpoints:
+    #       - port: http
+    #         scheme: http
+    #         path: /ups_metrics
+    #         interval: 15s
+    #         scrapeTimeout: 10s
+    #         params:
+    #           targets: ["10.2.0.1:3493"]
+    #           labels:
+    #             ups: "PR1500RT2U"
+    #             # server: "10.2.0.1"
+    #             # username: "monuser"
+    #         relabelings:
+    #           - sourceLabels: [__param_target]
+    #             targetLabel: target
     # securityContext:
     #   privileged: true
     # persistence:
