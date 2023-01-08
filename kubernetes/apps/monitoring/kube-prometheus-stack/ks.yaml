@@ -22,3 +22,23 @@ spec:
   interval: 15m
   retryInterval: 1m
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-monitoring-kube-prometheus-stack
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: apps-rook-ceph-cluster
+    - name: apps-monitoring-kube-prometheus-stack
+  path: ./kubernetes/apps/monitoring/kube-prometheus-stack/add-ons
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 15m
+  retryInterval: 1m
+  timeout: 5m
