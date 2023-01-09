@@ -8,6 +8,8 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/networking/crowdsec/app
+  dependsOn:
+    - name: apps-rook-ceph-cluster
   prune: true
   sourceRef:
     kind: GitRepository
