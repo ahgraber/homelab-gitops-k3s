@@ -61,6 +61,11 @@ spec:
           value: "k8s_cluster"
         # - name: ENROLL_TAGS
         #   value: "k8s linux test"
+        - name: BOUNCER_KEY_traefik
+          valueFrom:
+            secretKeyRef:
+              name: crowdsec-secret
+              key: BOUNCER_KEY_traefik
         # # If it's a test, we don't want to share signals with CrowdSec so disable the Online API.
         # - name: DISABLE_ONLINE_API
         #   value: "true"
