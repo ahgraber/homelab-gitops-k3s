@@ -64,7 +64,7 @@ spec:
               name: kps-kubernetes-storage
               namespace: monitoring
             # path: ./patches/kps-kubernetes-storage.yaml
-            patch:
+            patch: |
               # KubePersistentVolumeInodesFillingUp | critical
               - op: replace
                 path: /spec/groups/0/rules/2/expr
