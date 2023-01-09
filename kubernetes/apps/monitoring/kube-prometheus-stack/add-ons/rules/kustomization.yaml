@@ -6,3 +6,13 @@ resources:
   - ./etcd.yaml
   - ./flux.yaml
   - ./node-exporter.yaml
+  - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
+
+patches:
+  - path: ./patches/prometheus-ceph-rules.yaml
+    target:
+      group: monitoring.coreos.com
+      version: v1
+      kind: PrometheusRule
+      name: prometheus-ceph-rules
+      namespace: monitoring
