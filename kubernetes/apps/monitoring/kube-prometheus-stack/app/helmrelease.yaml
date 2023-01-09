@@ -47,3 +47,16 @@ spec:
       name: values-prometheus
     - kind: ConfigMap
       name: values-rules
+
+  postRenderers:
+    #  use built-in "kustomize" post renderer.
+    - kustomize:
+        # patchesJson6902:
+        patches:
+          - path: ./patches/kps-kubernetes-storage.yaml
+            target:
+              group: monitoring.coreos.com
+              version: v1
+              kind: PrometheusRule
+              name: kps-kubernetes-storage
+              namespace: monitoring
