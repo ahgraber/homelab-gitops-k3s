@@ -173,8 +173,8 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 
 ```sh
 # get hanging resources
- kubectl get all -o name \
-  | xargs -n 1 kubectl get --show-kind --ignore-not-found -n rook-ceph
+#  kubectl get all -o name \
+#   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n rook-ceph
 flux suspend kustomization apps-rook-ceph-cluster
 flux suspend kustomization apps-rook-ceph-operator
 kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"spec":{"cleanupPolicy":{"confirmation":"yes-really-destroy-data"}}}'
@@ -195,7 +195,7 @@ flux delete kustomization apps-rook-ceph-operator
 kubectl patch ns rook-ceph --type merge -p '{"spec":{"finalizers": []}}'
 kubectl delete ns rook-ceph
 
-### RUN ROOK-CEPH-CLEANUP ANSIBLE SCRIPT
+echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
 ```
 
 ## Remove orphan rbd images
