@@ -1,16 +1,17 @@
 # [Crowdsec](https://crowdsec.net)
 
-CrowdSec offers a crowd-based cybersecurity suite to protect your online services, visualize & act upon threats, and a TIP (Threat Intel Platform) to block malicious IPs.
+CrowdSec offers a crowd-based cybersecurity suite to protect your online services,
+visualize & act upon threats, and a TIP (Threat Intel Platform) to block malicious IPs.
+
+## K8s vs metal install
+
+Crowdsec is installed on the nodes using ansible (see [homelab-infra](https://github.com/ahgraber/homelab-infra)).
+The node installation watches LAN traffic and protects the nodes themselves.
+The k8s installtion watches ingress and protects the cluster.
 
 ## Secrets
 
 1. Crowsec secret must be (manually) created from the centralized [web portal](https://app.crowdsec.net/instances).
-2. Crowdsec bouncer API key must be (manually) generated from crowdsec LAPI.
-
-   ```sh
-   # in crowdsec pod cli
-   cscli bouncers add k8s-traefik
-   ```
 
 ## References
 
