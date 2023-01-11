@@ -189,9 +189,9 @@ for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do
   kubectl patch "$CRD" --type merge -p '{"metadata":{"finalizers": []}}'
   kubectl delete "$CRD"
 done;
-flux delete kustomization apps-rook-ceph-cluster
+flux delete kustomization apps-rook-ceph-cluster -s
 kubectl delete hr rook-ceph-operator -n rook-ceph
-flux delete kustomization apps-rook-ceph-operator
+flux delete kustomization apps-rook-ceph-operator -s
 kubectl patch ns rook-ceph --type merge -p '{"spec":{"finalizers": []}}'
 kubectl delete ns rook-ceph
 
