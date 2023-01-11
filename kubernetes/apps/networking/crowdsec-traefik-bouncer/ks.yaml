@@ -10,6 +10,7 @@ spec:
   path: ./kubernetes/apps/networking/crowdsec-traefik-bouncer/app
   dependsOn:
     - name: apps-networking-crowdsec
+    - name: apps-networking-traefik
   prune: true
   sourceRef:
     kind: GitRepository

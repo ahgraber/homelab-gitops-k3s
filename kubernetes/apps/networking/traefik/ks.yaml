@@ -12,7 +12,6 @@ spec:
     - name: apps-cert-manager
     - name: apps-metallb-system
     - name: apps-metallb-system-config
-    - name: apps-networking-crowdsec-traefik-bouncer
   prune: true
   sourceRef:
     kind: GitRepository
