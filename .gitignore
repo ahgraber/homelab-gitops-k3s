@@ -22,8 +22,8 @@ Thumbs.db
 *.bak
 .temp*
 .todo*
-**/.archive/
-**/.wip/
+**/*archive/
+**/*wip/
 .private/
 .logs/
 .task/
