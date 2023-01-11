@@ -1,22 +1,20 @@
 # 🤖 GitOps (with Flux)
 
 - [🤖 GitOps (with Flux)](#-gitops-with-flux)
-  - [1. Verify Flux can be installed](#1-verify-flux-can-be-installed)
-  - [2. Pre-create the `flux-system` namespace](#2-pre-create-the-flux-system-namespace)
-  - [3. Add the Age key in-order for Flux to decrypt SOPS secrets](#3-add-the-age-key-in-order-for-flux-to-decrypt-sops-secrets)
-  - [4. Create deploy key \& add to github](#4-create-deploy-key--add-to-github)
-  - [4. Export more environment variables for application configuration](#4-export-more-environment-variables-for-application-configuration)
-  - [5. Create required files based on ALL exported environment variables](#5-create-required-files-based-on-all-exported-environment-variables)
-  - [6. 🔍 **Verify** all the above files have the correct information present](#6--verify-all-the-above-files-have-the-correct-information-present)
-  - [7. 🔐 Encrypt secrets with SOPS](#7--encrypt-secrets-with-sops)
+  - [1. Create deploy key \& add to github](#1-create-deploy-key--add-to-github)
+  - [2. Export more environment variables for application configuration](#2-export-more-environment-variables-for-application-configuration)
+  - [3. Create required files based on ALL exported environment variables](#3-create-required-files-based-on-all-exported-environment-variables)
+  - [4. 🔍 **Verify** all the above files have the correct information present](#4--verify-all-the-above-files-have-the-correct-information-present)
+  - [5. 🔐 Encrypt secrets with SOPS](#5--encrypt-secrets-with-sops)
     - [Create deploy key](#create-deploy-key)
     - [Encrypting with SOPS](#encrypting-with-sops)
-  - [8. 🔍 **Verify** all the above files are **encrypted** with SOPS](#8--verify-all-the-above-files-are-encrypted-with-sops)
-  - [9. Push your changes to git](#9-push-your-changes-to-git)
-  - [10. Install Flux](#10-install-flux)
-  - [Verify Flux](#verify-flux)
-  - [Manually sync Flux with your Git repository](#manually-sync-flux-with-your-git-repository)
-  - [Verify ingress](#verify-ingress)
+  - [6. 🔍 **Verify** all the above files are **encrypted** with SOPS](#6--verify-all-the-above-files-are-encrypted-with-sops)
+  - [7. 📤 Push your changes to git](#7--push-your-changes-to-git)
+  - [8. ✅ Verify Flux can be installed](#8--verify-flux-can-be-installed)
+  - [9. 🚀 Install Flux](#9--install-flux)
+  - [10. ✅ Verify Flux](#10--verify-flux)
+  - [🔀 Manually sync Flux with your Git repository](#-manually-sync-flux-with-your-git-repository)
+  - [✅ Verify ingress](#-verify-ingress)
   - [📣 Post installation](#-post-installation)
     - [🌐 DNS](#-dns)
     - [🤖 Renovate](#-renovate)
@@ -24,30 +22,7 @@
 
 > [Here](https://fluxcd.io/docs/flux-e2e/) is flux's explanation of its end-to-end commit flow.
 
-## 1. Verify Flux can be installed
-
-```sh
-flux --kubeconfig=$(pwd)/kubeconfig check --pre
-```
-
-## 2. Pre-create the `flux-system` namespace
-
-```sh
-kubectl --kubeconfig="${KUBECONFIG}" create namespace flux-system --dry-run=client -o yaml | \
-  kubectl --kubeconfig="${KUBECONFIG}" apply -f -
-```
-
-## 3. Add the Age key in-order for Flux to decrypt SOPS secrets
-
-```sh
-# cat ~/.config/sops/age/keys.txt |
-cat "${SOPS_AGE_KEY_FILE}" |
-    kubectl --kubeconfig="${KUBECONFIG}" \
-    -n flux-system create secret generic sops-age \
-    --from-file=age.agekey=/dev/stdin
-```
-
-## 4. Create deploy key & add to github
+## 1. Create deploy key & add to github
 
 Generate key with :
 
@@ -58,7 +33,7 @@ ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./cluster/github-deploy-key
 Copy contents of `cluster/github-deploy-key.pub` to `deploy keys` section of github repo
 `https://github.com/<username>/<repo_name>/settings/keys`
 
-## 4. Export more environment variables for application configuration
+## 2. Export more environment variables for application configuration
 
 > _Note:_ Exported variables go into `./tmpl/...`, where there are exported to settings and secrets
 > in the next step
@@ -121,7 +96,7 @@ export SECRET_SMTP_PORT=""
 EOF
 ```
 
-## 5. Create required files based on ALL exported environment variables
+## 3. Create required files based on ALL exported environment variables
 
 General procedure:
 
@@ -139,9 +114,9 @@ To run for all templates in repo:
 bash ./scripts/substitute.sh
 ```
 
-## 6. 🔍 **Verify** all the above files have the correct information present
+## 4. 🔍 **Verify** all the above files have the correct information present
 
-## 7. 🔐 Encrypt secrets with SOPS
+## 5. 🔐 Encrypt secrets with SOPS
 
 > :round_pushpin: Variables defined in `cluster-secrets.yaml` and `cluster-settings.yaml` will be
 > usable anywhere in your YAML manifests under `./cluster`
@@ -166,9 +141,9 @@ To run for all templates in repo:
 bash ./scripts/sops.sh
 ```
 
-## 8. 🔍 **Verify** all the above files are **encrypted** with SOPS
+## 6. 🔍 **Verify** all the above files are **encrypted** with SOPS
 
-## 9. Push your changes to git
+## 7. 📤 Push your changes to git
 
 ```sh
 git add -A
@@ -176,7 +151,13 @@ git commit -m "initial commit"
 git push
 ```
 
-## 10. Install Flux
+## 8. ✅ Verify Flux can be installed
+
+```sh
+flux --kubeconfig=$(pwd)/kubeconfig check --pre
+```
+
+## 9. 🚀 Install Flux
 
 📍 Review [ClusterTasks](./../.taskfiles/ClusterTasks.yaml) for insight into specific commands that will be run!
 
@@ -184,7 +165,7 @@ git push
 task cluster:install
 ```
 
-## Verify Flux
+## 10. ✅ Verify Flux
 
 ```sh
 # check flux installation
@@ -202,16 +183,16 @@ task cluster:certificates
 task cluster:ingresses
 ```
 
-## Manually sync Flux with your Git repository
+## 🔀 Manually sync Flux with your Git repository
+
+> For objects that have been preinstalled with ansible, patching may be required to allow helm management
+> eg. [tigera-operator](../kubernetes/apps/tigera-operator/give_helm_ownership.sh)
 
 ```sh
 task cluster:reconcile
 ```
 
-> For objects that have been preinstalled with ansible, patching may be required to allow helm management
-> eg. [tigera-operator](../kubernetes/apps/networking/tigera-operator/give_helm_ownership.sh)
-
-## Verify ingress
+## ✅ Verify ingress
 
 If your cluster is not accessible to outside world you can provide a dns override
 for any service with an ingress in your router
