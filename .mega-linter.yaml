@@ -50,7 +50,7 @@ ACTION_ACTIONLINT_FILTER_REGEX_INCLUDE: "(\\.github)"
 ## excludes
 FILTER_REGEX_EXCLUDE: "(\\.vscode|.*\\.sops\\..*)" # '(\.github/workflows)'
 JSON_JSONLINT_FILTER_REGEX_EXCLUDE: "(\\.vscode)"
-KUBERNETES_KUBEVAL_FILTER_REGEX_EXCLUDE: "(.*patch.*|.*/crunchydata-operator/dashboards)"
+KUBERNETES_KUBEVAL_FILTER_REGEX_EXCLUDE: "(.*patch.*)"
 MARKDOWN_FILTER_REGEX_EXCUDE: "(license\\.md)"
 YAML_PRETTIER_FILTER_REGEX_EXCLUDE: "(.*gotk.*)"
 # YAML_YAMLLINT_FILTER_REGEX_EXCLUDE: "(gotk.*)"
