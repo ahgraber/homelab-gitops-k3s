@@ -32,17 +32,17 @@ spec:
     service:
       main:
         ports:
-          metrics:
+          http:
             port: 9199
-            protocol: TCP
 
+    ### monitor registered in kube-prometheus-stackAdditionalScrapeConfigs
     # serviceMonitor:
     #   main:
     #     enabled: true
     #     # serviceName: network-ups-tools-metrics
     #     endpoints:
     #       - port: http
-    #         scheme: http
+    #         scheme: tcp
     #         path: /ups_metrics
     #         interval: 15s
     #         scrapeTimeout: 10s
