@@ -9,7 +9,7 @@ resources:
   - ./storageclass-object.yaml
 #
 ### apply in apps-monitoring-kube-prometheus-stack-addons
-#   - https://raw.githubusercontent.com/rook/rook/v1.10.8/deploy/examples/monitoring/localrules.yaml
+#   - https://raw.githubusercontent.com/rook/rook/v1.10.9/deploy/examples/monitoring/localrules.yaml
 #
 # # patchesJson6902:
 # patches:
