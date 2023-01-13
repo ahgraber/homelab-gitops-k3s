@@ -9,6 +9,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-monitoring-kube-prometheus-stack
+    - name: apps-monitoring-grafana
   path: ./kubernetes/apps/monitoring/speedtest-exporter/app
   prune: true
   sourceRef:

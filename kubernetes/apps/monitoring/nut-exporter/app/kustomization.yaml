@@ -5,3 +5,21 @@ resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
   - ./secret.sops.yaml
+
+configMapGenerator:
+  - name: nut-exporter-dashboard
+    namespace: monitoring
+    files:
+      - ./nut-exporter-dashboard.json
+      # - nut-exporter.json=https://grafana.com/api/dashboards/15406/revisions/2/download
+  - name: pod-resources-max-dashboard
+    namespace: monitoring
+    files:
+      - ./pod-resources-max.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    grafana_folder: default
+  labels:
+    grafana_dashboard: "true"

@@ -32,7 +32,6 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
-    - name: apps-rook-ceph-cluster
     - name: apps-monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/kube-prometheus-stack/add-ons
   prune: true
