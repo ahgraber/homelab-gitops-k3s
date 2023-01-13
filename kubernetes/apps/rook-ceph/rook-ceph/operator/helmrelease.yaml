@@ -32,6 +32,7 @@ spec:
     pspEnable: false
     monitoring:
       enabled: true
+
     resources:
       requests:
         cpu: 100m
@@ -39,12 +40,12 @@ spec:
       limits:
         memory: 256Mi
 
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: "true"
     tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
         operator: Exists
-    nodeSelector:
-      node-role.kubernetes.io/control-plane: "true"
 
     csi:
       # enableRbdDriver: true
@@ -77,9 +78,10 @@ spec:
           operator: Exists
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
-    admissionController:
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/master
-          operator: Exists
-      nodeAffinity: node-role.kubernetes.io/control-plane=true
+    disableAdmissionController: true
+    # admissionController:
+    #   tolerations:
+    #     - effect: NoSchedule
+    #       key: node-role.kubernetes.io/master
+    #       operator: Exists
+    #   nodeAffinity: node-role.kubernetes.io/control-plane=true
