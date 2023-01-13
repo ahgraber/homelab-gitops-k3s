@@ -7,7 +7,7 @@ Kubernetes operator for installing Calico and Calico Enterprise
 (Re)Install Operator over ansible-installed version to allow subsequent cluster updates
 
 ```sh
-zsh ./cluster/core/tigera-operator/give_helm_ownership.sh
+zsh ./kubernetes/apps/tigera-operator/give_helm_ownership.sh
 ```
 
 [see also](https://github.com/onedr0p/flux-cluster-template/issues/321)
