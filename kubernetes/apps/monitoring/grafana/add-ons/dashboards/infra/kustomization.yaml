@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 configMapGenerator:
@@ -6,36 +7,10 @@ configMapGenerator:
     namespace: monitoring
     files:
       - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-    grafana_folder: default
-  labels:
-    grafana_dashboard: "true"
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-configMapGenerator:
   - name: pod-resources-max-dashboard
     namespace: monitoring
     files:
       - ./pod-resources-max.json
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-    grafana_folder: default
-  labels:
-    grafana_dashboard: "true"
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-configMapGenerator:
-  - name: speedtest-dashboard
-    namespace: monitoring
-    files:
-      - speedtest-dashboard.json=https://raw.githubusercontent.com/MiguelNdeCarvalho/speedtest-exporter/main/Dashboard/Speedtest-Exporter.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

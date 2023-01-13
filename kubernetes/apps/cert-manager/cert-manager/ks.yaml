@@ -59,3 +59,23 @@ spec:
   interval: 15m
   retryInterval: 1m
   timeout: 3m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-cert-manager-addons
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: apps-cert-manager
+    - name: apps-monitoring-grafana
+  path: ./kubernetes/apps/cert-manager/cert-manager/certs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m
