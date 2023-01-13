@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://charts.rook.io/release
       chart: rook-ceph-cluster
-      version: v1.10.8
+      version: v1.10.9
       sourceRef:
         kind: HelmRepository
         name: rook-ceph-charts
@@ -30,12 +30,12 @@ spec:
     annotations:
       all:
         reloader.stakater.com/search: "true"
-        # configmap.reloader.stakater.com/reload: "ceph-values-block,ceph-values-filesystem,ceph-values-object"
+
     monitoring:
       enabled: true
       # https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
       createPrometheusRules: false # deploy manually with kube-prom-stack to patch
-      # rulesNamespaceOverride: monitoring
+
     toolbox:
       enabled: true
       tolerations:
@@ -59,6 +59,11 @@ spec:
     cephClusterSpec:
       crashCollector:
         disable: false
+        daysToRetain: 30
+      logCollector:
+        enabled: true
+        periodicity: daily # one of: hourly, daily, weekly, monthly
+        maxLogSize: 500M # SUFFIX may be 'M' or 'G'. Must be at least 1M.
       dashboard:
         enabled: true
         urlPrefix: /
@@ -103,8 +108,12 @@ spec:
           requests:
             cpu: 250m
             memory: 50M
+          # limits: It is not recommended to set limits on the OSD prepare job
+          #         since it's a one-time burst for memory that must be allowed to
+          #         complete without an OOM kill...
+          #         for larger devices 2Gi may be required
           limits:
-            memory: 256M
+            memory: 2Gi # set arbitrarily large
         mgr-sidecar:
           requests:
             cpu: 50m
@@ -125,15 +134,111 @@ spec:
             memory: 1Gi
         cleanup:
           requests:
-            cpu: 250m
+            cpu: 500m
             memory: 100M
           limits:
             memory: 1G
 
-  valuesFrom:
-    - kind: ConfigMap
-      name: ceph-values-block
-    - kind: ConfigMap
-      name: ceph-values-filesystem
-    - kind: ConfigMap
-      name: ceph-values-object
+    # https://github.com/rook/rook/blob/HEAD/deploy/examples/csi/rbd/storageclass.yaml
+    cephBlockPools:
+      - name: ceph-blockpool
+        spec:
+          failureDomain: host
+          replicated:
+            size: 3
+        storageClass:
+          enabled: true
+          name: ceph-block
+          isDefault: true
+          reclaimPolicy: Delete
+          allowVolumeExpansion: true
+          parameters:
+            imageFormat: "2"
+            imageFeatures: layering
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+            csi.storage.k8s.io/fstype: ext4
+    cephBlockPoolsVolumeSnapshotClass:
+      enabled: true
+      name: csi-ceph-block
+      isDefault: true
+      deletionPolicy: Delete
+
+    # https://github.com/rook/rook/blob/HEAD/deploy/examples/filesystem.yaml
+    cephFileSystems:
+      - name: ceph-filesystem
+        spec:
+          metadataPool:
+            replicated:
+              size: 3
+          dataPools:
+            - failureDomain: host
+              replicated:
+                size: 3
+              name: data0
+          metadataServer:
+            activeCount: 1
+            activeStandby: true
+            resources:
+              requests:
+                cpu: 150m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
+        storageClass:
+          enabled: true
+          isDefault: false
+          name: ceph-fs
+          pool: data0
+          reclaimPolicy: Delete
+          allowVolumeExpansion: true
+          parameters:
+            csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+            csi.storage.k8s.io/fstype: ext4
+    cephFileSystemVolumeSnapshotClass:
+      enabled: true
+      name: csi-ceph-fs
+      isDefault: false
+      deletionPolicy: Delete
+
+    # https://github.com/rook/rook/blob/HEAD/deploy/examples/object.yaml
+    cephObjectStores:
+      - name: ceph-objectstore
+        spec:
+          metadataPool:
+            failureDomain: host
+            replicated:
+              size: 3
+          dataPool:
+            failureDomain: host
+            erasureCoded:
+              dataChunks: 2
+              codingChunks: 1
+          preservePoolsOnDelete: true
+          gateway:
+            port: 80
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
+            instances: 1
+          healthCheck:
+            bucket:
+              interval: 60s
+        storageClass:
+          enabled: true
+          name: ceph-bucket
+          reclaimPolicy: Delete
+          parameters:
+            region: us-east-1
