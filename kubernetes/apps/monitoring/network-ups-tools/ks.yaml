@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps-monitoring-network-ups-tools
+  name: apps-monitoring-nut-exporter
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
@@ -10,7 +10,7 @@ spec:
   dependsOn:
     - name: apps-monitoring-kube-prometheus-stack
     - name: apps-monitoring-grafana
-  path: ./kubernetes/apps/monitoring/network-ups-tools/app
+  path: ./kubernetes/apps/monitoring/nut-exporter/app
   prune: true
   sourceRef:
     kind: GitRepository
