@@ -1,0 +1,43 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-goldilocks-labels
+  annotations:
+    policies.kyverno.io/title: Add Goldilocks Labels
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      This policy assigns the label `goldilocks.fairwinds.com/enabled="true"` to matching Namespaces if the label does
+      not already exist.
+spec:
+  mutateExistingOnPolicyUpdate: true
+  generateExistingOnPolicyUpdate: true
+  rules:
+    - name: add-goldilocks-labels
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+              names:
+                - calico-apiserver
+                - calico-system
+                - flux-system
+                - kube-node-lease
+                - kube-public
+                - kube-system
+                - tigera-operator
+      mutate:
+        targets:
+          - apiVersion: v1
+            kind: Namespace
+            name: "{{request.object.metadata.name}}"
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(goldilocks.fairwinds.com/enabled): "true"
