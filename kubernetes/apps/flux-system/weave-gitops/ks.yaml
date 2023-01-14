@@ -2,14 +2,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: apps-monitoring-grafana
+  name: apps-flux-system-weave-gitops
   namespace: flux-system
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  dependsOn:
-    - name: apps-monitoring-kube-prometheus-stack
-  path: ./kubernetes/apps/monitoring/grafana/app
+  path: ./kubernetes/apps/flux-system/weave-gitops/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -17,8 +15,8 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: grafana
-      namespace: monitoring
-  interval: 15m
+      name: weave-gitops
+      namespace: flux-system
+  interval: 30m
   retryInterval: 1m
   timeout: 3m

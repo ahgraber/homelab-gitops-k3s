@@ -1,6 +1,11 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: flux-system
+resources:
+  - ./podmonitor.yaml
+  - ./prometheusrule.yaml
 configMapGenerator:
   - name: flux-cluster-dashboard
     namespace: monitoring
@@ -14,6 +19,14 @@ configMapGenerator:
     namespace: monitoring
     files:
       - flux-logs-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2/main/manifests/monitoring/monitoring-config/dashboards/logs.json
+  - name: node-exporter-full-dashboard
+    namespace: monitoring
+    files:
+      - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
+  - name: pod-resources-max-dashboard
+    namespace: monitoring
+    files:
+      - ./pod-resources-max.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
