@@ -12,7 +12,7 @@ patches:
       version: v1
       kind: PrometheusRule
       name: prometheus-ceph-rules
-      namespace: monitoring
+      namespace: rook-ceph
 
 configMapGenerator:
   - name: ceph-cluster-dashboard
