@@ -7,9 +7,9 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/crowdsec/app
   dependsOn:
     - name: apps-rook-ceph-cluster
+  path: ./kubernetes/apps/networking/crowdsec/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -18,6 +18,31 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
       name: crowdsec
+      namespace: networking
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-networking-crowdsec-traefik-bouncer
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: apps-networking-crowdsec
+    - name: apps-networking-traefik
+  path: ./kubernetes/apps/networking/crowdsec/traefik-bouncer
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: crowdsec-traefik-bouncer
       namespace: networking
   interval: 30m
   retryInterval: 1m
