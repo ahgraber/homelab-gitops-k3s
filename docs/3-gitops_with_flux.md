@@ -24,7 +24,7 @@
 
 ## 1. Create deploy key & add to github
 
-Generate key with :
+Generate key with:
 
 ```sh
 ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./cluster/github-deploy-key -q -P ""
@@ -154,7 +154,7 @@ git push
 ## 8. ✅ Verify Flux can be installed
 
 ```sh
-flux --kubeconfig=$(pwd)/kubeconfig check --pre
+task cluster:verify
 ```
 
 ## 9. 🚀 Install Flux
