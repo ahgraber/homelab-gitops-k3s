@@ -12,7 +12,7 @@ spec:
       version: 4.0.10
       sourceRef:
         kind: HelmRepository
-        name: weave-gitops
+        name: weave-gitops-charts
         namespace: flux-system
   install:
     createNamespace: true
