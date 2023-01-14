@@ -7,6 +7,9 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
+  dependsOn:
+    - name: apps-monitoring-kube-prometheus-stack
+    - name: apps-monitoring-grafana
   path: ./kubernetes/apps/flux-system/add-ons/monitoring
   prune: true
   sourceRef:
@@ -25,6 +28,8 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
+  dependsOn:
+    - name: apps-monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/flux-system/add-ons/notifications
   prune: true
   sourceRef:
@@ -43,6 +48,8 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
+  dependsOn:
+    - name: apps-neworking-traefik
   path: ./kubernetes/apps/flux-system/add-ons/webhooks
   prune: true
   sourceRef:
