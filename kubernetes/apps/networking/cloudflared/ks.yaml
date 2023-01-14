@@ -1,0 +1,22 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-networking-cloudflared
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  path: ./kubernetes/apps/networking/cloudflared/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: cloudflared
+      namespace: networking
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m

@@ -6,6 +6,7 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Pre Flux-Kustomizations
+  - ./cloudflared/ks.yaml
   - ./crowdsec/ks.yaml
   - ./traefik/ks.yaml
   # Standard Resources
