@@ -6,10 +6,10 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
-    - web
+    # - web
     - websecure
   routes:
-    - match: Host(`rook-ceph.${SECRET_DOMAIN}`)
+    - match: Host(`ceph.${SECRET_DOMAIN}`)
       kind: Rule
       # Enable auth middleware
       middlewares:
