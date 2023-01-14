@@ -91,12 +91,12 @@ spec:
           #     actions = SET
           #     instcmds = ALL
           #     upsmon slave
-          # ups.conf: |-
-          #   [PR1500RT2U]
-          #     driver = usbhid-ups
-          #     port = auto
-          #     desc = "PR1500RT2U"
-          #     pollinterval = 10
+          ups.conf: |-
+            [PR1500RT2U]
+              driver = usbhid-ups
+              port = auto
+              desc = "PR1500RT2U"
+              pollinterval = 10
           upsmon.conf: |-
             MONITOR PR1500RT2U@10.2.0.1:3493 1 monuser "${SECRET_DEFAULT_PWD}" SLAVE
             SHUTDOWNCMD "/sbin/shutdown -h +0"
