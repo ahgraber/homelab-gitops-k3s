@@ -31,7 +31,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "gridPos": {
         "h": 1,
@@ -51,7 +51,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "decimals": 2,
       "editable": true,
@@ -196,7 +196,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
@@ -273,7 +273,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "gridPos": {
         "h": 1,
@@ -293,7 +293,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "editable": true,
       "error": false,
@@ -405,7 +405,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "decimals": 2,
       "editable": true,
@@ -511,7 +511,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "$datasource"
+        "uid": "PBFA97CFB590B2093"
       },
       "decimals": 2,
       "editable": true,
@@ -625,7 +625,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "$datasource"
+          "uid": "PBFA97CFB590B2093"
         },
         "definition": "label_values(ceph_pool_metadata, name)",
         "hide": 0,
