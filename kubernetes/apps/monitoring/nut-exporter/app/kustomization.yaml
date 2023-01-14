@@ -12,10 +12,6 @@ configMapGenerator:
     files:
       - ./nut-exporter-dashboard.json
       # - nut-exporter.json=https://grafana.com/api/dashboards/15406/revisions/2/download
-  - name: pod-resources-max-dashboard
-    namespace: monitoring
-    files:
-      - ./pod-resources-max.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
