@@ -49,7 +49,8 @@ metadata:
     substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
-    - name: apps-neworking-traefik
+    - name: apps-networking-cloudflared
+    - name: apps-networking-traefik
   path: ./kubernetes/apps/flux-system/add-ons/webhooks
   prune: true
   sourceRef:

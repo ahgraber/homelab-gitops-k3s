@@ -14,8 +14,8 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
-      #   - name: ipfilter-internal
-      #   # - name: basicauth
+        # - name: ipfilter-internal
+        # # - name: basicauth
       services:
         - name: webhook-receiver
           namespace: flux-system
