@@ -708,7 +708,10 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query",
-        "datasource": "PBFA97CFB590B2093"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        }
       },
       {
         "current": {},
@@ -728,7 +731,10 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query",
-        "datasource": "PBFA97CFB590B2093"
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        }
       }
     ]
   },
