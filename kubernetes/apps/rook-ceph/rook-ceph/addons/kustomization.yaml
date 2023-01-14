@@ -23,7 +23,7 @@ configMapGenerator:
   - name: ceph-osd-dashboard
     namespace: monitoring
     files:
-      - ./ceph-cluster-dashboard.json
+      - ./ceph-osd-dashboard.json
       # - ceph-osd-dashboard.json=https://grafana.com/api/dashboards/5336/revisions/5/download
   - name: ceph-pools-dashboard
     namespace: monitoring
