@@ -51,6 +51,7 @@ spec:
         limits:
           memory: 128M
 
+    # https://rook.io/docs/rook/v1.10/Storage-Configuration/Advanced/ceph-configuration/#custom-cephconf-settings
     configOverride: |
       [global]
       bdev_enable_discard = true
@@ -162,6 +163,9 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
+            pg_num: "128" # create the pool with a pre-configured placement group number
+            pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
+
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-block
@@ -204,6 +208,8 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
+            pg_num: "128" # create the pool with a pre-configured placement group number
+            pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
     cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-fs
@@ -242,3 +248,5 @@ spec:
           reclaimPolicy: Delete
           parameters:
             region: us-east-1
+            pg_num: "128" # create the pool with a pre-configured placement group number
+            pgp_num: "128" # this should at least match `pg_num` so that all PGs are used

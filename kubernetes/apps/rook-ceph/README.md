@@ -80,6 +80,7 @@ dashboard set-prometheus-api-ssl-verify False
 > run the following commands against the ceph-toolbox pod
 
 ```sh
+ceph health detail
 # get new crashes
 ceph crash ls-new
 # get crash info
@@ -90,9 +91,61 @@ ceph crash archive-all
 
 [docs](https://docs.ceph.com/en/quincy/mgr/crash/)
 
+### View OSD pods
+
+> run the following commands against the ceph-toolbox pod
+
+```sh
+# Get OSD Pods
+# This uses the example/default cluster name "rook"
+OSD_PODS=$(kubectl get pods --all-namespaces -l \
+  app=rook-ceph-osd,rook_cluster=rook-ceph -o jsonpath='{.items[*].metadata.name}')
+
+# Find node and drive associations from OSD pods
+for pod in $(echo ${OSD_PODS})
+do
+ echo "Pod:  ${pod}"
+ echo "Node: $(kubectl -n rook-ceph get pod ${pod} -o jsonpath='{.spec.nodeName}')"
+ kubectl -n rook-ceph exec ${pod} -- sh -c '\
+  for i in /var/lib/ceph/osd/ceph-*; do
+    [ -f ${i}/ready ] || continue
+    echo -ne "-$(basename ${i}) "
+    echo $(lsblk -n -o NAME,SIZE ${i}/block 2> /dev/null || \
+    findmnt -n -v -o SOURCE,SIZE -T ${i}) $(cat ${i}/type)
+  done | sort -V
+  echo'
+done
+```
+
 ### Too many PGs per OSD
 
 > run the following commands against the ceph-toolbox pod
+
+List current OSD pools:
+
+```sh
+ceph osd tree
+ceph osd pool ls
+```
+
+Get current autoscale status (and coincidentally pg_num):
+
+```sh
+ceph osd pool autoscale-status
+```
+
+List pools
+
+```sh
+ceph osd lspools
+```
+
+List current placement groups:
+
+```sh
+ceph pg dump # list
+ceph pg stat # status
+```
 
 Show current PGs/OSD:
 
@@ -117,25 +170,17 @@ END {
 ```
 <!-- markdownlint-enable -->
 
-List current OSD pools:
-
-```sh
-ceph osd pool ls
-```
-
-Get current autoscale status (and coincidentally pg_num):
-
-```sh
-ceph osd pool autoscale-status
-```
-
 > The general rules for deciding how many PGs your pool(s) should contain is:
 >
 > - Fewer than 5 OSDs set pg_num to 128
 > - Between 5 and 10 OSDs set pg_num to 512
 > - Between 10 and 50 OSDs set pg_num to 1024
+>
+> ```sh
+> ceph osd pool set <name> pg_num 128
+> ```
 
-For more specifics, we can specify pg_num per osd pool.
+<!-- For more specifics, we can specify pg_num per osd pool.
 Based on [PGcalc](https://old.ceph.com/pgcalc/), assuming a 3-drive cluster with 3 replicas,
 we want 4, 8, or 16 pgs per osd pool, depending on anticipated utilization
 (larger # for pools with anticipated larger data requirements).
@@ -154,9 +199,10 @@ ceph osd pool set ceph-objectstore.rgw.buckets.data pg_num 16
 ceph osd pool set ceph-objectstore.rgw.control pg_num 16
 ceph osd pool set ceph-objectstore.rgw.log pg_num 16
 ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
-```
+``` -->
 
 [docs - configuring pools](https://rook.io/docs/rook/v1.9/Storage-Configuration/Advanced/ceph-configuration/#configuring-pools)
+[docs - monitoring osds & pgs](https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/)
 [docs - placement groups](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#a-preselection-of-pg-num)
 [stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
 [cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
@@ -220,7 +266,7 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
 2. From `ceph toolbox` pod, list of existing ceph RBD images by storage class
 
    ```sh
-   rbd ls -p ceph-blockpool-retain
+   rbd ls -p ceph-blockpool
    ```
 
 3. In `ceph toolbox` pod, create arrays
