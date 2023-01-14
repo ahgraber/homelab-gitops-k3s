@@ -7,11 +7,11 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/traefik/app
   dependsOn:
     - name: apps-cert-manager
     - name: apps-metallb-system
     - name: apps-metallb-system-config
+  path: ./kubernetes/apps/networking/traefik/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -33,9 +33,9 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/networking/traefik/add-ons
   dependsOn:
     - name: apps-networking-traefik
+  path: ./kubernetes/apps/networking/traefik/add-ons
   prune: true
   sourceRef:
     kind: GitRepository

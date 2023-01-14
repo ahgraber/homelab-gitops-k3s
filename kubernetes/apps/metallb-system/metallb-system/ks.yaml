@@ -29,9 +29,9 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/metallb-system/metallb-system/config
   dependsOn:
     - name: apps-metallb-system
+  path: ./kubernetes/apps/metallb-system/metallb-system/config
   prune: true
   sourceRef:
     kind: GitRepository
