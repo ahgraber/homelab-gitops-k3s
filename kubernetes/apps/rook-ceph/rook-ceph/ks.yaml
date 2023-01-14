@@ -7,8 +7,8 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  dependsOn:
-    - name: apps-cert-manager
+  # dependsOn:
+  #   - name: apps-cert-manager # for rook-ceph admission controller
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
   prune: true
   sourceRef:

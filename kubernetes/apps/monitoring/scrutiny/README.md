@@ -1,6 +1,6 @@
 # Scrutiny
 
-[Scrutiny](https://github.com/FairwindsOps/goldilocks) is a utility that provides storage drive S.M.A.R.T monitoring,
+[Scrutiny](https://github.com/AnalogJ/scrutiny) is a utility that provides storage drive S.M.A.R.T monitoring,
 historic trends, and real-world failure thresholds.
 
 Scrutiny is deployed as hub-and-spoke format, where the web gui is hosted on k8s,

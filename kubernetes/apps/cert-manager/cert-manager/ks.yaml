@@ -51,6 +51,7 @@ spec:
   dependsOn:
     - name: apps-cert-manager
     - name: apps-cert-manager-issuers
+    - name: apps-kube-system-reflector
   path: ./kubernetes/apps/cert-manager/cert-manager/certs
   prune: true
   sourceRef:

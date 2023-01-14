@@ -7,6 +7,9 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
+  dependsOn:
+    - name: apps-rook-ceph-cluster
+    - name: apps-monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/karma/app
   prune: true
   sourceRef:
