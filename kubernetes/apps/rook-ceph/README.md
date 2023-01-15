@@ -63,6 +63,16 @@ kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
 
 ## Troubleshooting
 
+### Dashboard not accessible thru ingress
+
+> run the following commands against the ceph-toolbox pod
+
+```sh
+ceph mgr module disable dashboard
+ceph config set mgr mgr/dashboard/ssl false
+ceph mgr module enable dashboard
+```
+
 ### Integrate with Prometheus/Alertmanager
 
 > run the following commands against the ceph-toolbox pod
@@ -95,32 +105,6 @@ ceph crash archive-all
 
 > run the following commands against the ceph-toolbox pod
 
-```sh
-# Get OSD Pods
-# This uses the example/default cluster name "rook"
-OSD_PODS=$(kubectl get pods --all-namespaces -l \
-  app=rook-ceph-osd,rook_cluster=rook-ceph -o jsonpath='{.items[*].metadata.name}')
-
-# Find node and drive associations from OSD pods
-for pod in $(echo ${OSD_PODS})
-do
- echo "Pod:  ${pod}"
- echo "Node: $(kubectl -n rook-ceph get pod ${pod} -o jsonpath='{.spec.nodeName}')"
- kubectl -n rook-ceph exec ${pod} -- sh -c '\
-  for i in /var/lib/ceph/osd/ceph-*; do
-    [ -f ${i}/ready ] || continue
-    echo -ne "-$(basename ${i}) "
-    echo $(lsblk -n -o NAME,SIZE ${i}/block 2> /dev/null || \
-    findmnt -n -v -o SOURCE,SIZE -T ${i}) $(cat ${i}/type)
-  done | sort -V
-  echo'
-done
-```
-
-### Too many PGs per OSD
-
-> run the following commands against the ceph-toolbox pod
-
 List current OSD pools:
 
 ```sh
@@ -146,6 +130,32 @@ List current placement groups:
 ceph pg dump # list
 ceph pg stat # status
 ```
+
+```sh
+# Get OSD Pods
+# This uses the example/default cluster name "rook"
+OSD_PODS=$(kubectl get pods --all-namespaces -l \
+  app=rook-ceph-osd,rook_cluster=rook-ceph -o jsonpath='{.items[*].metadata.name}')
+
+# Find node and drive associations from OSD pods
+for pod in $(echo ${OSD_PODS})
+do
+ echo "Pod:  ${pod}"
+ echo "Node: $(kubectl -n rook-ceph get pod ${pod} -o jsonpath='{.spec.nodeName}')"
+ kubectl -n rook-ceph exec ${pod} -- sh -c '\
+  for i in /var/lib/ceph/osd/ceph-*; do
+    [ -f ${i}/ready ] || continue
+    echo -ne "-$(basename ${i}) "
+    echo $(lsblk -n -o NAME,SIZE ${i}/block 2> /dev/null || \
+    findmnt -n -v -o SOURCE,SIZE -T ${i}) $(cat ${i}/type)
+  done | sort -V
+  echo'
+done
+```
+
+### Too many PGs per OSD
+
+> run the following commands against the ceph-toolbox pod
 
 Show current PGs/OSD:
 
