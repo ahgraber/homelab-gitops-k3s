@@ -10,6 +10,7 @@ tasks:
   install:
     desc: Install Flux into your cluster
     cmds:
+      - zsh {{.KUBERNETES_DIR}}/apps/tigera-operator/give_helm_ownership.sh
       - kubectl apply --kustomize {{.KUBERNETES_DIR}}/bootstrap
       - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age
         --from-file=age.agekey=/dev/stdin
