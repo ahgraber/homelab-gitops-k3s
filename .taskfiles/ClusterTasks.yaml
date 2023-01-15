@@ -33,18 +33,29 @@ tasks:
       - flux reconcile -n flux-system source git homelab-gitops-k3s
       - flux reconcile -n flux-system kustomization flux-cluster
 
-  dash:
+  dashpass:
     desc: Get secret for kubernetes-dashboard login
     cmds:
-      - kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
+      - >-
+        kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
+      - echo "Token is in clipboard ready to paste!"
+
+  cephpass:
+    desc: Get secret for rook-ceph dashboard login
+    cmds:
+      - >-
+        kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath='{.data.password}' | base64 --decode |
+        pbcopy
       - echo "Token is in clipboard ready to paste!"
 
   hr-restart:
     desc: Restart all failed Helm Releases
     cmds:
-      - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux suspend hr $0 -n
+      - >-
+        kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux suspend hr $0 -n
         $1'
-      - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux resume hr $0 -n
+      - >-
+        kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux resume hr $0 -n
         $1'
 
   nodes:
