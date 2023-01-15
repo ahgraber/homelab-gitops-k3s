@@ -2,12 +2,13 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: remove-cpu-limits
+  name: remove-cpu-limits-pod
   annotations:
     policies.kyverno.io/title: Remove CPU Limits
     policies.kyverno.io/subject: Pods
     policies.kyverno.io/description: >-
-      This policy searches for resource definitions and removes set CPU limits.
+      This policy searches for resource definitions and removes set CPU limits, unless: annotated with
+      `kyverno.io/ignore: "true"`, or in a specific set of namespaces
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
@@ -26,23 +27,10 @@ spec:
                 kyverno.io/ignore: "true"
           - resources:
               namespaces:
-                - calico-apiserver
-                - calico-system
                 - flux-system
                 - kube-node-lease
                 - kube-public
                 - kube-system
-                - tigera-operator
-          - resources:
-              kinds: ["Pod"]
-              selector:
-                matchLabels:
-                  job-name: "*"
-          # - resources:
-          #     kinds: ["Pod"]
-          #     selector:
-          #       matchLabels:
-          #         statefulset.kubernetes.io/pod-name: "*"
 
       mutate:
         patchStrategicMerge:
