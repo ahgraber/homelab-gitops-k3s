@@ -24,7 +24,7 @@ spec:
     remediation:
       retries: 3
   values:
-    installCRDs: false
+    installCRDs: true
     replicaCount: 3
 
     resources:
