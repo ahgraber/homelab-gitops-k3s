@@ -18,12 +18,12 @@ spec:
   maxHistory: 3
   install:
     createNamespace: true
-    # crds: CreateReplace
+    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    # crds: CreateReplace
+    crds: CreateReplace
     remediation:
       retries: 3
   uninstall:
@@ -48,10 +48,10 @@ spec:
     redisOperator:
       name: redis-operator
       imageName: quay.io/opstree/redis-operator
-      imageTag: v0.12.0
-      imagePullPolicy: Always
-      podAnnotations: {}
-      podLabels: {}
+      # imageTag: v0.12.0
+      # imagePullPolicy: Always
+      # podAnnotations: {}
+      # podLabels: {}
     replicas: 1
 
     # watch_namespace: ot-operators
