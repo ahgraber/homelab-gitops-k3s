@@ -1,0 +1,68 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-default-redis-operator
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  path: ./kubernetes/apps/default/redis/redis/operator
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: redis-operator
+      namespace: default
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: apps-default-redis-cluster
+#   namespace: flux-system
+#   labels:
+#     substitution.flux.home.arpa/enabled: "true"
+# spec:
+#   dependsOn:
+#     - name: apps-default-redis-operator
+#     - name: apps-rook-ceph-cluster
+#   path: ./kubernetes/apps/default/redis/redis/app
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-gitops-k3s
+#   healthChecks:
+#     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+#       kind: HelmRelease
+#       name: redis
+#       namespace: default
+#   interval: 15m
+#   retryInterval: 1m
+#   timeout: 3m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-default-redis-addons
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: apps-default-redis-operator
+    - name: apps-monitoring-kube-prometheus-stack
+    - name: apps-monitoring-grafana
+  path: ./kubernetes/apps/default/redis/redis/add-ons
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m

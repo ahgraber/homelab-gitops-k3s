@@ -1,0 +1,100 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: <app>-redis
+  namespace: &namespace default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: redis
+      version: 0.12.2
+      sourceRef:
+        kind: HelmRepository
+        name: ot-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  # dependsOn:
+  #   - name: redis-operator
+  #     namespace: default
+  #   - name: rook-ceph-cluster
+  #     namespace: rook-ceph
+  values:
+    redisStandalone:
+      image: quay.io/opstree/redis
+      # tag: v7.0.5
+      imagePullPolicy: IfNotPresent
+
+      redisSecret:
+        secretName: redis-secret
+        secretKey: password
+
+      serviceType: ClusterIP
+      resources:
+        limits:
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+    externalConfig:
+      enabled: false
+
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+      #   selector: {}
+
+    # priorityClassName: "-"
+    securityContext:
+      runAsUser: 1000
+      fsGroup: 1000
+
+    # If redis service needs to be exposed using LoadBalancer or NodePort
+    externalService:
+      enabled: false
+
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      scrapeTimeout: 10s
+      namespace: monitoring
+
+    redisExporter:
+      enabled: true
+      # image: quay.io/opstree/redis-exporter
+      imagePullPolicy: IfNotPresent
+      resources: # for redis exporter
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          memory: 128Mi
+
+      # env: # for redis exporter
+      # - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
+      #   value: "true"
+      # - name: UI_PROPERTIES_FILE_NAME
+      #   valueFrom:
+      #     configMapKeyRef:
+      #       name: game-demo
+      #       key: ui_properties_file_name
+      # - name: SECRET_USERNAME
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: mysecret
+      #       key: username
+
+    nodeSelector: {}
+    affinity: {}
