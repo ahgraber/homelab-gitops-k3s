@@ -1,0 +1,51 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cnpg-operator
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://github.com/cloudnative-pg/charts
+      chart: cloudnative-pg
+      version: 0.16.1
+      sourceRef:
+        kind: HelmRepository
+        name: cloudnativepg-charts
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    crds:
+      create: true
+
+    config:
+      data:
+        INHERITED_ANNOTATIONS: kyverno.io/ignore
+
+    resources:
+      limits:
+        memory: 200Mi
+      requests:
+        cpu: 25m
+        memory: 100Mi
+
+    podAnnotations:
+      reloader.stakater.com/search: "true"
+
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: "true"
+    tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
