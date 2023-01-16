@@ -227,6 +227,13 @@ Of course, if nothing is working, that is expected. This is DNS after all!
 
 ### 🤖 Renovate
 
+There are several Github workflows included in this repository that help automate some processes.
+_NOTE:_ several workflows require [creating a private github bot](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)
+
+- [Megalinter](./.github/workflows/megalinter.yaml) - workflow to lint so cluster specifications
+  remain properly formatted
+- [Helm differ](./.github/workflows/helmrelease-diff.yaml) - workflow to annotate PRs with the differences in helm files
+
 [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate) is a very useful
 tool that when configured will start to create PRs in your Github repository when Docker images,
 Helm charts or anything else that can be tracked has a newer version. The configuration for
@@ -234,16 +241,11 @@ renovate is located [here](./.github/renovate.json5).
 
 To enable Renovate, click the 'Configure' button over at their [Github app page](https://github.com/apps/renovate)
 and choose your repository. Over time Renovate will create PRs for out-of-date dependencies it finds.
-Flux will deploy any merged PRs.
+Flux will deploy any merged PRs.  Alternatively, use the private bot mentioned above in conjunction with
+a chron scheduler workflow to manage renovate privately.
 
-There are several Github workflows included in this repository that help automate some processes.
-
-- [Renovate schedule](./.github/workflows/schedule-renovate.yaml) - workflow to annotate `HelmRelease`'s which allows
+- [Renovate schedule](./.github/workflows/renovate.yaml) - workflow to annotate `HelmRelease`'s which allows
   Renovate to track Helm chart versions.
-- [Megalinter](./.github/workflows/megalinter.yaml) - workflow to lint so cluster specifications
-  remain properly formatted
-- [Helm differ](./.github/workflows/helm-release-differ.yaml) - workflow to annotate PRs with the differences in helm files
-  _NOTE:_ this requires [creating a private github bot](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens)
 
 ### 🪝 Github Webhook
 

@@ -29,9 +29,6 @@
   "rebaseWhen": "conflicted",
   "commitBodyTable": true,
   // set up Renovate Managers
-  "pre-commit": {
-    enabled: true,
-  },
   "flux": {
     fileMatch: ["kubernetes/.+\\.ya?ml$"],
   },
@@ -42,7 +39,6 @@
     fileMatch: ["kubernetes/.+\\.ya?ml$"],
   },
   "regexManagers": [
-    // regexManager to read and process HelmRelease files
     {
       description: "Process custom dependencies",
       fileMatch: ["kubernetes/.+\\.ya?ml$"],
@@ -52,15 +48,6 @@
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
-    // {
-    //   description: "Process raw GitHub URLs",
-    //   fileMatch: ["cluster/.+\\.ya?ml$"],
-    //   matchStrings: [
-    //     "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*",
-    //   ],
-    //   datasourceTemplate: "github-releases",
-    //   versioningTemplate: "semver",
-    // },
   ],
   "packageRules": [
     {
@@ -69,11 +56,5 @@
       versioning: "loose",
       matchPackagePatterns: ["changedetection", "immich", "plex", "qbittorrent"],
     },
-    // {
-    //   description: "Use custom versioning for Minio",
-    //   matchDatasources: ["docker"],
-    //   versioning: "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$",
-    //   matchPackagePatterns: ["minio"],
-    // },
   ],
 }
