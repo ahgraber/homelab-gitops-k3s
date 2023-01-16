@@ -31,14 +31,14 @@ spec:
       repository: redislabs/redisinsight
       tag: 1.13.1
 
-    # env:
-    #   - name: RITRUSTEDORIGINS
-    #     value: https://redisinsight.${SECRET_DOMAIN}
-    # RITRUSTEDORIGINS: https://redisinsight.${SECRET_DOMAIN}
-    # RIHOST: "0.0.0.0"
-    # RIPORT: "8001"
-    # RIHOMEDIR: /db
-    # RILOGDIR: /db
+    env:
+      # - name: RITRUSTEDORIGINS
+      #   value: https://redisinsight.${SECRET_DOMAIN}
+      RITRUSTEDORIGINS: https://redisinsight.${SECRET_DOMAIN}
+      # RIHOST: "0.0.0.0"
+      # RIPORT: "8001"
+      # RIHOMEDIR: /db
+      # RILOGDIR: /db
 
     service:
       main:
