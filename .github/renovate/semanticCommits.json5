@@ -1,4 +1,5 @@
 {
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
       matchDatasources: ["docker"],
@@ -13,8 +14,14 @@
     },
     {
       matchDatasources: ["docker"],
-      matchUpdateTypes: ["digest", "patch"],
+      matchUpdateTypes: ["patch"],
       semanticCommitType: "fix",
+      semanticCommitScope: "container",
+    },
+    {
+      matchDatasources: ["docker"],
+      matchUpdateTypes: ["digest"],
+      semanticCommitType: "chore",
       semanticCommitScope: "container",
     },
     {
@@ -34,6 +41,41 @@
       matchUpdateTypes: ["patch"],
       semanticCommitType: "fix",
       semanticCommitScope: "helm",
+    },
+    {
+      matchDatasources: ["galaxy", "galaxy-collection"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(ansible)!: ",
+    },
+    {
+      matchDatasources: ["galaxy", "galaxy-collection"],
+      matchUpdateTypes: ["minor"],
+      semanticCommitType: "feat",
+      semanticCommitScope: "ansible",
+    },
+
+    {
+      matchDatasources: ["galaxy", "galaxy-collection"],
+      matchUpdateTypes: ["patch"],
+      semanticCommitType: "fix",
+      semanticCommitScope: "ansible",
+    },
+    {
+      matchDatasources: ["terraform-provider"],
+      matchUpdateTypes: ["major"],
+      commitMessagePrefix: "feat(terraform)!: ",
+    },
+    {
+      matchDatasources: ["terraform-provider"],
+      matchUpdateTypes: ["minor"],
+      semanticCommitType: "feat",
+      semanticCommitScope: "terraform",
+    },
+    {
+      matchDatasources: ["terraform-provider"],
+      matchUpdateTypes: ["patch"],
+      semanticCommitType: "fix",
+      semanticCommitScope: "terraform",
     },
     {
       matchDatasources: ["github-releases", "github-tags"],
