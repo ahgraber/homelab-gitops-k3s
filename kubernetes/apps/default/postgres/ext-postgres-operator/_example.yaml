@@ -1,0 +1,19 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: miniflux-db
+  namespace: default
+spec:
+  database: miniflux # db name in postgres cluster
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: miniflux-user
+  namespace: default
+spec:
+  role: miniflux
+  database: miniflux-db # references the CR
+  secretName: database
+  privileges: OWNER
