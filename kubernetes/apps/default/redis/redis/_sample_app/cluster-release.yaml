@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: redis-cluster
-      version: 0.13.0
+      version: 0.12.2
       sourceRef:
         kind: HelmRepository
         name: ot-charts
@@ -28,7 +28,7 @@ spec:
   values:
     redisCluster:
       image: quay.io/opstree/redis
-      tag: v7.0.5
+      # tag: v7.0.5
       imagePullPolicy: IfNotPresent
       clusterVersion: v7
       clusterSize: 3
