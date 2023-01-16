@@ -54,7 +54,7 @@ spec:
     - name: apps-default-cnpg-db
     - name: apps-monitoring-kube-prometheus-stack
     - name: apps-monitoring-grafana
-  path: ./kubernetes/apps/postgres/cloudnative-pg/add-ons
+  path: ./kubernetes/apps/default/postgres/cloudnative-pg/add-ons
   prune: true
   sourceRef:
     kind: GitRepository
