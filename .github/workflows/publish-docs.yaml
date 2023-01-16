@@ -4,8 +4,7 @@ name: Publish docs via GitHub Pages
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: ["main"]
     paths:
       - ".github/workflows/publish-docs.yaml"
       - "mkdocs.yaml"
