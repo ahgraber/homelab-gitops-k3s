@@ -7,7 +7,7 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  path: ./kubernetes/apps/default/redis/operator
+  path: ./kubernetes/apps/default/redis/redis/operator
   prune: true
   sourceRef:
     kind: GitRepository
@@ -32,7 +32,7 @@ spec:
 #   dependsOn:
 #     - name: apps-default-redis-operator
 #     - name: apps-rook-ceph-cluster
-#   path: ./kubernetes/apps/default/redis/app
+#   path: ./kubernetes/apps/default/redis/redis/app
 #   prune: true
 #   sourceRef:
 #     kind: GitRepository
@@ -58,7 +58,7 @@ spec:
     - name: apps-default-redis-operator
     - name: apps-monitoring-kube-prometheus-stack
     - name: apps-monitoring-grafana
-  path: ./kubernetes/apps/default/postgres/cloudnative-pg/add-ons
+  path: ./kubernetes/apps/default/redis/redis/add-ons
   prune: true
   sourceRef:
     kind: GitRepository
