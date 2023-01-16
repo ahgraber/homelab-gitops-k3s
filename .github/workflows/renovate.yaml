@@ -1,4 +1,5 @@
 ---
+# use own bot instead of Mend/Renovate app
 name: "Renovate"
 
 on: # yamllint disable-line rule:truthy
