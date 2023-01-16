@@ -4,6 +4,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   # Flux-Kustomizations
-  - ./cloudnative-pg/
-  - ./ext-postgres-operator/
-  - ./pgadmin/
+  - ./cloudnative-pg/ks.yaml
+  - ./ext-postgres-operator/ks.yaml
+  - ./pgadmin/ks.yaml
