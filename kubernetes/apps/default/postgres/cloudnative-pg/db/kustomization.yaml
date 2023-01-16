@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - ./cluster.yaml
   - ./scheduledbackup.yaml
-  - ./secret-s3.sops.yaml
-  - ./secret-superuser.sops.yaml
+  - ./secrets.sops.yaml
