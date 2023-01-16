@@ -24,7 +24,7 @@
   "onboarding": false,
   "requireConfig": "optional",
   "gitAuthor": "UnhesitatingEffectiveBot <218594+UnhesitatingEffectiveBot[bot]@users.noreply.github.com>",
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "dependencyDashboardTitle": "🤖 Renovate Dashboard",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
   "commitBodyTable": true,
