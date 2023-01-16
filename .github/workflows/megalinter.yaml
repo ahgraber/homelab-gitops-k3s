@@ -8,8 +8,7 @@ on: # yamllint disable-line rule:truthy
   # push: # Comment this line to trigger action only on pull-requests (not recommended if you don't pay for GH Actions)
   workflow_dispatch:
   pull_request:
-    branches:
-      - main
+    branches: ["main"]
 
 env: # Comment env block if you do not want to apply fixes
   # Apply linter fixes configuration
