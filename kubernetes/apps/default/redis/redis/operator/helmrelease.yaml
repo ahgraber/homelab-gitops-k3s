@@ -29,20 +29,20 @@ spec:
   uninstall:
     keepHistory: false
 
-  # ### disable installing CRDs from helm chart
-  # postRenderers:
-  #   - kustomize:
-  #       patches:
-  #         - target:
-  #             group: apiextensions.k8s.io
-  #             version: v1
-  #             kind: CustomResourceDefinition
-  #           patch: |-
-  #             $patch: delete
-  #             apiVersion: apiextensions.k8s.io/v1
-  #             kind: CustomResourceDefinition
-  #             metadata:
-  #               name: not-used
+  ### disable installing CRDs from helm chart
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: apiextensions.k8s.io
+              version: v1
+              kind: CustomResourceDefinition
+            patch: |-
+              $patch: delete
+              apiVersion: apiextensions.k8s.io/v1
+              kind: CustomResourceDefinition
+              metadata:
+                name: not-used
 
   values:
     redisOperator:
