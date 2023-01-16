@@ -32,7 +32,7 @@ spec:
       tag: 1.13.1
 
     env:
-      RITRUSTEDORIGINS: "https://redisinsight.${SECRET_DOMAIN}"
+      RITRUSTEDORIGINS: https://redisinsight.${SECRET_DOMAIN}
     #   RIHOST: "0.0.0.0"
     #   RIPORT: "8001"
     #   RIHOMEDIR: /db
