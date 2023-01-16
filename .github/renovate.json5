@@ -1,5 +1,5 @@
 {
-  // General RenovateBot configuration
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base",
     "docker:enableMajor",
@@ -9,13 +9,13 @@
     ":enablePreCommit",
     ":automergeDigest",
     ":automergeBranch",
-    // "github>ahgraber/homelab-gitops-k3s//.github/renovate/allowedVersions.json5",
+    "github>ahgraber/homelab-gitops-k3s//.github/renovate/allowedVersions.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/autoMerge.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/commitMessage.json5",
-    "github>ahgraber/homelab-gitops-k3s//.github/renovate/disabledDatasources.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/groups.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/labels.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/semanticCommits.json5",
+    "helpers:pinGitHubActionDigests",
   ],
   "timezone": "America/New_York",
   "platform": "github",
@@ -28,76 +28,52 @@
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
   "commitBodyTable": true,
-  // set up ignored deps
-  "ignoreDeps": [
-    "ghcr.io/fluxcd/helm-controller",
-    "ghcr.io/fluxcd/image-automation-controller",
-    "ghcr.io/fluxcd/image-reflector-controller",
-    "ghcr.io/fluxcd/kustomize-controller",
-    "ghcr.io/fluxcd/notification-controller",
-    "ghcr.io/fluxcd/source-controller",
-  ],
   // set up Renovate Managers
   "pre-commit": {
     enabled: true,
   },
-  "docker-compose": {
-    fileMatch: ["(^|/)docker-compose.*.ya?ml$"],
-  },
   "flux": {
-    fileMatch: ["cluster/.+\\.ya?ml$"],
+    fileMatch: ["kubernetes/.+\\.ya?ml$"],
   },
   "helm-values": {
-    fileMatch: ["cluster/.+\\.ya?ml$"],
+    fileMatch: ["kubernetes/.+\\.ya?ml$"],
   },
   "kubernetes": {
-    fileMatch: ["cluster/.+\\.ya?ml$"],
+    fileMatch: ["kubernetes/.+\\.ya?ml$"],
   },
   "regexManagers": [
     // regexManager to read and process HelmRelease files
     {
-      description: "Process CRD dependencies",
-      fileMatch: ["cluster/crds/.+\\.ya?ml$"],
-      matchStrings: [
-        // GitRepository where 'Git release/tag' matches 'Helm' version
-        "# renovate: registryUrl=(?<registryUrl>\\S+) chart=(?<depName>\\S+)\n.*?(?<currentValue>[^-\\s]*)\n",
-        // Kustomization where 'GitHub release artifact URL' matches 'Docker image' version
-        "# renovate: datasource=(?<datasource>\\S+) image=(?<depName>\\S+)\n.*?-\\s(.*?)/(?<currentValue>[^/]+)/[^/]+\n",
-      ],
-      datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}helm{{/if}}",
-    },
-    {
-      description: "Process various dependencies",
-      fileMatch: ["cluster/.+\\.ya?ml$"],
+      description: "Process custom dependencies",
+      fileMatch: ["kubernetes/.+\\.ya?ml$"],
       matchStrings: [
         'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?"(?<currentValue>.*)"\n',
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
       versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}",
     },
-    {
-      description: "Process raw GitHub URLs",
-      fileMatch: ["cluster/.+\\.ya?ml$"],
-      matchStrings: [
-        "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*",
-      ],
-      datasourceTemplate: "github-releases",
-      versioningTemplate: "semver",
-    },
+    // {
+    //   description: "Process raw GitHub URLs",
+    //   fileMatch: ["cluster/.+\\.ya?ml$"],
+    //   matchStrings: [
+    //     "https:\\/\\/raw.githubusercontent.com\\/(?<depName>[\\w\\d\\-_]+\\/[\\w\\d\\-_]+)\\/(?<currentValue>[\\w\\d\\.\\-_]+)\\/.*",
+    //   ],
+    //   datasourceTemplate: "github-releases",
+    //   versioningTemplate: "semver",
+    // },
   ],
   "packageRules": [
-    // setup datasources
     {
-      matchDatasources: ["helm"],
-      separateMinorPatch: true,
-      ignoreDeprecated: true,
-    },
-    {
+      description: "Loose versioning for non-semver packages",
       matchDatasources: ["docker"],
-      enabled: true,
-      commitMessageTopic: "container image {{depName}}",
-      commitMessageExtra: "to {{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}",
-      matchUpdateTypes: ["major", "minor", "patch"],
+      versioning: "loose",
+      matchPackagePatterns: ["changedetection", "immich", "plex", "qbittorrent"],
     },
+    // {
+    //   description: "Use custom versioning for Minio",
+    //   matchDatasources: ["docker"],
+    //   versioning: "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$",
+    //   matchPackagePatterns: ["minio"],
+    // },
   ],
 }
