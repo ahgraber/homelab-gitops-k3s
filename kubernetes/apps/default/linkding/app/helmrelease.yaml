@@ -1,0 +1,103 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app linkding
+  namespace: services
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    global:
+      # nameOverride: linkding
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      # https://hub.docker.com/r/sissbruecker/linkding
+      repository: docker.io/sissbruecker/linkding
+      tag: 1.16.0
+
+    # https://github.com/sissbruecker/linkding/blob/master/docs/Options.md
+    env:
+      - name: TZ
+        value: "${TIMEZONE}"
+      - name: LD_DISABLE_BACKGROUND_TASKS
+        value: false
+      - name: LD_DISABLE_URL_VALIDATION
+        value: false
+      # - name: LD_ENABLE_AUTH_PROXY
+      #   value: true
+      # - name: LD_AUTH_PROXY_USERNAME_HEADER
+      #   value: HTTP_REMOTE_USER
+      # - name: LD_AUTH_PROXY_LOGOUT_URL
+      #   value: "https://auth.${PUBLIC_DOMAIN}/logout"
+      - name: LD_CSRF_TRUSTED_ORIGINS
+        value: "https://linkding.${SECRET_DOMAIN}"
+      - name: LD_DB_ENGINE
+        value: postgres
+      - name: LD_DB_DATABASE
+        valueFrom:
+          secretKeyRef:
+            name: database-linkding-user
+            key: DATABASE_NAME
+      - name: LD_DB_USER
+        valueFrom:
+          secretKeyRef:
+            name: database-linkding-user
+            key: LOGIN
+      - name: LD_DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: database-linkding-user
+            key: PASSWORD
+      - name: LD_DB_HOST
+        valueFrom:
+          secretKeyRef:
+            name: database-linkding-user
+            key: HOST
+      - name: LD_DB_PORT
+        value: 5432
+    envFrom:
+      - secretRef:
+          name: linkding-secret
+    persistence:
+      data:
+        enabled: true
+        existingClaim: linkding-data
+        mountPath: /etc/linkding/data
+    # # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
+    # podSecurityContext:
+    #   runAsUser: 33
+    #   runAsGroup: 33
+    #   fsGroup: 33
+    service:
+      main:
+        ports:
+          http:
+            port: 9090
+    ingress:
+      main:
+        enabled: false
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128M
+      limits:
+        memory: 256M

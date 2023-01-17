@@ -5,6 +5,8 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  # Flux-Kustomizations
+  # Flux-Kustomizations | Databases
   - ./postgres/
   - ./redis/
+  # Flux-Kustomizations | Apps
+  - ./linkding/ks.yaml

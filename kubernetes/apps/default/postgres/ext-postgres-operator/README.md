@@ -10,19 +10,19 @@ Manages auth and db urlstrings as kubernetes secrets.
 apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
-  name: app-db
+  name: <app>-db
   namespace: default
 spec:
-  database: app # db name in postgres cluster
+  database: <app> # db name in postgres cluster
 ---
 apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
-  name: app-user
+  name: <app>-user
   namespace: default
 spec:
-  role: app
-  database: app-db # references the CR
+  role: <app>
+  database: <app>-db # references the CR
   secretName: database
   privileges: OWNER
 ```
