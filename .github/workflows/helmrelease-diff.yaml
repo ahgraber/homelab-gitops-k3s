@@ -36,6 +36,7 @@ jobs:
           json: true
           files: |
             kubernetes/**/helmrelease.yaml
+
       - id: set-matrix
         run: echo "matrix={\"file\":${{ steps.changed-files.outputs.all_changed_files }}}" >> "${GITHUB_OUTPUT}"
 
@@ -71,6 +72,7 @@ jobs:
       - name: Setup Tools
         run: |
           brew install helm homeport/tap/dyff kustomize yq
+
       - name: Diff
         id: diff
         run: |
@@ -81,6 +83,7 @@ jobs:
           echo "diff<<EOF" >> "${GITHUB_OUTPUT}"
           echo "${diff}" >> "${GITHUB_OUTPUT}"
           echo "EOF" >> "${GITHUB_OUTPUT}"
+
       - name: Find Comment
         if: ${{ always() && steps.diff.outputs.diff != '' }}
         uses: peter-evans/find-comment@81e2da3af01c92f83cb927cf3ace0e085617c556 # v2.2.0
@@ -99,6 +102,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Helm Release: `${{ matrix.file }}`
+
             ```
             ${{ steps.diff.outputs.diff }}
             ```
