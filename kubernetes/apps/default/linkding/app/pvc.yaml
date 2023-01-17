@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: linkding-data
-  namespace: services
+  namespace: default
   labels:
     app.kubernetes.io/name: linkding
     app.kubernetes.io/instance: linkding
