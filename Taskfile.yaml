@@ -15,7 +15,7 @@ includes:
   format: .taskfiles/FormatTasks.yaml
   lint: .taskfiles/LintTasks.yaml
   pre-commit: .taskfiles/PrecommitTasks.yaml
-  snapshot: .taskfiles/SnapshotTasks.yaml
+  volsync: .taskfiles/VolsyncTasks.yaml
 
 tasks:
   init:
