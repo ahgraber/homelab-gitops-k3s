@@ -11,4 +11,5 @@ dist/
 *.sops.*
 gotk-components.y*ml
 *.md
+*.mjs
 # *.y*ml
