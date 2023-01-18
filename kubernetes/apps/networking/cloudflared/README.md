@@ -1,5 +1,12 @@
 # Cloudflare
 
+- [Cloudflare](#cloudflare)
+  - [Argo Tunnel](#argo-tunnel)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+  - [Deploy tunnel for app (**START HERE IF TUNNEL ALREADY DEPLOYED**)](#deploy-tunnel-for-app-start-here-if-tunnel-already-deployed)
+  - [Terraform](#terraform)
+
 ## Argo Tunnel
 
 Cloudflare Tunnel provides you with a secure way to connect your resources to Cloudflare
@@ -11,7 +18,7 @@ connections to Cloudflare's edge.
 
 Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide#1-download-and-install-cloudflared)
 
-### Deploying for k8s application
+### Setup
 
 [github example docs](https://github.com/cloudflare/argo-tunnel-examples/tree/master/named-tunnel-k8s)
 [documentation](https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel#deploy-cloudflared)
@@ -57,7 +64,9 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
    sops --encrypt --in-place ./cluster/apps/networking/cloudflared/secret.sops.yaml
    ```
 
-5. (**START HERE IF TUNNEL ALREADY DEPLOYED**) Associate your Tunnel with a DNS record.
+## Deploy tunnel for app (**START HERE IF TUNNEL ALREADY DEPLOYED**)
+
+1. Associate your Tunnel with a DNS record.
 
    ```sh
    cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
@@ -65,7 +74,7 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    > Repeat this process for all (sub)domains to be proxied over Cloudflared Tunnel
 
-6. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
+2. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
 
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step,
    it will send that traffic to the cloudflareds running in this deployment.
