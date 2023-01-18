@@ -6,7 +6,7 @@ metadata:
   namespace: networking
 spec:
   headers:
-    # ref: https://tferdinand.net/en/traefik-2-tls-configuration/
+    # ref:
     frameDeny: true
     sslRedirect: true
     browserXssFilter: true
