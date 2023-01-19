@@ -12,12 +12,12 @@ spec:
     - match: Host(`whoami.${SECRET_DOMAIN}`)
       kind: Rule
       middlewares:
-        # - name: basicauth
-        - name: crowdsec-traefik-bouncer
-        # - name: error-pages
         # - name: ips-cloudflare
-        # - name: plugin-cf-connecting-ip
-        - name: plugin-real-ip
+        # - name: plugin-cf-real-ip
+        - name: plugin-cf-realip-transform
+        - name: crowdsec-traefik-bouncer
+        # - name: basicauth
+        # - name: error-pages
       services:
         - name: whoami
           namespace: networking

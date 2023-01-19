@@ -103,10 +103,10 @@ spec:
       - "--hostresolver=true"
       - "--serverstransport.insecureskipverify=true"
       ## add plugins
-      - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
-      - "--experimental.plugins.cloudflarewarp.version=v1.3.3"
       - "--experimental.plugins.real-ip.modulename=github.com/Paxxs/traefik-get-real-ip"
       - "--experimental.plugins.real-ip.version=v1.0.2"
+      - "--experimental.plugins.header-transform.modulename=github.com/tomMoulard/htransformation"
+      - "--experimental.plugins.header-transform.version=v0.2.7"
     env:
       - name: TZ
         value: "${TIMEZONE}"
