@@ -106,7 +106,7 @@ spec:
       - "--hostresolver=true"
       - "--serverstransport.insecureskipverify=true"
       ## add plugins
-      - "--experimental.plugins.cloudflarewarp.modulename=github.com/bettercorp/cloudflarewarp"
+      - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
       - "--experimental.plugins.cloudflarewarp.version=v1.3.0"
     env:
       - name: TZ
