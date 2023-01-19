@@ -55,9 +55,9 @@ spec:
         enabled: false
       plugins:
         enabled: true
-        cloudflarewarp:
-          modulename: github.com/BetterCorp/cloudflarewarp
-          version: v1.3.0
+        # cloudflarewarp:
+        #   modulename: github.com/BetterCorp/cloudflarewarp
+        #   version: v1.3.0
       kubernetesGateway:
         enabled: false
 
@@ -105,9 +105,9 @@ spec:
       - "--api.insecure=true"
       - "--hostresolver=true"
       - "--serverstransport.insecureskipverify=true"
-      # ## add plugins
-      # - "--experimental.plugins.cloudflarewarp.modulename=github.com/bettercorp/cloudflarewarp"
-      # - "--experimental.plugins.cloudflarewarp.version=v1.3.0"
+      ## add plugins
+      - "--experimental.plugins.cloudflarewarp.modulename=github.com/bettercorp/cloudflarewarp"
+      - "--experimental.plugins.cloudflarewarp.version=v1.3.0"
     env:
       - name: TZ
         value: "${TIMEZONE}"
@@ -171,43 +171,10 @@ spec:
         tls:
           enabled: true
           options: "default"
-        # One can apply Middlewares on an entrypoint
-        # !!! This introduces here a link between your static configuration and your dynamic configuration !!!
-        # https://doc.traefik.io/traefik/middlewares/overview/
-        # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
-        # Follow the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
-        # middlewares:
-        #   - namespace-name1@kubernetescrd
-        #   - namespace-name2@kubernetescrd
-        middlewares: []
       metrics:
         port: 9100
         expose: false
         # exposedPort: 9100
-
-      # ### valheim
-      # steam1:
-      #   port: 2456
-      #   expose: true
-      #   exposedPort: 2456
-      # steam2:
-      #   port: 2457
-      #   expose: true
-      #   exposedPort: 2457
-      # steam3:
-      #   port: 2458
-      #   expose: true
-      #   exposedPort: 2458
-
-      ### expose db ports
-      # mysql:
-      #   port: 3306
-      #   expose: true
-      #   exposedPort: 3306
-      # postgresql:
-      #   port: 5432
-      #   expose: true
-      #   exposedPort: 5432
 
     # # https://doc.traefik.io/traefik/https/tls/#tls-options
     tlsOptions:
@@ -256,14 +223,3 @@ spec:
     tolerations:
       - key: "node-role.kubernetes.io/master"
         operator: "Exists"
-
-    # ## Resolves: error while building entryPoint web: error preparing server: error opening listener: listen tcp :80: bind: permission denied
-    # ## https://stackoverflow.com/questions/66138370/permission-problem-w-helm3-installation-of-traefik-on-port-80-hostnetwork
-    # securityContext:
-    #   capabilities:
-    #     drop: [ALL]
-    #     add: [NET_BIND_SERVICE]
-    #   readOnlyRootFilesystem: true
-    #   runAsGroup: 65532 # 0
-    #   runAsNonRoot: true # false
-    #   runAsUser: 65532 # 0
