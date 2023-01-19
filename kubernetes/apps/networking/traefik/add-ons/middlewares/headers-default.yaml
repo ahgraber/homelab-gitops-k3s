@@ -6,9 +6,9 @@ metadata:
   namespace: networking
 spec:
   headers:
-    # ref:
     frameDeny: true
     sslRedirect: true
+    sslHost: "${SECRET_DOMAIN}"
     browserXssFilter: true
     contentTypeNosniff: true
     customFrameOptionsValue: SAMEORIGIN
