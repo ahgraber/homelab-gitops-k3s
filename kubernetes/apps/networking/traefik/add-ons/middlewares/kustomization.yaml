@@ -9,5 +9,6 @@ resources:
   - ./ips-github-hooks.yaml
   - ./ips-rfc1918.yaml
   - ./headers-default.yaml
+  - ./plugins.yaml
   - ./redirects.yaml
   - ./secret-basicauth.sops.yaml

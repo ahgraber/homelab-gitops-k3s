@@ -105,6 +105,8 @@ spec:
       ## add plugins
       - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
       - "--experimental.plugins.cloudflarewarp.version=v1.3.3"
+      - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
+      - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
     env:
       - name: TZ
         value: "${TIMEZONE}"

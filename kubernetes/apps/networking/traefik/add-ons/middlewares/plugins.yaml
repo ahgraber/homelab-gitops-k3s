@@ -1,0 +1,29 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: cf-connecting-ip
+  namespace: networking
+spec:
+  plugin:
+    cloudflarewarp:
+      # disableDefault: "false" # use built-in list of cloudflare ips
+      trustip: # Trust IPS not required if disableDefault is false - we will allocate Cloud Flare IPs automatically
+        # - 10.1.0.0/16
+        # - 10.2.0.0/16
+        # - 10.1.0.0/16
+        - 10.0.0.0/8
+        # - 172.16.0.0/12
+        - 192.168.0.0/16
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: real-ip
+  namespace: networking
+spec:
+  plugin:
+    traefik-real-ip:
+      excludednets: # Trust IPS not required if disableDefault is false - we will allocate Cloud Flare IPs automatically
+        - 10.42.0.0/16
+        - 10.43.0.0/16
