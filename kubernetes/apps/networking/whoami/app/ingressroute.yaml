@@ -13,7 +13,7 @@ spec:
       kind: Rule
       middlewares:
         # - name: ips-cloudflare
-        # - name: plugin-cf-real-ip
+        # - name: plugin-cf-realip-xff
         - name: plugin-cf-realip-transform
         - name: crowdsec-traefik-bouncer
         # - name: basicauth

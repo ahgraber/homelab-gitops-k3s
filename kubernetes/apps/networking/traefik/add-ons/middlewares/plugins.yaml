@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: plugin-cf-real-ip
+  name: plugin-cf-realip-xff
   namespace: networking
 spec:
   plugin:
