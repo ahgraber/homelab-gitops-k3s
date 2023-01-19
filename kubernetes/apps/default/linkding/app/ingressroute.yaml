@@ -15,8 +15,8 @@ spec:
       middlewares:
         # - name: basicauth
         - name: crowdsec-traefik-bouncer
-        - name: ipfilter-cloudflare
-        # - name: ipfilter-internal
+        - name: ips-cloudflare
+        # - name: ips-rfc1918
       services:
         - name: linkding
           namespace: default
