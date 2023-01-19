@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./basicauth.yaml
   - ./error-pages.yaml
-  - ./ipfilters.yaml
+  # - ./ipfilters.yaml
   - ./ips-cloudflare.yaml
   - ./ips-github-hooks.yaml
   - ./ips-rfc1918.yaml

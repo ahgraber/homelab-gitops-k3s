@@ -102,9 +102,9 @@ spec:
       - "--api.insecure=true"
       - "--hostresolver=true"
       - "--serverstransport.insecureskipverify=true"
-      # ## add plugins
-      # - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
-      # - "--experimental.plugins.cloudflarewarp.version=v1.3.0"
+      ## add plugins
+      - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
+      - "--experimental.plugins.cloudflarewarp.version=v1.3.3"
     env:
       - name: TZ
         value: "${TIMEZONE}"
