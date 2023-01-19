@@ -27,7 +27,7 @@ spec:
     keepHistory: false
   values:
     controller:
-      replicas: 3
+      replicas: 1
     image:
       repository: docker.io/traefik/whoami
       tag: v1.8.7
@@ -42,7 +42,7 @@ spec:
 
     resources:
       requests:
-        cpu: 25m
-        memory: 32M
+        cpu: 10m
+        memory: 16M
       limits:
-        memory: 64M
+        memory: 32M
