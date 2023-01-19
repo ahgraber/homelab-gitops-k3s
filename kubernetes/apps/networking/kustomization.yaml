@@ -9,4 +9,5 @@ resources:
   - ./cloudflared/ks.yaml
   - ./crowdsec/ks.yaml
   - ./traefik/ks.yaml
+  - ./whoami/ks.yaml
   # Standard Resources
