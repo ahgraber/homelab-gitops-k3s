@@ -2,7 +2,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: cf-connecting-ip
+  name: plugin-cf-connecting-ip
   namespace: networking
 spec:
   plugin:
@@ -19,11 +19,13 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: real-ip
+  name: plugin-real-ip
   namespace: networking
 spec:
   plugin:
-    traefik-real-ip:
-      excludednets: # Trust IPS not required if disableDefault is false - we will allocate Cloud Flare IPs automatically
-        - 10.42.0.0/16
-        - 10.43.0.0/16
+    real-ip:
+      Proxy:
+        - proxyHeadername: X-From-Cf
+          proxyHeadervalue: cf-real
+          realIP: Cf-Connecting-Ip
+          overwriteXFF: true

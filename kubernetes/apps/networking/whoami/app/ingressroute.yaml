@@ -16,8 +16,8 @@ spec:
         - name: crowdsec-traefik-bouncer
         # - name: error-pages
         # - name: ips-cloudflare
-        # - name: cf-connecting-ip
-        - name: real-ip
+        # - name: plugin-cf-connecting-ip
+        - name: plugin-real-ip
       services:
         - name: whoami
           namespace: networking

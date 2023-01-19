@@ -105,8 +105,8 @@ spec:
       ## add plugins
       - "--experimental.plugins.cloudflarewarp.modulename=github.com/BetterCorp/cloudflarewarp"
       - "--experimental.plugins.cloudflarewarp.version=v1.3.3"
-      - "--experimental.plugins.traefik-real-ip.modulename=github.com/soulbalz/traefik-real-ip"
-      - "--experimental.plugins.traefik-real-ip.version=v1.0.3"
+      - "--experimental.plugins.real-ip.modulename=github.com/Paxxs/traefik-get-real-ip"
+      - "--experimental.plugins.real-ip.version=v1.0.2"
     env:
       - name: TZ
         value: "${TIMEZONE}"
@@ -131,14 +131,21 @@ spec:
         # port: 443
         expose: true
         exposedPort: 443
-        ## Trust forwarded  headers information (X-Forwarded-*).
+        ## Trust forwarded  headers information (X-Forwarded-*) from following IPs/rances
         forwardedHeaders:
           # insecure: false
           trustedIPs:
-            ## rfc1918
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+            ## cluster ips
+            - ${NET_NODE_CIDR}
+            - ${NET_POD_CIDR}
+            - ${NET_SVC_CIDR}
+            - ${LB_GATEWAY}
+            - ${LB_INGRESS}
+            - ${LB_AUTH}
+            # ## rfc1918
+            # - 10.0.0.0/8
+            # - 172.16.0.0/12
+            # - 192.168.0.0/16
             # ## https://www.cloudflare.com/ips-v4
             # - 173.245.48.0/20
             # - 103.21.244.0/22
