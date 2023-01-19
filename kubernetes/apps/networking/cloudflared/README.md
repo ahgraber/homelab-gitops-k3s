@@ -22,6 +22,7 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
 [github example docs](https://github.com/cloudflare/argo-tunnel-examples/tree/master/named-tunnel-k8s)
 [documentation](https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel#deploy-cloudflared)
+[config](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/ingress/)
 
 1. If you haven't, login to you Cloudflare account to obtain a certificate.
 
