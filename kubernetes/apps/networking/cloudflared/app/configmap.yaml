@@ -24,7 +24,7 @@ data:
     # set default configuration for all ingresses
     originRequest:
       # Hostname that cloudflared should expect from your origin server certificate
-      originServerName: {SECRET_DOMAIN}
+      originServerName: ${SECRET_DOMAIN}
 
     # The `ingress` block tells cloudflared which local service to route incoming requests to.
     # To route traffic from the internet to cloudflared, run `cloudflared tunnel route dns k8s-argo-tunnel <hostname>`.
