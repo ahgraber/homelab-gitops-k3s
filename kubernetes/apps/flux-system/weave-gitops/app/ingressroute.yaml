@@ -13,7 +13,7 @@ spec:
       kind: Rule
       middlewares:
         - name: crowdsec-traefik-bouncer
-        - name: ipfilter-internal
+        - name: ips-rfc1918
       #   # - name: basicauth
       services:
         - name: weave-gitops
