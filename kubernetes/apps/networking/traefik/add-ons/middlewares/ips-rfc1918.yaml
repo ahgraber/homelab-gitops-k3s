@@ -11,6 +11,14 @@ spec:
       - 172.16.0.0/12
       - 192.168.0.0/16
       - 127.0.0.1/32
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ips-k8s-excludes
+  namespace: networking
+spec:
+  ipWhiteList:
     ipStrategy:
       # ## scan the X-Forwarded-For header and take the IP located at the depth position (1-indexed, from the right)
       # depth: 1
@@ -22,3 +30,14 @@ spec:
         - ${LB_GATEWAY}
         - ${LB_INGRESS}
         - ${LB_AUTH}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ipfilter-rfc1918
+  namespace: networking
+spec:
+  chain:
+    middlewares:
+      - name: ips-k8s-excludes
+      - name: ips-rfc1918
