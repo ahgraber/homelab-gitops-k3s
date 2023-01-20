@@ -7,7 +7,7 @@ visualize & act upon threats, and a TIP (Threat Intel Platform) to block malicio
 
 Crowdsec is installed on the nodes using ansible (see [homelab-infra](https://github.com/ahgraber/homelab-infra)).
 The node installation watches LAN traffic and protects the nodes themselves.
-The k8s installtion watches ingress and protects the cluster.
+The k8s installation watches ingress and protects the cluster.
 
 ## Secrets
 
