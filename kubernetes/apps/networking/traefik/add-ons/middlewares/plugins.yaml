@@ -49,7 +49,7 @@ spec:
           Type: "Join"
         - Name: "Overwrite XFF with X-Temp"
           Header: "X-Forwarded-For"
-          Value: "^X-Temp"
+          Value: "X-Temp"
           Type: "Set"
         - Name: "Remove X-Temp"
           Header: "X-Temp"
