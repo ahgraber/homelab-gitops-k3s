@@ -33,7 +33,7 @@ spec:
       replicas: 1
     nameOverride: error-pages
     env:
-      TEMPLATE_NAME: i-said-random
+      TEMPLATE_NAME: shuffle
     service:
       main:
         ports:
