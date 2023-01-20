@@ -20,12 +20,12 @@ IP: fe80::44e3:4ff:fe93:6d38
 RemoteAddr: 10.42.229.216:53894
 # ...
 Upgrade-Insecure-Requests: 1
-X-Forwarded-For: 10.1.0.100  # my ip
+X-Forwarded-For: <internal ip>  # my ip
 X-Forwarded-Host: whoami.ninerealmlabs.com
 X-Forwarded-Port: 443
 X-Forwarded-Proto: https
 X-Forwarded-Server: traefik-ctf9x
-X-Real-Ip: 10.1.0.100  # my ip
+X-Real-Ip: <internal ip>  # my ip
 ```
 
 ### External
@@ -43,10 +43,10 @@ Cdn-Loop: cloudflare
 Cf-Connecting-Ip: 52.152.200.185  # my ip
 # ...
 Upgrade-Insecure-Requests: 1
-X-Forwarded-For: 52.152.200.185, 10.42.210.127  # real-ip, cloudflared
+X-Forwarded-For: <external ip>, 10.42.210.127  # real-ip, cloudflared pod
 X-Forwarded-Host: whoami.ninerealmlabs.com
 X-Forwarded-Port: 443
 X-Forwarded-Proto: https
 X-Forwarded-Server: traefik-5kdgs
-X-Real-Ip: 10.42.210.127  # cloudflared
+X-Real-Ip: <external ip>  # with traefik-get-real-ip plugin
 ```
