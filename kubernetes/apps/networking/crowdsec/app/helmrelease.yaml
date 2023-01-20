@@ -49,9 +49,14 @@ spec:
     # lapi (local api) will deploy pod with crowdsec lapi and dashboard as deployment
     lapi:
       env:
+        - name: TZ
+          value: "${TIMEZONE}"
         # by default disable the agent for local API pods
         - name: DISABLE_AGENT
           value: "true"
+        # # If it's a test, we don't want to share signals with CrowdSec so disable the Online API.
+        # - name: DISABLE_ONLINE_API
+        #   value: "true"
         - name: ENROLL_KEY
           valueFrom:
             secretKeyRef:
@@ -66,9 +71,20 @@ spec:
             secretKeyRef:
               name: crowdsec-secret
               key: BOUNCER_KEY_traefik
-        # # If it's a test, we don't want to share signals with CrowdSec so disable the Online API.
-        # - name: DISABLE_ONLINE_API
-        #   value: "true"
+
+        # COLLECTIONS are bundles of PARSERS and SCENARIOS
+        - name: COLLECTIONS
+          value:
+            "crowdsecurity/linux crowdsecurity/traefik"
+            # "crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/pgsql"
+
+        - name: PARSERS
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
+          value: "crowdsecurity/cri-logs crowdsecurity/docker-logs"
+
+        # - name: SCENARIOS
+        #   value: |
       dashboard:
         # -- Enable Metabase Dashboard (by default disabled)
         enabled: false
@@ -138,24 +154,10 @@ spec:
           size: 100Mi
       # -- environment variables from crowdsecurity/crowdsec docker image
       env:
-        # COLLECTIONS are bundles of PARSERS and SCENARIOS
-        - name: COLLECTIONS
-          value:
-            crowdsecurity/linux crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve
-            crowdsecurity/pgsql
-
-        - name: PARSERS
-          # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
-          # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
-          value: crowdsecurity/cri-logs crowdsecurity/docker-logs
-
-        # - name: SCENARIOS
-        #   value: |
-
         - name: TZ
           value: "${TIMEZONE}"
-
-        - name: DISABLE_ONLINE_API # default disable local API on the agent pod
+        # default disable local API on the agent pod
+        - name: DISABLE_ONLINE_API
           value: "false"
         # - name: LEVEL_TRACE
         #   value: "false"
