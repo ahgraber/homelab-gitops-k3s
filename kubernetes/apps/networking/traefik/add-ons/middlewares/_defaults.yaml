@@ -1,0 +1,39 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: default
+  namespace: networking
+spec:
+  chain:
+    middlewares:
+      - name: redirect-https
+      - name: headers-default
+      - name: headers-sts
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: internal
+  namespace: networking
+spec:
+  chain:
+    middlewares:
+      - name: default
+      - name: ips-rfc1918
+      - name: crowdsec-traefik-bouncer
+      - name: error-pages
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: external
+  namespace: networking
+spec:
+  chain:
+    middlewares:
+      - name: default
+      - name: ips-cloudflare
+      - name: plugin-cf-realip-xff
+      - name: crowdsec-traefik-bouncer
+      - name: error-pages

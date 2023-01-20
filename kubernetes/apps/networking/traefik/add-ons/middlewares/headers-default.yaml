@@ -6,14 +6,18 @@ metadata:
   namespace: networking
 spec:
   headers:
-    frameDeny: true
-    sslRedirect: true
+    # customRequestHeaders:
+    #   X-Forwarded-Proto: https
+    # sslRedirect: true # deprecated, use redirect middleware
     sslHost: "${SECRET_DOMAIN}"
-    browserXssFilter: true
+    frameDeny: true
+    customFrameOptionsValue: SAMEORIGIN # overrides frameDeny
     contentTypeNosniff: true
-    customFrameOptionsValue: SAMEORIGIN
-    customRequestHeaders:
-      X-Forwarded-Proto: https
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    contentSecurityPolicy: default-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN} # ; img-src *
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+    referrerPolicy: same-origin
+
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -22,7 +26,7 @@ metadata:
   namespace: networking
 spec:
   headers:
-    forceSTSHeader: true
+    stsSeconds: 31536000
     stsIncludeSubdomains: true
     stsPreload: true
-    stsSeconds: 31536000
+    forceSTSHeader: true

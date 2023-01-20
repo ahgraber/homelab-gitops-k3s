@@ -7,10 +7,17 @@ metadata:
 spec:
   errors:
     status:
-      - "300-300"
-      - "303-306"
-      - "308-599"
+      - "400"
+      - "401"
+      - "403-405"
+      - "407-413"
+      - "416"
+      - "418"
+      - "429"
+      - "500"
+      - "502-505"
     query: /{status}.html
     service:
       name: error-pages
+      namespace: networking
       port: 8080
