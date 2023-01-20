@@ -72,18 +72,6 @@ spec:
               name: crowdsec-secret
               key: BOUNCER_KEY_traefik
 
-        # COLLECTIONS are bundles of PARSERS and SCENARIOS
-        - name: COLLECTIONS
-          value: "crowdsecurity/linux crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve
-            crowdsecurity/pgsql" #
-
-        - name: PARSERS
-          # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
-          # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
-          value: "crowdsecurity/cri-logs crowdsecurity/docker-logs"
-
-        # - name: SCENARIOS
-        #   value: |
       dashboard:
         # -- Enable Metabase Dashboard (by default disabled)
         enabled: false
@@ -165,6 +153,20 @@ spec:
         # - name: LEVEL_INFO
         #   value: "false"
 
+        ### "Parsers and Scenarios must be present on the agents. It's not useful to deploy them on LAPI"
+        # COLLECTIONS are bundles of PARSERS and SCENARIOS
+        - name: COLLECTIONS
+          value:
+            "crowdsecurity/linux crowdsecurity/sshd crowdsecurity/traefik crowdsecurity/base-http-scenarios
+            crowdsecurity/http-cve crowdsecurity/pgsql"
+
+        - name: PARSERS
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
+          # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
+          value: "crowdsecurity/cri-logs crowdsecurity/docker-logs"
+
+        # - name: SCENARIOS
+        #   value: |
       # -- tolerations for agent
       tolerations:
         - key: "node-role.kubernetes.io/master"
