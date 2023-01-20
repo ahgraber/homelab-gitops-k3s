@@ -36,8 +36,14 @@ spec:
       - 10.0.0.0/8
       - 172.16.0.0/12
       - 192.168.0.0/16
-    # ipStrategy:
-    #   excludedIPs:
-    #     - 10.0.0.0/8
-    #     - 172.16.0.0/12
-    #     - 192.168.0.0/16
+    ipStrategy:
+      # ## scan the X-Forwarded-For header and use the IP located at the depth position (1-indexed, from the right)
+      # depth: 1
+      ## scan the X-Forwarded-For header and use the first IP not in the list.
+      excludedIPs:
+        - ${NET_NODE_CIDR}
+        - ${NET_POD_CIDR}
+        - ${NET_SVC_CIDR}
+        - ${LB_GATEWAY}
+        - ${LB_INGRESS}
+        - ${LB_AUTH}
