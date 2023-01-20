@@ -74,11 +74,8 @@ spec:
 
         # COLLECTIONS are bundles of PARSERS and SCENARIOS
         - name: COLLECTIONS
-          value: |
-            crowdsecurity/linux
-            crowdsecurity/traefik
-            crowdsecurity/base-http-scenarios
-            crowdsecurity/http-cve
+          value: >-
+            crowdsecurity/linux crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve
             crowdsecurity/pgsql
 
         - name: PARSERS
