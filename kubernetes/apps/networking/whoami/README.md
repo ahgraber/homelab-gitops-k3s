@@ -40,7 +40,7 @@ IP: fe80::44e3:4ff:fe93:6d38
 RemoteAddr: 10.42.47.219:56412
 # ...
 Cdn-Loop: cloudflare
-Cf-Connectig-Ip: 52.152.200.185  # my ip
+Cf-Connecting-Ip: 52.152.200.185  # my ip
 # ...
 Upgrade-Insecure-Requests: 1
 X-Forwarded-For: 52.152.200.185, 10.42.210.127  # real-ip, cloudflared
