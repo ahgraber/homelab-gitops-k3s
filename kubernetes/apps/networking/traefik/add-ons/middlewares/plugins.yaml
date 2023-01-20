@@ -6,7 +6,7 @@ metadata:
   namespace: networking
 spec:
   plugin:
-    real-ip:
+    get-real-ip:
       Proxy:
         # https://github.com/Paxxs/traefik-get-real-ip/issues/6
         # proxyHeadername: proxyHeadervalue determine when rule is applied
@@ -22,7 +22,7 @@ metadata:
   namespace: networking
 spec:
   plugin:
-    header-transform:
+    htransformation:
       Rules:
         # https://plugins.traefik.io/plugins/62947319108ecc83915d7789/header-transformation
         # https://github.com/tomMoulard/htransformation
@@ -33,4 +33,24 @@ spec:
           Values:
             - "^CF-Connecting-IP"
             - "^X-Forwarded-For"
-          Type: "Set"
+          Type: "Join"
+        # ###
+        # - Name: 'Temp'
+        #   Header: 'X-Temp'
+        #   HeaderPrefix: "^" # identfies we want to treat value as pointer to a header
+        #   Value: "^CF-Connecting-IP"
+        #   Type: 'Set'
+        # - Name: 'Temp join'
+        #   Header: 'X-Temp'
+        #   HeaderPrefix: "^" # identfies we want to treat value as pointer to a header
+        #   Sep: ","
+        #   Values:
+        #     - "^X-Forwarded-For"
+        #   Type: "Join"
+        # - Name: 'Set XFF'
+        #   Header: 'X-Forwarded-For'
+        #   Value: '^X-Temp'
+        #   Type: 'Set'
+        # - Name: 'Remove Temp'
+        #   Header: 'X-Temp'
+        #   Type: 'Del'
