@@ -13,10 +13,10 @@ spec:
       kind: Rule
       middlewares:
         # - name: ips-cloudflare
-        - name: plugin-cf-realip-xff
-        - name: crowdsec-traefik-bouncer
+        # - name: plugin-cf-realip-xff
+        # - name: crowdsec-traefik-bouncer
+        - name: internal
         # - name: basicauth
-        # - name: error-pages
       services:
         - name: whoami
           namespace: networking

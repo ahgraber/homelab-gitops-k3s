@@ -132,18 +132,18 @@ spec:
         exposedPort: 443
         ## Trust forwarded  headers information (X-Forwarded-*) from following IPs/rances
         forwardedHeaders:
-          # insecure: false
-          trustedIPs:
-            ## cluster ips
-            - ${NET_NODE_CIDR}
-            - ${NET_POD_CIDR}
-            - ${NET_SVC_CIDR}
-            - ${LB_GATEWAY}
-            - ${LB_INGRESS}
-            - ${LB_AUTH}
-            # ## rfc1918
-            # ## https://www.cloudflare.com/ips-v4
-            # ## https://www.cloudflare.com/ips-v6
+          insecure: true
+          # trustedIPs:
+          #   ## cluster ips
+          #   - ${NET_NODE_CIDR}
+          #   - ${NET_POD_CIDR}
+          #   - ${NET_SVC_CIDR}
+          #   - ${LB_GATEWAY}
+          #   - ${LB_INGRESS}
+          #   - ${LB_AUTH}
+          #   # ## rfc1918
+          #   # ## https://www.cloudflare.com/ips-v4
+          #   # ## https://www.cloudflare.com/ips-v6
 
         ## Enable the Proxy Protocol header parsing for the entry point
         # proxyProtocol:
