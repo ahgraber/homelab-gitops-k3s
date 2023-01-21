@@ -9,13 +9,10 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`flux-receiver.${SECRET_DOMAIN}`) && PathPrefix(`/hook`)
-      kind: Rule
-      # Enable auth middleware
+    - kind: Rule
+      match: Host(`flux-receiver.${SECRET_DOMAIN}`) && PathPrefix(`/hook`)
       middlewares:
         - name: crowdsec-traefik-bouncer
-        # - name: ips-rfc1918
-        # # - name: basicauth
       services:
         - name: webhook-receiver
           namespace: flux-system

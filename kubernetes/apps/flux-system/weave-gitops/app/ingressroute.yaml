@@ -9,12 +9,11 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`gitops.${SECRET_DOMAIN}`)
-      kind: Rule
+    - kind: Rule
+      match: Host(`gitops.${SECRET_DOMAIN}`)
       middlewares:
-        - name: crowdsec-traefik-bouncer
-        - name: ips-rfc1918
-      #   # - name: basicauth
+        - name: default
+        # - name: basicauth
       services:
         - name: weave-gitops
           namespace: flux-system

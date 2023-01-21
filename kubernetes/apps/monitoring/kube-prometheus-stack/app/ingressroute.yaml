@@ -9,12 +9,10 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`alertmanager.${SECRET_DOMAIN}`)
-      kind: Rule
-      # Enable auth middleware
+    - kind: Rule
+      match: Host(`alertmanager.${SECRET_DOMAIN}`)
       middlewares:
-        - name: crowdsec-traefik-bouncer
-        - name: ips-rfc1918
+        - name: default
         # - name: basicauth
       services:
         - name: kps-alertmanager
@@ -35,12 +33,10 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`prometheus.${SECRET_DOMAIN}`)
-      kind: Rule
-      # Enable auth middleware
+    - kind: Rule
+      match: Host(`prometheus.${SECRET_DOMAIN}`)
       middlewares:
-        - name: crowdsec-traefik-bouncer
-        - name: ips-rfc1918
+        - name: default
         # - name: basicauth
       services:
         - name: kps-prometheus
