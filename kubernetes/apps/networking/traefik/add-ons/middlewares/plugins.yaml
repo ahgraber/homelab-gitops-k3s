@@ -8,9 +8,9 @@ spec:
   plugin:
     get-real-ip:
       Proxy:
-        # https://github.com/Paxxs/traefik-get-real-ip/issues/6
-        # proxyHeadername: proxyHeadervalue determine when rule is applied
-        - proxyHeadername: Cf-Warp-Tag-Id
-          proxyHeadervalue: 145b8bac-18f1-4432-b4e0-14124c72b1ab
+        ## Create proxyHeadername: proxyHeadervalue in cloudflare dashboard > Rules > Transform rules
+        ## proxyHeadername: proxyHeadervalue determine when rule is applied
+        - proxyHeadername: Id-Cf-Tunnel-Source
+          proxyHeadervalue: id-cf-realip-xff
           realIP: Cf-Connecting-Ip
           overwriteXFF: true
