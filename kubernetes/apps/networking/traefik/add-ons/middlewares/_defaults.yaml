@@ -33,7 +33,7 @@ spec:
   chain:
     middlewares:
       - name: default
-      - name: ips-cloudflare
+      # - name: ips-cloudflare # cloudflared tunnel skips proxying thru CF endpoints?
       - name: plugin-cf-realip-xff
       - name: crowdsec-traefik-bouncer
       - name: error-pages
