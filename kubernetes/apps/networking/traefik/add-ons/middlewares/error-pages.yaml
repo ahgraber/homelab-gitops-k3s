@@ -7,8 +7,9 @@ metadata:
 spec:
   errors:
     # https://github.com/traefik/traefik/issues/9061
-    status: # ["400", "401", "403-405", "407-413", "416", "418", "429", "500", "502-505"]
-      - "400-599"
+    status:
+      ["400", "401", "403-405", "407-413", "416", "418", "429", "500", "502-505"]
+      # - "400-599"
     query: /{status}.html
     service:
       name: error-pages

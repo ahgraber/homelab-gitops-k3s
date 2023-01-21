@@ -8,8 +8,8 @@ Creates a `default` middleware by:
 
 1. Forcing http --> https
 2. Setting standardized headers
-
-Standardizes `internal` and `external` headers
+3. Sets X-Real-Ip correctly from Cloudflare tunnel
+4. Adds redirects to error pages
 
 ## basicauth
 
