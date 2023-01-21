@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./error-pages/
   - ./middlewares/
-  # - ./ingressroute.yaml # disable and just kube proxy it if needed
+  - ./ingressroute.yaml
