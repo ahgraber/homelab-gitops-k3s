@@ -9,7 +9,7 @@ spec:
     # customRequestHeaders:
     #   X-Forwarded-Proto: https
     # sslRedirect: true # deprecated, use redirect middleware
-    sslHost: "${SECRET_DOMAIN}"
+    # sslHost: "${SECRET_DOMAIN}" # deprecated, use redirect middleware
     frameDeny: true
     customFrameOptionsValue: SAMEORIGIN # overrides frameDeny
     contentTypeNosniff: true
