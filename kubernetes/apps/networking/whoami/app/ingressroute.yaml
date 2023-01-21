@@ -14,7 +14,6 @@ spec:
       middlewares:
         - name: default
         # - name: basicauth
-      priority: 1
       services:
         - name: whoami
           namespace: networking
