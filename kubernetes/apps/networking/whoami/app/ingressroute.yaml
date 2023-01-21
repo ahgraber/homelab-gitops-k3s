@@ -9,12 +9,22 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`whoami.${SECRET_DOMAIN}`)
-      kind: Rule
+    ## https://github.com/traefik/traefik/issues/7735#issuecomment-758545590
+    - kind: Rule
+      # if includes X-Forwarded-For header
+      match: >
+        Host(`whoami.${SECRET_DOMAIN}`) && HeadersRegexp(`X-Forwarded-For`, `.+`)
       middlewares:
-        # - name: ips-cloudflare
-        # - name: plugin-cf-realip-xff
-        # - name: crowdsec-traefik-bouncer
+        - name: external
+        # - name: basicauth
+      services:
+        - name: whoami
+          namespace: networking
+          port: 80
+    - kind: Rule
+      match: >
+        Host(`whoami.${SECRET_DOMAIN}`) && ClientIP(`10.1.0.0/16`, `192.168.1.0/24`)
+      middlewares:
         - name: internal
         # - name: basicauth
       services:

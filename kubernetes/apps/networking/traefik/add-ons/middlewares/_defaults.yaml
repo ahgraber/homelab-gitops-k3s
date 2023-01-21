@@ -20,7 +20,7 @@ spec:
   chain:
     middlewares:
       - name: default
-      - name: ips-rfc1918
+      # - name: ips-rfc1918
       - name: crowdsec-traefik-bouncer
       - name: error-pages
 ---
