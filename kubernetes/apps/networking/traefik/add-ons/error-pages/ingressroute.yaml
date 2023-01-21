@@ -15,7 +15,7 @@ spec:
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
-      priority: 999
+      priority: 1
       services:
         - name: error-pages
           namespace: networking
