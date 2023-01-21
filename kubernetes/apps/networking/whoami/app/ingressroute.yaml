@@ -24,7 +24,7 @@ spec:
     - kind: Rule
       # require cloudflared pod IDs
       match: >
-        Host(`whoami.${SECRET_DOMAIN}`) && ClientIP(`10.42.42.40`, `10.42.42.41`, `10.42.42.42`)
+        Host(`whoami.${SECRET_DOMAIN}`) && ClientIP(`10.42.0.0/16`)
       middlewares:
         - name: external
         # - name: basicauth
