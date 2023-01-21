@@ -1,0 +1,11 @@
+---
+apiVersion: projectcalico.org/v3
+kind: IPReservation
+metadata:
+  name: pod-reservations
+spec:
+  reservedCIDRs:
+    ## cloudflared
+    - 10.42.42.40
+    - 10.42.42.41
+    - 10.42.42.42
