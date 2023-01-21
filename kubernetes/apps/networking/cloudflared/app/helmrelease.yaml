@@ -45,9 +45,6 @@ spec:
       - /etc/cloudflared/config/config.yaml
       - run
 
-    podAnnotations:
-      cni.projectcalico.org/ipAddrs: '["10.42.42.40","10.42.42.41","10.42.42.42"]'
-
     ingress:
       main:
         enabled: false
