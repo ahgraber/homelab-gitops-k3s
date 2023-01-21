@@ -10,7 +10,8 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: HostRegexp(`{host:.+}`)
+      # match: HostRegexp(`{host:.+}`)
+      match: HostRegexp(`${SECRET_DOMAIN}`, `{subdomain:[a-z]+}.${SECRET_DOMAIN}`)
       # Enable auth middleware
       middlewares:
         - name: crowdsec-traefik-bouncer
