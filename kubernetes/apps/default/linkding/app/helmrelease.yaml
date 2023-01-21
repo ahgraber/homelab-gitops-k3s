@@ -73,6 +73,8 @@ spec:
             key: HOST
       - name: LD_DB_PORT
         value: 5432
+      - name: LD_FAVICON_PROVIDER
+        value: https://t1.gstatic.com/faviconV2?url={url}&client=SOCIAL&type=FAVICON
     envFrom:
       - secretRef:
           name: linkding-secret
