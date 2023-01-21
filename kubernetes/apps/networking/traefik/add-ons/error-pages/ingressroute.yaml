@@ -6,7 +6,8 @@ metadata:
   namespace: networking
 spec:
   entryPoints:
-    - metrics
+    - web
+    - websecure
   routes:
     - kind: Rule
       match: HostRegexp(`{host:.+}`)
