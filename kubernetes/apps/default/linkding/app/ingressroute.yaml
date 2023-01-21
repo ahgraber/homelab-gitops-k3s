@@ -9,14 +9,11 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`linkding.${SECRET_DOMAIN}`)
-      kind: Rule
-      # Enable auth middleware
+    - kind: Rule
+      match: Host(`linkding.${SECRET_DOMAIN}`)
       middlewares:
+        - name: default
         # - name: basicauth
-        - name: crowdsec-traefik-bouncer
-        - name: ips-cloudflare
-        # - name: ips-rfc1918
       services:
         - name: linkding
           namespace: default

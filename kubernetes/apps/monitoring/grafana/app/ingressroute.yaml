@@ -9,12 +9,10 @@ spec:
     # - web
     - websecure
   routes:
-    - match: Host(`grafana.${SECRET_DOMAIN}`)
-      kind: Rule
-      # Enable auth middleware
+    - kind: Rule
+      match: Host(`grafana.${SECRET_DOMAIN}`)
       middlewares:
-        - name: crowdsec-traefik-bouncer
-        - name: ips-rfc1918
+        - name: default
         # - name: basicauth
       services:
         - name: *app

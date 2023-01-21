@@ -2,6 +2,9 @@
 
 - [Traefik Middlewares](#traefik-middlewares)
 
+> Middlewares are applied in the same order as their declaration in router
+>
+
 ## _defaults
 
 Creates a `default` middleware by:
