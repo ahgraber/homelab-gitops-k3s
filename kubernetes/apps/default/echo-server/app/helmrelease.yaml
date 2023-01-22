@@ -1,0 +1,41 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: echo-server
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://ealenn.github.io/charts
+      chart: echo-server
+      version: 0.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: ealenn-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: ealen/echo-server
+      tag: 0.7.0
+
+    ingress:
+      enabled: false
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64M
+      limits:
+        memory: 96M
+
+    annotations:
+      reloader.stakater.com/search: "true"
