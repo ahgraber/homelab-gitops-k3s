@@ -33,14 +33,14 @@ data:
     ### Proxy traefik to the k8s ingress (Traefik) to hand off to Services
     # internet --> cloudflared tunnel --> local DNS --> ingress --> service
     ### NOTE: relies on split-brain DNS / local overrides
-    - hostname: httpbin.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443 # https://httpbin.${SECRET_DOMAIN}
+    # - hostname: httpbin.${SECRET_DOMAIN}
+    #   service: https://traefik.networking.svc.cluster.local:443
     - hostname: hammond.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443 # https://hammond.${SECRET_DOMAIN}
+      service: https://traefik.networking.svc.cluster.local:443
     - hostname: linkding.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443 # https://linkding.${SECRET_DOMAIN}
-    - hostname: whoami.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443 # https://whoami.${SECRET_DOMAIN}
+      service: https://traefik.networking.svc.cluster.local:443
+    # - hostname: whoami.${SECRET_DOMAIN}
+    #   service: https://traefik.networking.svc.cluster.local:443
 
     ### Proxy traffic to the k8s Services directly
     - hostname: flux-receiver.${SECRET_DOMAIN}
