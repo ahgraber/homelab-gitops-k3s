@@ -1,0 +1,52 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: httpbin
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    global:
+      # nameOverride: httpbin
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      repository: kennethreitz/httpbin
+      tag: latest
+
+    # env:
+    #   ...
+
+    ingress:
+      main:
+        enabled: false
+    service:
+      main:
+        ports:
+          http:
+            port: 80
+
+    resources:
+      requests:
+        cpu: 15m
+        memory: 105M
+      limits:
+        memory: 105M

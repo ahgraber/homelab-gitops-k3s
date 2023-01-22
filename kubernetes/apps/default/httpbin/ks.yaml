@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: apps-default-httpbin
+  namespace: flux-system
+  labels:
+    substitution.flux.home.arpa/enabled: "true"
+spec:
+  dependsOn:
+    - name: apps-networking-traefik
+  path: ./kubernetes/apps/default/httpbin/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m

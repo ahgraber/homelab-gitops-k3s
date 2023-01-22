@@ -9,4 +9,7 @@ resources:
   - ./postgres/
   - ./redis/
   # Flux-Kustomizations | Apps
+  - ./cyberchef/ks.yaml
+  - ./echo-server/ks.yaml
+  - ./httpbin/ks.yaml
   - ./linkding/ks.yaml
