@@ -14,7 +14,8 @@ spec:
     customFrameOptionsValue: SAMEORIGIN # overrides frameDeny
     contentTypeNosniff: true
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    contentSecurityPolicy: default-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN} # ; img-src *
+    contentSecurityPolicy: >-
+      default-src 'self'; img-src 'self' * data:; style-src 'self' 'unsafe-inline' *;
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
     referrerPolicy: same-origin
 
