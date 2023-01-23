@@ -89,10 +89,6 @@ spec:
 
   monitoring:
     enablePodMonitor: true
-    # note: this is 90% the same as the default monitoring config auto-deployed with the operator
-    customQueriesConfigMap:
-      - name: cnpg-basic-monitoring
-        key: custom-queries
 
   nodeMaintenanceWindow:
     inProgress: false
