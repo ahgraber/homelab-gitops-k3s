@@ -1,0 +1,131 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app miniflux
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    global:
+      annotations:
+        reloader.stakater.com/auto: "true"
+
+    # controller:
+    #   replicas: 3
+    #   strategy: RollingUpdate
+
+    image:
+      repository: docker.io/miniflux/miniflux
+      tag: 2.0.41
+
+    env:
+      - name: BASE_URL
+        value: "https://miniflux.${SECRET_DOMAIN}"
+      - name: CREATE_ADMIN
+        value: "1"
+      - name: DEBUG
+        value: "1"
+      - name: LOG_DATE_TIME
+        value: "1"
+      - name: METRICS_ALLOWED_NETWORKS
+        value: ["${NET_POD_CIDR}", "${NET_SVC_CIDR}"]
+      - name: METRICS_COLLECTOR
+        value: "1"
+      # - name: OAUTH2_CLIENT_ID
+      #   value: miniflux
+      # - name: OAUTH2_CLIENT_SECRET
+      #   value: "${SECRET_MINIFLUX_OAUTH_CLIENT_SECRET}"
+      # - name: OAUTH2_USER_CREATION
+      #   value: "1"
+      # - name: OAUTH2_OIDC_DISCOVERY_ENDPOINT
+      #   value: "https://auth.${SECRET_DOMAIN}"
+      # - name: OAUTH2_PROVIDER
+      #   value: oidc
+      # - name: OAUTH2_REDIRECT_URL
+      #   value: "https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback"
+      - name: POLLING_SCHEDULER
+        value: entry_frequency
+      - name: POLLING_FREQUENCY
+        value: "15"
+      - name: RUN_MIGRATIONS
+        value: "1"
+      # - name: FETCH_YOUTUBE_WATCH_TIME
+      #   value: "1"
+      # - name: INVIDIOUS_INSTANCE
+      #   value: "yewtu.be"
+      - name: POSTGRES_USER
+        valueFrom:
+          secretKeyRef:
+            name: database-miniflux-user
+            key: LOGIN
+      - name: POSTGRES_PASS
+        valueFrom:
+          secretKeyRef:
+            name: database-miniflux-user
+            key: PASSWORD
+      - name: DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            name: database-miniflux-user
+            key: HOST
+    envFrom:
+      - secretRef:
+          name: miniflux-secret
+    ingress:
+      main:
+        enabled: false
+
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8080
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 15m
+            scrapeTimeout: 10s
+
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /healthcheck
+            port: *port
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
+        enabled: false
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 100Mi
+      limits:
+        memory: 750Mi
