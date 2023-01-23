@@ -45,7 +45,7 @@ spec:
       - name: LOG_DATE_TIME
         value: "1"
       - name: METRICS_ALLOWED_NETWORKS
-        value: ["${NET_POD_CIDR}", "${NET_SVC_CIDR}"]
+        value: "${NET_POD_CIDR}"
       - name: METRICS_COLLECTOR
         value: "1"
       # - name: OAUTH2_CLIENT_ID
