@@ -84,7 +84,7 @@ spec:
         valueFrom:
           secretKeyRef:
             name: database-miniflux-user
-            key: HOST
+            key: POSTGRES_URL
     envFrom:
       - secretRef:
           name: miniflux-secret
