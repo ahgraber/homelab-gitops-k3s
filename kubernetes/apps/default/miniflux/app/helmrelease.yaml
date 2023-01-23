@@ -65,21 +65,23 @@ spec:
       #   value: "1"
       # - name: INVIDIOUS_INSTANCE
       #   value: "yewtu.be"
-      # POSTGRES_USER:
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: database-miniflux-user
-      #       key: LOGIN
-      # POSTGRES_PASS:
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: database-miniflux-user
-      #       key: PASSWORD
-      DATABASE_URL:
+      POSTGRES_USER:
         valueFrom:
           secretKeyRef:
             name: database-miniflux-user
-            key: POSTGRES_URL
+            key: LOGIN
+      POSTGRES_PASS:
+        valueFrom:
+          secretKeyRef:
+            name: database-miniflux-user
+            key: PASSWORD
+      DATABASE_URL:
+        "postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASS
+        }}@postgres-rw.default.svc.cluster.local/miniflux?sslmode=disable"
+        # valueFrom:
+        #   secretKeyRef:
+        #     name: database-miniflux-user
+        #     key: POSTGRES_URL
 
     ingress:
       main:
