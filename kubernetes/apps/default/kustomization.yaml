@@ -13,3 +13,4 @@ resources:
   - ./echo-server/ks.yaml
   - ./httpbin/ks.yaml
   - ./linkding/ks.yaml
+  - ./miniflux/ks.yaml
