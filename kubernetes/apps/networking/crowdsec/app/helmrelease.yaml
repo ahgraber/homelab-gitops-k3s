@@ -105,7 +105,7 @@ spec:
       nodeSelector:
         node-role.kubernetes.io/control-plane: "true"
       tolerations:
-        - key: "node-role.kubernetes.io/master"
+        - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
 
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
@@ -169,7 +169,7 @@ spec:
         #   value: |
       # -- tolerations for agent
       tolerations:
-        - key: "node-role.kubernetes.io/master"
+        - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
 
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)

@@ -31,7 +31,7 @@ spec:
         reloader.stakater.com/search: "true"
       tolerations:
         # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
+        #   key: node-role.kubernetes.io/control-plane
         #   operator: Exists
         - effect: "NoExecute"
           operator: "Exists"
@@ -42,7 +42,7 @@ spec:
         reloader.stakater.com/search: "true"
       tolerations:
         # - effect: NoSchedule
-        #   key: node-role.kubernetes.io/master
+        #   key: node-role.kubernetes.io/control-plane
         #   operator: Exists
         - effect: "NoExecute"
           operator: "Exists"
