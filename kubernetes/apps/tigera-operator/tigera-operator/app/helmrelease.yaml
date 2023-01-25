@@ -9,7 +9,6 @@ spec:
   chart:
     spec:
       chart: tigera-operator
-      # https://github.com/projectcalico/calico/issues/7003
       version: v3.25.0
       sourceRef:
         kind: HelmRepository
@@ -56,3 +55,12 @@ spec:
         memory: 200Mi
       limits:
         memory: 200Mi
+
+    tolerations:
+      - effect: NoExecute
+        operator: Exists
+      - effect: NoSchedule
+        operator: Exists
+
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: "true"
