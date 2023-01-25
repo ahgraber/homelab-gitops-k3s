@@ -60,7 +60,8 @@ spec:
     retentionPolicy: 30d
     barmanObjectStore:
       endpointURL: https://${SECRET_S3_ENDPOINT}
-      destinationPath: s3://postgres-v2/
+      destinationPath: s3://postgres/
+      serverName: postgres-v2
       s3Credentials:
         accessKeyId:
           name: postgres-s3-secret
