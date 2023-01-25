@@ -156,9 +156,13 @@ spec:
         ### "Parsers and Scenarios must be present on the agents. It's not useful to deploy them on LAPI"
         # COLLECTIONS are bundles of PARSERS and SCENARIOS
         - name: COLLECTIONS
-          value:
-            "crowdsecurity/linux crowdsecurity/sshd crowdsecurity/traefik crowdsecurity/base-http-scenarios
-            crowdsecurity/http-cve crowdsecurity/pgsql"
+          value: >-
+            crowdsecurity/linux
+            crowdsecurity/sshd
+            crowdsecurity/traefik
+            crowdsecurity/base-http-scenarios
+            crowdsecurity/http-cve
+            crowdsecurity/pgsql
 
         - name: PARSERS
           # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs

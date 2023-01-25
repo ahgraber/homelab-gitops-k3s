@@ -59,7 +59,7 @@ spec:
           labels:
             severity: critical
           annotations:
-            description:
+            description: >
               "Depending on the rate limit, cert-manager may be unable to generate certificates for up to a week."
             runbook_url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/blob/master/RUNBOOK.md#certmanagerhittingratelimits
             summary: "Cert manager hitting LetsEncrypt rate limits."
