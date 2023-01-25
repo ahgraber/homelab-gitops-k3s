@@ -6,3 +6,12 @@ singleQuote: false
 quoteProps: "consistent"
 printWidth: 119
 proseWrap: "always"
+overrides:
+  - files: "*.md"
+    options:
+      parser: markdown
+      # proseWrap: "preserve"
+  - files: "*.yaml"
+    options:
+      parser: yaml
+      proseWrap: "preserve"

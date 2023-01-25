@@ -19,9 +19,9 @@ vars:
 
 tasks:
   list:
-    desc:
-      List all snapshots taken by restic for a given ReplicationSource (ex. task volsync:list rsrc=plex
-      [namespace=default])
+    desc: >
+      List all snapshots taken by restic for a given ReplicationSource
+      (ex. task volsync:list rsrc=plex [namespace=default])
     silent: true
     cmds:
       - envsubst < <(cat {{.listJobTemplate}}) | kubectl apply -f -
