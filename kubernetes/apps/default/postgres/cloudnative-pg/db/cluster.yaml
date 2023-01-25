@@ -29,32 +29,32 @@ spec:
     storageClass: local-path
 
   bootstrap:
-    initdb:
-      # set up 'default' db/owner
-      database: default
-      owner: default
-      # secret:
-      #   name: <app>-user-secret
-    # # Alternative bootstrap method: start from a backup
-    # recovery:
-    #   source: &active-cluster postgres-v2
+    # initdb:
+    #   # set up 'default' db/owner
+    #   database: default
+    #   owner: default
+    #   # secret:
+    #   #   name: <app>-user-secret
+    ## Alternative bootstrap method: start from a backup
+    recovery:
+      source: &s3-backup postgres
 
-  # # externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: *active-cluster
-  #     barmanObjectStore:
-  #       endpointURL: https://${SECRET_S3_ENDPOINT}
-  #       destinationPath: s3://postgres/
-  #       s3Credentials:
-  #         accessKeyId:
-  #           name: postgres-s3-secret
-  #           key: S3_ACCESS_KEY
-  #         secretAccessKey:
-  #           name: postgres-s3-secret
-  #           key: S3_SECRET_KEY
-  #       wal:
-  #         compression: bzip2
-  #         maxParallel: 8
+  # externalClusters is needed when recovering from an existing cnpg cluster
+  externalClusters:
+    - name: *s3-backup
+      barmanObjectStore:
+        endpointURL: https://${SECRET_S3_ENDPOINT}
+        destinationPath: s3://postgres/
+        s3Credentials:
+          accessKeyId:
+            name: postgres-s3-secret
+            key: S3_ACCESS_KEY
+          secretAccessKey:
+            name: postgres-s3-secret
+            key: S3_SECRET_KEY
+        wal:
+          compression: bzip2
+          maxParallel: 8
 
   backup:
     retentionPolicy: 30d
