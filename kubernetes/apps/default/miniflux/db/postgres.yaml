@@ -2,18 +2,18 @@
 apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
-  name: miniflux-db
+  name: &app miniflux
   namespace: default
 spec:
-  database: miniflux # db name in postgres cluster
+  database: *app # db name in postgres cluster
 ---
 apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
-  name: miniflux-user
+  name: &app miniflux
   namespace: default
 spec:
-  role: miniflux
-  database: miniflux-db # references the CR
+  role: *app
+  database: *app # references the CR
   secretName: database
   privileges: OWNER

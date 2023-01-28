@@ -2,18 +2,18 @@
 apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
-  name: linkding-db
+  name: &app linkding
   namespace: default
 spec:
-  database: linkding # db name in postgres cluster
+  database: *app # db name in postgres cluster
 ---
 apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
-  name: linkding-user
+  name: &app linkding
   namespace: default
 spec:
-  role: linkding
-  database: linkding-db # references the CR
+  role: *app
+  database: *app # references the CR
   secretName: database
   privileges: OWNER
