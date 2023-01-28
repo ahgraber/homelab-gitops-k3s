@@ -7,8 +7,6 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  dependsOn:
-    - name: apps-debug-dnsutils
   path: ./kubernetes/apps/debug/dnsutils/app
   prune: true
   sourceRef:
