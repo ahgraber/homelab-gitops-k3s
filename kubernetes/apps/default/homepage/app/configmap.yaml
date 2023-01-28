@@ -129,10 +129,6 @@ data:
             href: https://goldilocks.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
             description: Helps identify a starting point for resource requests and limits
-        - Scrutiny:
-            href: https://scrutiny.${SECRET_DOMAIN}
-            icon: scrutiny.png
-            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
         - Alertmanager:
             href: https://alertmanager.${SECRET_DOMAIN}
             icon: alertmanager.png
@@ -163,6 +159,10 @@ data:
             href: https://rook.${SECRET_DOMAIN}
             icon: ceph.png
             # description: This is my service
+        - Scrutiny:
+            href: https://scrutiny.${SECRET_DOMAIN}
+            icon: scrutiny.png
+            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
     - Databases:
         - pgAdmin:
             href: https://pgadmin.${SECRET_DOMAIN}
