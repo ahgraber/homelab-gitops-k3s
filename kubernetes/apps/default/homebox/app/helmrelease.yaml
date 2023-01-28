@@ -29,7 +29,7 @@ spec:
 
     image:
       repository: ghcr.io/hay-kot/homebox
-      tag: v0.6.0
+      tag: v0.7.0
       # tag: frontend-v1.0.0beta-5
     env:
       TZ: ${TIMEZONE}
