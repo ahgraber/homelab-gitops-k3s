@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: &app mealie
+  namespace: default
+spec:
+  sourcePVC: *app
+  trigger:
+    schedule: "0 0 * * *"
+  restic:
+    repository: mealie-restic-secret
+    retain:
+      daily: 5
+      weekly: 4
+      monthly: 3
+      yearly: 1
+    pruneIntervalDays: 10
+    cacheCapacity: 2Gi
+    storageClassName: ceph-block # same as source
+    copyMethod: Snapshot
+    volumeSnapshotClassName: csi-ceph-block

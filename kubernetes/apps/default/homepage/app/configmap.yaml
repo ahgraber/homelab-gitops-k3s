@@ -1,0 +1,168 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: &app homepage
+  namespace: default
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  settings.yaml: |
+    ---
+    title: Dashboard
+    favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/kubernetes/apps/default/homepage/app/icons/favicon.png
+    theme: dark
+    color: neutral
+    layout: # key by group name in services.yaml
+      Infrastructure:
+        # style: row
+        # columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Monitoring:
+        # style: row
+        # columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Storage:
+        # style: row
+        # columns: 4
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Databases:
+        # style: row
+        # columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+      Apps & Services:
+        # style: row
+        # columns: 3
+        # icon: home-assistant.png
+        # headerStyle: boxed
+
+  widgets.yaml: |
+    ---
+    # - logo:
+    - search:
+        provider: custom
+        url: https://search.unlocked.link/search?q=
+        target: _blank
+        # focus: true # Optional, will set focus to the search bar on page load
+    - openmeteo:
+        label: Home # optional
+        latitude: 40.008378
+        longitude: -75.290233
+        units: imperial # or metric
+        cache: 5 # Time in minutes to cache API responses, to stay within limits
+
+  services.yaml: |
+    ---
+    - Infrastructure:
+        - OPNsense:
+            href: https://opnsense.${SECRET_DOMAIN}
+            icon: opnsense.png
+            description: NineRealmLabs Router
+            # widget:
+            #   type: opnsense
+            #   url: https://10.2.0.1.${SECRET_DOMAIN}
+            #   username: apikey
+            #   password: apisecret
+        - AdGuard:
+            href: https://opnsense.${SECRET_DOMAIN}:44353
+            icon: adguard-home.png
+            description: DNS Adblocking
+            widget:
+              type: adguard
+              url: https://10.2.0.1:44353
+              username: ${SECRET_ADMIN_USER}
+              password: ${SECRET_DEFAULT_PWD}
+        - HomeAssistant:
+            href: https://homeassistant.${SECRET_DOMAIN}:8123
+            icon: home-assistant-circle.png
+            description: Smart Home Automation
+    - Monitoring:
+        - Karma:
+            href: https://karma.${SECRET_DOMAIN}
+            icon: alertmanager.png
+            description: Alertmanager dashboard
+        - Grafana:
+            href: https://grafana.${SECRET_DOMAIN}
+            icon: grafana.png
+            # description: This is my service
+        - Goldilocks:
+            href: https://goldilocks.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
+            description: Helps identify a starting point for resource requests and limits
+        - Scrutiny:
+            href: https://scrutiny.${SECRET_DOMAIN}
+            icon: scrutiny.png
+            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
+        - Alertmanager:
+            href: https://alertmanager.${SECRET_DOMAIN}
+            icon: alertmanager.png
+            # description: This is my service
+        - Prometheus:
+            href: https://prometheus.${SECRET_DOMAIN}
+            icon: prometheus.png
+            # description: This is my service
+        - Crowdsec:
+            href: https://app.crowdsec.net/
+            icon: crowdsec.png
+            description: Crowd-based cyber security threat detection & mitigation
+    - Storage:
+        - TrueNAS:
+            href: https://truenas.${SECRET_DOMAIN}
+            icon: truenas-scale.png
+            # description: This is my service
+            widget:
+                type: truenas
+                url: https://${SECRET_TRUENAS_IP}
+                username: ${SECRET_ADMIN_USER}
+                password: ${SECRET_DEFAULT_PWD}
+        - MinIO:
+            href: https://truenas.${SECRET_DOMAIN}:9001
+            icon: minio.png
+            # description: This is my service
+        - Rook-Ceph:
+            href: https://rook.${SECRET_DOMAIN}
+            icon: ceph.png
+            # description: This is my service
+    - Databases:
+        - pgAdmin:
+            href: https://pgadmin.${SECRET_DOMAIN}
+            icon: pgadmin.png
+            # description: This is my service
+        - RedisInsight:
+            href: https://redisinsight.${SECRET_DOMAIN}
+            icon: redis.png
+            # description: This is my service
+    - Apps & Services:
+        - ChangeDetection:
+            href: https://changedetection.${SECRET_DOMAIN}
+            icon: changedetection-io.png
+            description: Monitor which websites had a text change (for free)
+        - Homebox:
+            href: https://homebox.${SECRET_DOMAIN}
+            icon: homebox.png
+            description: A simple home inventory system
+        - Linkding:
+            href: https://linkding.${SECRET_DOMAIN}
+            icon: linkding.png
+            description: A bookmark manager with read-it-later and archiving functionality
+        - Mealie:
+            href: https://mealie.${SECRET_DOMAIN}
+            icon: mealie.png
+            description: A self-hosted recipe manager and meal planner
+        - Miniflux:
+            href: https://miniflux.${SECRET_DOMAIN}
+            icon: miniflux.png
+            description: A self-hosted rss feed reader
+
+  bookmarks.yaml: |
+    ---
+
+  docker.yaml: |
+    ---
