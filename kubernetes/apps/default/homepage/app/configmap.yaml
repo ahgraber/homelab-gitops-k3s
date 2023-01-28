@@ -18,30 +18,25 @@ data:
     color: neutral
     layout: # key by group name in services.yaml
       Apps & Services:
-        # style: row
-        columns: 2
+        style: row
+        columns: 3
         # icon: home-assistant.png
-        # headerStyle: boxed
       Infrastructure:
         # style: row
         # columns: 3
         # icon: home-assistant.png
-        # headerStyle: boxed
       Monitoring:
         # style: row
         # columns: 3
         # icon: home-assistant.png
-        # headerStyle: boxed
       Storage:
         # style: row
         # columns: 4
         # icon: home-assistant.png
-        # headerStyle: boxed
       Databases:
         # style: row
         # columns: 3
         # icon: home-assistant.png
-        # headerStyle: boxed
 
   widgets.yaml: |
     ---
