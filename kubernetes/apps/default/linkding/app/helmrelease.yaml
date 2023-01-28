@@ -45,22 +45,22 @@ spec:
       LD_DB_DATABASE:
         valueFrom:
           secretKeyRef:
-            name: database-linkding-user
+            name: database-linkding
             key: DATABASE_NAME
       LD_DB_USER:
         valueFrom:
           secretKeyRef:
-            name: database-linkding-user
+            name: database-linkding
             key: LOGIN
       LD_DB_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: database-linkding-user
+            name: database-linkding
             key: PASSWORD
       LD_DB_HOST:
         valueFrom:
           secretKeyRef:
-            name: database-linkding-user
+            name: database-linkding
             key: HOST
       LD_DB_PORT:
         value: 5432

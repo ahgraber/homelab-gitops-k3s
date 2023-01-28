@@ -68,18 +68,18 @@ spec:
       POSTGRES_USER:
         valueFrom:
           secretKeyRef:
-            name: database-miniflux-user
+            name: database-miniflux
             key: LOGIN
       POSTGRES_PASS:
         valueFrom:
           secretKeyRef:
-            name: database-miniflux-user
+            name: database-miniflux
             key: PASSWORD
       DATABASE_URL:
         # "postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASS }}@postgres-rw.default.svc.cluster.local/miniflux?sslmode=disable"
         valueFrom:
           secretKeyRef:
-            name: database-miniflux-user
+            name: database-miniflux
             key: POSTGRES_URL
 
     ingress:
