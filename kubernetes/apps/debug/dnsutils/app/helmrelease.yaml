@@ -27,7 +27,7 @@ spec:
       main:
         enabled: false
     image:
-      repository: gcr.io/kubernetes-e2e-test-images/jessie-dnsutils
+      repository: registry.k8s.io/e2e-test-images/jessie-dnsutils
       tag: "1.3"
     command:
       - sleep
