@@ -13,13 +13,13 @@ spec:
     frameDeny: true
     customFrameOptionsValue: SAMEORIGIN # overrides frameDeny
     contentTypeNosniff: true
-    ## https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    contentSecurityPolicy: >-
-      default-src 'self';
-      font-src 'self' data:;
-      img-src 'self' * data:;
-      script-src 'self' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline';
+    # ## https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    # contentSecurityPolicy: >-
+    #   default-src 'self';
+    #   font-src 'self' data:;
+    #   img-src 'self' * data:;
+    #   script-src 'self' 'unsafe-inline';
+    #   style-src 'self' 'unsafe-inline';
     ## https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
     referrerPolicy: same-origin
 
