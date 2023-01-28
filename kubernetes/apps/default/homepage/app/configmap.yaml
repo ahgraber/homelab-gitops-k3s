@@ -22,20 +22,20 @@ data:
         columns: 3
         # icon: home-assistant.png
       Infrastructure:
-        # style: row
-        # columns: 3
+        style: row
+        columns: 3
         # icon: home-assistant.png
       Monitoring:
-        # style: row
-        # columns: 3
+        style: row
+        columns: 3
         # icon: home-assistant.png
       Storage:
-        # style: row
-        # columns: 4
+        style: row
+        columns: 3
         # icon: home-assistant.png
       Databases:
-        # style: row
-        # columns: 3
+        style: row
+        columns: 3
         # icon: home-assistant.png
 
   widgets.yaml: |
@@ -68,6 +68,10 @@ data:
   services.yaml: |
     ---
     - Apps & Services:
+        - HomeAssistant:
+            href: https://homeassistant.${SECRET_DOMAIN}:8123
+            icon: home-assistant-circle.png
+            description: Smart Home Automation
         - ChangeDetection:
             href: https://changedetection.${SECRET_DOMAIN}
             icon: changedetection-io.png
@@ -107,10 +111,6 @@ data:
               url: https://10.2.0.1:44353
               username: ${SECRET_ADMIN_USER}
               password: ${SECRET_DEFAULT_PWD}
-        - HomeAssistant:
-            href: https://homeassistant.${SECRET_DOMAIN}:8123
-            icon: home-assistant-circle.png
-            description: Smart Home Automation
     - Monitoring:
         - Karma:
             href: https://karma.${SECRET_DOMAIN}
