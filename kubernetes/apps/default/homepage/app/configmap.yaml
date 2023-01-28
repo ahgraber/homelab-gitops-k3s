@@ -17,6 +17,11 @@ data:
     theme: dark
     color: neutral
     layout: # key by group name in services.yaml
+      Apps & Services:
+        # style: row
+        columns: 2
+        # icon: home-assistant.png
+        # headerStyle: boxed
       Infrastructure:
         # style: row
         # columns: 3
@@ -37,15 +42,22 @@ data:
         # columns: 3
         # icon: home-assistant.png
         # headerStyle: boxed
-      Apps & Services:
-        # style: row
-        # columns: 3
-        # icon: home-assistant.png
-        # headerStyle: boxed
 
   widgets.yaml: |
     ---
     # - logo:
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
     - search:
         provider: custom
         url: https://search.unlocked.link/search?q=
@@ -60,6 +72,27 @@ data:
 
   services.yaml: |
     ---
+    - Apps & Services:
+        - ChangeDetection:
+            href: https://changedetection.${SECRET_DOMAIN}
+            icon: changedetection-io.png
+            description: Monitor which websites had a text change (for free)
+        - Homebox:
+            href: https://homebox.${SECRET_DOMAIN}
+            icon: homebox.png
+            description: A simple home inventory system
+        - Linkding:
+            href: https://linkding.${SECRET_DOMAIN}
+            icon: linkding.png
+            description: A bookmark manager with read-it-later and archiving functionality
+        - Mealie:
+            href: https://mealie.${SECRET_DOMAIN}
+            icon: mealie.png
+            description: A self-hosted recipe manager and meal planner
+        - Miniflux:
+            href: https://miniflux.${SECRET_DOMAIN}
+            icon: miniflux.png
+            description: A self-hosted rss feed reader
     - Infrastructure:
         - OPNsense:
             href: https://opnsense.${SECRET_DOMAIN}
@@ -139,27 +172,6 @@ data:
             href: https://redisinsight.${SECRET_DOMAIN}
             icon: redis.png
             # description: This is my service
-    - Apps & Services:
-        - ChangeDetection:
-            href: https://changedetection.${SECRET_DOMAIN}
-            icon: changedetection-io.png
-            description: Monitor which websites had a text change (for free)
-        - Homebox:
-            href: https://homebox.${SECRET_DOMAIN}
-            icon: homebox.png
-            description: A simple home inventory system
-        - Linkding:
-            href: https://linkding.${SECRET_DOMAIN}
-            icon: linkding.png
-            description: A bookmark manager with read-it-later and archiving functionality
-        - Mealie:
-            href: https://mealie.${SECRET_DOMAIN}
-            icon: mealie.png
-            description: A self-hosted recipe manager and meal planner
-        - Miniflux:
-            href: https://miniflux.${SECRET_DOMAIN}
-            icon: miniflux.png
-            description: A self-hosted rss feed reader
 
   bookmarks.yaml: |
     ---

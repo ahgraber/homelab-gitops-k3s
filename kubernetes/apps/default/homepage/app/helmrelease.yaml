@@ -29,8 +29,12 @@ spec:
 
     image:
       repository: ghcr.io/benphelps/homepage
-      tag: v0.5.9
+      tag: v0.6.3
       pullPolicy: IfNotPresent
+
+    serviceAccount:
+      # allow scraping of k8s resources for widget
+      create: true
 
     env:
       TZ: ${TIMEZONE}
