@@ -9,6 +9,10 @@ resources:
   - ./postgres/
   - ./redis/
   # Flux-Kustomizations | Apps
+  - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
+  - ./homebox/ks.yaml
+  - ./homepage/ks.yaml
   - ./linkding/ks.yaml
+  - ./mealie/ks.yaml
   - ./miniflux/ks.yaml

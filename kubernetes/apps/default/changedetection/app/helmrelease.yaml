@@ -1,0 +1,83 @@
+---
+# https://github.com/dgtlmoon/changedetection.io
+# https://github.com/dgtlmoon/changedetection.io/blob/master/docker-compose.yml
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app changedetection
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  # dependsOn:
+  #   - name: changedetection-browser
+  #     namespace: default
+  values:
+    image:
+      repository: ghcr.io/dgtlmoon/changedetection.io
+      tag: 0.40.1.1
+    env:
+      TZ: "${TIMEZONE}"
+      # PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
+      # PGID: "${SECURITY_CONTEXT_RUN_AS_GROUP}"
+      BASE_URL: "changedetection.${SECRET_DOMAIN}"
+      USE_X_SETTINGS: 1
+      PLAYWRIGHT_DRIVER_URL: ws://changedetection-browser.default.svc.cluster.local:3000/?stealth=1&--disable-web-security=true
+
+    persistence:
+      data:
+        enabled: true
+        existingClaim: *app
+        mountPath: /datastore
+
+    service:
+      main:
+        ports:
+          http:
+            port: 5000
+    ingress:
+      main:
+        enabled: false
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 145M
+      limits:
+        memory: 145M
+
+    additionalContainers:
+      - name: changedetection-browser
+        image: docker.io/browserless/chrome:latest
+        env:
+          SCREEN_WIDTH: 1920
+          SCREEN_HEIGHT: 1024
+          SCREEN_DEPTH: 16
+          ENABLE_DEBUGGER: false
+          PREBOOT_CHROME: true
+          CONNECTION_TIMEOUT: 300000
+          MAX_CONCURRENT_SESSIONS: 10
+          CHROME_REFRESH_TIME: 600000
+          DEFAULT_BLOCK_ADS: true
+          DEFAULT_STEALTH: true
+        resources:
+          requests:
+            cpu: 25m
+            memory: 979M
+          limits:
+            memory: 979M
