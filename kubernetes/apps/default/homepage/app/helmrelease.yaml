@@ -71,7 +71,8 @@ spec:
             mountPath: /app/config/bookmarks.yaml
           - path: docker.yaml
             mountPath: /app/config/docker.yaml
-
+          - path: kubernetes.yaml
+            mountPath: /app/config/kubernetes.yaml
     resources:
       requests:
         cpu: 25m
