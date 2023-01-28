@@ -281,3 +281,10 @@ In order to configure Github to send `push` events from your repository to the F
 Now that you have the webhook url and secret, it's time to set everything up on the Github repository side.
 Navigate to the settings of your repository on Github, under "Settings/Webhooks" press the "Add webhook" button.
 Fill in the webhook url and your secret.
+
+In order to allow the github webhook access to the cluster, follow [`cloudflared` readme](../kubernetes/apps/networking/cloudflared/README.md)
+instructions to:
+
+1. Create the tunnel
+2. Create the route / DNS CNAME
+3. Configure the `cloudflared` deployment
