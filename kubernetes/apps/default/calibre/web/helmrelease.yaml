@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/linuxserver/calibre-web
-      tag: "0.6.19"
+      tag: "version-0.6.19"
     env:
       TZ: "${TZ}"
       PUID: "1001" # "568"
