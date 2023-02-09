@@ -28,8 +28,8 @@ spec:
       tag: "0.6.19"
     env:
       TZ: "${TZ}"
-      PUID: "1000" # "568"
-      PGID: "1000"
+      PUID: "1001" # "568"
+      PGID: "33"
     service:
       main:
         ports:
