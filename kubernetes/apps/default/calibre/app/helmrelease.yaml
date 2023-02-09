@@ -1,0 +1,67 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app calibre
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.3.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: ghcr.io/linuxserver/calibre
+      tag: "6.12.0"
+    env:
+      TZ: "${TZ}"
+      PUID: "1000" # "568"
+      PGID: "1000"
+    service:
+      main:
+        ports:
+          http:
+            port: 8080
+      webserver:
+        enabled: true
+        ports:
+          webserver:
+            enabled: true
+            port: 8081
+            protocol: TCP
+            targetPort: 8081
+    ingress:
+      main:
+        enabled: false
+    persistence:
+      config:
+        enabled: true
+        existingClaim: calibre-config
+      books:
+        enabled: true
+        existingClaim: calibre-books
+        mountPath: /books
+    resources:
+      requests:
+        cpu: 15m
+        memory: 249M
+      limits:
+        memory: 1G
+    probes:
+      startup:
+        spec:
+          initialDelaySeconds: 60
+          failureThreshold: 160
