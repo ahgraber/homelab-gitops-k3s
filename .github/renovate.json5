@@ -56,5 +56,16 @@
       versioning: "loose",
       matchPackagePatterns: ["changedetection", "immich", "plex", "qbittorrent"],
     },
+    // custom versioning
+    {
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/linuxserver/calibre"],
+      versioning: "regex:^version-v?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+    },
+    {
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/linuxserver/calibre-web"],
+      versioning: "regex:^version-?(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+    },
   ],
 }
