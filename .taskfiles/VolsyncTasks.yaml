@@ -10,18 +10,15 @@ x-task-vars: &task-vars
   kustomization: "{{.kustomization}}"
 
 vars:
-  listJobTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/job-list.tmpl.yaml"
-  destinationTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/replicationdestination.tmpl.yaml"
-  wipeJobTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/job-wipe.tmpl.yaml"
-  waitForJobScript: "{{.ROOT_DIR}}/.taskfiles/volsync/wait-for-job.sh"
-
+  destinationTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/ReplicationDestination.tmpl.yaml"
+  wipeJobTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/WipeJob.tmpl.yaml"
+  waitForJobScript: "{{.PROJECT_DIR}}/.taskfiles/volsync/wait-for-job.sh"
+  listJobTemplate: "{{.PROJECT_DIR}}/.taskfiles/volsync/ListJob.tmpl.yaml"
   ts: '{{now | date "150405"}}'
 
 tasks:
   list:
-    desc: >
-      List all snapshots taken by restic for a given ReplicationSource
-      (ex. task volsync:list rsrc=plex [namespace=default])
+    desc: List all snapshots taken by restic for a given ReplicationSource (ex. task volsync:list rsrc=plex [namespace=default])
     silent: true
     cmds:
       - envsubst < <(cat {{.listJobTemplate}}) | kubectl apply -f -
@@ -38,13 +35,12 @@ tasks:
       - sh: test -f {{.listJobTemplate}}
 
   # To run backup jobs in parallel for all replicationsources:
-  #  - kubectl get replicationsources --all-namespaces --no-headers | awk '{print $2, $1}' | xargs --max-procs=4 -l bash -c 'task vs:snapshot rsrc=$0 namespace=$1'
+  #  - kubectl get replicationsources --all-namespaces --no-headers | awk '{print $2, $1}' | xargs --max-procs=4 -l bash -c 'task volsync:snapshot rsrc=$0 namespace=$1'
   #
   snapshot:
     desc: Trigger a Restic ReplicationSource snapshot (ex. task volsync:snapshot rsrc=plex [namespace=default])
     cmds:
-      - kubectl -n {{.namespace}} patch replicationsources {{.rsrc}} --type merge -p
-        '{"spec":{"trigger":{"manual":"{{.ts}}"}}}'
+      - kubectl -n {{.namespace}} patch replicationsources {{.rsrc}} --type merge -p '{"spec":{"trigger":{"manual":"{{.ts}}"}}}'
       - bash {{.waitForJobScript}} volsync-src-{{.rsrc}} {{.namespace}}
       - kubectl -n {{.namespace}} wait job/volsync-src-{{.rsrc}} --for condition=complete --timeout=120m
       # TODO: Error from server (NotFound): jobs.batch "volsync-src-zzztest" not found
@@ -59,7 +55,7 @@ tasks:
         msg: "ReplicationSource '{{.rsrc}}' not found in namespace '{{.namespace}}'"
 
   # To run restore jobs in parallel for all replicationdestinations:
-  #   - kubectl get replicationsources --all-namespaces --no-headers | awk '{print $2, $1}' | xargs --max-procs=2 -l bash -c 'task vs:restore rsrc=$0 namespace=$1'
+  #   - kubectl get replicationsources --all-namespaces --no-headers | awk '{print $2, $1}' | xargs --max-procs=2 -l bash -c 'task volsync:restore rsrc=$0 namespace=$1'
   #
   restore:
     desc: Trigger a Restic ReplicationSource restore (ex. task volsync:restore rsrc=plex [namespace=default])
@@ -89,7 +85,7 @@ tasks:
       controller:
         sh: |
           app=$(kubectl -n {{.namespace}} get persistentvolumeclaim {{.claim}} -o jsonpath="{.metadata.labels.app\.kubernetes\.io/name}")
-          if [[ -z $(kubectl -n {{.namespace}} get persistentvolumeclaim {{.claim}} -o jsonpath="{.metadata.annotations.volume\.kubernetes\.io/storage-provisioner}") ]]; then
+          if [[ -n $(kubectl -n {{.namespace}} get deployment --no-headers -l "app.kubernetes.io/name=$app") ]]; then
             echo "deployments.apps/$app" && exit 0
           fi
           echo "statefulsets.apps/$app"
@@ -126,8 +122,7 @@ tasks:
     cmds:
       - envsubst < <(cat {{.destinationTemplate}}) | kubectl apply -f -
       - bash {{.waitForJobScript}} volsync-dst-{{.rsrc}}-{{.claim}}-{{.ts}} {{.namespace}}
-      - kubectl -n {{.namespace}} wait job/volsync-dst-{{.rsrc}}-{{.claim}}-{{.ts}} --for condition=complete
-        --timeout=120m
+      - kubectl -n {{.namespace}} wait job/volsync-dst-{{.rsrc}}-{{.claim}}-{{.ts}} --for condition=complete --timeout=120m
       - kubectl -n {{.namespace}} delete replicationdestination {{.rsrc}}-{{.claim}}-{{.ts}}
     env: *task-vars
 
