@@ -50,10 +50,16 @@ spec:
       config:
         enabled: true
         existingClaim: calibre-config
+      # books:
+      #   enabled: true
+      #   existingClaim: calibre-books
+      #   mountPath: /books
       books:
         enabled: true
-        existingClaim: calibre-books
-        mountPath: /books
+        type: nfs
+        server: "${SECRET_TRUENAS_IP}"
+        path: /mnt/ssdpool/books
+        mountPath: /mnt/ssdpool/books
     resources:
       requests:
         cpu: 15m
