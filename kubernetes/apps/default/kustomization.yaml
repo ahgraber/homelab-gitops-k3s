@@ -9,7 +9,6 @@ resources:
   - ./postgres/
   - ./redis/
   # Flux-Kustomizations | Apps
-  - ./calibre/ks.yaml
   - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
   - ./homebox/ks.yaml
