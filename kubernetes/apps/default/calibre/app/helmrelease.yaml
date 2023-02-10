@@ -28,13 +28,9 @@ spec:
       tag: "version-v6.12.0"
     env:
       TZ: "${TZ}"
-    #   PUID: "1001"
-    #   PGID: "33"
-    # podSecurityContext:
-    #   runAsUser: 1001
-    #   runAsGroup: 33
-    #   fsGroup: 33
-    #   fsGroupChangePolicy: "OnRootMismatch"
+      PUID: "568"
+      PGID: "65539"
+      UMASK_SET: "022"
 
     service:
       main:
