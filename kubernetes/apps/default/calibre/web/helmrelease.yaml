@@ -28,13 +28,13 @@ spec:
       tag: "version-0.6.19"
     env:
       TZ: "${TZ}"
-      PUID: "1001" # "568"
-      PGID: "33"
-    podSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 33
-      fsGroup: 33
-      fsGroupChangePolicy: "OnRootMismatch"
+    #   PUID: "1001" # "568"
+    #   PGID: "33"
+    # podSecurityContext:
+    #   runAsUser: 1001
+    #   runAsGroup: 33
+    #   fsGroup: 33
+    #   fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       main:
@@ -47,23 +47,18 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: calibre-web
-      # books:
-      #   enabled: true
-      #   existingClaim: calibre-books
-      #   mountPath: /books
+        existingClaim: *app
       books:
         enabled: true
-        type: nfs
-        server: "${SECRET_TRUENAS_IP}"
-        path: /mnt/ssdpool/books
-        mountPath: /mnt/ssdpool/books
+        existingClaim: calibre-books
+        mountPath: /books
     resources:
       requests:
         cpu: 15m
         memory: 249M
       limits:
         memory: 1G
+
     probes:
       startup:
         spec:

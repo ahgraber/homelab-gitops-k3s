@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &app calibre-config
+  name: &app calibre-app
   namespace: default
   labels:
-    app.kubernetes.io/instance: calibre
-    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: calibre
     snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
@@ -15,20 +15,3 @@ spec:
   resources:
     requests:
       storage: 256Mi
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: &app calibre-books
-#   namespace: default
-#   labels:
-#     app.kubernetes.io/instance: calibre
-#     app.kubernetes.io/name: *app
-#     snapshot.home.arpa/enabled: "true"
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: ceph-block
-#   resources:
-#     requests:
-#       storage: 5Gi
