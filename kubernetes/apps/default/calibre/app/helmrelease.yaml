@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app calibre
+  name: &app calibre-app
   namespace: default
 spec:
   interval: 15m
@@ -28,13 +28,13 @@ spec:
       tag: "version-v6.12.0"
     env:
       TZ: "${TZ}"
-      PUID: "1001"
-      PGID: "33"
-    podSecurityContext:
-      runAsUser: 1001
-      runAsGroup: 33
-      fsGroup: 33
-      fsGroupChangePolicy: "OnRootMismatch"
+    #   PUID: "1001"
+    #   PGID: "33"
+    # podSecurityContext:
+    #   runAsUser: 1001
+    #   runAsGroup: 33
+    #   fsGroup: 33
+    #   fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       main:
@@ -55,17 +55,11 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: calibre-config
-      # books:
-      #   enabled: true
-      #   existingClaim: calibre-books
-      #   mountPath: /books
+        existingClaim: *app
       books:
         enabled: true
-        type: nfs
-        server: "${SECRET_TRUENAS_IP}"
-        path: /mnt/ssdpool/books
-        mountPath: /mnt/ssdpool/books
+        existingClaim: calibre-books
+        mountPath: /books
     resources:
       requests:
         cpu: 15m

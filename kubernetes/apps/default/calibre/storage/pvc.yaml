@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &app calibre-web
+  name: &app calibre-books
   namespace: default
   labels:
     app.kubernetes.io/instance: *app
@@ -10,8 +10,8 @@ metadata:
     snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: ceph-block
+    - ReadWriteMany
+  storageClassName: ceph-fs
   resources:
     requests:
-      storage: 256Mi
+      storage: 5Gi
