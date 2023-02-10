@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-default-ext-postgres-operator
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-default-cnpg-db

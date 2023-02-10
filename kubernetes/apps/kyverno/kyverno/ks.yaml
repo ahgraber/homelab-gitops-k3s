@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-kyverno
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/kyverno/kyverno/app
   prune: true
@@ -26,8 +24,6 @@ kind: Kustomization
 metadata:
   name: apps-kyverno-policies
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-kyverno

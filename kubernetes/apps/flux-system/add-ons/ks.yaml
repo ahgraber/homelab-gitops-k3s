@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-flux-system-monitoring
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-monitoring-kube-prometheus-stack
@@ -25,8 +23,6 @@ kind: Kustomization
 metadata:
   name: apps-flux-system-notifications
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-monitoring-kube-prometheus-stack
@@ -45,8 +41,6 @@ kind: Kustomization
 metadata:
   name: apps-flux-system-webhooks
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-networking-cloudflared

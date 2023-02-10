@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-networking-traefik
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-cert-manager-certs
@@ -30,8 +28,6 @@ kind: Kustomization
 metadata:
   name: apps-networking-traefik-addons
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-networking-traefik
