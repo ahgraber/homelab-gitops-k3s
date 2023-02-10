@@ -5,8 +5,8 @@ metadata:
   name: apps-local-path-provisioner
   namespace: flux-system
   ### envvar subst breaks the helmrelease configmap
-  # labels:
-  #   substitution.flux.home.arpa/enabled: "true"
+  labels:
+    substitution.flux.home.arpa/disabled: "true"
 spec:
   path: ./kubernetes/apps/kube-system/local-path-provisioner/app
   prune: true

@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-default-miniflux-db
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-default-cnpg-db
@@ -23,8 +21,6 @@ kind: Kustomization
 metadata:
   name: apps-default-miniflux
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-default-miniflux-db

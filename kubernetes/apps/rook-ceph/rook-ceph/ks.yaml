@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-rook-ceph-operator
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   # dependsOn:
   #   - name: apps-cert-manager # for rook-ceph admission controller
@@ -28,8 +26,6 @@ kind: Kustomization
 metadata:
   name: apps-rook-ceph-cluster
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-rook-ceph-operator
@@ -54,8 +50,6 @@ kind: Kustomization
 metadata:
   name: apps-rook-ceph-addons
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   dependsOn:
     - name: apps-rook-ceph-cluster

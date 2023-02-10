@@ -40,4 +40,8 @@ spec:
               - kind: Secret
                 name: cluster-secrets
       target:
-        labelSelector: substitution.flux.home.arpa/enabled=true
+        # substitute is default condition unless 'substitution.flux.home.arpa/disabled: "true"' is present
+        group: kustomize.toolkit.fluxcd.io
+        version: v1beta2
+        kind: Kustomization
+        labelSelector: substitution.flux.home.arpa/disabled notin (true)

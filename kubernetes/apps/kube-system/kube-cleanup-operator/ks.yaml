@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-kube-system-kube-cleanup-operator
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/kube-system/kube-cleanup-operator/app
   prune: true

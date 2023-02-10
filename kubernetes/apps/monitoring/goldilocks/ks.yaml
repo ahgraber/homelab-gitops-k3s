@@ -4,8 +4,6 @@ kind: Kustomization
 metadata:
   name: apps-monitoring-goldilocks
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
   path: ./kubernetes/apps/monitoring/goldilocks/app
   prune: true
