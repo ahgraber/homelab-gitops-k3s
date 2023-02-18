@@ -56,7 +56,7 @@ spec:
         cpu: 100m
         memory: 128M
       limits:
-        memory: 384M
+        memory: 512M
 
     sidecars:
       - name: api
