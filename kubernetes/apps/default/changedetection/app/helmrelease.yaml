@@ -62,7 +62,7 @@ spec:
       limits:
         memory: 512M
 
-    sidecarContainers:
+    sidecars:
       - name: changedetection-browser
         image: docker.io/browserless/chrome:latest
         env:
