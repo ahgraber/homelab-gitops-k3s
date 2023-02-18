@@ -59,7 +59,7 @@ spec:
         memory: 512M
 
     sidecars:
-      - name: api
+      api:
         image: docker.io/hkotel/mealie
         tag: api-nightly@sha256:f7ba5690057b3f50d2580b6f4e3816187a3c965d490ef23a2b49e22dd24c7617
         # tag: api-v1.0.0beta-5

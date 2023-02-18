@@ -63,7 +63,7 @@ spec:
         memory: 512M
 
     sidecars:
-      - name: changedetection-browser
+      changedetection-browser:
         image: docker.io/browserless/chrome:latest
         env:
           SCREEN_WIDTH: 1920
