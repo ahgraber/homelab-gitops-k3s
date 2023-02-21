@@ -151,7 +151,7 @@ data:
             icon: minio.png
             # description: This is my service
         - Rook-Ceph:
-            href: https://rook.${SECRET_DOMAIN}
+            href: https://ceph.${SECRET_DOMAIN}
             icon: ceph.png
             # description: This is my service
         - Scrutiny:
