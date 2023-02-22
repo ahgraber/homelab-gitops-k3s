@@ -1,9 +1,64 @@
 {
+  "__inputs": [],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.0.5"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph (old)",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "heatmap",
+      "name": "Heatmap",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table-old",
+      "name": "Table (old)",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -19,12 +74,11 @@
     ]
   },
   "description": "Ceph Cluster overview.\r\n",
-  "editable": true,
+  "editable": false,
   "fiscalYearStartMonth": 0,
   "gnetId": 2842,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1638881716217,
+  "id": null,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -42,10 +96,23 @@
       },
       "id": 37,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "CLUSTER STATE",
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [
@@ -116,18 +183,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "exemplar": false,
-          "expr": "sum without (instance) (ceph_health_status)",
+          "expr": "sum without (instance) (ceph_health_status{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": " ",
           "refId": "A",
@@ -140,7 +206,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -190,13 +256,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes{}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -208,7 +278,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -258,13 +328,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r_out_bytes[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r_out_bytes{}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -276,7 +350,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -326,13 +400,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -345,7 +423,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -403,13 +481,17 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_cluster_total_bytes-ceph_cluster_total_used_bytes)/ceph_cluster_total_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) ((ceph_cluster_total_bytes{}-ceph_cluster_total_used_bytes{})/ceph_cluster_total_bytes{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -422,7 +504,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -479,13 +561,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pool_objects)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pool_objects{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -497,7 +583,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -547,13 +633,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_w_in_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_w_in_bytes{})",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -565,7 +655,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -615,13 +705,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_r_out_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_r_out_bytes{})",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -633,7 +727,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -680,10 +774,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "count(ALERTS{alertstate='firing',alertname=~'^CephCluster.*'}) OR vector(0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count(ALERTS{alertname=~\"^Ceph.*\",alertstate=\"firing\"}) OR vector(0)",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -699,7 +797,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -749,13 +847,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_w[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_w{}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -767,7 +869,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -817,13 +919,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r{}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -835,7 +941,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -885,13 +991,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_used_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_cluster_total_used_bytes{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -904,7 +1014,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -957,10 +1067,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_mon_num_sessions)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (ceph_mon_num_sessions{})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -974,7 +1088,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1032,13 +1146,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_mon_quorum_status)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count without (instance, ceph_daemon) (ceph_mon_quorum_status{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1062,13 +1180,22 @@
       },
       "id": 38,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "OSD STATE",
       "type": "row"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1125,13 +1252,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_osd_up) - count without (instance, ceph_daemon) (ceph_osd_in)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count without (instance, ceph_daemon) (ceph_osd_up{}) - count without (instance, ceph_daemon) (ceph_osd_in{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1144,7 +1275,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1201,13 +1332,18 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "count(ceph_osd_up == 0.0) OR vector(0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "count(ceph_osd_up{} == 0.0) OR vector(0)",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1220,7 +1356,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1273,13 +1409,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_up)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_up{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1292,7 +1432,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1345,13 +1485,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_in)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_in{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1364,7 +1508,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1421,13 +1565,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_numpg)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_numpg{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1440,7 +1588,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1497,13 +1645,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1516,7 +1668,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1573,13 +1725,17 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "avg(ceph_osd_commit_latency_ms)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg(ceph_osd_commit_latency_ms{})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1592,7 +1748,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1650,10 +1806,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum{}[5m]) / rate(ceph_osd_op_w_latency_count{}[5m]) >= 0)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1668,7 +1828,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1725,10 +1885,14 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_r_latency_sum[5m])/rate(ceph_osd_op_r_latency_count[5m]) >= 0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_r_latency_sum{}[5m])/rate(ceph_osd_op_r_latency_count{}[5m]) >= 0)",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -1758,13 +1922,7 @@
           "columns": [],
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "uid": "${DS_PROMETHEUS}"
           },
           "fontSize": "100%",
           "gridPos": {
@@ -1802,7 +1960,11 @@
           ],
           "targets": [
             {
-              "expr": "ALERTS{alertstate='firing'}",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "ALERTS{alertname=~\"^Ceph.+\",alertstate=\"firing\"}",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1810,23 +1972,64 @@
               "refId": "A"
             }
           ],
-          "title": "Alerts from CephThanos",
+          "title": "Alerts from Ceph",
           "transform": "table",
           "type": "table-old"
         },
         {
-          "columns": [],
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
-              "custom": {}
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "decimals": 2,
+              "displayName": "",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
             },
-            "overrides": []
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Time"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "time: YYYY-MM-DD HH:mm:ss"
+                  },
+                  {
+                    "id": "custom.align"
+                  }
+                ]
+              }
+            ]
           },
-          "fontSize": "100%",
           "gridPos": {
             "h": 6,
             "w": 8,
@@ -1835,34 +2038,22 @@
           },
           "id": 105,
           "links": [],
-          "scroll": true,
-          "showHeader": true,
-          "sort": {
-            "col": 5,
-            "desc": true
-          },
-          "styles": [
-            {
-              "alias": "Time",
-              "align": "auto",
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
+          "options": {
+            "footer": {
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
             },
-            {
-              "alias": "",
-              "align": "auto",
-              "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-              "decimals": 2,
-              "pattern": "/.*/",
-              "thresholds": [],
-              "type": "number",
-              "unit": "short"
-            }
-          ],
+            "showHeader": true
+          },
+          "pluginVersion": "9.1.3",
           "targets": [
             {
-              "expr": "topk(5,sort_desc(ceph_osd_apply_latency_ms + ceph_osd_commit_latency_ms))",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "topk(5,sort_desc(ceph_osd_apply_latency_ms{} + ceph_osd_commit_latency_ms{}))",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1871,22 +2062,70 @@
             }
           ],
           "title": "Top Sluggish OSD's",
-          "transform": "table",
-          "type": "table-old"
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {
+                "reducers": []
+              }
+            }
+          ],
+          "type": "table"
         },
         {
-          "columns": [],
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
-              "custom": {}
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "decimals": 2,
+              "displayName": "",
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
             },
-            "overrides": []
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Time"
+                  },
+                  {
+                    "id": "unit",
+                    "value": "time: YYYY-MM-DD HH:mm:ss"
+                  },
+                  {
+                    "id": "custom.align"
+                  }
+                ]
+              }
+            ]
           },
-          "fontSize": "100%",
           "gridPos": {
             "h": 6,
             "w": 8,
@@ -1895,34 +2134,22 @@
           },
           "id": 103,
           "links": [],
-          "scroll": true,
-          "showHeader": true,
-          "sort": {
-            "col": 0,
-            "desc": true
-          },
-          "styles": [
-            {
-              "alias": "Time",
-              "align": "auto",
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "pattern": "Time",
-              "type": "date"
+          "options": {
+            "footer": {
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
             },
-            {
-              "alias": "",
-              "align": "auto",
-              "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-              "decimals": 2,
-              "pattern": "/.*/",
-              "thresholds": [],
-              "type": "number",
-              "unit": "short"
-            }
-          ],
+            "showHeader": true
+          },
+          "pluginVersion": "9.1.3",
           "targets": [
             {
-              "expr": "ceph_osd_up == 0",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "ceph_osd_up{} == 0",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1931,8 +2158,24 @@
             }
           ],
           "title": "Down OSD's",
-          "transform": "table",
-          "type": "table-old"
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {
+                "reducers": []
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
         }
       ],
       "title": "Alerts",
@@ -1959,13 +2202,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
           "fillGradient": 0,
@@ -1994,7 +2231,7 @@
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "7.2.0",
+          "pluginVersion": "9.1.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2004,7 +2241,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version) (ceph_osd_metadata)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "count by (ceph_version) (ceph_osd_metadata{})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2051,13 +2292,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
           "fillGradient": 0,
@@ -2086,7 +2321,7 @@
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "7.2.0",
+          "pluginVersion": "9.1.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2096,7 +2331,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_mon_metadata)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "count by (ceph_version)(ceph_mon_metadata{})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2144,13 +2383,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
           "fillGradient": 0,
@@ -2179,7 +2412,7 @@
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "7.2.0",
+          "pluginVersion": "9.1.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2189,7 +2422,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_mds_metadata)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "count by (ceph_version)(ceph_mds_metadata{})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2237,13 +2474,7 @@
           "dashes": false,
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "custom": {}
-            },
-            "overrides": []
+            "uid": "${DS_PROMETHEUS}"
           },
           "fill": 1,
           "fillGradient": 0,
@@ -2272,7 +2503,7 @@
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "7.2.0",
+          "pluginVersion": "9.1.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -2282,7 +2513,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_rgw_metadata)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${DS_PROMETHEUS}"
+              },
+              "expr": "count by (ceph_version)(ceph_rgw_metadata{})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2324,6 +2559,15 @@
           }
         }
       ],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "Ceph Versions",
       "type": "row"
     },
@@ -2341,6 +2585,15 @@
       },
       "id": 39,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "CLUSTER",
       "type": "row"
     },
@@ -2358,7 +2611,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -2374,7 +2627,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 1,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2394,7 +2647,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2411,27 +2664,39 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Total Capacity",
           "refId": "C",
           "step": 300
         },
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes-ceph_cluster_total_used_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{}-ceph_cluster_total_used_bytes{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Available",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance) (ceph_cluster_total_used_bytes)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_cluster_total_used_bytes{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Used",
           "refId": "B",
@@ -2485,7 +2750,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "decimals": 0,
       "editable": true,
@@ -2502,7 +2767,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 3,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2521,7 +2786,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2531,18 +2796,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w{}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Write",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r{}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Read",
           "refId": "B",
@@ -2592,7 +2865,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -2608,7 +2881,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 7,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2627,7 +2900,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2637,18 +2910,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes{}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Write",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r_out_bytes[5m]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r_out_bytes{}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Read",
           "refId": "B",
@@ -2697,7 +2978,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fill": 1,
@@ -2729,7 +3010,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2739,7 +3020,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum((ceph_pool_num_bytes_recovered) *on (instance, pool_id) group_left(name)(ceph_pool_metadata)) by (name)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum((ceph_pool_num_bytes_recovered{}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{})) by (name)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2788,7 +3073,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "",
       "fill": 1,
@@ -2820,7 +3105,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2830,7 +3115,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) ((ceph_pool_num_objects_recovered) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) ((ceph_pool_num_objects_recovered{}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2879,7 +3168,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -2910,7 +3199,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2920,7 +3209,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_pool_objects) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) ((ceph_pool_objects{}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2968,7 +3261,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -2997,7 +3290,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3007,7 +3300,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_pool_quota_bytes) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) ((ceph_pool_quota_bytes{}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3055,7 +3352,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -3086,7 +3383,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3096,7 +3393,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_pool_quota_objects) *on (instance, pool_id) group_left(name)(ceph_pool_metadata)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance) (ceph_pool_quota_objects{}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3144,7 +3445,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -3175,7 +3476,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3185,7 +3486,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_bluestore_commit_lat_count)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count without (instance, ceph_daemon) (ceph_bluestore_commit_lat_count{})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3193,7 +3498,11 @@
           "refId": "A"
         },
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_filestore_journal_latency_count)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "count without (instance, ceph_daemon) (ceph_filestore_journal_latency_count{})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3245,6 +3554,15 @@
       },
       "id": 41,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "OBJECTS",
       "type": "row"
     },
@@ -3255,7 +3573,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3289,7 +3607,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3304,9 +3622,13 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
           "expr": "sum without (instance, pool_id) (ceph_pool_objects)",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Total",
           "refId": "A",
@@ -3351,7 +3673,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3385,7 +3707,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3400,181 +3722,269 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_active)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_active{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Active",
           "refId": "M"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_clean)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_clean{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Clean",
           "refId": "U"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_peering)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_peering{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Peering",
           "refId": "I"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_degraded)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_degraded{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Degraded",
           "refId": "B",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_stale)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_stale{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Stale",
           "refId": "C",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_unclean_pgs)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_unclean_pgs{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Unclean",
           "refId": "D",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_undersized)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_undersized{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Undersized",
           "refId": "E",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_incomplete)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_incomplete{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Incomplete",
           "refId": "G"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_forced_backfill)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_forced_backfill{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Forced Backfill",
           "refId": "H"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_inconsistent)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_inconsistent{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Inconsistent",
           "refId": "F"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_forced_recovery)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_forced_recovery{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Forced Recovery",
           "refId": "J"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_creating)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_creating{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Creating",
           "refId": "K"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_wait_backfill)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_wait_backfill{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Wait Backfill",
           "refId": "L"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_deep)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_deep{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Deep",
           "refId": "N"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_scrubbing)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_scrubbing{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Scrubbing",
           "refId": "O"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_recovering)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_recovering{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Recovering",
           "refId": "P"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_repair)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_repair{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Repair",
           "refId": "Q"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_down)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_down{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Down",
           "refId": "R"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_peered)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_peered{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Peered",
           "refId": "S"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_backfill)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_backfill{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Backfill",
           "refId": "T"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_remapped)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_remapped{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Remapped",
           "refId": "V"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_backfill_toofull)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_backfill_toofull{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Backfill Toofull",
           "refId": "W"
@@ -3619,7 +4029,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3653,7 +4063,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3668,27 +4078,39 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_degraded)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_degraded{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Degraded",
           "refId": "F",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_stale)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_stale{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Stale",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_undersized)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, pool_id) (ceph_pg_undersized{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Undersized",
           "refId": "B",
@@ -3734,7 +4156,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "editable": true,
       "error": false,
@@ -3766,7 +4188,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3776,9 +4198,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_recovery_ops[$__rate_interval]))",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_recovery_ops{}[$__rate_interval]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "OPS",
           "refId": "A",
@@ -3833,6 +4259,15 @@
       },
       "id": 40,
       "panels": [],
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "refId": "A"
+        }
+      ],
       "title": "LATENCY",
       "type": "row"
     },
@@ -3848,7 +4283,7 @@
       "dataFormat": "timeseries",
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 8,
@@ -3864,13 +4299,64 @@
         "show": true
       },
       "links": [],
+      "options": {
+        "calculate": true,
+        "calculation": {
+          "yBuckets": {
+            "mode": "count",
+            "scale": {
+              "log": 2,
+              "type": "log"
+            },
+            "value": "1"
+          }
+        },
+        "cellGap": 2,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "#b4ff00",
+          "mode": "opacity",
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "show": true,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "min": "0",
+          "reverse": false,
+          "unit": "ms"
+        }
+      },
+      "pluginVersion": "9.1.3",
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "ceph_osd_apply_latency_ms",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "ceph_osd_apply_latency_ms{}",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -3908,7 +4394,7 @@
       "dataFormat": "timeseries",
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 8,
@@ -3924,13 +4410,63 @@
         "show": true
       },
       "links": [],
+      "options": {
+        "calculate": true,
+        "calculation": {
+          "yBuckets": {
+            "mode": "count",
+            "scale": {
+              "log": 2,
+              "type": "log"
+            }
+          }
+        },
+        "cellGap": 2,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "#65c5db",
+          "mode": "opacity",
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "show": true,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "min": "0",
+          "reverse": false,
+          "unit": "ms"
+        }
+      },
+      "pluginVersion": "9.1.3",
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "ceph_osd_commit_latency_ms",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "ceph_osd_commit_latency_ms{}",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "refId": "A"
         }
@@ -3965,7 +4501,7 @@
       "dataFormat": "timeseries",
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 8,
@@ -3981,13 +4517,64 @@
         "show": true
       },
       "links": [],
+      "options": {
+        "calculate": true,
+        "calculation": {
+          "yBuckets": {
+            "mode": "count",
+            "scale": {
+              "log": 2,
+              "type": "log"
+            }
+          }
+        },
+        "cellGap": 2,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "#806eb7",
+          "mode": "opacity",
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "show": true,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "decimals": 2,
+          "min": "0",
+          "reverse": false,
+          "unit": "ms"
+        }
+      },
+      "pluginVersion": "9.1.3",
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "rate(ceph_osd_op_r_latency_sum[5m]) / rate(ceph_osd_op_r_latency_count[5m]) >= 0",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(ceph_osd_op_r_latency_sum{}[5m]) / rate(ceph_osd_op_r_latency_count{}[5m]) >= 0",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "refId": "A"
         }
@@ -4023,7 +4610,7 @@
       "dataFormat": "timeseries",
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 8,
@@ -4039,14 +4626,65 @@
         "show": true
       },
       "links": [],
+      "options": {
+        "calculate": true,
+        "calculation": {
+          "yBuckets": {
+            "mode": "count",
+            "scale": {
+              "log": 2,
+              "type": "log"
+            }
+          }
+        },
+        "cellGap": 2,
+        "cellValues": {},
+        "color": {
+          "exponent": 0.5,
+          "fill": "#f9934e",
+          "mode": "opacity",
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 128
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "show": true,
+          "yHistogram": false
+        },
+        "yAxis": {
+          "axisPlacement": "left",
+          "decimals": 2,
+          "min": "0",
+          "reverse": false,
+          "unit": "ms"
+        }
+      },
+      "pluginVersion": "9.1.3",
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "rate(ceph_osd_op_w_latency_sum{}[5m]) / rate(ceph_osd_op_w_latency_count{}[5m]) >= 0",
           "format": "time_series",
           "hide": false,
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -4078,7 +4716,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4109,7 +4747,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4119,7 +4757,11 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg without (instance,ceph_daemon) (rate(ceph_osd_op_r_latency_sum[5m]) / rate(ceph_osd_op_r_latency_count[5m]) >= 0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance,ceph_daemon) (rate(ceph_osd_op_r_latency_sum{}[5m]) / rate(ceph_osd_op_r_latency_count{}[5m]) >= 0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4127,7 +4769,11 @@
           "refId": "A"
         },
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum{}[5m]) / rate(ceph_osd_op_w_latency_count{}[5m]) >= 0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4172,7 +4818,7 @@
       "dashes": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4204,7 +4850,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "9.0.5",
       "pointradius": 1,
       "points": false,
       "renderer": "flot",
@@ -4214,9 +4860,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "apply",
           "metric": "ceph_osd_perf_apply_latency_seconds",
@@ -4224,9 +4874,13 @@
           "step": 4
         },
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_commit_latency_ms)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_commit_latency_ms{})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "commit",
           "metric": "ceph_osd_perf_commit_latency_seconds",
@@ -4265,473 +4919,126 @@
       "yaxis": {
         "align": false
       }
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 74
-      },
-      "id": 61,
-      "panels": [],
-      "title": "Node Statistics (NodeExporter)",
-      "type": "row"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 75
-      },
-      "hiddenSeries": false,
-      "id": 63,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": false,
-        "max": true,
-        "min": true,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.3.0",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "node_memory_Active_anon_bytes",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        },
-        {
-          "expr": "sum without (instance) (node_memory_Active_anon_bytes)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Cluster Memory Usage",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Node Memory Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:2713",
-          "format": "bytes",
-          "logBase": 2,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:2714",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 75
-      },
-      "hiddenSeries": false,
-      "id": 64,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.3.0",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "avg by (instance) (irate(node_cpu_seconds_total{mode!=\"idle\"}[$__interval])) * 100",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Node CPU Usage",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:2684",
-          "format": "percent",
-          "logBase": 2,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:2685",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 84
-      },
-      "hiddenSeries": false,
-      "id": 65,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.3.0",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by (instance)(irate(node_disk_read_bytes_total[$__interval]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Node Out",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:2742",
-          "format": "decbytes",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:2743",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 84
-      },
-      "hiddenSeries": false,
-      "id": 66,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.3.0",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum by (instance)(irate(node_disk_written_bytes_total[$__interval]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Node In",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:2771",
-          "format": "decbytes",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:2772",
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 93
-      },
-      "hiddenSeries": false,
-      "id": 68,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "8.3.0",
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "(node_filesystem_free_bytes{mountpoint='/', device != 'rootfs'})*100 / (node_filesystem_size_bytes{mountpoint='/', device != 'rootfs'})",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Free Space in root filesystem",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 33,
+  "schemaVersion": 36,
   "style": "dark",
   "tags": ["ceph", "cluster"],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data source",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "auto": true,
+        "auto_count": 10,
+        "auto_min": "1m",
+        "current": {
+          "selected": false,
+          "text": "10s",
+          "value": "10s"
+        },
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Interval",
+        "multi": false,
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "auto",
+            "value": "$__auto_interval_interval"
+          },
+          {
+            "selected": false,
+            "text": "5s",
+            "value": "5s"
+          },
+          {
+            "selected": true,
+            "text": "10s",
+            "value": "10s"
+          },
+          {
+            "selected": false,
+            "text": "30s",
+            "value": "30s"
+          },
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "5s,10s,30s,1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
   },
   "time": {
     "from": "now-12h",
@@ -4743,7 +5050,7 @@
   },
   "timezone": "browser",
   "title": "Ceph - Cluster",
-  "uid": "r6lloPJmz",
-  "version": 1,
+  "uid": "r6lloPJmz1",
+  "version": 2,
   "weekStart": ""
 }
