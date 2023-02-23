@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://ot-container-kit.github.io/helm-charts chart=redis-operator
       chart: redis-operator
-      version: 0.13.1
+      version: 0.14.3
       sourceRef:
         kind: HelmRepository
         name: ot-charts
