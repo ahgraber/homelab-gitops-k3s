@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://movetokube.github.io/postgres-operator/
       chart: ext-postgres-operator
-      version: 1.2.1
+      version: 1.2.2
       sourceRef:
         kind: HelmRepository
         name: movetokube-charts
