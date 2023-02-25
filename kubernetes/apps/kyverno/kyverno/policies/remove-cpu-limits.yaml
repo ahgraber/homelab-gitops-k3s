@@ -9,12 +9,47 @@ metadata:
     policies.kyverno.io/description: >-
       This policy searches for resource definitions and removes set CPU limits, unless: annotated with
       `kyverno.io/ignore: "true"`, or in a specific set of namespaces
+    pod-policies.kyverno.io/autogen-controllers: none
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
 
   rules:
-    - name: remove-cpu-limits
+    ### onedr0p
+    # - name: remove-cpu-limits
+    #   match:
+    #     any:
+    #       - resources:
+    #           kinds:
+    #             - Pod
+    #   exclude:
+    #     any:
+    #       - resources:
+    #           annotations:
+    #             kyverno.io/ignore: "true"
+    #       - resources:
+    #           namespaces:
+    #             - flux-system
+    #             - kube-node-lease
+    #             - kube-public
+    #             - kube-system
+    #             # - calico-system
+    #             # - tigera-operator
+    #   mutate:
+    #     patchStrategicMerge:
+    #       spec:
+    #         initContainers:
+    #           - (name): "*"
+    #             resources:
+    #               limits:
+    #                 cpu: 0
+    #         containers:
+    #           - (name): "*"
+    #             resources:
+    #               limits:
+    #                 cpu: 0
+
+    - name: delete-containers-cpu-limits
       match:
         any:
           - resources:
@@ -25,37 +60,31 @@ spec:
           - resources:
               annotations:
                 kyverno.io/ignore: "true"
-          - resources:
-              namespaces:
-                - flux-system
-                - kube-node-lease
-                - kube-public
-                - kube-system
-
       mutate:
-        patchesJson6902: |-
-          - path: "/spec/initContainers/0/resources/limits/cpu"
-            op: remove
-          - path: "/spec/initContainers/1/resources/limits/cpu"
-            op: remove
-          - path: "/spec/initContainers/2/resources/limits/cpu"
-            op: remove
-          - path: "/spec/initContainers/3/resources/limits/cpu"
-            op: remove
-          - path: "/spec/initContainers/4/resources/limits/cpu"
-            op: remove
-          - path: "/spec/initContainers/5/resources/limits/cpu"
-            op: remove
-
-          - path: "/spec/containers/0/resources/limits/cpu"
-            op: remove
-          - path: "/spec/containers/1/resources/limits/cpu"
-            op: remove
-          - path: "/spec/containers/2/resources/limits/cpu"
-            op: remove
-          - path: "/spec/containers/3/resources/limits/cpu"
-            op: remove
-          - path: "/spec/containers/4/resources/limits/cpu"
-            op: remove
-          - path: "/spec/containers/5/resources/limits/cpu"
-            op: remove
+        foreach:
+          - list: "request.object.spec.containers"
+            patchesJson6902: |-
+              - path: /spec/containers/{{elementIndex}}/resources/limits/cpu
+                op: remove
+    - name: delete-initcontainers-cpu-limits
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      exclude:
+        any:
+          - resources:
+              annotations:
+                kyverno.io/ignore: "true"
+      preconditions:
+        all:
+          - key: "{{ request.object.spec.initContainers[] || `[]` | length(@) }}"
+            operator: GreaterThanOrEquals
+            value: 1
+      mutate:
+        foreach:
+          - list: "request.object.spec.initContainers"
+            patchesJson6902: |-
+              - path: /spec/initContainers/{{elementIndex}}/resources/limits/cpu
+                op: remove
