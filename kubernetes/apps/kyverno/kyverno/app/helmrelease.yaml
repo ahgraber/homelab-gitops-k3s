@@ -24,7 +24,18 @@ spec:
     remediation:
       retries: 3
   values:
-    installCRDs: true
+    crds:
+      install: true
+
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        # effect: NoSchedule
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: "true"
+    annotations:
+      reloader.stakater.com/search: "true"
+
     replicaCount: 3
 
     resources:
@@ -34,8 +45,16 @@ spec:
       limits:
         memory: 384Mi
 
+    backgroundController:
+      serviceMonitor:
+        enabled: true
+    cleanupController:
+      serviceMonitor:
+        enabled: true
+    reportsController:
+      serviceMonitor:
+        enabled: true
+    grafana:
+      enabled: true
     serviceMonitor:
       enabled: true
-
-    annotations:
-      reloader.stakater.com/search: "true"
