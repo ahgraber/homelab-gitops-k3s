@@ -18,9 +18,9 @@ spec:
       yearly: 1
     pruneIntervalDays: 10
     cacheCapacity: 2Gi
-    moverSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
+    # moverSecurityContext:
+    #   runAsUser: 568
+    #   runAsGroup: 568
     storageClassName: ceph-block # same as source
     copyMethod: Snapshot
     volumeSnapshotClassName: csi-ceph-block
