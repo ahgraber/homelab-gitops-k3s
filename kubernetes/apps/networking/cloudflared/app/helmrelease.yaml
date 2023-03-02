@@ -37,7 +37,7 @@ spec:
       replicas: 3
     image:
       repository: cloudflare/cloudflared
-      tag: 2023.2.1
+      tag: 2023.3.0
     args:
       - tunnel
       # provide path to config file, created by a ConfigMap below
