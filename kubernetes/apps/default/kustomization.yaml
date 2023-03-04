@@ -16,3 +16,4 @@ resources:
   - ./linkding/ks.yaml
   - ./mealie/ks.yaml
   - ./miniflux/ks.yaml
+  # - ./rxresume/ks.yaml
