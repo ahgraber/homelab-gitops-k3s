@@ -21,9 +21,6 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  # dependsOn:
-  #   - name: mealie-cnpgdb
-  #     namespace: default
   values:
     global:
       nameOverride: *app
@@ -32,18 +29,20 @@ spec:
 
     image:
       repository: docker.io/hkotel/mealie
-      tag: frontend-nightly@sha256:3c46415f7d72ab3f199d93527df50f4a390ca8c1ff276623eef2d0a0dd85a638
+      tag: frontend-v1.0.0beta-5
       # tag: frontend-v1.0.0beta-5
     env:
       TZ: ${TIMEZONE}
-      API_URL: "mealie.default.svc.cluster.local:9090"
-      BASE_URL: "https://mealie.${SECRET_DOMAIN}"
+      # API_URL: "mealie.default.svc.cluster.local:9000"
+      # BASE_URL: "https://mealie.${SECRET_DOMAIN}"
     service:
       main:
         ports:
           http:
-            port: 8080
-            targetPort: 80
+            port: 3000
+          api:
+            enabled: true
+            port: 9000
 
     persistence:
       data:
@@ -60,12 +59,11 @@ spec:
 
     sidecars:
       api:
-        image: docker.io/hkotel/mealie
-        tag: api-nightly@sha256:f7ba5690057b3f50d2580b6f4e3816187a3c965d490ef23a2b49e22dd24c7617
+        image: docker.io/hkotel/mealie:api-v1.0.0beta-5
         # tag: api-v1.0.0beta-5
         env:
           TZ: ${TIMEZONE}
-          API_PORT: 9090
+          API_PORT: 9000
           BASE_URL: "https://mealie.${SECRET_DOMAIN}"
           # database settings
           DB_ENGINE: postgres
@@ -94,9 +92,17 @@ spec:
           - secretRef:
               name: *app
 
+        ports:
+          - name: api
+            containerPort: 9000
+
         resources:
           requests:
             cpu: 100m
             memory: 128Mi
           limits:
             memory: 384Mi
+
+        volumeMounts:
+          - name: data
+            mountPath: /app/data/
