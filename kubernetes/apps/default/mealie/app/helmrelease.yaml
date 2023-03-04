@@ -32,7 +32,7 @@ spec:
 
     image:
       repository: docker.io/hkotel/mealie
-      tag: frontend-nightly@sha256:3c46415f7d72ab3f199d93527df50f4a390ca8c1ff276623eef2d0a0dd85a638
+      tag: frontend-nightly@sha256:aa7cba5fe5c93cd6a982a3ac52d580aa2e77d69ea670d9bc83e7f354962f7658
       # tag: frontend-v1.0.0beta-5
     env:
       TZ: ${TIMEZONE}
