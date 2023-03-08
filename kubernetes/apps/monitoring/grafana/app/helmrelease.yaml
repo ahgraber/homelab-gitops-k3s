@@ -123,7 +123,7 @@ spec:
         cpu: 49m
         memory: 81M
       limits:
-        memory: 81M
+        memory: 256M
 
     serviceMonitor:
       enabled: true
