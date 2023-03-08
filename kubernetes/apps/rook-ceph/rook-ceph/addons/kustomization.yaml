@@ -2,17 +2,17 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-resources:
-  - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
+# resources:
+#   - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
 
-patches:
-  - path: ./patches/prometheus-ceph-rules.yaml
-    target:
-      group: monitoring.coreos.com
-      version: v1
-      kind: PrometheusRule
-      name: prometheus-ceph-rules
-      namespace: rook-ceph
+# patches:
+#   - path: ./patches/prometheus-ceph-rules.yaml
+#     target:
+#       group: monitoring.coreos.com
+#       version: v1
+#       kind: PrometheusRule
+#       name: prometheus-ceph-rules
+#       namespace: rook-ceph
 
 configMapGenerator:
   - name: ceph-cluster-dashboard
