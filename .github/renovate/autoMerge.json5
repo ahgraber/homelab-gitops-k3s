@@ -1,19 +1,22 @@
 {
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
       description: "Auto merge container digests",
       matchDatasources: ["docker"],
       automerge: true,
       automergeType: "branch",
-      requiredStatusChecks: null,
+      ignoreTests: true,
       matchUpdateTypes: ["digest"],
       matchPackagePattern: ["ghcr.io/onedr0p"],
     },
     {
+      description: "Auto merge GitHub Actions",
       matchManagers: ["github-actions"],
+      matchDatasources: ["github-tags"],
       automerge: true,
+      ignoreTests: true,
       automergeType: "branch",
-      requiredStatusChecks: null,
       matchUpdateTypes: ["minor", "patch"],
     },
   ],
