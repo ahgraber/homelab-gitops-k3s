@@ -60,6 +60,15 @@ spec:
           - resources:
               annotations:
                 kyverno.io/ignore: "true"
+          - resources:
+              namespaces:
+                - flux-system
+                - kube-node-lease
+                - kube-public
+                - kube-system
+                - calico-apiserver
+                - calico-system
+                - tigera-operator
       mutate:
         foreach:
           - list: "request.object.spec.containers"
@@ -77,6 +86,15 @@ spec:
           - resources:
               annotations:
                 kyverno.io/ignore: "true"
+          - resources:
+              namespaces:
+                - flux-system
+                - kube-node-lease
+                - kube-public
+                - kube-system
+                - calico-apiserver
+                - calico-system
+                - tigera-operator
       preconditions:
         all:
           - key: "{{ request.object.spec.initContainers[] || `[]` | length(@) }}"
