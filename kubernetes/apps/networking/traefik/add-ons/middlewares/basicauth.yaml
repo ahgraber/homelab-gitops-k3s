@@ -7,3 +7,4 @@ metadata:
 spec:
   basicAuth:
     secret: traefik-basicauth-secret
+    headerField: X-Forwarded-User
