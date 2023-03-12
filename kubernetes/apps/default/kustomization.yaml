@@ -13,6 +13,7 @@ resources:
   - ./cyberchef/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
+  - ./letsblockit/ks.yaml
   - ./linkding/ks.yaml
   - ./mealie/ks.yaml
   - ./miniflux/ks.yaml

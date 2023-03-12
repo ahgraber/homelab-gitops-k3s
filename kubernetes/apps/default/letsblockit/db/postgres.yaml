@@ -1,0 +1,19 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: &app letsblockit
+  namespace: default
+spec:
+  database: *app # db name in postgres cluster
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: &app letsblockit
+  namespace: default
+spec:
+  role: *app
+  database: *app # references the CR
+  secretName: database
+  privileges: OWNER
