@@ -38,7 +38,7 @@ spec:
     image:
       # renovate: registryUrl=https://github.com/prymitive/karma
       repository: ghcr.io/prymitive/karma
-      tag: v0.113
+      tag: v0.114
 
     env:
       - name: ALERTMANAGER_URI
