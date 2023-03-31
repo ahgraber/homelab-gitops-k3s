@@ -32,7 +32,7 @@ spec:
   values:
     image:
       repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks
-      tag: v4.7.0
+      tag: v4.7.1
       pullPolicy: Always
 
     controller:
