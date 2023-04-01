@@ -1,0 +1,22 @@
+# Docs: https://github.com/crate-ci/typos
+# Config: https://github.com/crate-ci/typos/blob/master/docs/reference.md
+
+[default]
+check-filename = false
+
+extend-ignore-re = [
+  "ot-charts",
+  "ot-container-kit",
+  "ot-operators",
+]
+
+# # Identifiers vs. Words: https://github.com/crate-ci/typos/blob/master/docs/design.md#identifiers-and-words
+[default.extend-words]
+# Don't correct "iterm" or "iTerm"
+iterm = "iterm"
+
+[files]
+extend-exclude = [
+  ".typos.toml",
+  "*.sops.yaml"
+]

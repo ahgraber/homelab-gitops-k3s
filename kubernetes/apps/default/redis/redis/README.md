@@ -5,12 +5,12 @@ cache and message broker, with optional durability.
 
 ## Redis Operator
 
-The OT-container-kit Redis operator supports HA in a leader/follower arrangement.
+The ot-container-kit Redis operator supports HA in a leader/follower arrangement.
 For Redis Sentinel, use the Bitnami helm chart
 
 ## Redis Sentinel Configuration (bitnami chart)
 
-1. Create base64 encoded Redis configuation
+1. Create base64 encoded Redis configuration
 
     <!-- markdownlint-disable -->
     ```sh

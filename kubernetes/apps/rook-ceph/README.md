@@ -222,7 +222,7 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 
 > Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.9/ceph-teardown.html)
 
-1. Suspend Flux reconcilation or remove kustomization/s (at least the rook-ceph cluster) from git repo
+1. Suspend Flux reconciliation or remove kustomization/s (at least the rook-ceph cluster) from git repo
 2. Delete the cluster helm release (and associated configmaps) or `kubectl delete -k ./kubernetes/apps/rook-ceph/rook-ceph/cluster/`.
    **DO NOT REMOVE THE ORCHESTRATOR**
 3. Delete the cephcluster custom resource (if it still exists)
@@ -290,7 +290,7 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
    # )
    echo "${pvs[0]}"
 
-   # create array from rbd comand
+   # create array from rbd command
    imgs=($(rbd ls -p ceph-blockpool-retain))
    echo "${pvs[0]}"
    ```

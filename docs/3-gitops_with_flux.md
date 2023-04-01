@@ -208,7 +208,7 @@ By default, `echo-server` is the only public domain exposed on your Cloudflare d
 In order to make additional applications public you must set an ingress annotation (see HelmRelease for `echo-server`).
 Note: This is not required unless you need a record outside the purposes of your Kubernetes cluster (e.g. setting up MX records).
 
-[k8s_gateway](https://github.com/ori-edge/k8s_gateway) is deployed on the IP choosen for `${LB_GATEWAY}`.
+[k8s_gateway](https://github.com/ori-edge/k8s_gateway) is deployed on the IP chosen for `${LB_GATEWAY}`.
 In order to test DNS you can point your client's DNS to the `${LB_GATEWAY}` IP address and load a deployed app in your browser.
 
 You can also try debugging with the command `dig`, e.g. `dig @${LB_GATEWAY} <app_name>.${SECRET_DOMAIN}`
