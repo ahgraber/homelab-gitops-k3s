@@ -51,9 +51,9 @@ spec:
       env:
         - name: TZ
           value: "${TIMEZONE}"
-        # by default disable the agent for local API pods
-        - name: DISABLE_AGENT
-          value: "true"
+        ### by default disable the agent for local API pods --> this is set in lapi-deployment helm template
+        # - name: DISABLE_AGENT
+        #   value: "true"
         # # If it's a test, we don't want to share signals with CrowdSec so disable the Online API.
         # - name: DISABLE_ONLINE_API
         #   value: "true"
@@ -143,9 +143,9 @@ spec:
       env:
         - name: TZ
           value: "${TIMEZONE}"
-        # default disable local API on the agent pod
-        - name: DISABLE_ONLINE_API
-          value: "false"
+        # # default disable local API on the agent pod --> this is set in agent-daemonset helm template
+        # - name: DISABLE_ONLINE_API
+        #   value: "false"
         # - name: LEVEL_TRACE
         #   value: "false"
         # - name: LEVEL_DEBUG
