@@ -32,11 +32,11 @@ spec:
 
     image:
       # -- docker image repository name
-      repository: crowdsecurity/crowdsec
+      repository: ghcr.io/crowdsecurity/crowdsec
+      tag: v1.4.6
       # -- pullPolicy
       pullPolicy: IfNotPresent
       # -- docker image tag
-      tag: "latest"
 
     # # If you want to specify secrets that will be used for all your crowdsec-agents
     # # secrets can be provided be env variables
