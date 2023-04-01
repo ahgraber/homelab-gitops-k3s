@@ -4,7 +4,7 @@
 
 > Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.0/ceph-teardown.html)
 
-1. Suspend Flux reconcilation or remove kustomization/s (at least the rook-ceph cluster) from git repo
+1. Suspend Flux reconciliation or remove kustomization/s (at least the rook-ceph cluster) from git repo
 2. Delete the cluster helm release (and associated configmaps) or `kubectl delete -k ./cluster/core/rook-ceph/cluster`.
    **DO NOT REMOVE THE ORCHESTRATOR**
 3. Delete the cephcluster custom resource (if it still exists)
@@ -68,7 +68,7 @@ kubectl delete ns rook-ceph
    # )
    echo "${pvs[0]}"
 
-   # create array from rbd comand
+   # create array from rbd command
    imgs=($(rbd ls -p ceph-blockpool-retain))
    echo "${pvs[0]}"
    ```

@@ -52,7 +52,7 @@ task init
 
 [pre-commit](https://pre-commit.com/) is installed with `task init`.
 [sops-pre-commit](https://github.com/k8s-at-home/sops-pre-commit) will check
-to make sure you are not by accident commiting your secrets un-encrypted.
+to make sure you are not by accident committing your secrets un-encrypted.
 
 ```sh
 pre-commit install && pre-commit autoupdate

@@ -78,7 +78,7 @@ repos:
       - id: shellcheck
         args: ["-x"]
         # ignore '*.zsh" scripts'
-        exclude: "^.*zsh$"
+        exclude: '^\.\*zsh$'
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.1.1
     hooks:
@@ -89,3 +89,21 @@ repos:
     rev: v8.16.2
     hooks:
       - id: gitleaks
+  # - repo: https://github.com/codespell-project/codespell
+  #   rev: v2.2.4
+  #   hooks:
+  #     - id: codespell
+  #       args:
+  #         - "--ignore-words-list"
+  #         - "iterm"
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.14.3
+    hooks:
+      - id: typos
+        args: [--config, .typos.toml]
+        # exclude: "sops.yaml$"
+        exclude: |
+          (?x)^(
+            ^.*(typos\.toml)$ |
+            ^.*(\.sops\.yaml)$
+          )$
