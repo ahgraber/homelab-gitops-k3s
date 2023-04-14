@@ -33,3 +33,11 @@ tasks:
       DEPS: >-
         age ansible direnv fluxcd/tap/flux gitleaks go-task/tap/go-task helm ipcalc jq kubernetes-cli kustomize
         pre-commit prettier sops stern terraform tflint weaveworks/tap/gitops yamllint yq
+
+  sops:
+    desc: Substitute and encrypt sops secret, given final filepath
+    cmds:
+      - |
+        unset noclobber
+        envsubst < ./{{.CLI_ARGS}}.tmpl > ./{{.CLI_ARGS}}
+        sops --encrypt --in-place ./{{.CLI_ARGS}}
