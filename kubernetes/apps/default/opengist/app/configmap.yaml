@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: &app opengist
+  namespace: default
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  config.yml: |
+    ---
+    # Set the log level to one of the following: trace, debug, info, warn, error, fatal, panic. Default: warn
+    log-level: warn
+
+    # Public URL for the Git HTTP/SSH connection.
+    # If not set, uses the URL from the request
+    external-url: opengist.${SECRET_DOMAIN}
+
+    # Prevents the creation of new accounts (either `true` or `false`). Default: false
+    disable-signup: true
+
+    # Directory where Opengist will store its data. Default: ~/.opengist/
+    opengist-home: /mnt/opengist/
+
+    # Name of the SQLite database file. Default: opengist.db
+    db-filename: opengist.db
+
+
+    # HTTP server configuration
+    # Host to bind to. Default: 0.0.0.0
+    http.host: 0.0.0.0
+
+    # Port to bind to. Default: 6157
+    http.port: 6157
+
+    # Enable or disable git operations (clone, pull, push) via HTTP (either `true` or `false`). Default: true
+    http.git-enabled: true
+
+    # Enable or disable TLS (either `true` or `false`). Default: false
+    http.tls-enabled: false
+
+    # Path to the TLS certificate file if TLS is enabled
+    http.cert-file:
+
+    # Path to the TLS key file if TLS is enabled
+    http.key-file:
+
+    # SSH built-in server configuration
+    # Note: it is not using the SSH daemon from your machine (yet)
+
+    # Enable or disable SSH built-in server
+    # for git operations (clone, pull, push) via SSH (either `true` or `false`). Default: true
+    ssh.git-enabled: true
+
+    # Host to bind to. Default: 0.0.0.0
+    ssh.host: 0.0.0.0
+
+    # Port to bind to. Default: 2222
+    # Note: it cannot be the same port as the SSH daemon if it's currently running
+    # If you want to use the port 22 for the built-in SSH server,
+    # you can either change the port of the SSH daemon or stop it
+    ssh.port: 2222
+
+    # Public domain for the Git SSH connection, if it has to be different from the HTTP one.
+    # If not set, uses the URL from the request
+    ssh.external-domain: opengist.${SECRET_DOMAIN}
+
+    # Path or alias to ssh-keygen executable. Default: ssh-keygen
+    ssh.keygen-executable: ssh-keygen
