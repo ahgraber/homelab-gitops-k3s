@@ -20,14 +20,13 @@ data:
     external-url: opengist.${SECRET_DOMAIN}
 
     # Prevents the creation of new accounts (either `true` or `false`). Default: false
-    disable-signup: true
+    disable-signup: false
 
     # Directory where Opengist will store its data. Default: ~/.opengist/
     opengist-home: /mnt/opengist/
 
     # Name of the SQLite database file. Default: opengist.db
     db-filename: opengist.db
-
 
     # HTTP server configuration
     # Host to bind to. Default: 0.0.0.0
