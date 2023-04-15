@@ -149,6 +149,10 @@ spec:
         tls:
           enabled: true
           options: "default"
+      ssh:
+        port: 2222
+        expose: true
+        exposedPort: 2222
       metrics:
         port: 9100
         expose: false
