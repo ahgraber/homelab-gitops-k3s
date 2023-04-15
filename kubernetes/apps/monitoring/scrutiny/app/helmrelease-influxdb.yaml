@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: docker.io/library/influxdb
-      tag: 2.6-alpine
+      tag: 2.7-alpine
 
     service:
       main:
