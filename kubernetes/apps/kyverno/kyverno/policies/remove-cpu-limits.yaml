@@ -13,7 +13,6 @@ metadata:
 spec:
   mutateExistingOnPolicyUpdate: true
   generateExistingOnPolicyUpdate: true
-
   rules:
     - name: delete-containers-cpu-limits
       match:
@@ -38,7 +37,7 @@ spec:
       mutate:
         foreach:
           - list: "request.object.spec.containers"
-            patches: |-
+            patchesJson6902: |-
               - path: /spec/containers/{{elementIndex}}/resources/limits/cpu
                 op: remove
     - name: delete-initcontainers-cpu-limits
@@ -69,6 +68,6 @@ spec:
       mutate:
         foreach:
           - list: "request.object.spec.initContainers"
-            patches: |-
+            patchesJson6902: |-
               - path: /spec/initContainers/{{elementIndex}}/resources/limits/cpu
                 op: remove
