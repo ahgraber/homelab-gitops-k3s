@@ -15,40 +15,6 @@ spec:
   generateExistingOnPolicyUpdate: true
 
   rules:
-    ### onedr0p
-    # - name: remove-cpu-limits
-    #   match:
-    #     any:
-    #       - resources:
-    #           kinds:
-    #             - Pod
-    #   exclude:
-    #     any:
-    #       - resources:
-    #           annotations:
-    #             kyverno.io/ignore: "true"
-    #       - resources:
-    #           namespaces:
-    #             - flux-system
-    #             - kube-node-lease
-    #             - kube-public
-    #             - kube-system
-    #             # - calico-system
-    #             # - tigera-operator
-    #   mutate:
-    #     patchStrategicMerge:
-    #       spec:
-    #         initContainers:
-    #           - (name): "*"
-    #             resources:
-    #               limits:
-    #                 cpu: 0
-    #         containers:
-    #           - (name): "*"
-    #             resources:
-    #               limits:
-    #                 cpu: 0
-
     - name: delete-containers-cpu-limits
       match:
         any:
@@ -72,7 +38,7 @@ spec:
       mutate:
         foreach:
           - list: "request.object.spec.containers"
-            patchesJson6902: |-
+            patches: |-
               - path: /spec/containers/{{elementIndex}}/resources/limits/cpu
                 op: remove
     - name: delete-initcontainers-cpu-limits
@@ -103,6 +69,6 @@ spec:
       mutate:
         foreach:
           - list: "request.object.spec.initContainers"
-            patchesJson6902: |-
+            patches: |-
               - path: /spec/initContainers/{{elementIndex}}/resources/limits/cpu
                 op: remove

@@ -34,7 +34,7 @@ Flux will apply them.
 - **bootstrap** helps initialize Flux
 - **flux** installs Flux, defines the cluster, and deploys cluster secrets and variables
 - **apps** organizes all applications.  Applications are defined by a nested folder where the exterior
-  folder contains a "fluxtomization" (kustomize.toolkit.fluxcd.io/v1beta2) that manages dependencies,
+  folder contains a "fluxtomization" (kustomize.toolkit.fluxcd.io/v1) that manages dependencies,
   and the inner folder contains a kustomization (kustomize.config.k8s.io/v1beta1) that deploys the manifests.
 
 ```txt
