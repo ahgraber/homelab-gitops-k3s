@@ -1,5 +1,5 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: apps-monitoring-kube-prometheus-stack
@@ -21,7 +21,7 @@ spec:
   retryInterval: 1m
   timeout: 5m
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: apps-monitoring-kube-prometheus-stack-addons

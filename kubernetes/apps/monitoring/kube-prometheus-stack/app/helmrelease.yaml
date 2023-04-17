@@ -55,7 +55,6 @@ spec:
   postRenderers:
     #  use built-in "kustomize" post renderer.
     - kustomize:
-        # patchesJson6902:
         patches:
           - target:
               group: monitoring.coreos.com
