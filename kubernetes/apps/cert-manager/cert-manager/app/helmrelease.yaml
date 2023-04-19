@@ -46,7 +46,7 @@ spec:
         targetPort: 9402
         path: /metrics
         interval: 60s
-        scrapeTimeout: 30s
+        scrapeTimeout: 10s
         labels: {}
         honorLabels: false
 

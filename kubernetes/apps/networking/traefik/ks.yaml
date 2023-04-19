@@ -19,7 +19,7 @@ spec:
       kind: HelmRelease
       name: traefik
       namespace: networking
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
   timeout: 3m
 ---
@@ -36,6 +36,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: homelab-gitops-k3s
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
   timeout: 3m

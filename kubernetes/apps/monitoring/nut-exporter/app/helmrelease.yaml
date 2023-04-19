@@ -47,7 +47,7 @@ spec:
         endpoints:
           - port: http
             scheme: http
-            interval: 30s
+            interval: 60s
             scrapeTimeout: 10s
             path: /ups_metrics
             params:

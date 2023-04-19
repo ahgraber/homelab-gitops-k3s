@@ -14,7 +14,7 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
   timeout: 3m
 ---
@@ -32,7 +32,7 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
   timeout: 3m
 ---
@@ -51,6 +51,6 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
   timeout: 3m
