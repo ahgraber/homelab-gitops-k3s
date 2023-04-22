@@ -97,7 +97,7 @@ repos:
   #         - "--ignore-words-list"
   #         - "iterm"
   - repo: https://github.com/crate-ci/typos
-    rev: v1.14.6
+    rev: v1.14.8
     hooks:
       - id: typos
         args: [--config, .typos.toml]
