@@ -21,7 +21,7 @@ spec:
   install:
     timeout: 10m
     replace: true
-    # crds: CreateReplace
+    crds: CreateReplace
     createNamespace: true
     remediation:
       retries: 3
@@ -31,7 +31,7 @@ spec:
       retries: 3
       strategy: rollback
     cleanupOnFail: true
-    # crds: CreateReplace
+    crds: CreateReplace
   uninstall:
     keepHistory: false
   values:
@@ -44,7 +44,7 @@ spec:
       annotations:
         reloader.stakater.com/search: "true"
 
-    installCRDs: true
+    # installCRDs: true
 
     ingressClass:
       enabled: true
