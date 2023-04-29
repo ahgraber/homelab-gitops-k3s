@@ -58,7 +58,20 @@ spec:
           memory: 105Mi
 
     ingress:
-      enabled: false
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host "goldilocks.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
 
     annotations:
       reloader.stakater.com/search: "true"

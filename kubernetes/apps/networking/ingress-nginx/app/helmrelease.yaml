@@ -1,0 +1,110 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: networking
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: ingress-nginx
+      version: 4.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx-charts
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controller:
+      replicaCount: 2
+      service:
+        type: LoadBalancer
+        ### pick either metallb annotation OR spec.loadBalancerIP
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: "${LB_INGRESS}"
+        spec:
+          externalTrafficPolicy: Local # preserve client source IP
+
+      ingressClassResource:
+        default: true
+      config:
+        client-body-buffer-size: 100M
+        client-body-timeout: 120
+        client-header-timeout: 120
+        custom-http-errors: >-
+          401,403,404,500,501,502,503
+        enable-brotli: "true"
+        enable-real-ip: "true"
+        forwarded-for-header: CF-Connecting-IP
+        hsts-max-age: 31449600
+        keep-alive-requests: 10000
+        keep-alive: 120
+        proxy-body-size: 0
+        proxy-buffer-size: 16k
+        ssl-protocols: TLSv1.3 TLSv1.2
+        use-forwarded-headers: "true"
+      extraArgs:
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-tls"
+      extraEnvs:
+        - name: TZ
+          value: "${TIMEZONE}"
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: networking
+          namespaceSelector:
+            any: true
+
+      podAnnotations:
+        configmap.reloader.stakater.com/reload: cloudflare-proxied-networks
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+              app.kubernetes.io/component: controller
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 250Mi
+        limits:
+          memory: 750Mi
+
+    defaultBackend:
+      enabled: true # Note: obsidian-livesync does not work with a default backend enabled
+      image:
+        repository: ghcr.io/tarampampam/error-pages
+        tag: 2.24.0
+      replicaCount: 1
+      extraEnvs:
+        # https://github.com/tarampampam/error-pages#-templates
+        - name: TEMPLATE_NAME
+          value: shuffle
+        - name: SHOW_DETAILS
+          value: "false"
+
+  valuesFrom:
+    # Cloudflare Networks
+    # https://www.cloudflare.com/ips/
+    - kind: ConfigMap
+      name: cloudflare-networks
+      valuesKey: cloudflare-networks.txt
+      targetPath: controller.config.proxy-real-ip-cidr

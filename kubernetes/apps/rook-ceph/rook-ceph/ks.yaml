@@ -30,7 +30,7 @@ spec:
   dependsOn:
     - name: apps-rook-ceph-operator
     - name: apps-kube-system-snapshot-controller
-    - name: apps-networking-traefik
+    - name: apps-networking-ingress-nginx
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
   sourceRef:

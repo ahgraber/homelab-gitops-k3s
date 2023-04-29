@@ -75,8 +75,16 @@ spec:
       dashboard:
         # -- Enable Metabase Dashboard (by default disabled)
         enabled: false
-        ingress:
-          enabled: false
+        # image:
+        #   repository: metabase/metabase
+        # assetURL: https://crowdsec-statics-assets.s3-eu-west-1.amazonaws.com/metabase_sqlite.zip
+        # ingress:
+        #   enabled: true
+        #   annotations:
+        #     # metabase only supports http
+        #     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        #   ingressClassName: nginx
+        #   host: "crowdsec.${SECRET_DOMAIN}"
 
       resources:
         requests:
@@ -119,8 +127,8 @@ spec:
       acquisition:
         # -- Specify each pod you want to process it logs (namespace, podName and program)
         - namespace: networking
-          podName: traefik-*
-          program: traefik
+          podName: ingress-nginx-controller-*
+          program: nginx
         # - namespace: cluster-system
         #   podName: keycloak-postgresql-*
         #   program: pgsql
@@ -159,7 +167,7 @@ spec:
           value: >-
             crowdsecurity/linux
             crowdsecurity/sshd
-            crowdsecurity/traefik
+            crowdsecurity/nginx
             crowdsecurity/base-http-scenarios
             crowdsecurity/http-cve
             crowdsecurity/pgsql
@@ -167,7 +175,9 @@ spec:
         - name: PARSERS
           # https://hub.crowdsec.net/author/crowdsecurity/configurations/cri-logs
           # https://hub.crowdsec.net/author/crowdsecurity/configurations/docker-logs
-          value: "crowdsecurity/cri-logs crowdsecurity/docker-logs"
+          value: >-
+            crowdsecurity/cri-logs
+            crowdsecurity/docker-logs
 
         # - name: SCENARIOS
         #   value: |

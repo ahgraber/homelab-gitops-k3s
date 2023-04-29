@@ -21,3 +21,27 @@ spec:
   tls:
     secretName: "${SECRET_DOMAIN/./-}-tls"
     # secretName: '${SECRET_DOMAIN/./-}-stage-tls'
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webhook-receiver
+  namespace: flux-system
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host "flux-receiver.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /hook/
+            pathType: Prefix
+            backend:
+              service:
+                name: webhook-receiver
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - *host
+      # secretName: "${SECRET_DOMAIN/./-}-tls"

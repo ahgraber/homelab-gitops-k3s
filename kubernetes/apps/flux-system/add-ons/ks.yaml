@@ -44,7 +44,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-networking-cloudflared
-    - name: apps-networking-traefik
+    - name: apps-networking-ingress-nginx
   path: ./kubernetes/apps/flux-system/add-ons/webhooks
   prune: true
   sourceRef:

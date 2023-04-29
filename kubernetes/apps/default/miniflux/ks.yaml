@@ -24,7 +24,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-default-miniflux-db
-    - name: apps-networking-traefik
+    - name: apps-networking-ingress-nginx
     - name: apps-rook-ceph-cluster
     - name: apps-volsync
   path: ./kubernetes/apps/default/miniflux/app

@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   # - ./backup/
   - ./helmrelease.yaml
-  - ./ingressroute.yaml
   - ./pvc.yaml
   - ./secret.sops.yaml
