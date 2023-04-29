@@ -92,6 +92,11 @@ data:
             href: https://miniflux.${SECRET_DOMAIN}
             icon: miniflux.png
             description: A self-hosted rss feed reader
+        - OpenGist:
+            href: https://opengist.${SECRET_DOMAIN}
+            icon: mdi-xml
+            description: A bookmark manager with read-it-later and archiving functionality
+
     - Infrastructure:
         - OPNsense:
             href: https://opnsense.${SECRET_DOMAIN}
