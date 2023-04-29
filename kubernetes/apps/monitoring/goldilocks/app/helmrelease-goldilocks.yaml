@@ -49,16 +49,7 @@ spec:
       enabled: true
       # Container names to exclude from displaying in the Goldilocks dashboard
       excludeContainers: "linkerd-proxy,istio-proxy"
-      resources:
-        requests:
-          cpu: 15m
-          memory: 105Mi
-        limits:
-          cpu: 15m
-          memory: 105Mi
-
-    ingress:
-      main:
+      ingress:
         enabled: true
         ingressClassName: nginx
         annotations:
@@ -68,10 +59,17 @@ spec:
           - host: &host "goldilocks.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                type: Prefix
         tls:
           - hosts:
               - *host
+      resources:
+        requests:
+          cpu: 15m
+          memory: 105Mi
+        limits:
+          cpu: 15m
+          memory: 105Mi
 
     annotations:
       reloader.stakater.com/search: "true"

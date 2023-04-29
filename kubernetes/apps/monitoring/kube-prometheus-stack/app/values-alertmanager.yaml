@@ -12,24 +12,7 @@ data:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/alertmanager/values.yaml
     alertmanager:
       enabled: true
-
       nameOverride: alertmanager
-
-      ingress:
-        main:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            nginx.ingress.kubernetes.io/whitelist-source-range: |
-              10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-          hosts:
-            - host: &host "alertmanager.${SECRET_DOMAIN}"
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - hosts:
-                - *host
 
       alertmanagerSpec:
         # externalUrl: "https://alertmanager.${SECRET_DOMAIN}"
@@ -50,6 +33,18 @@ data:
 
         # tolerations: []
         # nodeSelector: {}
+
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - &host "alertmanager.${SECRET_DOMAIN}"
+        tls:
+          - hosts:
+              - *host
 
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
       config:
