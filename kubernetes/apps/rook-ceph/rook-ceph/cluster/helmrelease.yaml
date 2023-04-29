@@ -36,6 +36,19 @@ spec:
       # https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
       createPrometheusRules: false # deploy manually with kube-prom-stack to patch
 
+    ingress:
+      dashboard:
+        ingressClassName: nginx
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        host:
+          name: "rook.${SECRET_DOMAIN}"
+          path: /
+        tls:
+          - hosts:
+              - "${SECRET_DOMAIN/./-}-tls"
+
     toolbox:
       enabled: true
       tolerations:

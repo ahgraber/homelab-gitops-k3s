@@ -6,5 +6,4 @@ resources:
   - ./helmrelease-collector.yaml
   - ./helmrelease-influxdb.yaml
   - ./helmrelease-scrutiny.yaml
-  - ./ingressroute.yaml
   - ./pvc.yaml

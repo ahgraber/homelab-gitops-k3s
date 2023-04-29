@@ -8,5 +8,5 @@ resources:
   # Flux-Kustomizations
   - ./cloudflared/ks.yaml
   - ./crowdsec/ks.yaml
-  - ./traefik/ks.yaml
-  # Standard Resources
+  - ./ingress-nginx/ks.yaml
+  # - ./traefik/ks.yaml

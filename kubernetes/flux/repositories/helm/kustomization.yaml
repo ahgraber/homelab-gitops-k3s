@@ -21,7 +21,7 @@ resources:
   - ./external-dns-charts.yaml
   - ./fairwinds-charts.yaml # goldilocks (and others)
   - ./grafana-charts.yaml
-  # - ./ingress-nginx-charts.yaml
+  - ./ingress-nginx-charts.yaml
   - ./jetstack-charts.yaml # cert-manager
   - ./jupyterhub-charts.yaml
   - ./k8s-gateway-charts.yaml

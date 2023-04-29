@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-networking-traefik
+    - name: apps-networking-ingress-nginx
   path: ./kubernetes/apps/debug/httpbin/app
   prune: true
   sourceRef:

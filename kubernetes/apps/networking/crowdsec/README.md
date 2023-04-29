@@ -32,7 +32,6 @@ Crowdsec bouncer API key must be (manually) generated from crowdsec LAPI.
 cscli bouncers add traefik-ingress
 ```
 
-### Integration with traefik
+### Integration with ingress-nginx
 
-Traefik middleware is created automatically by deployment, and can be used by ingresses and ingressroutes,
-or applied to all traffic on specific endpoints
+[Follow instructions to patch helm values](https://docs.crowdsec.net/docs/bouncers/ingress-nginx)
