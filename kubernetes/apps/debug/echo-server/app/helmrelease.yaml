@@ -8,25 +8,48 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://ealenn.github.io/charts
-      chart: echo-server
-      version: 0.5.0
+      chart: app-template
+      version: 1.4.0
       sourceRef:
         kind: HelmRepository
-        name: ealenn-charts
+        name: bjw-s-charts
         namespace: flux-system
+  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
+  uninstall:
+    keepHistory: false
   values:
+    controller:
+      replicas: 1
     image:
-      repository: ealen/echo-server
-      tag: 0.7.0
-
+      repository: docker.io/jmalloc/echo-server
+      tag: 0.3.5
+    service:
+      main:
+        ports:
+          http:
+            port: &port 8080
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /health
+            port: *port
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
+        enabled: false
     ingress:
       main:
         enabled: true
@@ -45,10 +68,7 @@ spec:
 
     resources:
       requests:
-        cpu: 50m
-        memory: 64M
+        cpu: 10m
+        memory: 16M
       limits:
-        memory: 96M
-
-    annotations:
-      reloader.stakater.com/search: "true"
+        memory: 32M
