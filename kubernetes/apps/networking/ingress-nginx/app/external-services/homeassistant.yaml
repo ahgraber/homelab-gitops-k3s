@@ -5,26 +5,26 @@ metadata:
   name: homeassistant
   namespace: networking
 spec:
+  type: ExternalName
+  externalName: "yellow.${SECRET_DOMAIN}"
   ports:
     - name: http
       port: 8123
       protocol: TCP
       targetPort: 8123
-  clusterIP: None
-  type: ClusterIP
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: homeassistant
-  namespace: networking
-subsets:
-  - addresses:
-      - ip: 10.3.1.1
-    ports:
-      - name: http
-        port: 8123
-        protocol: TCP
+# ---
+# apiVersion: v1
+# kind: Endpoints
+# metadata:
+#   name: homeassistant
+#   namespace: networking
+# subsets:
+#   - addresses:
+#       - ip: 10.3.1.1
+#     ports:
+#       - name: http
+#         port: 8123
+#         protocol: TCP
 # ---
 # # EndpointSlices causes crash (panic) with headless service
 # # use once resolved: https://github.com/kubernetes/ingress-nginx/issues/9606
