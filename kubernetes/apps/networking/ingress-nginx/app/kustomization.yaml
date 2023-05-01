@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: networking
 resources:
   - ./dashboard/
-  - ./external-services/
   - ./helmrelease.yaml
 configMapGenerator:
   - name: cloudflare-networks

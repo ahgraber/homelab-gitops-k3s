@@ -9,9 +9,9 @@ spec:
   externalName: "yellow.${SECRET_DOMAIN}"
   ports:
     - name: http
-      port: 8123
+      port: &port 8123
       protocol: TCP
-      targetPort: 8123
+      targetPort: *port
 # ---
 # apiVersion: v1
 # kind: Endpoints
@@ -50,6 +50,9 @@ kind: Ingress
 metadata:
   name: homeassistant
   namespace: networking
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 spec:
   ingressClassName: nginx
   rules:
