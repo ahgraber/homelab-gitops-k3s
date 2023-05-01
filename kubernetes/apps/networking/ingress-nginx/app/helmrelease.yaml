@@ -33,11 +33,9 @@ spec:
         ### pick either metallb annotation OR spec.loadBalancerIP
         # annotations:
         #   metallb.universe.tf/loadBalancerIPs: "${LB_INGRESS}"
-        spec:
-          # externalIPs:
-          #   - "${LB_INGRESS}"
-          loadBalancerIP: "${LB_INGRESS}"
-          externalTrafficPolicy: Local # preserve client source IP
+        externalIPs: ["${LB_INGRESS}"]
+        loadBalancerIP: "${LB_INGRESS}"
+        externalTrafficPolicy: Local # preserve client source IP
 
       ingressClassResource:
         default: true
