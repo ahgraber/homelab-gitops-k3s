@@ -47,7 +47,7 @@ spec:
           401,403,404,500,501,502,503
         enable-brotli: "true"
         enable-real-ip: "true"
-        forwarded-for-header: CF-Connecting-IP|X-Forwarded-For
+        forwarded-for-header: CF-Connecting-IP # X-Forwarded-For
         hsts-max-age: 31449600
         keep-alive-requests: 10000
         keep-alive: 120
