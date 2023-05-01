@@ -81,9 +81,13 @@ spec:
       #   imagePullPolicy: IfNotPresent
       #   env:
       #     - name: API_URL
-      #       value: "http://crowdsec-service.crowdsec.svc.cluster.local:8080"
+      #       value: "http://crowdsec-service.networking.svc.cluster.local:8080"
       #     - name: API_KEY
-      #       value: "${SECRET_CROWDSEC_NGINX_BOUNCER_API_KEY}"
+      #       # value: "${BOUNCER_KEY_INGRESS}"
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: crowdsec-secret
+      #           key: BOUNCER_KEY_INGRESS
       #     - name: DISABLE_RUN
       #       value: "true"
       #     - name: BOUNCER_CONFIG
