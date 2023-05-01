@@ -5,20 +5,11 @@ metadata:
   name: &app homeassistant
   namespace: networking
   annotations:
-    # nginx.ingress.kubernetes.io/forwarded-for-header: "X-Forwarded-For"
-    # nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-    # nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    # nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    # nginx.ingress.kubernetes.io/server_snippet: |
-    #   proxy_set_header Host $host;
-    #   proxy_http_version 1.1;
-    #   proxy_set_header Upgrade $http_upgrade;
-    #   proxy_set_header Connection "Upgrade";
     nginx.ingress.kubernetes.io/whitelist-source-range: |
       10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-  # labels:
-  #   app.kubernetes.io/name: *app
-  #   app.kubernetes.io/instance: *app
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 spec:
   ingressClassName: nginx
   rules:
@@ -43,9 +34,9 @@ kind: Service
 metadata:
   name: &app homeassistant
   namespace: networking
-  # labels:
-  #   app.kubernetes.io/name: *app
-  #   app.kubernetes.io/instance: *app
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 spec:
   # selector:
   #   app.kubernetes.io/instance: *app
@@ -80,9 +71,9 @@ kind: Endpoints
 metadata:
   name: &app homeassistant
   namespace: networking
-  # labels:
-  #   app.kubernetes.io/name: *app
-  #   app.kubernetes.io/instance: *app
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 subsets:
   - addresses:
       - ip: 10.3.1.1
