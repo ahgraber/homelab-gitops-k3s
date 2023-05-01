@@ -9,4 +9,3 @@ resources:
   - ./dnsutils/ks.yaml
   - ./echo-server/ks.yaml
   - ./httpbin/ks.yaml
-  - ./whoami/ks.yaml
