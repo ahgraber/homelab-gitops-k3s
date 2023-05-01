@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: *app
 spec:
   type: ExternalName
-  externalName: "10.3.1.1"
+  externalName: yellow.ninerealmlabs.com
   ports:
     - name: http
       port: &port 8123
