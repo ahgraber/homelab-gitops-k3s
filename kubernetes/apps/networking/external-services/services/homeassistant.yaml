@@ -1,33 +1,20 @@
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: &app homeassistant
-#   namespace: networking
-#   labels:
-#     app.kubernetes.io/name: *app
-#     app.kubernetes.io/instance: *app
-# spec:
-#   type: ExternalName
-#   externalName: "yellow.${SECRET_DOMAIN}"
-#   ports:
-#     - name: http
-#       port: &port 8123
-#       protocol: TCP
-#       targetPort: *port
 ---
 apiVersion: v1
-kind: Endpoints
+kind: Service
 metadata:
-  name: homeassistant
+  name: &app homeassistant
   namespace: networking
-subsets:
-  - addresses:
-      - ip: 10.3.1.1
-    ports:
-      - name: http
-        port: 8123
-        protocol: TCP
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  type: ExternalName
+  externalName: "http://10.3.1.1"
+  ports:
+    - name: http
+      port: &port 8123
+      protocol: TCP
+      targetPort: *port
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
