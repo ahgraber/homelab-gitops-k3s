@@ -38,32 +38,12 @@ metadata:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
 spec:
-  # selector:
-  #   app.kubernetes.io/instance: *app
-  #   app.kubernetes.io/name: *app
   type: ClusterIP
   ports:
     - name: http
       port: &port 8123
       protocol: TCP
       targetPort: *port
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: &app homeassistant
-#   namespace: networking
-#   labels:
-#     app.kubernetes.io/name: *app
-#     app.kubernetes.io/instance: *app
-# spec:
-#   type: ExternalName  # uses fqdn
-#   externalName: yellow.ninerealmlabs.com
-#   ports:
-#     - name: http
-#       port: &port 8123
-#       protocol: TCP
-#       targetPort: *port
 ---
 # ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
 apiVersion: v1
@@ -81,23 +61,3 @@ subsets:
       - name: http
         port: 8123
         protocol: TCP
-# ---
-# # ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
-# # EndpointSlices causes crash (panic) with headless service
-# # use once resolved: https://github.com/kubernetes/ingress-nginx/issues/9606
-# apiVersion: discovery.k8s.io/v1
-# kind: EndpointSlice
-# metadata:
-#   name: &app homeassistant
-#   namespace: networking
-#   labels:
-#     # 'kubernetes.io/service-name': *app Must be present for EndpointSlice and equal to Service name for automatic mapping
-#     # If in place, you can change the name of EndpointSlice to something else.
-#     # The official convention is using Service name as the prefix.
-#     kubernetes.io/service-name: homeassistant
-# addressType: IPv4
-# ports:
-#   - port: 8123
-# endpoints:
-#   - addresses:
-#     - "10.3.1.1" # IP address of your external service that you would like to proxy requests to
