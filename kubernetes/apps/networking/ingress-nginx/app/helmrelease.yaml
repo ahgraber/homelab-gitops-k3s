@@ -31,9 +31,12 @@ spec:
       service:
         type: LoadBalancer
         ### pick either metallb annotation OR spec.loadBalancerIP
-        annotations:
-          metallb.universe.tf/loadBalancerIPs: "${LB_INGRESS}"
+        # annotations:
+        #   metallb.universe.tf/loadBalancerIPs: "${LB_INGRESS}"
         spec:
+          # externalIPs:
+          #   - "${LB_INGRESS}"
+          loadBalancerIP: "${LB_INGRESS}"
           externalTrafficPolicy: Local # preserve client source IP
 
       ingressClassResource:
@@ -43,8 +46,7 @@ spec:
         client-body-buffer-size: 100M
         client-body-timeout: 120
         client-header-timeout: 120
-        custom-http-errors: >-
-          401,403,404,500,501,502,503
+        custom-http-errors: 400,401,403,404,500,501,502,503,504
         enable-brotli: "true"
         enable-real-ip: "true"
         forwarded-for-header: CF-Connecting-IP # X-Forwarded-For
@@ -70,6 +72,45 @@ spec:
       extraEnvs:
         - name: TZ
           value: "${TIMEZONE}"
+      # crowdsec bouncer
+      # extraVolumes:
+      # - name: crowdsec-bouncer-plugin
+      #   emptyDir: {}
+      # extraInitContainers:
+      # - name: init-clone-crowdsec-bouncer
+      #   image: crowdsecurity/lua-bouncer-plugin
+      #   tag: v0.1.11
+      #   imagePullPolicy: IfNotPresent
+      #   env:
+      #     - name: API_URL
+      #       value: "http://crowdsec-service.crowdsec.svc.cluster.local:8080"
+      #     - name: API_KEY
+      #       value: "${SECRET_CROWDSEC_NGINX_BOUNCER_API_KEY}"
+      #     - name: DISABLE_RUN
+      #       value: "true"
+      #     - name: BOUNCER_CONFIG
+      #       value: "/crowdsec/crowdsec-bouncer.conf"
+      #   command:
+      #     - "/bin/sh"
+      #     - "-c"
+      #     - |
+      #       #!/bin/sh
+      #       sh /docker_start.sh
+      #       mkdir -p /lua_plugins/crowdsec/
+      #       cp -pr /crowdsec/* /lua_plugins/crowdsec/
+      #   volumeMounts:
+      #   - name: crowdsec-bouncer-plugin
+      #     mountPath: /lua_plugins
+      # extraVolumeMounts:
+      # - name: crowdsec-bouncer-plugin
+      #   mountPath: /etc/nginx/lua/plugins/crowdsec
+      #   subPath: crowdsec
+      # resources:
+      #   requests:
+      #     memory: 400Mi
+      #     cpu: 25m
+      #   limits:
+      #     memory: 1Gi
       metrics:
         enabled: true
         serviceMonitor:
