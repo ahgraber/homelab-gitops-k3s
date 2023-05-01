@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-networking-external-services
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: apps-networking-ingress-nginx
+  path: ./kubernetes/apps/networking/external-services/services
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 15m
+  retryInterval: 1m
+  timeout: 3m
