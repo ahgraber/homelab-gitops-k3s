@@ -1,17 +1,70 @@
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: &app homeassistant
+#   namespace: networking
+#   labels:
+#     app.kubernetes.io/name: *app
+#     app.kubernetes.io/instance: *app
+# spec:
+#   type: ExternalName
+#   externalName: "yellow.${SECRET_DOMAIN}"
+#   ports:
+#     - name: http
+#       port: &port 8123
+#       protocol: TCP
+#       targetPort: *port
 ---
 apiVersion: v1
-kind: Service
+kind: Endpoints
 metadata:
   name: homeassistant
   namespace: networking
+subsets:
+  - addresses:
+      - ip: 10.3.1.1
+    ports:
+      - name: http
+        port: 8123
+        protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: &app homeassistant
+  namespace: networking
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server_snippet: |
+      proxy_set_header Host $host;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "Upgrade";
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
 spec:
-  type: ExternalName
-  externalName: "yellow.${SECRET_DOMAIN}"
-  ports:
-    - name: http
-      port: &port 8123
-      protocol: TCP
-      targetPort: *port
+  ingressClassName: nginx
+  rules:
+    - host: &host "homeassistant.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: *app
+                port:
+                  number: 8123
+  tls:
+    - hosts:
+        - *host
+      # secretName: "${SECRET_DOMAIN/./-}-tls"
 # ---
 # apiVersion: v1
 # kind: Endpoints
@@ -44,29 +97,3 @@ spec:
 # endpoints:
 #   - addresses:
 #     - "10.3.1.1" # IP address of your external service that you would like to proxy requests to
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: homeassistant
-  namespace: networking
-  annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: |
-      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: &host "homeassistant.${SECRET_DOMAIN}"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: homeassistant
-                port:
-                  number: 8123
-  tls:
-    - hosts:
-        - *host
-      # secretName: "${SECRET_DOMAIN/./-}-tls"
