@@ -4,7 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./actions-runner-controller.yaml
-  - ./authentik-charts.yaml
+  # - ./authentik-charts.yaml
   - ./backube-charts.yaml # snapscheduler, volsync
   - ./bitnami-charts.yaml
   - ./bjws-charts.yaml
@@ -15,7 +15,7 @@ resources:
   - ./deliveryhero-charts.yaml # node-problem-detector (and others)
   - ./democratic-csi-charts.yaml
   - ./descheduler-charts.yaml
-  - ./dysnix-charts.yaml # raw
+  # - ./dysnix-charts.yaml # raw
   - ./emberstack-charts.yaml # reflector
   - ./external-dns-charts.yaml
   - ./fairwinds-charts.yaml # goldilocks (and others)
@@ -31,15 +31,15 @@ resources:
   - ./metallb-charts.yaml
   - ./metrics-server-charts.yaml
   - ./movetokube-charts.yaml
-  - ./mysql-charts.yaml
+  # - ./mysql-charts.yaml
   - ./node-feature-discovery-charts.yaml
   - ./ot-charts.yaml
-  - ./percona-charts.yaml
+  # - ./percona-charts.yaml
   - ./piraeus-charts.yaml
   - ./prometheus-community-charts.yaml
   - ./rook-ceph-charts.yaml
   - ./runix-charts.yaml # pgadmin
   - ./stakater-charts.yaml # reloader
-  - ./traefik-charts.yaml
+  # - ./traefik-charts.yaml
   - ./valheim-charts.yaml
   - ./weave-gitops-charts.yaml
