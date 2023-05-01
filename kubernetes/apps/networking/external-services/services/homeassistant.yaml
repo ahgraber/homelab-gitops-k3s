@@ -1,52 +1,55 @@
-# ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
 ---
-apiVersion: v1
-kind: Endpoints
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: &app homeassistant
   namespace: networking
-  labels:
-    app.kubernetes.io/name: *app
-    app.kubernetes.io/instance: *app
-subsets:
-  - addresses:
-      - ip: 10.3.1.1
-    ports:
-      - name: http
-        port: 8123
-        protocol: TCP
-# ---
-# # EndpointSlices causes crash (panic) with headless service
-# # use once resolved: https://github.com/kubernetes/ingress-nginx/issues/9606
-# apiVersion: discovery.k8s.io/v1
-# kind: EndpointSlice
-# metadata:
-#   name: &app homeassistant
-#   namespace: networking
-#   labels:
-#     # 'kubernetes.io/service-name': *app Must be present for EndpointSlice and equal to Service name for automatic mapping
-#     # If in place, you can change the name of EndpointSlice to something else.
-#     # The official convention is using Service name as the prefix.
-#     kubernetes.io/service-name: homeassistant
-# addressType: IPv4
-# ports:
-#   - port: 8123
-# endpoints:
-#   - addresses:
-#     - "10.3.1.1" # IP address of your external service that you would like to proxy requests to
+  annotations:
+    # nginx.ingress.kubernetes.io/forwarded-for-header: "X-Forwarded-For"
+    # nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    # nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    # nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    # nginx.ingress.kubernetes.io/server_snippet: |
+    #   proxy_set_header Host $host;
+    #   proxy_http_version 1.1;
+    #   proxy_set_header Upgrade $http_upgrade;
+    #   proxy_set_header Connection "Upgrade";
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+  # labels:
+  #   app.kubernetes.io/name: *app
+  #   app.kubernetes.io/instance: *app
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host "homeassistant.${SECRET_DOMAIN}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: *app
+                port:
+                  number: 8123
+  tls:
+    - hosts:
+        - *host
+      # secretName: "${SECRET_DOMAIN/./-}-tls"
 ---
+# ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
 apiVersion: v1
 kind: Service
 metadata:
   name: &app homeassistant
   namespace: networking
-  labels:
-    app.kubernetes.io/name: *app
-    app.kubernetes.io/instance: *app
+  # labels:
+  #   app.kubernetes.io/name: *app
+  #   app.kubernetes.io/instance: *app
 spec:
-  selector:
-    app.kubernetes.io/instance: *app
-    app.kubernetes.io/name: *app
+  # selector:
+  #   app.kubernetes.io/instance: *app
+  #   app.kubernetes.io/name: *app
   type: ClusterIP
   ports:
     - name: http
@@ -71,40 +74,39 @@ spec:
 #       protocol: TCP
 #       targetPort: *port
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+# ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
+apiVersion: v1
+kind: Endpoints
 metadata:
   name: &app homeassistant
   namespace: networking
-  annotations:
-    nginx.ingress.kubernetes.io/forwarded-for-header: "X-Forwarded-For"
-    # nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-    # nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    # nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    # nginx.ingress.kubernetes.io/server_snippet: |
-    #   proxy_set_header Host $host;
-    #   proxy_http_version 1.1;
-    #   proxy_set_header Upgrade $http_upgrade;
-    #   proxy_set_header Connection "Upgrade";
-    nginx.ingress.kubernetes.io/whitelist-source-range: |
-      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-  labels:
-    app.kubernetes.io/name: *app
-    app.kubernetes.io/instance: *app
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: &host "homeassistant.${SECRET_DOMAIN}"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: *app
-                port:
-                  number: 8123
-  tls:
-    - hosts:
-        - *host
-      # secretName: "${SECRET_DOMAIN/./-}-tls"
+  # labels:
+  #   app.kubernetes.io/name: *app
+  #   app.kubernetes.io/instance: *app
+subsets:
+  - addresses:
+      - ip: 10.3.1.1
+    ports:
+      - name: http
+        port: 8123
+        protocol: TCP
+# ---
+# # ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
+# # EndpointSlices causes crash (panic) with headless service
+# # use once resolved: https://github.com/kubernetes/ingress-nginx/issues/9606
+# apiVersion: discovery.k8s.io/v1
+# kind: EndpointSlice
+# metadata:
+#   name: &app homeassistant
+#   namespace: networking
+#   labels:
+#     # 'kubernetes.io/service-name': *app Must be present for EndpointSlice and equal to Service name for automatic mapping
+#     # If in place, you can change the name of EndpointSlice to something else.
+#     # The official convention is using Service name as the prefix.
+#     kubernetes.io/service-name: homeassistant
+# addressType: IPv4
+# ports:
+#   - port: 8123
+# endpoints:
+#   - addresses:
+#     - "10.3.1.1" # IP address of your external service that you would like to proxy requests to
