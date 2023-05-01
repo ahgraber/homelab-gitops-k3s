@@ -44,6 +44,9 @@ metadata:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
 spec:
+  selector:
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: *app
   type: ClusterIP
   ports:
     - name: http
