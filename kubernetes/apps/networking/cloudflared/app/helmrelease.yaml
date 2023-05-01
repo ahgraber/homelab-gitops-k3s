@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cloudflared
+  name: &app cloudflared
   namespace: networking
 spec:
   interval: 15m
@@ -38,38 +38,70 @@ spec:
     image:
       repository: cloudflare/cloudflared
       tag: 2023.4.2
+    # Outbound traffic is proxied through port 8080
+    # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-useful-terms/#configuration-file
+    # Arguments: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/#metrics
     args:
       - tunnel
-      # provide path to config file, created by a ConfigMap below
       - --config
-      - /etc/cloudflared/config/config.yaml
+      - /etc/cloudflared/config.yaml
       - run
-
+    env:
+      TZ: "${TIMEZONE}"
     ingress:
       main:
         enabled: false
     service:
       main:
+        ports:
+          http:
+            port: 2000
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
         enabled: false
 
     persistence:
       config:
         enabled: true
         type: configMap
-        name: k8s-argo-tunnel
-        mountPath: /etc/cloudflared/config
+        name: *app
+        mountPath: /etc/cloudflared/config.yaml
+        subPath: config.yaml
+        readOnly: true
       # By default, the credentials file will be created under ~/.cloudflared/<tunnel ID>.json
       # when you run `cloudflared tunnel create`. You can move it into a secret by using:
       # ```sh
       # kubectl create secret generic tunnel-credentials \
       # --from-file=credentials.json=/Users/yourusername/.cloudflared/<tunnel ID>.json
       # ```
-      creds:
+      credentials:
         enabled: true
         type: secret
-        name: tunnel-credentials
-        mountPath: /etc/cloudflared/creds
-
+        name: *app
+        mountPath: /etc/cloudflared/credentials.json
+        subPath: credentials.json
+        readOnly: true
     resources:
       requests:
         cpu: 25m
