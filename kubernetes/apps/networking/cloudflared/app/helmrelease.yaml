@@ -37,7 +37,7 @@ spec:
       replicas: 3
     image:
       repository: cloudflare/cloudflared
-      tag: 2023.4.2
+      tag: 2023.5.0
     # Outbound traffic is proxied through port 8080
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-useful-terms/#configuration-file
     # Arguments: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/#metrics
