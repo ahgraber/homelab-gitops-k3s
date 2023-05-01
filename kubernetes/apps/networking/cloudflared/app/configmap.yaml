@@ -30,18 +30,18 @@ data:
     # To route traffic from the internet to cloudflared, run `cloudflared tunnel route dns k8s-argo-tunnel <hostname>`.
     # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress
     ingress:
-    ### Proxy traefik to the k8s ingress (Traefik) to hand off to Services
+    ### Proxy traefik to the k8s ingress to hand off to Services
     # internet --> cloudflared tunnel --> local DNS --> ingress --> service
     ### NOTE: relies on split-brain DNS / local overrides
     - hostname: linkding.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443
+      service: https://ingress-nginx-controller.networking.svc.cluster.local:443
     - hostname: miniflux.${SECRET_DOMAIN}
-      service: https://traefik.networking.svc.cluster.local:443
+      service: https://ingress-nginx-controller.networking.svc.cluster.local:443
+    ### debugging
+    - hostname: echo.${SECRET_DOMAIN}
+      service: https://ingress-nginx-controller.networking.svc.cluster.local:443
     # - hostname: httpbin.${SECRET_DOMAIN}
-    #   service: https://traefik.networking.svc.cluster.local:443
-    # - hostname: whoami.${SECRET_DOMAIN}
-    #   service: https://traefik.networking.svc.cluster.local:443
-
+    #   service: https://ingress-nginx-controller.networking.svc.cluster.local:443
 
     ### Proxy traffic to the k8s Services directly
     - hostname: flux-receiver.${SECRET_DOMAIN}
@@ -57,3 +57,6 @@ data:
 
     ### "Else" rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
     - service: http_status:404
+
+    # ### Alternatively, fail to sending to ingress
+    # - service: https://ingress-nginx-controller.networking.svc.cluster.local:443
