@@ -29,7 +29,7 @@ spec:
 
     image:
       repository: ghcr.io/benphelps/homepage
-      tag: v0.6.16
+      tag: v0.6.17
       pullPolicy: IfNotPresent
 
     serviceAccount:
