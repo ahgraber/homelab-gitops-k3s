@@ -12,12 +12,8 @@ spec:
   sourceRef:
     kind: GitRepository
     name: homelab-gitops-k3s
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-      kind: HelmRelease
-      name: kube-prometheus-stack
-      namespace: monitoring
-  interval: 15m
+  wait: true
+  interval: 30m
   retryInterval: 1m
   timeout: 5m
 ---
@@ -34,6 +30,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: homelab-gitops-k3s
-  interval: 15m
+  interval: 30m
   retryInterval: 1m
   timeout: 5m

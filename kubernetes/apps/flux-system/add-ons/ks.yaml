@@ -14,9 +14,9 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 15m
+  interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -32,9 +32,9 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 15m
+  interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -51,6 +51,6 @@ spec:
     kind: GitRepository
     name: homelab-gitops-k3s
   wait: true
-  interval: 15m
+  interval: 30m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
