@@ -36,6 +36,7 @@ resources:
   - ./ot-charts.yaml
   # - ./percona-charts.yaml
   - ./piraeus-charts.yaml
+  - ./prefect-charts.yaml
   - ./prometheus-community-charts.yaml
   - ./rook-ceph-charts.yaml
   - ./runix-charts.yaml # pgadmin
