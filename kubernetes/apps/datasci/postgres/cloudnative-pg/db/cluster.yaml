@@ -21,7 +21,6 @@ spec:
     # pg_hba:
     #   - host all all 10.244.0.0/16 md5
     ## https://cloudnative-pg.io/documentation/1.20/postgresql_conf/#shared-preload-libraries
-    shared_preload_libraries: ["pg_trgm"]
 
   superuserSecret:
     name: postgres-superuser-secret
