@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: postgres
+  name: postgres-ds
   namespace: datasci
 spec:
   # schedule: "@weekly"
@@ -10,4 +10,4 @@ spec:
   immediate: true
   backupOwnerReference: self
   cluster:
-    name: postgres
+    name: postgres-ds

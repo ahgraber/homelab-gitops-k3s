@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: &name postgres
+  name: &name postgres-ds
   namespace: &namespace datasci
   annotations:
     kyverno.io/ignore: "true"
@@ -39,7 +39,7 @@ spec:
       #   name: <app>-user-secret
     # ## Alternative bootstrap method: start from a backup
     # recovery:
-    #   source: &s3-backup datasci-pg
+    #   source: &s3-backup postgres-ds  # from prior backup.barmanObjectStore.serverName
 
   # # externalClusters is needed when recovering from an existing cnpg cluster
   # externalClusters:
@@ -61,7 +61,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: datasci-pg # next time it will be datasci-pg-v2
+      serverName: postgres-ds # next time it will be postgres-ds-v2
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres-ds/
       s3Credentials:
