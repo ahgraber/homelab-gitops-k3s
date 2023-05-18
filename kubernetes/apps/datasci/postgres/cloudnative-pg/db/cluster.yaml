@@ -60,7 +60,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: postgres-ds # next time it will be postgres-ds-v2
+      # serverName: postgres-ds # next time it will be postgres-ds-v2
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres-ds/
       s3Credentials:
