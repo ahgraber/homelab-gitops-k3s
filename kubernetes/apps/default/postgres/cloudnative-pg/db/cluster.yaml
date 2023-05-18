@@ -59,9 +59,9 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
+      serverName: postgres-v3 # next time it will be postgres-v4
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
-      serverName: postgres-v3 # next time it will be postgres-v4
       s3Credentials:
         accessKeyId:
           name: postgres-s3-secret
