@@ -20,7 +20,6 @@ spec:
       # auto_explain.log_min_duration: "10s"
     # pg_hba:
     #   - host all all 10.244.0.0/16 md5
-    ## https://cloudnative-pg.io/documentation/1.20/postgresql_conf/#shared-preload-libraries
 
   superuserSecret:
     name: postgres-superuser-secret
@@ -30,6 +29,7 @@ spec:
     storageClass: local-path
 
   bootstrap:
+    ## for initial setup
     initdb:
       # set up 'default' db/owner
       database: default
@@ -60,7 +60,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      # serverName: postgres-ds # next time it will be postgres-ds-v2
+      serverName: postgres-ds # next time it will be postgres-ds-v2
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres-ds/
       s3Credentials:
