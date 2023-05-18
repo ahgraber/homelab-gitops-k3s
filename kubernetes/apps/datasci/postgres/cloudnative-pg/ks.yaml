@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-default-cnpg-operator
+    - name: apps-cnpg-system-operator
     - name: apps-monitoring-kube-prometheus-stack
     # - name: apps-rook-ceph-cluster
   path: ./kubernetes/apps/datasci/postgres/cloudnative-pg/db

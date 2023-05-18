@@ -5,8 +5,6 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  # Flux-Kustomizations | Databases
-  # - ./postgres/
-  # - ./redis/
+  # - ./storageclass-local.yaml # overwrite local-path StorageClass to set as NOT default
   # Flux-Kustomizations
-  # - ./prefect/ks.yaml
+  - ./cloudnative-pg/ks.yaml
