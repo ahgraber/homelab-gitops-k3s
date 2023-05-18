@@ -29,6 +29,7 @@ spec:
     storageClass: local-path
 
   bootstrap:
+    # ## for initial setup
     # initdb:
     #   # set up 'default' db/owner
     #   database: default
