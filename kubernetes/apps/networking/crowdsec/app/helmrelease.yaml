@@ -66,11 +66,11 @@ spec:
           value: "k8s_cluster"
         # - name: ENROLL_TAGS
         #   value: "k8s linux test"
-        - name: BOUNCER_KEY_traefik
+        - name: BOUNCER_KEY_INGRESS
           valueFrom:
             secretKeyRef:
               name: crowdsec-secret
-              key: BOUNCER_KEY_traefik
+              key: BOUNCER_KEY_INGRESS
 
       dashboard:
         # -- Enable Metabase Dashboard (by default disabled)
