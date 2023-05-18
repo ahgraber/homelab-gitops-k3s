@@ -57,26 +57,26 @@ spec:
   #         compression: bzip2
   #         maxParallel: 8
 
-  # backup:
-  #   retentionPolicy: 30d
-  #   barmanObjectStore:
-  #     serverName: datasci # next time it will be datasci-v2
-  #     endpointURL: https://${SECRET_S3_ENDPOINT}
-  #     destinationPath: s3://postgres/
-  #     s3Credentials:
-  #       accessKeyId:
-  #         name: postgres-s3-secret
-  #         key: S3_ACCESS_KEY
-  #       secretAccessKey:
-  #         name: postgres-s3-secret
-  #         key: S3_SECRET_KEY
-  #     wal:
-  #       compression: bzip2
-  #       maxParallel: 8
-  #     data:
-  #       compression: bzip2
-  #       immediateCheckpoint: false
-  #       jobs: 4
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore:
+      serverName: datasci # next time it will be datasci-v2
+      endpointURL: https://${SECRET_S3_ENDPOINT}
+      destinationPath: s3://postgres/
+      s3Credentials:
+        accessKeyId:
+          name: postgres-s3-secret
+          key: S3_ACCESS_KEY
+        secretAccessKey:
+          name: postgres-s3-secret
+          key: S3_SECRET_KEY
+      wal:
+        compression: bzip2
+        maxParallel: 8
+      data:
+        compression: bzip2
+        immediateCheckpoint: false
+        jobs: 4
 
   resources:
     requests:
@@ -85,9 +85,9 @@ spec:
     limits:
       memory: 1Gi
 
-  affinity:
-    enablePodAntiAffinity: true
-    topologyKey: kubernetes.io/hostname
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: kubernetes.io/hostname
 
   monitoring:
     enablePodMonitor: true
