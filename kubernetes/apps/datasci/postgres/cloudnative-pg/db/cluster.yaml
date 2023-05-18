@@ -46,7 +46,7 @@ spec:
   #   - name: *s3-backup
   #     barmanObjectStore:
   #       endpointURL: https://${SECRET_S3_ENDPOINT}
-  #       destinationPath: s3://datasci/postgres/
+  #       destinationPath: s3://postgres-ds/
   #       s3Credentials:
   #         accessKeyId:
   #           name: postgres-s3-secret
@@ -63,7 +63,7 @@ spec:
     barmanObjectStore:
       serverName: datasci-pg # next time it will be datasci-pg-v2
       endpointURL: https://${SECRET_S3_ENDPOINT}
-      destinationPath: s3://datasci/postgres/
+      destinationPath: s3://postgres-ds/
       s3Credentials:
         accessKeyId:
           name: postgres-s3-secret
