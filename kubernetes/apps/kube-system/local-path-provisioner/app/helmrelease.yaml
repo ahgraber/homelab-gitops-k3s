@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: rancher/local-path-provisioner
-      tag: v0.0.24 # master-head
+      tag: master-head
     helperImage:
       repository: public.ecr.aws/docker/library/busybox
       tag: latest
