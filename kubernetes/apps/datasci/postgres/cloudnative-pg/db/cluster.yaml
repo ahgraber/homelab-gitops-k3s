@@ -85,9 +85,10 @@ spec:
     limits:
       memory: 1Gi
 
-  # affinity:
-  #   enablePodAntiAffinity: true
-  #   topologyKey: kubernetes.io/hostname
+  affinity:
+    enablePodAntiAffinity: false
+    # enablePodAntiAffinity: true
+    # topologyKey: kubernetes.io/hostname
 
   monitoring:
     enablePodMonitor: true
