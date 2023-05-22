@@ -33,21 +33,24 @@ spec:
         # prefectTag: 2-latest
         prefectTag: 2-python3.11-kubernetes
 
-      # # -- sets PREFECT_UI_API_URL; should be publicly accessible API URL; UI will not work unless set
-      # publicApiUrl: "prefect.${SECRET_DOMAIN}/api"
-
       # https://docs.prefect.io/latest/concepts/settings/
       env:
-        # - name: PREFECT_LOGGING_SERVER_LEVEL
-        #   value: WARNING
+        - name: PREFECT_DEBUG_MODE
+          value: true
+        - name: PREFECT_LOGGING_INTERNAL_LEVEL
+          value: DEBUG # ERROR
+        - name: PREFECT_LOGGING_LEVEL
+          value: DEBUG # INFO
+        - name: PREFECT_LOGGING_SERVER_LEVEL
+          value: DEBUG # WARNING
         - name: PREFECT_API_DATABASE_MIGRATE_ON_START
           value: "True"
         - name: PREFECT_API_URL # internal/cluster fqdn
           value: "prefect-server.datasci.svc.cluster.local:4200/api"
         - name: PREFECT_UI_API_URL
           value: "prefect.${SECRET_DOMAIN}/api"
-        - name: PREFECT_PROFILE
-          value: "default"
+        # - name: PREFECT_PROFILE
+        #   value: "default"
 
     # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
     resources:
