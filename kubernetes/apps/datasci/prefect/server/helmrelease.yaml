@@ -53,7 +53,7 @@ spec:
       #       name: database-prefect
       #       key: PASSWORD
       - name: PREFECT_API_URL # internal/cluster fqdn
-        value: "prefect-server.datasci.svc.cluster.local:4200"
+        value: "prefect-server.datasci.svc.cluster.local:4200/api"
       - name: PREFECT_UI_API_URL
         value: "prefect.${SECRET_DOMAIN}/api"
       - name: PREFECT_PROFILE
@@ -106,10 +106,10 @@ spec:
       #       - *host
       #     secretName: "${SECRET_DOMAIN/./-}-tls"
 
-    # Bitnami Postgresql configuration
+    # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
       enabled: true
-      useSubChart: false # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
+      useSubChart: false
 
   valuesFrom:
     - kind: Secret
