@@ -1,0 +1,130 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app prefect-server
+  namespace: &app-namespace datasci
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://prefecthq.github.io/prefect-helm
+      chart: prefect-server
+      version: 2023.05.11
+      sourceRef:
+        kind: HelmRepository
+        name: prefect-charts
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    server:
+      image:
+        repository: prefecthq/prefect
+        # prefectTag: 2-latest
+        prefectTag: 2-python3.11-kubernetes
+
+    # # -- sets PREFECT_UI_API_URL; should be publicly accessible API URL; UI will not work unless set
+    # publicApiUrl: "prefect.${SECRET_DOMAIN}/api"
+
+    # https://docs.prefect.io/latest/concepts/settings/
+    env:
+      # - name: PREFECT_LOGGING_SERVER_LEVEL
+      #   value: WARNING
+      # - name: PREFECT_API_DATABASE_CONNECTION_URL
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: database-prefect
+      #       key: POSTGRES_URL
+      - name: PREFECT_API_DATABASE_MIGRATE_ON_START
+        value: "True"
+      # - name: PREFECT_API_DATABASE_PASSWORD
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: database-prefect
+      #       key: PASSWORD
+      - name: PREFECT_API_URL # internal/cluster fqdn
+        value: "prefect-server.datasci.svc.cluster.local:4200"
+      - name: PREFECT_UI_API_URL
+        value: "prefect.${SECRET_DOMAIN}/api"
+      - name: PREFECT_PROFILE
+        value: "default"
+
+    # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
+    resources:
+      requests:
+        {}
+        # cpu: 25m
+        # memory: 105M
+      limits:
+        {}
+        # memory: 105M
+
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+    podSecurityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      fsGroup: 1002
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+
+    ## Service configuration
+    service:
+      type: ClusterIP
+      port: 4200
+      externalTrafficPolicy: Cluster
+
+    # Ingress configuration
+    ingress:
+      enabled: true
+      className: nginx
+      host:
+        hostname: &host "prefect.${SECRET_DOMAIN}"
+        path: /
+        pathType: Prefix
+      annotations:
+        nginx.ingress.kubernetes.io/whitelist-source-range: |
+          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      tls: # false
+        - hosts:
+            - *host
+      # extraTls:
+      #   - hosts:
+      #       - *host
+      #     secretName: "${SECRET_DOMAIN/./-}-tls"
+
+    # Bitnami Postgresql configuration
+    postgresql:
+      enabled: true
+      useSubChart: false # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
+
+  valuesFrom:
+    - kind: Secret
+      name: database-prefect
+      valuesKey: DATABASE_NAME
+      targetPath: postgresql.auth.database
+    - kind: Secret
+      name: database-prefect
+      valuesKey: LOGIN
+      targetPath: postgresql.auth.username
+    - kind: Secret
+      name: database-prefect
+      valuesKey: PASSWORD
+      targetPath: postgresql.auth.password
+    - kind: Secret
+      name: database-prefect
+      valuesKey: HOST
+      targetPath: postgresql.externalHostname
