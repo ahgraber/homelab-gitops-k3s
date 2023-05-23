@@ -35,27 +35,25 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: apps-datasci-prefect-agent
-#   namespace: flux-system
-# spec:
-#   dependsOn:
-#     - name: apps-datasci-prefect-server
-#     - name: apps-datasci-prefect-db
-#     - name: apps-networking-ingress-nginx
-#     - name: apps-rook-ceph-cluster
-#   path: ./kubernetes/apps/datasci/prefect/agent
-#   prune: true
-#   sourceRef:
-#     kind: GitRepository
-#     name: homelab-gitops-k3s
-#   wait: true
-#   interval: 30m
-#   retryInterval: 1m
-#   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-datasci-prefect-agent
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: apps-datasci-prefect-server
+    - name: apps-datasci-prefect-db
+  path: ./kubernetes/apps/datasci/prefect/agent
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
 # ---
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
@@ -66,8 +64,6 @@ spec:
 #   dependsOn:
 #     - name: apps-datasci-prefect-server
 #     - name: apps-datasci-prefect-db
-#     - name: apps-networking-ingress-nginx
-#     - name: apps-rook-ceph-cluster
 #   path: ./kubernetes/apps/datasci/prefect/worker
 #   prune: true
 #   sourceRef:
