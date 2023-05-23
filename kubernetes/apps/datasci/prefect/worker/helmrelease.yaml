@@ -60,7 +60,7 @@ spec:
       serverApiConfig:
         apiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
 
-      replicaCount: 3
+      replicaCount: 1
 
       resources:
         requests:
