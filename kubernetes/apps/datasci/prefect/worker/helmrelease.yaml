@@ -1,0 +1,92 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app prefect-worker
+  namespace: &app-namespace datasci
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://prefecthq.github.io/prefect-helm
+      chart: prefect-worker
+      version: 2023.05.11
+      sourceRef:
+        kind: HelmRepository
+        name: prefect-charts
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    worker:
+      # -- unique cluster identifier, if none is provided this value will be inferred at time of helm install
+      clusterUid: ""
+
+      image:
+        repository: prefecthq/prefect
+        prefectTag: 2-python3.11-kubernetes
+        debug: false
+
+      ## general configuration of the agent
+      config:
+        # -- name of prefect work pool the worker will poll
+        workPool: ""
+        # -- how often the worker will query for runs
+        queryInterval: 5
+        # -- when querying for runs, how many seconds in the future can they be scheduled
+        prefetchSeconds: 10
+        # -- connect using HTTP/2 if the server supports it (experimental)
+        http2: true
+
+      ## connection settings
+      # -- one of 'cloud' or 'server'
+      apiConfig: "server"
+      # cloudApiConfig:
+      #   accountId: ""
+      #   workspaceId: ""
+      #   apiKeySecret:
+      #     name: prefect-api-key
+      #     key: key
+      #   cloudUrl: https://api.prefect.cloud/api
+      serverApiConfig:
+        apiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+
+      replicaCount: 3
+
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 100m
+        limits:
+          memory: 1Gi
+
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+    podSecurityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      fsGroup: 1002
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+    containerSecurityContext:
+      runAsUser: 1000
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+
+    ## Role configuration
+    role:
+      ## List of extra role permissions
+      ## e.g:
+      ## extraPermissions:
+      ##  - apiGroups: [""]
+      ##    resources: ["pods", "services"]
+      ##    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+      extraPermissions: []
