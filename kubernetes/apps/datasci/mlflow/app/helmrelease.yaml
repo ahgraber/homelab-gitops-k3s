@@ -1,0 +1,84 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app mlflow
+  namespace: &app-namespace datasci
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    global:
+      nameOverride: *app
+      annotations:
+        reloader.stakater.com/search: "true"
+
+    image:
+      # renovate: datasource=docker image=ghcr.io/...
+      repository: ghcr.io/ninerealmlabs/mlflow
+      tag: "2.3.2"
+    # -- Override the command(s) for the default container
+    command: ["mlflow server"]
+    # -- Override the args for the default container
+    args:
+      - "--backend-store-uri"
+      - "$(POSTGRES_URL)"
+      - "--default-artifact-root"
+      - "/data"
+      - "--host 0.0.0.0"
+
+    env:
+      TZ: "${TIMEZONE}"
+    envFrom:
+      - secretRef:
+          name: database-mlflow
+    service:
+      main:
+        ports:
+          http:
+            port: 80
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host "mlflow.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      data:
+        enabled: true
+        existingClaim: *app
+        mountPath: /data # defaults to persistence.key
+    resources:
+      requests:
+        cpu: 25m
+        memory: 105M
+      limits:
+        memory: 105M

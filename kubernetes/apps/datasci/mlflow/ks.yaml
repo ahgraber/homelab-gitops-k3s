@@ -1,0 +1,39 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-datasci-mlflow-db
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: apps-datasci-cnpg-db
+  path: ./kubernetes/apps/datasci/mlflow/db
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-datasci-mlflow
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: apps-datasci-mlflow-db
+    # - name: apps-default-mlflow-redis
+    - name: apps-networking-ingress-nginx
+    - name: apps-rook-ceph-cluster
+    - name: apps-volsync
+  path: ./kubernetes/apps/datasci/mlflow/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: homelab-gitops-k3s
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
