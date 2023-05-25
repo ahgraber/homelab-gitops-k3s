@@ -85,22 +85,22 @@ spec:
           POSTGRES_DB:
             valueFrom:
               secretKeyRef:
-                name: database-mealie
+                name: &db_secret database-mealie
                 key: DATABASE_NAME
           POSTGRES_USER:
             valueFrom:
               secretKeyRef:
-                name: database-mealie
+                name: *db_secret
                 key: LOGIN
           POSTGRES_PASSWORD:
             valueFrom:
               secretKeyRef:
-                name: database-mealie
+                name: *db_secret
                 key: PASSWORD
           POSTGRES_SERVER:
             valueFrom:
               secretKeyRef:
-                name: database-mealie
+                name: *db_secret
                 key: HOST
           POSTGRES_PORT: 5432
         envFrom:
