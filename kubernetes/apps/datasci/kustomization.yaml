@@ -9,5 +9,5 @@ resources:
   - ./postgres/
   # - ./redis/
   # Flux-Kustomizations
-  - ./mlflow/ks.yaml
-  - ./prefect/ks.yaml
+  # - ./mlflow/ks.yaml
+  # - ./prefect/ks.yaml
