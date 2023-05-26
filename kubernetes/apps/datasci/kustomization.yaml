@@ -6,8 +6,8 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations | Databases
-  - ./postgres/
-  # - ./redis/
-  # Flux-Kustomizations
-  - ./mlflow/ks.yaml
-  - ./prefect/ks.yaml
+  # - ./postgres/
+  # # - ./redis/
+  # # Flux-Kustomizations
+  # - ./mlflow/ks.yaml
+  # - ./prefect/ks.yaml

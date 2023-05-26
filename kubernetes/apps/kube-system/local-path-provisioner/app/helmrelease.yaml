@@ -39,6 +39,8 @@ spec:
     nodePathMap:
       - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
         paths: ["/var/lib/rancher/k3s/storage"]
+    # Note: Do not enable Flux variable substitution on this HelmRelease
+    # see disable label in ks.yaml
     configmap:
       setup: |-
         #!/bin/sh
