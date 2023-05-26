@@ -20,3 +20,7 @@ and these data can be recorded to local files, to a SQLAlchemy compatible databa
 
 The artifact store persists artifacts (files, models, images, in-memory objects, or model summary, etc)
 to local files or a variety of remote file storage solutions.
+
+> IMPORTANT
+> See notes in MLFlow docs regarding the differences between options 4 and 5
+> with respect to user authorization / access permissions

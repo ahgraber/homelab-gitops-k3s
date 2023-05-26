@@ -10,19 +10,23 @@ Manages auth and db urlstrings as kubernetes secrets.
 apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
-  name: <app>-db
-  namespace: default
+  name: &app <app>
+  namespace: &namespace datasci
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
 spec:
-  database: <app> # db name in postgres cluster
+  database: *app # db name in postgres cluster
 ---
 apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
-  name: <app>-user
-  namespace: default
+  name: &app <app>-user
+  namespace: &namespace datasci
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
 spec:
-  role: <app>
-  database: <app>-db # references the CR
+  role: *app
+  database: <app> # references the CR
   secretName: database
   privileges: OWNER
 ```

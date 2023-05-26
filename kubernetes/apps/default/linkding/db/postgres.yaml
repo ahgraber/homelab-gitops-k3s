@@ -3,7 +3,9 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
   name: &app linkding
-  namespace: default
+  namespace: &namespace default
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
 spec:
   database: *app # db name in postgres cluster
 ---
@@ -11,7 +13,9 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
   name: &app linkding
-  namespace: default
+  namespace: &namespace default
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
 spec:
   role: *app
   database: *app # references the CR
