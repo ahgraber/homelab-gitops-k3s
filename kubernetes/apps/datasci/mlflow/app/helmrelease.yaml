@@ -39,23 +39,32 @@ spec:
     # -- Override the command(s) for the default container
     command: ["mlflow server"]
     # -- Override the args for the default container
-    args:
-      - "--backend-store-uri"
-      - "$(POSTGRES_URL)"
-      - "--default-artifact-root"
-      - "/data"
-      - "--host 0.0.0.0"
+    # args:
+    #   - "--backend-store-uri"
+    #   - "$(POSTGRES_URL)"
+    #   - "--default-artifact-root"
+    #   - "/data"
+    #   - "--host"
+    #   - "0.0.0.0"
 
     env:
       TZ: "${TIMEZONE}"
-    envFrom:
-      - secretRef:
-          name: database-mlflow
+      MLFLOW_BACKEND_STORE_URI:
+        valueFrom:
+          secretKeyRef:
+            name: &db_secret database-mlflow
+            key: POSTGRES_URL
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: "/data"
+      MLFLOW_SERVE_ARTIFACTS: true
+      MLFLOW_HOST: 0.0.0.0
+    # envFrom:
+    #   - secretRef:
+    #       name: database-mlflow
     service:
       main:
         ports:
           http:
-            port: 80
+            port: 5000
     ingress:
       main:
         enabled: true

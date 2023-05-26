@@ -7,6 +7,7 @@ metadata:
 spec:
   dependsOn:
     - name: apps-datasci-cnpg-db
+    - name: apps-datasci-postgres-operator
   path: ./kubernetes/apps/datasci/mlflow/db
   prune: true
   sourceRef:
@@ -24,7 +25,6 @@ metadata:
 spec:
   dependsOn:
     - name: apps-datasci-mlflow-db
-    # - name: apps-default-mlflow-redis
     - name: apps-networking-ingress-nginx
     - name: apps-rook-ceph-cluster
     - name: apps-volsync

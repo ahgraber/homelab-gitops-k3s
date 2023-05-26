@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: ext-postgres-operator
-  namespace: default
+  name: &name datasci-postgres-operator
+  namespace: &namespace datasci
 spec:
   interval: 15m
   chart:
@@ -30,9 +30,12 @@ spec:
     keepHistory: false
   values:
     replicaCount: 1
-
+    fullnameOverride: *name
     podAnnotations:
       reloader.stakater.com/search: "true"
+
+    env:
+      POSTGRES_INSTANCE: *namespace
 
     # podSecurityContext: {}
     #   # fsGroup: 2000
@@ -45,8 +48,10 @@ spec:
         memory: 128Mi
 
     # Which namespace to watch in kubernetes, empty string means all namespaces
-    watchNamespace: "default"
+    watchNamespace: *namespace
 
-  valuesFrom:
-    - kind: Secret
-      name: ext-postgres-connection
+    existingSecret: *name
+
+  # valuesFrom:
+  #   - kind: Secret
+  #     name: *name
