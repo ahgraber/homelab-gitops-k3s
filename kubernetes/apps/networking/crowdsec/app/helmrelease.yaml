@@ -33,7 +33,7 @@ spec:
     image:
       # -- docker image repository name
       repository: ghcr.io/crowdsecurity/crowdsec
-      tag: v1.5.1
+      tag: v1.5.2
       # -- pullPolicy
       pullPolicy: IfNotPresent
       # -- docker image tag
