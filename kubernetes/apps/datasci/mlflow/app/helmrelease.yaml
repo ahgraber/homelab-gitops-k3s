@@ -37,7 +37,7 @@ spec:
       repository: ghcr.io/ninerealmlabs/mlflow-server
       tag: "2.3.2"
     # -- Override the command(s) for the default container
-    command: ["mlflow server"]
+    command: ["/bin/bash", "-c", "mlflow server"]
     # -- Override the args for the default container
     # args:
     #   - "--backend-store-uri"
@@ -57,6 +57,7 @@ spec:
       MLFLOW_DEFAULT_ARTIFACT_ROOT: "/data"
       MLFLOW_SERVE_ARTIFACTS: true
       MLFLOW_HOST: 0.0.0.0
+      MLFLOW_PORT: 5000
     # envFrom:
     #   - secretRef:
     #       name: database-mlflow
@@ -89,5 +90,5 @@ spec:
       requests:
         cpu: 25m
         memory: 105M
-      limits:
-        memory: 105M
+      # limits:
+      #   memory: 105M
