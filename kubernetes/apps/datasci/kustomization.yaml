@@ -8,6 +8,6 @@ resources:
   # Flux-Kustomizations | Databases
   - ./postgres/
   # # - ./redis/
-  # # Flux-Kustomizations
-  # - ./mlflow/ks.yaml
-  # - ./prefect/ks.yaml
+  # Flux-Kustomizations
+  - ./mlflow/ks.yaml
+  - ./prefect/ks.yaml
