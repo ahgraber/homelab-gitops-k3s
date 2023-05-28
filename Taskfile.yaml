@@ -13,6 +13,9 @@ includes:
   cluster: .taskfiles/ClusterTasks.yaml
   flux: .taskfiles/ClusterTasks.yaml
   format: .taskfiles/FormatTasks.yaml
+  kubernetes:
+    taskfile: .taskfiles/KubernetesTasks.yaml
+    aliases: ["k8s"]
   lint: .taskfiles/LintTasks.yaml
   pre-commit: .taskfiles/PrecommitTasks.yaml
   volsync: .taskfiles/VolsyncTasks.yaml
