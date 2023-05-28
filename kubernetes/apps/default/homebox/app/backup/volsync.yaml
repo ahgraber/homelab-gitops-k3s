@@ -10,7 +10,7 @@ spec:
   trigger:
     schedule: "0 0 * * *"
   restic:
-    repository: homebox-restic-secret
+    repository: homebox-restic
     retain:
       daily: 5
       weekly: 4

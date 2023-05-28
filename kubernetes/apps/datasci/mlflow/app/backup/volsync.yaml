@@ -4,13 +4,13 @@ apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
   name: &app mlflow
-  namespace: &app-namespace datasci
+  namespace: &namespace datasci
 spec:
   sourcePVC: *app
   trigger:
     schedule: "0 0 * * *"
   restic:
-    repository: mlflow-restic-secret
+    repository: mlflow-restic
     retain:
       daily: 5
       weekly: 4

@@ -68,11 +68,11 @@ spec:
         value: https://t1.gstatic.com/faviconV2?url={url}&client=SOCIAL&type=FAVICON
     envFrom:
       - secretRef:
-          name: linkding-secret
+          name: *app
     persistence:
-      data:
+      data: # favicons only; no need to back up
         enabled: true
-        existingClaim: linkding-data
+        existingClaim: *app
         mountPath: /etc/linkding/data
     # # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
     # podSecurityContext:

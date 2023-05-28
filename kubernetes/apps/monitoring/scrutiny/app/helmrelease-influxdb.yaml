@@ -61,7 +61,7 @@ spec:
       data:
         enabled: true
         mountPath: /var/lib/influxdb2
-        existingClaim: scrutiny-data
+        existingClaim: scrutiny
         subPath: scrutiny_influxdb
 
     resources:

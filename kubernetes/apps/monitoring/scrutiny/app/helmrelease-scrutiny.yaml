@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: scrutiny
+  name: &app scrutiny
   namespace: monitoring
 spec:
   interval: 15m
@@ -85,7 +85,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: scrutiny-data
+        existingClaim: *app
         mountPath: /opt/scrutiny/config
         subPath: scrutiny
 
