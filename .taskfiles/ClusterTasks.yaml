@@ -49,90 +49,80 @@ tasks:
         pbcopy
       - echo "Token is in clipboard ready to paste!"
 
-  hr-restart:
-    desc: Restart all failed Helm Releases
+  gr-sync:
+    desc: Sync Flux GitRepositories
     cmds:
-      - >-
-        kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux suspend hr $0 -n
-        $1'
-      - >-
-        kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -l bash -c 'flux resume hr $0 -n
-        $1'
+      - |
+        kubectl get gitrepositories --all-namespaces --no-headers \
+          | awk '{print $1, $2}' \
+          | xargs -P 4 bash -c \
+            'kubectl -n $0 annotate gitrepository/$1 reconcile.fluxcd.io/requestedAt=$(date +%s) \
+            --field-manager=flux-client-side-apply \
+            --overwrite'
 
-  nodes:
-    desc: List all the nodes in your cluster
+  ks-sync:
+    desc: Sync Flux Kustomizations
     cmds:
-      - kubectl get nodes {{.CLI_ARGS | default "-o wide"}}
+      - |
+        kubectl get kustomization --all-namespaces --no-headers \
+          | awk '{print $1, $2}' \
+          | xargs -P 4 bash -c \
+            'kubectl -n $0 annotate kustomization/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" \
+            --field-manager=flux-client-side-apply \
+            --overwrite'
 
-  pods:
-    desc: List all the pods in your cluster
-    cmds:
-      - kubectl get pods {{.CLI_ARGS | default "-A"}}
-
-  kustomizations:
-    desc: List all the kustomizations in your cluster
-    cmds:
-      - kubectl get kustomizations {{.CLI_ARGS | default "-A"}}
-
-  helmreleases:
-    desc: List all the helmreleases in your cluster
-    cmds:
-      - kubectl get helmreleases {{.CLI_ARGS | default "-A"}}
-
-  helmrepositories:
-    desc: List all the helmrepositories in your cluster
-    cmds:
-      - kubectl get helmrepositories {{.CLI_ARGS | default "-A"}}
-
-  gitrepositories:
-    desc: List all the gitrepositories in your cluster
-    cmds:
-      - kubectl get gitrepositories {{.CLI_ARGS | default "-A"}}
-
-  certificates:
-    desc: List all the certificates in your cluster
-    cmds:
-      - kubectl get certificates {{.CLI_ARGS | default "-A"}}
-      - kubectl get certificaterequests {{.CLI_ARGS | default "-A"}}
-
-  ingresses:
-    desc: List all the ingresses in your cluster
-    cmds:
-      - kubectl get ingress {{.CLI_ARGS | default "-A"}}
-
-  resources:
-    desc: Gather common resources in your cluster, useful when asking for support
-    cmds:
-      - task: nodes
-      - task: kustomizations
-      - task: helmreleases
-      - task: helmrepositories
-      - task: gitrepositories
-      - task: certificates
-      - task: ingresses
-      - task: pods
-
-      - flux reconcile -n flux-system source git flux-cluster
-      - flux reconcile -n flux-system kustomization flux-cluster
-
-  delete-failed-pods:
-    desc: Deletes failed pods
-    cmds:
-      - kubectl delete pods --field-selector status.phase=Failed -A --ignore-not-found=true
-
-  bounce-hr:
-    desc: Suspend and resume helmrelease
-    cmds:
-      - flux suspend hr {{.CLI_ARGS}}
-      - sleep 5
-      - flux resume hr {{.CLI_ARGS}}
-
-  bounce-ks:
+  ks-bounce:
     desc: Suspend and resume kustomization
     cmds:
-      - flux suspend kustomization -n flux-system {{.CLI_ARGS}}
+      - flux suspend kustomization -n {{.namespace}} {{.ks}}
       - sleep 5
-      - flux resume kustomization -n flux-system {{.CLI_ARGS}}
+      - flux resume kustomization -n {{.namespace}} {{.ks}}
+    vars:
+      ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
+      namespace: '{{.namespace | default "flux-system"}}'
+
+  hr-sync:
+    desc: Sync Flux HelmReleases
+    cmds:
+      - |
+        kubectl get helmreleases --all-namespaces --no-headers \
+          | awk '{print $1, $2}' \
+          | xargs -P 4 bash -c \
+            'kubectl -n $0 annotate helmrelease/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" --overwrite'
+
+  hr-bounce:
+    desc: Suspend and resume helmrelease
+    cmds:
+      - flux suspend hr -n {{.namespace}} {{.release}}
+      - sleep 5
+      - flux resume hr -n {{.namespace}} {{.release}}
+    vars:
+      release: '{{ or .release (fail "HelmRelease `release` is required") }}'
+      namespace: '{{.namespace | default "default"}}'
+
+  hr-suspend:
+    desc: Suspend all Flux HelmReleases
+    cmds:
+      - |
+        flux get helmrelease --all-namespaces --no-header \
+          | awk '{print $1, $2}' \
+          | xargs bash -c 'flux -n $0 suspend helmrelease $1'
+
+  hr-resume:
+    desc: Resume all Flux HelmReleases
+    cmds:
+      - |
+        flux get helmrelease --all-namespaces --no-header \
+          | awk '{print $1, $2}' \
+          | xargs bash -c 'flux -n $0 resume helmrelease $1'
+
+  hr-fix:
+    cmds:
+      - kubectl -n {{.namespace}} delete secret -l owner=helm,name={{.release}},status=pending-upgrade
+      - flux -n {{.namespace}} reconcile hr {{.release}}
+    vars:
+      release: '{{ or .release (fail "HelmRelease `release` is required") }}'
+      namespace: '{{.namespace | default "default"}}'
 
   delete-jobs:
     desc: Delete all jobs
