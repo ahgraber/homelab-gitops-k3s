@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: &name datasci
+  name: &app datasci
   namespace: &namespace datasci
   annotations:
     kyverno.io/ignore: "true"

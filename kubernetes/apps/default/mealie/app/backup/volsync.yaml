@@ -10,7 +10,7 @@ spec:
   trigger:
     schedule: "0 0 * * *"
   restic:
-    repository: mealie-restic-secret
+    repository: mealie-restic
     retain:
       daily: 5
       weekly: 4

@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &name kubernetes-dashboard
+  name: &app kubernetes-dashboard
   namespace: &namespace monitoring
 spec:
   interval: 15m

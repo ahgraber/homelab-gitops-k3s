@@ -2,14 +2,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &name reflector
+  name: &app reflector
   namespace: kube-system
 spec:
   interval: 15m
   chart:
     spec:
       # renovate: registryUrl=https://emberstack.github.io/helm-charts/
-      chart: *name
+      chart: *app
       version: 7.0.173
       sourceRef:
         kind: HelmRepository

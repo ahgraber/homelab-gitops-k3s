@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: scrutiny-data
+  name: scrutiny
   namespace: monitoring
 spec:
   accessModes:
