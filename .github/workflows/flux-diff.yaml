@@ -7,8 +7,8 @@ on: # yamllint disable-line rule:truthy
     paths: ["**.yaml"]
 
 jobs:
-  diff:
-    name: Compute diff
+  flux-diff:
+    name: Flux Diff
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,8 +26,10 @@ jobs:
         uses: allenporter/flux-local/action/diff@main
         id: diff
         with:
+          live-branch: main
           path: ${{ matrix.path }}
           resource: ${{ matrix.resource }}
+          # debug: true
 
       - name: Add comment
         uses: mshick/add-pr-comment@7c0890544fb33b0bdd2e59467fbacb62e028a096 # v2
