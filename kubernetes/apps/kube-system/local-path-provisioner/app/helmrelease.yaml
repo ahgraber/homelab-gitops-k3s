@@ -27,7 +27,7 @@ spec:
   values:
     image:
       repository: rancher/local-path-provisioner
-      tag: v0.0.23 # ref: https://github.com/rancher/local-path-provisioner/issues/333
+      tag: v0.0.24 # ref: https://github.com/rancher/local-path-provisioner/issues/333
     helperImage:
       repository: public.ecr.aws/docker/library/busybox
       tag: latest
