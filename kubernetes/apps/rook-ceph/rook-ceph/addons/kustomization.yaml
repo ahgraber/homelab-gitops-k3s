@@ -2,17 +2,54 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-# resources:
-#   - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
-
+resources:
+  - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
 # patches:
-#   - path: ./patches/prometheus-ceph-rules.yaml
-#     target:
+#   ### https://raw.githubusercontent.com/rook/rook/master/deploy/charts/rook-ceph-cluster/prometheus/localrules.yaml
+#   ### ref: https://rook.github.io/docs/rook/v1.9/ceph-monitoring.html#customize-alerts
+#   - target:
 #       group: monitoring.coreos.com
 #       version: v1
 #       kind: PrometheusRule
 #       name: prometheus-ceph-rules
-#       namespace: rook-ceph
+#       namespace: monitoring
+#     patch: |
+#       # CephNodeNetworkPacketDrops
+#       - op: replace
+#         path: /spec/groups/6/rules/1/expr
+#         value: |
+#           (
+#             rate(node_network_receive_drop_total{device!="lo"}[1m]) +
+#             rate(node_network_transmit_drop_total{device!="lo"}[1m])
+#           ) / (
+#             rate(node_network_receive_packets_total{device!="lo"}[1m]) +
+#             rate(node_network_transmit_packets_total{device!="lo"}[1m])
+#           ) >= 0.0050000000000000001 and (
+#             rate(node_network_receive_drop_total{device!="lo"}[1m]) +
+#             rate(node_network_transmit_drop_total{device!="lo"}[1m])
+#           ) >= 10
+#       # - op: add
+#       #   path: /spec/groups/6/rules/1/for
+#       #   value: 1m
+
+#       # # CephNodeNetworkPacketErrors
+#       # - op: add
+#       #   path: /spec/groups/6/rules/2/for
+#       #   value: 1m
+
+#       # CephNodeInconsistentMTU
+#       - op: remove
+#         path: /spec/groups/6/rules/4
+#       # # CephPoolGrowthWarning
+#       # - op: replace
+#       #   path: /spec/groups/7/rules/0/expr
+#       #   # value: |
+#       #   #   (predict_linear(
+#       #   #     (max(ceph_pool_percent_used) without (pod, instance))[2d:1h], 3600 * 24 * 5
+#       #   #   ) * on(pool_id)
+#       #   value: |
+#       #     (predict_linear(ceph_pool_percent_used[2d], 3600 * 24 * 5) * on(pool_id)
+#       #     group_right ceph_pool_metadata) >= 95"
 
 configMapGenerator:
   - name: ceph-cluster-dashboard
