@@ -35,8 +35,6 @@ spec:
     annotations:
       reloader.stakater.com/search: "true"
 
-    replicaCount: 3
-
     resources:
       requests:
         cpu: 203m
@@ -44,9 +42,39 @@ spec:
       limits:
         memory: 384Mi
 
+    admissionController:
+      replicas: 3
+      serviceMonitor:
+        enabled: true
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
+              verbs:
+                - create
+                - update
+                - delete
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: kyverno
+              app.kubernetes.io/component: kyverno
     backgroundController:
       serviceMonitor:
         enabled: true
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups:
+                - ""
+              resources:
+                - pods
     cleanupController:
       serviceMonitor:
         enabled: true
@@ -57,3 +85,5 @@ spec:
       enabled: true
     serviceMonitor:
       enabled: true
+      annotations:
+        grafana_folder: General
