@@ -4,22 +4,21 @@ kind: ClusterPolicy
 metadata:
   name: remove-cpu-limits-pod
   annotations:
-    policies.kyverno.io/title: Remove CPU Limits
+    policies.kyverno.io/title: Remove CPU limits
     policies.kyverno.io/subject: Pods
     policies.kyverno.io/description: >-
       This policy searches for resource definitions and removes set CPU limits, unless: annotated with
       `kyverno.io/ignore: "true"`, or in a specific set of namespaces
     pod-policies.kyverno.io/autogen-controllers: none
 spec:
-  mutateExistingOnPolicyUpdate: true
-  generateExistingOnPolicyUpdate: true
+  # mutateExistingOnPolicyUpdate: true
+  # generateExistingOnPolicyUpdate: true
   rules:
     - name: delete-containers-cpu-limits
       match:
         any:
           - resources:
-              kinds:
-                - Pod
+              kinds: ["Pod"]
       exclude:
         any:
           - resources:
@@ -44,8 +43,7 @@ spec:
       match:
         any:
           - resources:
-              kinds:
-                - Pod
+              kinds: ["Pod"]
       exclude:
         any:
           - resources:
