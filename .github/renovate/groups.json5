@@ -9,7 +9,8 @@
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
       },
-      "separateMinorPatch": true
+      "separateMinorPatch": true,
+      "versioning": "semver"
     },
     {
       "description": "Rook-Ceph Group",
