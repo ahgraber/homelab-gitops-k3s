@@ -2,8 +2,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: pgadmin
-  namespace: default
+  name: &app pgadmin
+  namespace: &namespace default
 spec:
   interval: 15m
   chart:
@@ -29,7 +29,7 @@ spec:
   values:
     env:
       email: admin@${SECRET_DOMAIN}
-    existingSecret: pgadmin-secret
+    existingSecret: *app
     secretKeys:
       pgadminPasswordKey: password
 
@@ -57,7 +57,7 @@ spec:
 
     persistentVolume:
       enabled: true
-      existingClaim: pgadmin-config
+      existingClaim: *app
 
     resources:
       # required to initialize

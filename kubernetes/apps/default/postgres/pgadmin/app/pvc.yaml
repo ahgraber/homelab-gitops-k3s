@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pgadmin-config
+  name: &app pgadmin
   namespace: default
   labels:
-    app.kubernetes.io/instance: pgadmin
-    app.kubernetes.io/name: pgadmin
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: *app
 spec:
   accessModes:
     - ReadWriteOnce
