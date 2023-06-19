@@ -70,7 +70,7 @@ data:
     - Apps & Services:
         - HomeAssistant:
             href: https://homeassistant.${SECRET_DOMAIN}:8123
-            icon: home-assistant-circle.png
+            icon: home-assistant.png
             description: Smart Home Automation
         - ChangeDetection:
             href: https://changedetection.${SECRET_DOMAIN}
