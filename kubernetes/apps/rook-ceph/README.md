@@ -218,6 +218,15 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 [cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
 [pgcalc](https://old.ceph.com/pgcalc/)
 
+### Ceph Mon Low Space warning
+
+Clean up unused images:
+
+```sh
+ssh ...
+sudo k3s crictl rmi --prune
+```
+
 ## Teardown and Cleanup
 
 > Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.9/ceph-teardown.html)
