@@ -41,12 +41,12 @@ spec:
       ADMIN_USERNAME:
         valueFrom:
           secretKeyRef:
-            name: miniflux-secret
+            name: *app
             key: ADMIN_USERNAME
       ADMIN_PASSWORD:
         valueFrom:
           secretKeyRef:
-            name: miniflux-secret
+            name: *app
             key: ADMIN_PASSWORD
       DEBUG: "1"
       LOG_DATE_TIME: "1"
