@@ -74,12 +74,12 @@ tasks:
   ks-bounce:
     desc: Suspend and resume kustomization
     cmds:
-      - flux suspend kustomization -n {{.namespace}} {{.ks}}
+      - flux suspend kustomization -n {{.ns}} {{.ks}}
       - sleep 5
-      - flux resume kustomization -n {{.namespace}} {{.ks}}
+      - flux resume kustomization -n {{.ns}} {{.ks}}
     vars:
       ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
-      namespace: '{{.namespace | default "flux-system"}}'
+      ns: '{{.ns | default "flux-system"}}'
 
   hr-sync:
     desc: Sync Flux HelmReleases
@@ -93,12 +93,12 @@ tasks:
   hr-bounce:
     desc: Suspend and resume helmrelease
     cmds:
-      - flux suspend hr -n {{.namespace}} {{.release}}
+      - flux suspend hr -n {{.ns}} {{.hr}}
       - sleep 5
-      - flux resume hr -n {{.namespace}} {{.release}}
+      - flux resume hr -n {{.ns}} {{.hr}}
     vars:
-      release: '{{ or .release (fail "HelmRelease `release` is required") }}'
-      namespace: '{{.namespace | default "default"}}'
+      hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
+      ns: '{{.ns | default "default"}}'
 
   hr-suspend:
     desc: Suspend all Flux HelmReleases
@@ -118,11 +118,11 @@ tasks:
 
   hr-fix:
     cmds:
-      - kubectl -n {{.namespace}} delete secret -l owner=helm,name={{.release}},status=pending-upgrade
-      - flux -n {{.namespace}} reconcile hr {{.release}}
+      - kubectl -n {{.ns}} delete secret -l owner=helm,name={{.hr}},status=pending-upgrade
+      - flux -n {{.ns}} reconcile hr {{.hr}}
     vars:
-      release: '{{ or .release (fail "HelmRelease `release` is required") }}'
-      namespace: '{{.namespace | default "default"}}'
+      hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
+      ns: '{{.ns | default "default"}}'
 
   delete-jobs:
     desc: Delete all jobs
