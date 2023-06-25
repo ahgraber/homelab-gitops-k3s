@@ -1,3 +1,3 @@
-# [Homebox](https://hay-kot.github.io/homebox/)
+# [OpenGist](https://github.com/thomiceli/opengist)
 
-Homebox is the inventory and organization system built for the Home User
+Self-hosted pastebin powered by Git, open-source alternative to Github Gist.
