@@ -43,7 +43,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - host: &host "mealie.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
@@ -79,7 +79,7 @@ spec:
         env:
           TZ: ${TIMEZONE}
           API_PORT: 9000
-          BASE_URL: "https://mealie.${SECRET_DOMAIN}"
+          BASE_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
           # database settings
           DB_ENGINE: postgres
           POSTGRES_DB:
