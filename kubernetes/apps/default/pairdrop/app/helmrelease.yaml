@@ -1,0 +1,55 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app pairdrop
+  namespace: default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      repository: lscr.io/linuxserver/pairdrop
+      tag: 1.7.6@sha256:ed5b1e37764ad4617d89e650b67b59ae488fcd3fb034693ebb59f5f093c9da1d
+
+    env:
+      TZ: ${TIMEZONE}
+
+    ingress:
+      main:
+        enabled: true
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+
+        tls:
+          - hosts:
+              - *host
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 52M
+      limits:
+        memory: 256M

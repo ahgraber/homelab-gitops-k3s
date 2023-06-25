@@ -18,4 +18,5 @@ resources:
   - ./mealie/ks.yaml
   - ./miniflux/ks.yaml
   - ./opengist/ks.yaml
+  - ./pairdrop/ks.yaml
   # - ./rxresume/ks.yaml
