@@ -29,7 +29,7 @@ spec:
   values:
     image:
       repository: ghcr.io/dgtlmoon/changedetection.io
-      tag: "0.43.1"
+      tag: "0.43.2"
     env:
       TZ: "${TIMEZONE}"
       # PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
