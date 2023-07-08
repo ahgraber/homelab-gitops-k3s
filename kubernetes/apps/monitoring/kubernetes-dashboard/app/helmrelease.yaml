@@ -29,6 +29,7 @@ spec:
           - --disable-settings-authorizer
           - --enable-insecure-login
           - --enable-skip-login
+          - --namespace=monitoring
           - --token-ttl=43200
         env:
           - name: TZ
@@ -74,7 +75,7 @@ spec:
       enabled: false # installed separately
     cert-manager:
       enabled: false
-    nginx:
+    nginx-ingress:
       enabled: false
     serviceMonitor:
       enabled: false
