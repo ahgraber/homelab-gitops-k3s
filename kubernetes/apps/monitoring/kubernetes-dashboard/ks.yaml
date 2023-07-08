@@ -5,6 +5,9 @@ metadata:
   name: apps-monitoring-kubernetes-dashboard
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: apps-networking-ingress-nginx
+    - name: apps-monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/kubernetes-dashboard/app
   prune: true
   sourceRef:
