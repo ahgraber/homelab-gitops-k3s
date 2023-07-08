@@ -75,7 +75,7 @@ spec:
       enabled: false # installed separately
     cert-manager:
       enabled: false
-    nginx-ingress:
+    nginx:
       enabled: false
     serviceMonitor:
       enabled: false
