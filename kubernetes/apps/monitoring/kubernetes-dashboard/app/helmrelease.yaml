@@ -68,7 +68,7 @@ spec:
               pathType: Prefix
       tls:
         - hosts:
-      #       - *host
+            - *host
     metricsScraper:
       enabled: true
     metrics-server:
