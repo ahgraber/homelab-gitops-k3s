@@ -52,22 +52,22 @@ spec:
             # cpu: 250m
             memory: 400Mi
     ingress:
-      hosts:
-        # Keep 'localhost' host only if you want to access Dashboard using 'kubectl port-forward ...' on:
-        # https://localhost:8443
-        - localhost
-      # enabled: true
-      # ingressClassName: nginx
-      # annotations:
-      #   nginx.ingress.kubernetes.io/whitelist-source-range: |
-      #     10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       # hosts:
-      #   - host: &host "kubernetes.${SECRET_DOMAIN}"
-      #     paths:
-      #       - path: /
-      #         pathType: Prefix
-      # tls:
-      #   - hosts:
+      #   # Keep 'localhost' host only if you want to access Dashboard using 'kubectl port-forward ...' on:
+      #   # https://localhost:8443
+      #   - localhost
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/whitelist-source-range: |
+          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      hosts:
+        - host: &host "kubernetes.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
       #       - *host
     metricsScraper:
       enabled: true
