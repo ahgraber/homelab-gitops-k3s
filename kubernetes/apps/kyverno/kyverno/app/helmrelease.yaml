@@ -56,7 +56,10 @@ spec:
               verbs:
                 - create
                 - update
+                - patch
                 - delete
+                - get
+                - list
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
