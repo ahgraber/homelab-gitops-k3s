@@ -60,8 +60,9 @@ Scrutiny is deployed as 3 distinct components:
 
 5. Create a TrueNAS cron job (System Settings → Advanced → Cron Jobs):
 
-   | Description | Scrutiny |
+   | Key | Value |
    |-------------|----------|
+   | Description | Scrutiny |
    | Command     | . /etc/profile; /usr/local/tools/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --config /usr/local/tools/scrutiny/config/collector.yaml |
    | Run As User | root |
    | Schedule | Hourly |
