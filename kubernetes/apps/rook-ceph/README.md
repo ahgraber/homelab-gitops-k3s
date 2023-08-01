@@ -272,13 +272,13 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
    # with add'l info
    k get pv -o json \
      | jq '.items[]
-     | select(.spec.storageClassName == "ceph-block-retain")
+     | select(.spec.storageClassName == "ceph-block")
      | {name: .metadata.name, usedby: .spec.claimRef.name, imageName: .spec.csi.volumeAttributes.imageName}'
 
    # just the rook-ceph imageNames
    k get pv -o json \
      | jq '.items[]
-     | select(.spec.storageClassName == "ceph-block-retain")
+     | select(.spec.storageClassName == "ceph-block")
      | .spec.csi.volumeAttributes.imageName'
    ```
 
@@ -292,7 +292,7 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
 
    ```sh
    # from kubectl command, copy list of imageNames
-   pvs=(< copy outputs from step 1 >)
+   pvs=(<copy outputs from step 1>)
    # pvs=("csi-vol-9918487c-718e-11ed-af1c-d608edb9ade0" \
    # "csi-vol-7f05fdba-8847-11ed-af1c-d608edb9ade0" \
    # "csi-vol-30448e88-74fd-11ed-af1c-d608edb9ade0" \
@@ -300,8 +300,8 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
    echo "${pvs[0]}"
 
    # create array from rbd command
-   imgs=($(rbd ls -p ceph-blockpool-retain))
-   echo "${pvs[0]}"
+   imgs=($(rbd ls -p ceph-blockpool))
+   echo "${imgs[0]}"
    ```
 
 4. In `ceph toolbox` pod, compare arrays and remove trash
@@ -311,6 +311,6 @@ echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
    echo "${toremove[@]}"
    for img in "${toremove[@]}"; do
      echo "Removing $img"
-     rbd rm "$img" -p ceph-blockpool-retain
+     rbd rm "$img" -p ceph-blockpool
    done
    ```
