@@ -48,8 +48,8 @@ spec:
           value: "True"
         - name: PREFECT_API_URL # internal/cluster fqdn
           value: "http://prefect-server.datasci.svc.cluster.local:4200/api"
-        - name: PREFECT_UI_API_URL
-          value: "https://prefect.${SECRET_DOMAIN}/api"
+        # - name: PREFECT_UI_API_URL  # set by publicApiUrl
+        #   value: "https://prefect.${SECRET_DOMAIN}/api"
         # - name: PREFECT_PROFILE
         #   value: "default"
 
