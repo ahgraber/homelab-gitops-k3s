@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "docker:enableMajor",
     ":disableRateLimiting",
     ":dependencyDashboard",
@@ -25,24 +25,16 @@
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
   "commitBodyTable": true,
-  "flux": {
-    "fileMatch": ["kubernetes/.+\\.ya?ml$"]
-  },
-  "helm-values": {
-    "fileMatch": ["kubernetes/.+\\.ya?ml$"]
-  },
-  "kubernetes": {
-    "fileMatch": ["kubernetes/.+\\.ya?ml$"]
-  },
+  "flux": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
+  "helm-values": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
+  "kubernetes": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
   "regexManagers": [
     {
       "description": "Process custom dependencies",
-      "fileMatch": [
-        "kubernetes/.+\\.ya?ml$"
-      ],
+      "fileMatch": ["kubernetes/.+\\.ya?ml$"],
       "matchStrings": [
         // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)\/(?<currentValue>[^/]+)\/[^/]+\n",
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)/(?<currentValue>[^/]+)/[^/]+\n",
         // Example: apiVersion=helm.cattle.io/v1 kind=HelmChart
         "datasource=(?<datasource>\\S+)\n.*?repo: (?<registryUrl>\\S+)\n.*?chart: (?<depName>\\S+)\n.*?version: (?<currentValue>\\S+)\n"
       ],
@@ -51,22 +43,19 @@
     },
     {
       "description": "Process imageName values",
-      "fileMatch": [
-        "kubernetes/.+\\.ya?ml$"
-      ],
-      "matchStrings": [
-        "imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"
-      ],
+      "fileMatch": ["kubernetes/.+\\.ya?ml$"],
+      "matchStrings": ["imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"],
       "datasourceTemplate": "docker",
       "versioningTemplate": "redhat"
     }
   ],
   "packageRules": [
     {
-      "description": "Loose versioning for non-semver charts",
+      "description": "YYYY.MM.DD versioning for charts",
       "matchDatasources": ["flux"],
       "matchPackagePatterns": ["prefect"],
-      "versioning": "loose"
+      // "versioning": "loose"
+      "versioning": "regex:^(?<major>\\d{4})\\.((?<minor>\\d{2}))\\.((?<patch>\\d{2}))$"
     },
     {
       "description": "Loose versioning for non-semver packages",
