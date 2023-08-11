@@ -63,10 +63,16 @@
   ],
   "packageRules": [
     {
-      "description": "Loose versioning for non-semver packages",
-      "matchDatasources": ["docker"],
+      "description": "Loose versioning for non-semver charts",
+      "matchDatasources": ["flux"],
+      "matchPackagePatterns": ["prefect"]
       "versioning": "loose",
-      "matchPackagePatterns": ["changedetection", "prefect"]
+    },
+    {
+      "description": "Loose versioning for non-semver packages",
+      "matchDatasources": ["docker", ],
+      "versioning": "loose",
+      "matchPackagePatterns": ["changedetection"]
     }
   ]
 }
