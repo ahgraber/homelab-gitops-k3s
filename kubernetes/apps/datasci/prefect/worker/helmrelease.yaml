@@ -58,6 +58,7 @@ spec:
       #     key: key
       #   cloudUrl: https://api.prefect.cloud/api
       serverApiConfig:
+        # -- prefect API url (PREFECT_API_URL); should be in-cluster URL if the worker is deployed in the same cluster as the API
         apiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
 
       replicaCount: 1
