@@ -51,14 +51,14 @@
   ],
   "packageRules": [
     {
-      "description": "YYYY.MM.DD versioning for charts",
-      "matchDatasources": ["flux"],
+      "description": "YYYY.MM.DD versioning for helm charts",
+      "matchDatasources": ["helm"],
       "matchPackagePatterns": ["prefect"],
       // "versioning": "loose"
       "versioning": "regex:^(?<major>\\d{4})\\.((?<minor>\\d{2}))\\.((?<patch>\\d{2}))$"
     },
     {
-      "description": "Loose versioning for non-semver packages",
+      "description": "Loose versioning for non-semver docker images",
       "matchDatasources": ["docker"],
       "matchPackagePatterns": ["changedetection"],
       "versioning": "loose"
