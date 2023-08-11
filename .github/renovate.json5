@@ -38,12 +38,9 @@
     {
       "description": "Process custom dependencies",
       "fileMatch": [
-        "ansible/.+\\.ya?ml$",
         "kubernetes/.+\\.ya?ml$"
       ],
       "matchStrings": [
-        // Example: `k3s_release_version: "v1.27.3+k3s1"`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n",
         // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)\/(?<currentValue>[^/]+)\/[^/]+\n",
         // Example: apiVersion=helm.cattle.io/v1 kind=HelmChart
@@ -69,7 +66,7 @@
       "description": "Loose versioning for non-semver packages",
       "matchDatasources": ["docker"],
       "versioning": "loose",
-      "matchPackagePatterns": ["changedetection", "plex", "qbittorrent"]
+      "matchPackagePatterns": ["changedetection", "prefect"]
     }
   ]
 }
