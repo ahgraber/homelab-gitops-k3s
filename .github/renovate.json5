@@ -65,14 +65,14 @@
     {
       "description": "Loose versioning for non-semver charts",
       "matchDatasources": ["flux"],
-      "matchPackagePatterns": ["prefect"]
-      "versioning": "loose",
+      "matchPackagePatterns": ["prefect"],
+      "versioning": "loose"
     },
     {
       "description": "Loose versioning for non-semver packages",
-      "matchDatasources": ["docker", ],
-      "versioning": "loose",
-      "matchPackagePatterns": ["changedetection"]
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["changedetection"],
+      "versioning": "loose"
     }
   ]
 }
