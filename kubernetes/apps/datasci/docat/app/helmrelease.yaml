@@ -35,9 +35,9 @@ spec:
     image:
       # renovate: datasource=docker image=ghcr.io/...
       repository: ghcr.io/docat-org/docat
-      # tag: "2.3.2"
+      tag: 47cc0cc96bf20886ec0a260e03fa0ee097e46810
     # -- Override the command(s) for the default container
-    command: ["/bin/bash", "-c", "mlflow server"]
+    # command: ["/bin/bash", "-c", "mlflow server"]
     # -- Override the args for the default container
     # args:
     #   - "--backend-store-uri"
@@ -49,18 +49,7 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
-      # MLFLOW_BACKEND_STORE_URI:
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: &db_secret database-mlflow
-      #       key: POSTGRES_URL
-      # MLFLOW_DEFAULT_ARTIFACT_ROOT: "/data"
-      # MLFLOW_SERVE_ARTIFACTS: true
-      # MLFLOW_HOST: 0.0.0.0
-      # MLFLOW_PORT: 5000
-    # envFrom:
-    #   - secretRef:
-    #       name: database-mlflow
+
     service:
       main:
         ports:
