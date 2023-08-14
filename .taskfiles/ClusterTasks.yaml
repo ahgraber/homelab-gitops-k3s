@@ -51,6 +51,7 @@ tasks:
 
   gr-sync:
     desc: Sync Flux GitRepositories
+    aliases: ["sync-gr"]
     cmds:
       - |
         kubectl get gitrepositories --all-namespaces --no-headers \
@@ -62,6 +63,7 @@ tasks:
 
   ks-sync:
     desc: Sync Flux Kustomizations
+    aliases: ["sync-ks"]
     cmds:
       - |
         kubectl get kustomization --all-namespaces --no-headers \
@@ -73,6 +75,7 @@ tasks:
 
   ks-bounce:
     desc: Suspend and resume kustomization
+    aliases: ["bounce-ks"]
     cmds:
       - flux suspend kustomization -n {{.ns}} {{.ks}}
       - sleep 5
@@ -83,6 +86,7 @@ tasks:
 
   hr-sync:
     desc: Sync Flux HelmReleases
+    aliases: ["sync-hr"]
     cmds:
       - |
         kubectl get helmreleases --all-namespaces --no-headers \
@@ -92,6 +96,7 @@ tasks:
 
   hr-bounce:
     desc: Suspend and resume helmrelease
+    aliases: ["bounce-hr"]
     cmds:
       - flux suspend hr -n {{.ns}} {{.hr}}
       - sleep 5
@@ -102,6 +107,7 @@ tasks:
 
   hr-suspend:
     desc: Suspend all Flux HelmReleases
+    aliases: ["suspend-hr"]
     cmds:
       - |
         flux get helmrelease --all-namespaces --no-header \
