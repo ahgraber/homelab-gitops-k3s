@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &app mlflow
+  name: &app docat
   namespace: datasci
   labels:
     app.kubernetes.io/instance: *app
