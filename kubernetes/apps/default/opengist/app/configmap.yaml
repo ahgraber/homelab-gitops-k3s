@@ -19,14 +19,16 @@ data:
     # If not set, uses the URL from the request
     external-url: opengist.${SECRET_DOMAIN}
 
-    # Prevents the creation of new accounts (either `true` or `false`). Default: false
-    disable-signup: false
-
-    # Directory where Opengist will store its data. Default: ~/.opengist/
+    # Directory where Opengist will store its data. Default: /opengist/
     opengist-home: /mnt/opengist/
 
     # Name of the SQLite database file. Default: opengist.db
     db-filename: opengist.db
+
+    # Set the journal mode for SQLite. Default: WAL
+    # See https://www.sqlite.org/pragma.html#pragma_journal_mode
+    sqlite.journal-mode: WAL
+
 
     # HTTP server configuration
     # Host to bind to. Default: 0.0.0.0
@@ -69,3 +71,17 @@ data:
 
     # Path or alias to ssh-keygen executable. Default: ssh-keygen
     ssh.keygen-executable: ssh-keygen
+
+
+    # OAuth2 configuration
+    # The callback/redirect URL must be http://opengist.domain/oauth/<github|gitea>/callback
+
+    # To create a new OAuth2 application using GitHub : https://github.com/settings/applications/new
+    github.client-key:
+    github.secret:
+
+    # To create a new OAuth2 application using Gitea : https://gitea.domain/user/settings/applications
+    gitea.client-key:
+    gitea.secret:
+    # URL of the Gitea instance. Default: https://gitea.com/
+    gitea.url: https://gitea.com/
