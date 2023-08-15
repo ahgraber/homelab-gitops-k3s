@@ -17,7 +17,7 @@ data:
 
     # Public URL for the Git HTTP/SSH connection.
     # If not set, uses the URL from the request
-    external-url: opengist.${SECRET_DOMAIN}
+    # external-url: opengist.${SECRET_DOMAIN}
 
     # Directory where Opengist will store its data. Default: /opengist/
     opengist-home: /mnt/opengist/
@@ -44,10 +44,10 @@ data:
     http.tls-enabled: false
 
     # Path to the TLS certificate file if TLS is enabled
-    http.cert-file:
+    # http.cert-file:
 
     # Path to the TLS key file if TLS is enabled
-    http.key-file:
+    # http.key-file:
 
     # SSH built-in server configuration
     # Note: it is not using the SSH daemon from your machine (yet)
@@ -67,7 +67,7 @@ data:
 
     # Public domain for the Git SSH connection, if it has to be different from the HTTP one.
     # If not set, uses the URL from the request
-    ssh.external-domain: opengist.${SECRET_DOMAIN}
+    # ssh.external-domain: opengist.${SECRET_DOMAIN}
 
     # Path or alias to ssh-keygen executable. Default: ssh-keygen
     ssh.keygen-executable: ssh-keygen
@@ -77,11 +77,11 @@ data:
     # The callback/redirect URL must be http://opengist.domain/oauth/<github|gitea>/callback
 
     # To create a new OAuth2 application using GitHub : https://github.com/settings/applications/new
-    github.client-key:
-    github.secret:
+    # github.client-key:
+    # github.secret:
 
     # To create a new OAuth2 application using Gitea : https://gitea.domain/user/settings/applications
-    gitea.client-key:
-    gitea.secret:
+    # gitea.client-key:
+    # gitea.secret:
     # URL of the Gitea instance. Default: https://gitea.com/
-    gitea.url: https://gitea.com/
+    # gitea.url: https://gitea.com/
