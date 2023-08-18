@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://prefecthq.github.io/prefect-helm
       chart: prefect-server
-      version: 2023.08.03
+      version: 2023.08.18
       sourceRef:
         kind: HelmRepository
         name: prefect-charts
