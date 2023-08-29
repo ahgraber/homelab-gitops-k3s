@@ -29,38 +29,38 @@ spec:
     storageClass: local-path
 
   bootstrap:
-    ## for initial setup
-    initdb:
-      # set up 'default' db/owner
-      database: default
-      owner: default
-      # secret:
-      #   name: <app>-user-secret
-    # ## Alternative bootstrap method: start from a backup
-    # recovery:
-    #   source: &s3-backup datasci  # from prior backup.barmanObjectStore.serverName
+    # ## for initial setup
+    # initdb:
+    #   # set up 'default' db/owner
+    #   database: default
+    #   owner: default
+    #   # secret:
+    #   #   name: <app>-user-secret
+    ## Alternative bootstrap method: start from a backup
+    recovery:
+      source: &s3-backup datasci # next time it will be datasci-v2
 
-  # # externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: *s3-backup
-  #     barmanObjectStore:
-  #       endpointURL: https://${SECRET_S3_ENDPOINT}
-  #       destinationPath: s3://postgres/
-  #       s3Credentials:
-  #         accessKeyId:
-  #           name: postgres-s3-secret
-  #           key: S3_ACCESS_KEY
-  #         secretAccessKey:
-  #           name: postgres-s3-secret
-  #           key: S3_SECRET_KEY
-  #       wal:
-  #         compression: bzip2
-  #         maxParallel: 8
+  # externalClusters is needed when recovering from an existing cnpg cluster
+  externalClusters:
+    - name: *s3-backup
+      barmanObjectStore:
+        endpointURL: https://${SECRET_S3_ENDPOINT}
+        destinationPath: s3://postgres/
+        s3Credentials:
+          accessKeyId:
+            name: postgres-s3-secret
+            key: S3_ACCESS_KEY
+          secretAccessKey:
+            name: postgres-s3-secret
+            key: S3_SECRET_KEY
+        wal:
+          compression: bzip2
+          maxParallel: 8
 
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: datasci # next time it will be datasci-v2
+      serverName: datasci-v2 # next time it will be datasci-v3
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:
