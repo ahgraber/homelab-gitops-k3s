@@ -146,7 +146,7 @@ spec:
       enabled: true # Note: obsidian-livesync does not work with a default backend enabled
       image:
         repository: ghcr.io/tarampampam/error-pages
-        tag: 2.24.0
+        tag: 2.25.0
       replicaCount: 1
       extraEnvs:
         # https://github.com/tarampampam/error-pages#-templates
