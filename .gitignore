@@ -1,37 +1,56 @@
+# gitignore
+
 # Editors
 .vscode/
 .monokle
 *.profraw
+
 # Trash
 .DS_Store
 Thumbs.db
-*.iso
-# k8s
+
+# secrets
 *kubeconfig*
 *key*
 *.pem
 *.pgp
 *.pub
-# vscode-sops
 .decrypted~*.yaml
-# env
 .env
 .envrc
 
+# terraform
+.terraform/
+*.tfstate*
+*.lock.hcl
+*.zip
+*.ova
+# main.tf  # allowing because all secrets are in .envrc
+govcvars.sh
+modules/terraform-vsphere/
+
+# ansible
+ansible/.facts_cache/
+ansible/collections/
+ansible/tmp
+
 # temp / working files & dirs
 *.bak
-.temp*
-.todo*
+*.iso
+*.log
 **/*archive/
 **/*wip/
 .private/
 .logs/
 .task/
+.temp*
+.todo*
 report/
 
 #extras
 *pytest*
 *cache*
+
 # retain files
 !**.gitkeep
 !*.sops.*

@@ -17,10 +17,17 @@ includes:
     taskfile: .taskfiles/KubernetesTasks.yaml
     aliases: ["k8s"]
   lint: .taskfiles/LintTasks.yaml
-  pre-commit: .taskfiles/PrecommitTasks.yaml
+  pre-commit:
+    taskfile: .taskfiles/PrecommitTasks.yaml
+    aliases: ["pc"]
+  rook:
+    taskfile: .taskfiles/RookTasks.yaml
+    aliases: ["ceph"]
   volsync: .taskfiles/VolsyncTasks.yaml
 
 tasks:
+  default: task -l
+
   init:
     desc: Initialize workstation dependencies with Brew
     cmds:
