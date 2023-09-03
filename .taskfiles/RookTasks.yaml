@@ -12,7 +12,7 @@ tasks:
 
   rook-pass:
     desc: Retrieve the rook-ceph dashboard password
-    aliases: ceph-pass
+    aliases: [ceph-pass]
     cmds:
       - kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64
         --decode && echo
