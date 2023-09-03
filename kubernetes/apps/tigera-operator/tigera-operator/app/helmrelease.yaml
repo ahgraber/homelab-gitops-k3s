@@ -28,12 +28,17 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    # Configures general installation parameters for Calico. Schema is based
+    # on the operator.tigera.io/Installation API documented
+    # here: https://projectcalico.docs.tigera.io/reference/installation/api#operator.tigera.io/v1.InstallationSpec
     installation:
       enabled: true
       registry: quay.io
       imagePath: calico
       ### from the ansible template used in bootstrap
       calicoNetwork:
+        bgp: Disabled
+        hostPorts: Disabled
         # Note: The ipPools section cannot be modified post-install.
         ipPools:
           - blockSize: 26
@@ -41,13 +46,15 @@ spec:
             encapsulation: "VXLANCrossSubnet"
             natOutgoing: Enabled
             nodeSelector: all()
-        linuxDataplane: Iptables
-        multiInterfaceMode: None
+        # linuxDataplane: Iptables
         nodeAddressAutodetectionV4:
           cidrs:
             - "${NET_NODE_CIDR}"
       nodeMetricsPort: 9091
       typhaMetricsPort: 9093
+
+    apiServer:
+      enabled: true
 
     resources:
       requests:
