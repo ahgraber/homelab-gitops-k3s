@@ -37,8 +37,8 @@ spec:
       imagePath: calico
       ### from the ansible template used in bootstrap
       calicoNetwork:
-        bgp: Disabled
-        hostPorts: Disabled
+        # bgp: Disabled
+        # hostPorts: Disabled
         # Note: The ipPools section cannot be modified post-install.
         ipPools:
           - blockSize: 26
