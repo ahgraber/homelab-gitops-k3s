@@ -2,6 +2,7 @@
 version: "3"
 
 tasks:
+
   all:
     desc: Lint with MegaLinter
     cmds:
