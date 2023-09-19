@@ -30,7 +30,7 @@ spec:
 
     image:
       repository: ghcr.io/letsblockit/server
-      tag: v0.43.0
+      tag: v0.44.0
     env:
       TZ: America/New_York
       LETSBLOCKIT_AUTH_METHOD: proxy
