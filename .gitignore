@@ -10,11 +10,16 @@
 Thumbs.db
 
 # secrets
+kubeconfig
 *kubeconfig*
+*.agekey
+*.key
 *key*
 *.pem
 *.pgp
 *.pub
+.config.env
+.decrypted~*
 .decrypted~*.yaml
 .env
 .envrc
@@ -30,8 +35,9 @@ govcvars.sh
 modules/terraform-vsphere/
 
 # ansible
+.venv*
 ansible/.facts_cache/
-ansible/collections/
+ansible/galaxy
 ansible/tmp
 
 # temp / working files & dirs

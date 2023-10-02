@@ -1,17 +1,21 @@
-# assume top-most EditorConfig file
+# editorconfig.org
 root = true
 
 [*]
 charset = utf-8
-end_of_line = lf  # Unix-style newlines
+end_of_line = lf
 indent_size = 2
 indent_style = space
-insert_final_newline = true
 max_line_length = 120
 trim_trailing_whitespace = true
+insert_final_newline = true
 
 [*.{bat,cmd,ps1}]
 end_of_line = crlf
+
+[*.{bash,sh}]
+indent_style = space
+indent_size = 4
 
 [*.csv]
 insert_final_newline = false
@@ -33,4 +37,5 @@ indent_size = 2
 
 # Tab indentation (no size specified)
 [Makefile]
-indent_style = tab
+indent_style = space
+indent_size = 4

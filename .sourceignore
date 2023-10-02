@@ -18,6 +18,11 @@
 .sops.yaml.tmpl
 .sourceignore
 configure -->
+ansible/
+bootstrap/
+docs/
 LICENSE
 README.md
+requirements.txt
+requirements.yaml
 Taskfile.yml

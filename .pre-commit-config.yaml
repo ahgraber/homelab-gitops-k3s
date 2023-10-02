@@ -35,8 +35,17 @@ repos:
       #   entry: .precommit/sops.sh
       #   language: script
       #   pass_filenames: false
+  ## shellcheck requires docker to run
+  # - repo: https://github.com/koalaman/shellcheck-precommit
+  #   rev: v0.8.0
+  #   hooks:
+  #     - id: shellcheck
+  #       args:
+  #         - --severity=warning
+  #         - -e
+  #         - SC1071
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.3 # Use the sha or tag you want to point at
+    rev: v3.0.3
     hooks:
       - id: prettier
         args:
@@ -44,7 +53,7 @@ repos:
           # - "--ignore-path '**/*.md'"
           # - "--ignore-path '**/*.y*ml'"
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.37.0 # v0.30.0
+    rev: v0.37.0
     hooks:
       - id: markdownlint
         args:
@@ -63,21 +72,22 @@ repos:
   #   hooks:
   #     - id: hadolint-docker
   #       entry: hadolint/hadolint hadolint
-  # ## shellcheck requires docker to run
-  # - repo: https://github.com/koalaman/shellcheck-precommit
-  #   rev: v0.9.0
-  #   hooks:
-  #     - id: shellcheck
-  #       args: ["-x"]
-  #       # ignore '*.zsh" scripts'
-  #       exclude: '^\.\*zsh$'
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.2
+    rev: v0.9.0.5
     hooks:
       - id: shellcheck
         args: ["-x"]
         # ignore '*.zsh" scripts'
-        exclude: '^\.\*zsh$'
+        exclude: "^.*zsh$"
+  # - repo: https://github.com/ansible/ansible-lint.git
+  #   rev: v6.16.1
+  #   hooks:
+  #     - id: ansible-lint
+  #       args:
+  #         - --config-file=.ansible-lint
+  #         - --project-dir=ansible/
+  #         - --parseable
+
   - repo: https://github.com/k8s-at-home/sops-pre-commit
     rev: v2.1.1
     hooks:
@@ -88,13 +98,6 @@ repos:
     rev: v8.18.0
     hooks:
       - id: gitleaks
-  # - repo: https://github.com/codespell-project/codespell
-  #   rev: v2.2.4
-  #   hooks:
-  #     - id: codespell
-  #       args:
-  #         - "--ignore-words-list"
-  #         - "iterm"
   - repo: https://github.com/crate-ci/typos
     rev: v1.16.15
     hooks:
