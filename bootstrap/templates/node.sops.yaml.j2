@@ -1,0 +1,13 @@
+---
+disk: "{{ disk_id }}"
+ansible_host: "{{ address }}"
+mac: "{{ mac_address}}"
+network_interface: "{{ network_iface }}"
+ansible_become_pass: "{{ password }}"
+{% if ceph_drives %}
+ceph_drives:
+{% for item in ceph_drives %}
+  - {{ item }}
+{% endfor %}
+{% endif %}
+ansible_user: "{{ username }}"

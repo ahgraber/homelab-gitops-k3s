@@ -1,0 +1,16 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+---
+kubernetes:
+  children:
+    master:
+      hosts:
+      {% for item in bootstrap_nodes.controller %}
+        {{ item.name }}:
+      {% endfor %}
+    {% if bootstrap_nodes.worker | default([]) | length > 0 %}
+    worker:
+      hosts:
+      {% for item in bootstrap_nodes.worker %}
+        {{ item.name }}:
+      {% endfor %}
+    {% endif %}

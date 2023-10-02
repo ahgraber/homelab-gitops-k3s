@@ -1,11 +1,18 @@
 ---
+area/addons:
+  - "bootstrap/templates/addons/**/*"
+  - "bootstrap/tasks/addons/**/*"
+  - "bootstrap/vars/addons.sample.yaml"
 area/ansible:
   - "ansible/**/*"
+  - "bootstrap/templates/ansible/**/*"
+  - "bootstrap/tasks/ansible/**/*"
+area/bootstrap:
+  - "bootstrap/**/*"
+  - "bootstrap/configure.yaml"
 area/github:
   - ".github/**/*"
 area/kubernetes:
   - "kubernetes/**/*"
-area/hack:
-  - "hack/**/*"
-area/terraform:
-  - "terraform/**/*"
+  - "bootstrap/templates/kubernetes/**/*"
+  - "bootstrap/tasks/kubernetes/**/*"

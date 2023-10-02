@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-settings
+  namespace: flux-system
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  TIMEZONE: "{{ bootstrap_timezone }}"

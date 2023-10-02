@@ -1,0 +1,8 @@
+---
+timezone: "America/New_York"
+github_username: "ahgraber"
+coredns_addr: "10.43.0.10"
+kube_vip_addr: "10.2.118.1"
+cluster_cidr: "10.42.0.0/16"
+service_cidr: "10.43.0.0/16"
+node_cidr: "10.2.118.0/24"

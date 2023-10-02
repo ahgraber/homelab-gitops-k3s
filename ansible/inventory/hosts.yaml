@@ -1,0 +1,13 @@
+---
+kubernetes:
+  children:
+    controller:
+      hosts:
+        optiplex0:
+        optiplex1:
+        optiplex2:
+    worker:
+      hosts:
+        optiplex3:
+        optiplex4:
+        optiplex5:

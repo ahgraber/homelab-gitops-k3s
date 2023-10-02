@@ -25,16 +25,53 @@
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
   "commitBodyTable": true,
-  "flux": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
-  "helm-values": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
-  "kubernetes": {"fileMatch": ["kubernetes/.+\\.ya?ml$"]},
+  "flux": {
+    "fileMatch": [
+      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+    ]
+  },
+  "helm-values": {
+    "fileMatch": [
+      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+    ]
+  },
+  "kubernetes": {
+    "fileMatch": [
+      "(^|/)\\.taskfiles/.+\\.ya?ml(\\.j2)?$",
+      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+    ]
+  },
+  "kustomize": {
+    "fileMatch": [
+      "(^|/)kustomization\\.ya?ml(\\.j2)?$"
+    ]
+  },
   "regexManagers": [
     {
       "description": "Process custom dependencies",
-      "fileMatch": ["kubernetes/.+\\.ya?ml$"],
+      "fileMatch": [
+        "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+        "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+        "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
+        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      ],
       "matchStrings": [
+        // Example: `k3s_release_version: "v1.27.3+k3s1"`
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n",
         // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)/(?<currentValue>[^/]+)/[^/]+\n",
+        //          `- https://github.com/argoproj/argo-cd/raw/v2.7.10/manifests/install.yaml`
+        //          `- https://github.com/argoproj/argo-cd/raw/v2.7.10/manifests/ha/install.yaml`
+        //          `- https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/21.1.1/kubernetes/kubernetes.yml`
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)\/(?<currentValue>(v|\\d)[^/]+)\/\\S+\n",
         // Example: apiVersion=helm.cattle.io/v1 kind=HelmChart
         "datasource=(?<datasource>\\S+)\n.*?repo: (?<registryUrl>\\S+)\n.*?chart: (?<depName>\\S+)\n.*?version: (?<currentValue>\\S+)\n"
       ],
@@ -45,6 +82,17 @@
       "description": "Process imageName values",
       "fileMatch": ["kubernetes/.+\\.ya?ml$"],
       "matchStrings": ["imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "redhat"
+    },
+    {
+      "description": "Process CloudnativePG Postgresql version",
+      "fileMatch": [
+        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
+      ],
+      "matchStrings": [
+        "imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"
+      ],
       "datasourceTemplate": "docker",
       "versioningTemplate": "redhat"
     }
