@@ -1,103 +1,42 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
 tasks:
 
   verify:
     desc: Verify flux meets the prerequisites
-    cmds:
-      - flux check --pre
+    cmd: flux check --pre
 
   install:
     desc: Install Flux into your cluster
     cmds:
-      - zsh {{.KUBERNETES_DIR}}/apps/tigera-operator/give_helm_ownership.sh
-      - zsh {{.KUBERNETES_DIR}}/apps/kube-system/local-path-provisioner/give_helm_ownership.sh
       - kubectl apply --kustomize {{.KUBERNETES_DIR}}/bootstrap
-      - cat {{.SOPS_AGE_KEY_FILE}} | kubectl -n flux-system create secret generic sops-age
-        --from-file=age.agekey=/dev/stdin
-      - sops --decrypt {{.KUBERNETES_DIR}}/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
+      - |
+        kubectl delete secret sops-age -n flux-system --ignore-not-found \
+        && cat {{.SOPS_AGE_KEY_FILE}} |
+           kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
       - sops --decrypt {{.KUBERNETES_DIR}}/flux/vars/cluster-secrets.sops.yaml | kubectl apply -f -
+      - sops --decrypt {{.KUBERNETES_DIR}}/flux/vars/custom-secrets.sops.yaml | kubectl apply -f -
       - kubectl apply -f {{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml
+      - kubectl apply -f {{.KUBERNETES_DIR}}/flux/vars/custom-settings.yaml
       - kubectl apply --kustomize {{.KUBERNETES_DIR}}/flux/config
-      - sleep 30
-      - task: reconcile
     preconditions:
       - sh: test -f {{.SOPS_AGE_KEY_FILE}}
         msg: |
           Age key file is not found. Did you forget to create it?
     vars:
-      SOPS_AGE_KEY_FILE: "$HOME/Library/Application\\ Support/sops/age/keys.txt"
+      SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
 
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
-      - flux reconcile -n flux-system source git homelab-gitops-k3s
-      - flux reconcile -n flux-system kustomization flux-cluster
+      - flux reconcile kustomization cluster -n flux-system --with-source
+      - flux reconcile kustomization apps -n flux-system
 
-  dashpass:
-    desc: Get secret for kubernetes-dashboard login
-    cmds:
-      - >-
-        kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
-      - echo "Token is in clipboard ready to paste!"
-
-  cephpass:
-    desc: Get secret for rook-ceph dashboard login
-    cmds:
-      - >-
-        kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath='{.data.password}' | base64 --decode |
-        pbcopy
-      - echo "Token is in clipboard ready to paste!"
-
-  gr-sync:
-    desc: Sync Flux GitRepositories
-    aliases: ["sync-gr"]
-    cmds:
-      - |
-        kubectl get gitrepositories --all-namespaces --no-headers \
-          | awk '{print $1, $2}' \
-          | xargs -P 4 bash -c \
-            'kubectl -n $0 annotate gitrepository/$1 reconcile.fluxcd.io/requestedAt=$(date +%s) \
-            --field-manager=flux-client-side-apply \
-            --overwrite'
-
-  ks-sync:
-    desc: Sync Flux Kustomizations
-    aliases: ["sync-ks"]
-    cmds:
-      - |
-        kubectl get kustomization --all-namespaces --no-headers \
-          | awk '{print $1, $2}' \
-          | xargs -P 4 bash -c \
-            'kubectl -n $0 annotate kustomization/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" \
-            --field-manager=flux-client-side-apply \
-            --overwrite'
-
-  ks-bounce:
-    desc: Suspend and resume kustomization
-    aliases: ["bounce-ks"]
-    cmds:
-      - flux suspend kustomization -n {{.ns}} {{.ks}}
-      - sleep 5
-      - flux resume kustomization -n {{.ns}} {{.ks}}
-    vars:
-      ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
-      ns: '{{.ns | default "flux-system"}}'
-
-  hr-sync:
-    desc: Sync Flux HelmReleases
-    aliases: ["sync-hr"]
-    cmds:
-      - |
-        kubectl get helmreleases --all-namespaces --no-headers \
-          | awk '{print $1, $2}' \
-          | xargs -P 4 bash -c \
-            'kubectl -n $0 annotate helmrelease/$1 reconcile.fluxcd.io/requestedAt="$(date +%s)" --overwrite'
-
-  hr-bounce:
+  bounce-hr:
     desc: Suspend and resume helmrelease
-    aliases: ["bounce-hr"]
+    aliases: ["hr-bounce"]
     cmds:
       - flux suspend hr -n {{.ns}} {{.hr}}
       - sleep 5
@@ -106,104 +45,82 @@ tasks:
       hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
       ns: '{{.ns | default "default"}}'
 
-  hr-suspend:
-    desc: Suspend all Flux HelmReleases
-    aliases: ["suspend-hr"]
+  bounce-ks:
+    desc: Suspend and resume kustomization
+    aliases: ["ks-bounce"]
     cmds:
-      - |
-        flux get helmrelease --all-namespaces --no-header \
-          | awk '{print $1, $2}' \
-          | xargs bash -c 'flux -n $0 suspend helmrelease $1'
-
-  hr-resume:
-    desc: Resume all Flux HelmReleases
-    cmds:
-      - |
-        flux get helmrelease --all-namespaces --no-header \
-          | awk '{print $1, $2}' \
-          | xargs bash -c 'flux -n $0 resume helmrelease $1'
-
-  hr-fix:
-    cmds:
-      - kubectl -n {{.ns}} delete secret -l owner=helm,name={{.hr}},status=pending-upgrade
-      - flux -n {{.ns}} reconcile hr {{.hr}}
+      - flux suspend kustomization -n {{.ns}} {{.ks}}
+      - sleep 5
+      - flux resume kustomization -n {{.ns}} {{.ks}}
     vars:
-      hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
-      ns: '{{.ns | default "default"}}'
+      ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
+      ns: '{{.ns | default "flux-system"}}'
 
-  delete-jobs:
-    desc: Delete all jobs
+  bounce-failed-hr:
+    desc: Restart all failed helmreleases
     cmds:
-      - kubectl delete job -A --all
+      - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend hr $0 -n $1'
+      - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume hr $0 -n $1'
+
+  bounce-failed-ks:
+    desc: Restart all failed kustomizations
+    cmds:
+      - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend kustomization $0 -n $1'
+      - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume kustomization $0 -n $1'
+
+  resume-all-hr:
+    desc: Resume suspended helmreleases
+    cmds:
+      - for: { var: suspended_hr, as: HR, split: "\n" }
+        cmd: |
+          echo '{{.HR}}' |
+          xargs -L1 bash -c 'flux resume hr "$0" -n "$1"'
+    vars:
+      suspended_hr:
+        sh: |
+          kubectl get helmreleases --all-namespaces -o json |
+          jq -rc '.items[] |
+            select(.spec.suspend) |
+            [.metadata.name, .metadata.namespace] |
+          @tsv'
+    status:
+      - 'test -z "{{.suspended_hr}}"'
+
+  resume-all-ks:
+    desc: Resume suspended kustomizations
+    cmds:
+      - for: { var: suspended_ks, as: KS, split: "\n" }
+        cmd: |
+          echo '{{.KS}}' |
+          xargs -L1 bash -c 'flux resume kustomization "$0" -n flux-system'
+    vars:
+      suspended_ks:
+        sh: |
+          kubectl get kustomization -n flux-system -o json |
+          jq -rc '.items[] |
+            select(.spec.suspend) |
+            .metadata.name
+          '
+    status:
+      - 'test -z "{{.suspended_ks}}"'
+
+  # TODO: specify status for delete
+  # delete-jobs:
+  #   desc: Delete all jobs
+  #   cmd: kubectl delete job --all-namespaces --all
 
   ns-cleanup:
     desc: Force terminate all namespaces stuck with finalizers
     cmds:
-      - |
-        function ns_cleanup {
-        declare -a terminating=( \
-          $(kubectl get ns -o json | \
-            jq '.items[] | select(.status.phase=="Terminating") | (.metadata.name)' | \
-            xargs -n1) \
-            )
-        for ns in "${terminating[@]}"; do
-          echo "$ns"
-          kubectl get ns "$ns"  -o json | \
-            jq '.spec.finalizers = []' | \
-            kubectl replace --raw "/api/v1/namespaces/$ns/finalize" -f -
-        done
-        unset terminating
-        }
-        ns_cleanup
-
-  ks-deploy:
-    desc: Deploy from local (for testing)
-    cmds:
-      - |
-        # Export vars in the config and secret files to the current env
-        while read -r line; do
-          # skip comments
-          [[ "$line" = \#* ]] && continue;
-          declare -x "${line}";
-        done < <(sops -d "{{.cluster_secret_file}}" | yq eval '.stringData' - | sed 's/: /=/g')
-
-        while read -r line; do
-          # skip comments
-          [[ "$line" = \#* ]] && continue;
-          declare -x "${line}";
-        done < <(yq eval '.data' "{{.cluster_config_file}}" | sed 's/: /=/g')
-
-        # Build the manifests in ks_path, substitute env with the variables and then apply to the cluster
-        kustomize build --load-restrictor=LoadRestrictionsNone "{{.ks_path}}" \
-            | envsubst \
-                | kubectl apply --server-side -f -
+      - for: { var: terminating, as: NS, split: "\n" }
+        cmd: |
+          kubectl patch ns '{{.NS}}' --type merge --patch='{"spec":{"finalizers": []}}'
     vars:
-      cluster_secret_file: '{{.cluster_secret_file | default "./kubernetes/flux/vars/cluster-secrets.sops.yaml"}}'
-      cluster_config_file: '{{.cluster_config_file | default "./kubernetes/flux/vars/cluster-settings.yaml"}}'
-      ks_path: '{{ or .ks_path (fail "kustomization `ks_path` is required") }}'
-
-  ks-undeploy:
-    desc: Revert deployment from local (for testing)
-    cmds:
-      - |
-        # Export vars in the config and secret files to the current env
-        while read -r line; do
-          # skip comments
-          [[ "$line" = \#* ]] && continue;
-          declare -x "${line}";
-        done < <(sops -d "{{.cluster_secret_file}}" | yq eval '.stringData' - | sed 's/: /=/g')
-
-        while read -r line; do
-          # skip comments
-          [[ "$line" = \#* ]] && continue;
-          declare -x "${line}";
-        done < <(yq eval '.data' "{{.cluster_config_file}}" | sed 's/: /=/g')
-
-        # Build the manifests in ks_path, substitute env with the variables and then apply to the cluster
-        kustomize build --load-restrictor=LoadRestrictionsNone "{{.ks_path}}" \
-            | envsubst \
-                | kubectl delete -f -
-    vars:
-      cluster_secret_file: '{{.cluster_secret_file | default "./kubernetes/flux/vars/cluster-secrets.sops.yaml"}}'
-      cluster_config_file: '{{.cluster_config_file | default "./kubernetes/flux/vars/cluster-settings.yaml"}}'
-      ks_path: '{{ or .ks_path (fail "kustomization `ks_path` is required") }}'
+      terminating:
+        sh: |
+          kubectl get namespaces -o json |
+          jq -r '.items[] | select(.status.phase=="Terminating") |
+          .metadata.name
+          '
+    status:
+      - 'test -z "{{.terminating}}"'

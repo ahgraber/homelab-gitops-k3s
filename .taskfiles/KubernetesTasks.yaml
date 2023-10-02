@@ -1,18 +1,27 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
 tasks:
 
   kubeconfig:
     desc: Download kubeconfig from a remote k3s master node
+    dotenv: ['.env']
     vars:
-      MASTER_USERNAME: '{{.MASTER_USERNAME | default "root"}}'
-      MASTER_HOST: '{{.MASTER_HOST | default "192.168.42.10"}}'
-      KUBERNETES_API: '{{.KUBERNETES_API | default "192.168.1.1"}}'
+      user: '{{.user | default "root"}}'
+      controller_host: '{{.controller_host | default "optiplex0"}}'
+      # kubernetes_api: '{{.kubernetes_api | default "192.168.1.1"}}'  # pull KUBE_VIP_ADDR from .env
     cmds:
-      - rsync --verbose --progress --partial --rsync-path="sudo rsync" {{.MASTER_USERNAME}}@{{.MASTER_HOST}}:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
-      - sed -i '' 's/127.0.0.1/{{.KUBERNETES_API}}/g' "${KUBECONFIG}"
+      - rsync --verbose --progress --partial --rsync-path="sudo rsync" {{.user}}@{{.controller_host}}:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
+      - sed -i '' "s/127.0.0.1/$KUBE_VIP_ADDR/g" "${KUBECONFIG}"
       - chmod go-r "${KUBECONFIG}"
+
+  dash-pass:
+    desc: Get secret for kubernetes-dashboard login
+    cmds:
+      - >-
+        kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
+      - echo "Token is in clipboard ready to paste!"
 
   schemas:
     desc: Pull the latest CRD schemas for this cluster
@@ -68,33 +77,27 @@ tasks:
 
   nodes:
     desc: List all the nodes in your cluster
-    cmds:
-      - kubectl get nodes {{.CLI_ARGS | default "-o wide"}}
+    cmd: kubectl get nodes {{.CLI_ARGS | default "-o wide"}}
 
   pods:
     desc: List all the pods in your cluster
-    cmds:
-      - kubectl get pods {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get pods {{.CLI_ARGS | default "-A"}}
 
   kustomizations:
     desc: List all the kustomizations in your cluster
-    cmds:
-      - kubectl get kustomizations {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get kustomizations {{.CLI_ARGS | default "-A"}}
 
   helmreleases:
     desc: List all the helmreleases in your cluster
-    cmds:
-      - kubectl get helmreleases {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get helmreleases {{.CLI_ARGS | default "-A"}}
 
   helmrepositories:
     desc: List all the helmrepositories in your cluster
-    cmds:
-      - kubectl get helmrepositories {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get helmrepositories {{.CLI_ARGS | default "-A"}}
 
   gitrepositories:
     desc: List all the gitrepositories in your cluster
-    cmds:
-      - kubectl get gitrepositories {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get gitrepositories {{.CLI_ARGS | default "-A"}}
 
   certificates:
     desc: List all the certificates in your cluster
@@ -104,8 +107,7 @@ tasks:
 
   ingresses:
     desc: List all the ingresses in your cluster
-    cmds:
-      - kubectl get ingress {{.CLI_ARGS | default "-A"}}
+    cmd: kubectl get ingress {{.CLI_ARGS | default "-A"}}
 
   resources:
     desc: Gather common resources in your cluster, useful when asking for support
