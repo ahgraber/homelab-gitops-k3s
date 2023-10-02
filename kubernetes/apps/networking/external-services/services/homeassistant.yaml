@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
 spec:
-  ingressClassName: nginx
+  ingressClassName: internal
   rules:
     - host: &host "homeassistant.${SECRET_DOMAIN}"
       http:
@@ -34,6 +34,9 @@ kind: Service
 metadata:
   name: &app homeassistant
   namespace: networking
+  annotations:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app

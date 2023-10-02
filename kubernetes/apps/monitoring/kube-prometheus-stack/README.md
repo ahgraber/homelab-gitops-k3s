@@ -13,22 +13,22 @@ is stored with the timestamp at which it was recorded, alongside optional key-va
 `./prometheus-rules` will need to be disable on first install due to race condition.
 Once `prometheus-operator` is up and running, `./prometheus-rules` can be added back
 
-## Included
+### Naming
 
-### [Kube-State-Metrics](https://github.com/kubernetes/kube-state-metrics)
+> As of Helm Chart `v51.*`
 
-### [Node Exporter](https://github.com/prometheus/node_exporter)
+|     | `fullNameOverride` | `nameOverride` | `cleanPrometheusOperatorObjectNames` | `alertmanager` | `prometheus` | `operator` | `kube-state-metrics` |
+| :---: | :---: | :---: | :---: | :--- | :--- | :--- | :--- |
+| 🆗 | 'kps' | `null` | `false` | `alertmanager-kps-alertmanager-0` | `prometheus-kps-prometheus-0` | `kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
+| ❌ | `null` | 'kps' | `false` | `alertmanager-kube-prometheus-stack-kps-alertmanager-0` | `prometheus-kube-prometheus-stack-kps-prometheus-0` | `kube-prometheus-stack-kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
+| 🆗 | 'kps' | 'kps' | `false` | `alertmanager-kps-alertmanager-0` | `prometheus-kps-prometheus-0` | `kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
+| ✅ | 'kps' | `null` | `true` | `alertmanager-kps-0` | `prometheus-kps-0` | `kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
+| ❌ | `null` | 'kps' | `true` | `alertmanager-kube-prometheus-stack-kps-0` | `prometheus-kube-prometheus-stack-kps-0` | `kube-prometheus-stack-kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
+| ✅ | 'kps' | 'kps' | `true` | `alertmanager-kps-0` | `prometheus-kps-0` | `kps-operator-...` | `kube-prometheus-stack-kube-state-metrics-...` |
 
-### Thanos
-
-Distributed Prometheus solutions such as Thanos and Cortex use an alternate architecture in which multiple small
-Prometheus instances are deployed.
-
-In the case of Thanos, the metrics from each Prometheus are aggregated into the common Thanos deployment,
-and then those metrics are exported to a persistent store, such as S3.
-
-This more robust architecture avoids burdening any single Prometheus instance with too many time series,
-while also preserving the ability to query metrics on a global level.
+|     | `fullNameOverride` | `cleanPrometheusOperatorObjectNames` | `values.kube-state-metrics.fullNameOverride` | `alertmanager` | `prometheus` | `operator` | `kube-state-metrics` |
+| :---: | :---: | :---: | :--- | :--- | :--- | :--- | :--- |
+| ⭐️ | 'kps' | `true` | `kube-state-metrics` | `alertmanager-kps-0` | `prometheus-kps-0` | `kps-operator-...` | `kube-state-metrics-...` |
 
 ## Monitoring external services
 

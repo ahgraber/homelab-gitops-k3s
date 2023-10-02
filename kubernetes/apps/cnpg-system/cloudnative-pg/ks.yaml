@@ -3,14 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cnpg-system-operator
+  name: cnpg-system-operator
   namespace: flux-system
 spec:
   path: ./kubernetes/apps/cnpg-system/cloudnative-pg/operator
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -20,19 +20,19 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cnpg-system-addons
+  name: cnpg-system-addons
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cnpg-system-operator
-    # - name: apps-default-cnpg-db
-    - name: apps-monitoring-kube-prometheus-stack
-    - name: apps-monitoring-grafana
-  path: ./kubernetes/apps/cnpg-system/cloudnative-pg/add-ons
+    - name: cnpg-system-operator
+    - name: monitoring-kube-prometheus-stack
+    - name: monitoring-grafana
+  path: ./kubernetes/apps/cnpg-system/cloudnative-pg/addons
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

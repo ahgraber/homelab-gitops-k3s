@@ -61,6 +61,12 @@ kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
 ```
 <!-- markdownlint-enable -->
 
+## Teardown and Cleanup
+
+> Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown)
+
+Run `task ceph:teardown`
+
 ## Troubleshooting
 
 ### Dashboard not accessible thru ingress
@@ -225,43 +231,6 @@ Clean up unused images:
 ```sh
 ssh ...
 sudo k3s crictl rmi --prune
-```
-
-## Teardown and Cleanup
-
-> Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.9/ceph-teardown.html)
-
-1. Suspend Flux reconciliation or remove kustomization/s (at least the rook-ceph cluster) from git repo
-2. Delete the cluster helm release (and associated configmaps) or `kubectl delete -k ./kubernetes/apps/rook-ceph/rook-ceph/cluster/`.
-   **DO NOT REMOVE THE ORCHESTRATOR**
-3. Delete the cephcluster custom resource (if it still exists)
-4. Check crds for remaining objects
-
-```sh
-# get hanging resources
-#  kubectl get all -o name \
-#   | xargs -n 1 kubectl get --show-kind --ignore-not-found -n rook-ceph
-flux suspend kustomization apps-rook-ceph-cluster
-flux suspend kustomization apps-rook-ceph-operator
-kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"spec":{"cleanupPolicy":{"confirmation":"yes-really-destroy-data"}}}'
-kubectl patch cephcluster rook-ceph -n rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
-kubectl delete cephcluster rook-ceph -n rook-ceph
-kubectl delete hr rook-ceph-cluster -n rook-ceph
-for RES in $(kubectl get configmap,secret -n rook-ceph -o name); do
-  kubectl patch "$RES" -n rook-ceph --type merge -p '{"metadata":{"finalizers": []}}'
-  kubectl delete "$RES" -n rook-ceph
-done
-for CRD in $(kubectl get crd -A -o name | grep ceph.rook.io); do
-  kubectl patch "$CRD" --type merge -p '{"metadata":{"finalizers": []}}'
-  kubectl delete "$CRD"
-done;
-flux delete kustomization apps-rook-ceph-cluster -s
-kubectl delete hr rook-ceph-operator -n rook-ceph
-flux delete kustomization apps-rook-ceph-operator -s
-kubectl patch ns rook-ceph --type merge -p '{"spec":{"finalizers": []}}'
-kubectl delete ns rook-ceph
-
-echo "!!! Don't forget to run rook-ceph cleanup ansible script !!!"
 ```
 
 ## Remove orphan rbd images

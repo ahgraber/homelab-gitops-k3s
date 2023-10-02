@@ -1,3 +1,3 @@
-# Karma
+# [Karma](https://github.com/prymitive/karma)
 
-[Karma](https://github.com/prymitive/karma) is an Alert dashboard for Prometheus Alertmanager
+An Alert dashboard for Prometheus Alertmanager

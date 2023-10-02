@@ -2,17 +2,19 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+# yamllint disable rule:comments
+# prettier-ignore
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
   - ./goldilocks/ks.yaml
   - ./grafana/ks.yaml
-  # - ./graphite-exporter/ks.yaml
   - ./karma/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
-  # - ./kubernetes-dashboard/ks.yaml
+  - ./kubernetes-dashboard/ks.yaml    # NOTE: do not upgrade; versions>6.* have breaking & unresolved changes
   - ./nut-exporter/ks.yaml
+  - ./node-exporter/ks.yaml
   - ./node-problem-detector/ks.yaml
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml

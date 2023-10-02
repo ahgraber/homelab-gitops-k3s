@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD013 -->
 # Homelab cluster with k3s and Flux
 
 This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [Ansible](https://www.ansible.com) and uses the GitOps tool [Flux](https://toolkit.fluxcd.io) to manage its state.

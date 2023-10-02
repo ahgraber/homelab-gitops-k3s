@@ -1,4 +1,3 @@
-# https://github.com/AnalogJ/scrutiny/blob/master/docker/example.hubspoke.docker-compose.yml
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -7,15 +6,14 @@ metadata:
   name: &app scrutiny
   namespace: monitoring
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
       chart: app-template
       version: 1.5.1
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
   install:
     createNamespace: true
@@ -39,7 +37,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16

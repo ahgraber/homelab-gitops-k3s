@@ -6,57 +6,58 @@ metadata:
   name: &app cloudflared
   namespace: networking
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
       chart: app-template
       version: 1.5.1
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
   uninstall:
     keepHistory: false
   values:
-    global:
-      # nameOverride: cloudflared
-      annotations:
-        reloader.stakater.com/search: "true"
-        # configmap.reloader.stakater.com/reload: "k8s-argo-tunnel"
-
     controller:
       type: deployment
       replicas: 3
+      strategy: RollingUpdate
+      annotations:
+        reloader.stakater.com/auto: "true"
     image:
       repository: docker.io/cloudflare/cloudflared
       tag: 2023.8.2
-    # Outbound traffic is proxied through port 8080
-    # https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-useful-terms/#configuration-file
-    # Arguments: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/arguments/#metrics
+    env:
+      TZ: "${TIMEZONE}"
+      NO_AUTOUPDATE: "true"
+      TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
+      TUNNEL_METRICS: 0.0.0.0:8080
+      TUNNEL_TRANSPORT_PROTOCOL: quic
+      TUNNEL_POST_QUANTUM: true
+      TUNNEL_ID:
+        valueFrom:
+          secretKeyRef:
+            name: cloudflared-secret
+            key: TUNNEL_ID
     args:
       - tunnel
       - --config
-      - /etc/cloudflared/config.yaml
+      - /etc/cloudflared/config/config.yaml
       - run
-    env:
-      TZ: "${TIMEZONE}"
-    ingress:
-      main:
-        enabled: false
+      - "$(TUNNEL_ID)"
     service:
       main:
         ports:
           http:
-            port: 2000
+            port: 8080
     serviceMonitor:
       main:
         enabled: true
@@ -81,31 +82,24 @@ spec:
       readiness: *probes
       startup:
         enabled: false
-
     persistence:
       config:
         enabled: true
         type: configMap
         name: *app
-        mountPath: /etc/cloudflared/config.yaml
         subPath: config.yaml
+        mountPath: /etc/cloudflared/config/config.yaml
         readOnly: true
-      # By default, the credentials file will be created under ~/.cloudflared/<tunnel ID>.json
-      # when you run `cloudflared tunnel create`. You can move it into a secret by using:
-      # ```sh
-      # kubectl create secret generic tunnel-credentials \
-      # --from-file=credentials.json=/Users/yourusername/.cloudflared/<tunnel ID>.json
-      # ```
-      credentials:
+      creds:
         enabled: true
         type: secret
-        name: *app
-        mountPath: /etc/cloudflared/credentials.json
+        name: cloudflared-secret
         subPath: credentials.json
+        mountPath: /etc/cloudflared/creds/credentials.json
         readOnly: true
     resources:
       requests:
-        cpu: 25m
-        memory: 105M
+        cpu: 5m
+        memory: 10Mi
       limits:
-        memory: 105M
+        memory: 256Mi

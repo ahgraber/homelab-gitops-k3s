@@ -2,14 +2,17 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: monitoring
 resources:
   - ./helmrelease.yaml
   - ./secret-additionalScrapeConfigs.sops.yaml
-  - ./values-alertmanager.yaml
-  - ./values-grafana.yaml
-  - ./values-kube-state-metrics.yaml
-  - ./values-node-exporter.yaml
-  - ./values-prometheus-exporters.yaml
-  - ./values-prometheus-operator.yaml
-  - ./values-prometheus.yaml
-  - ./values-rules.yaml
+
+configMapGenerator:
+  - name: alertmanager-config-tpl
+    files:
+      - alertmanager.yaml=./alertmanager.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+    reloader.stakater.com/match: "true"

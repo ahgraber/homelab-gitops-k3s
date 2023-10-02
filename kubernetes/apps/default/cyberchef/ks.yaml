@@ -3,16 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-default-cyberchef
+  name: default-cyberchef
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: apps-networking-ingress-nginx
   path: ./kubernetes/apps/default/cyberchef/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

@@ -2,8 +2,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: scrutiny
+  name: &app scrutiny
   namespace: monitoring
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+    # snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
     - ReadWriteMany

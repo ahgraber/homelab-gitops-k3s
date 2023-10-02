@@ -1,3 +1,0 @@
-# Resote TrueNAS (Offsite)
-
-WIP

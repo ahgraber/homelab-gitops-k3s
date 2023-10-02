@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
@@ -8,7 +9,7 @@ spec:
   interval: 30m
   url: https://github.com/rancher/local-path-provisioner
   ref:
-    tag: v0.0.23 # ref: https://github.com/rancher/local-path-provisioner/issues/333
+    tag: v0.0.24
   ignore: |
     # exclude all
     /*

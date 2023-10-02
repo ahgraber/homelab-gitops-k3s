@@ -3,16 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-rook-ceph-operator
+  name: rook-ceph-operator
   namespace: flux-system
 spec:
   # dependsOn:
-  #   - name: apps-cert-manager # for rook-ceph admission controller
+  #   - name: cert-manager # for rook-ceph admission controller
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -22,18 +22,18 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-rook-ceph-cluster
+  name: rook-ceph-cluster
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-rook-ceph-operator
-    - name: apps-kube-system-snapshot-controller
-    - name: apps-networking-ingress-nginx
+    - name: rook-ceph-operator
+    - name: kube-system-snapshot-controller
+    # - name: networking-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -43,17 +43,19 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-rook-ceph-addons
+  name: rook-ceph-addons
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-rook-ceph-cluster
-    - name: apps-monitoring-kube-prometheus-stack
+    - name: rook-ceph-cluster
+    - name: monitoring-kube-prometheus-stack
+    - name: monitoring-grafana
   path: ./kubernetes/apps/rook-ceph/rook-ceph/addons
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

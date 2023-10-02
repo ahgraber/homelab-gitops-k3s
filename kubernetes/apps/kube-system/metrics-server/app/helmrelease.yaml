@@ -6,19 +6,17 @@ metadata:
   name: metrics-server
   namespace: kube-system
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://kubernetes-sigs.github.io/metrics-server/
       chart: metrics-server
       version: 3.11.0
       sourceRef:
         kind: HelmRepository
-        name: metrics-server-charts
+        name: metrics-server
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -37,5 +35,3 @@ spec:
       enabled: true
     serviceMonitor:
       enabled: true
-    # annotations:
-    #   reloader.stakater.com/search: "true"

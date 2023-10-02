@@ -6,21 +6,17 @@ metadata:
   name: snapshot-controller
   namespace: kube-system
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: snapshot-controller
       version: 1.9.1
       sourceRef:
         kind: HelmRepository
-        name: piraeus-charts
+        name: piraeus
         namespace: flux-system
   maxHistory: 3
-  # dependsOn:
-  #   - name: snapshot-validation-webhook
-  #     namespace: kube-system
   install:
-    createNamespace: true
     crds: CreateReplace
     remediation:
       retries: 3
@@ -35,7 +31,7 @@ spec:
     replicaCount: 3
     serviceMonitor:
       create: true
-    # ## maanged with storage application deployments
+    # ## managed with storage application deployments
     # volumeSnapshotClasses:
     #   - name: csi-democratic-csi-iscsi
     #     driver: org.democratic-csi.truenas-iscsi

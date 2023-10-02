@@ -6,41 +6,41 @@ metadata:
   name: weave-gitops
   namespace: flux-system
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: weave-gitops
       version: 4.0.31
       sourceRef:
         kind: HelmRepository
-        name: weave-gitops-charts
+        name: weave-gitops
         namespace: flux-system
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
+  uninstall:
+    keepHistory: false
   values:
     adminUser:
       create: true
+      createSecret: false
       username: admin
     ingress:
-      main:
-        enabled: true
-        ingressClassName: nginx
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - host: &host "gitops.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host
+      enabled: true
+      className: internal
+      hosts:
+        - host: &host "gitops.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - *host
     networkPolicy:
       create: false
     metrics:
@@ -49,9 +49,4 @@ spec:
       create: true
       impersonationResourceNames: ["admin"]
     podAnnotations:
-      secret.reloader.stakater.com/reload: weave-gitops-secret
-  valuesFrom:
-    - kind: Secret
-      name: weave-gitops-secret
-      valuesKey: adminPassword
-      targetPath: adminUser.passwordHash
+      secret.reloader.stakater.com/reload: cluster-user-auth

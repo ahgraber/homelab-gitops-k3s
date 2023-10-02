@@ -3,17 +3,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-default-letsblockit-db
+  name: default-letsblockit-db
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-default-cnpg-db
-    - name: apps-default-postgres-operator
+    - name: default-cnpg-db
+    - name: default-postgres-operator
   path: ./kubernetes/apps/default/letsblockit/db
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: true
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -22,20 +23,17 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-default-letsblockit
+  name: default-letsblockit
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-default-letsblockit-db
-    - name: apps-networking-ingress-nginx
-    # - name: apps-rook-ceph-cluster
-    # - name: apps-volsync
+    - name: default-letsblockit-db
   path: ./kubernetes/apps/default/letsblockit/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
-  wait: true
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

@@ -3,17 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-flux-system-weave-gitops
+  name: flux-system-weave-gitops
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: apps-networking-ingress-nginx
   path: ./kubernetes/apps/flux-system/weave-gitops/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
-  wait: true
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m
