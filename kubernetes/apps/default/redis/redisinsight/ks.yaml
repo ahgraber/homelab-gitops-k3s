@@ -3,17 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-default-redisinsight
+  name: default-redisinsight
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-default-redis-operator
+    - name: default-redis-operator
   path: ./kubernetes/apps/default/redis/redisinsight/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
-  wait: true
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

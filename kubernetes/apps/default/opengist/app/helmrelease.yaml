@@ -6,15 +6,14 @@ metadata:
   name: &app opengist
   namespace: default
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://bjw-s.github.io/helm-charts
       chart: app-template
       version: 1.5.1
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
   install:
     remediation:
@@ -36,15 +35,11 @@ spec:
     args:
       - "--config"
       - "/mnt/config.yml"
-    # env:
-    #   CONFIG: |
-    #     log-level: info
-    #     opengist-home: /data
-    #   # disable-signup: true
+
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
@@ -60,7 +55,7 @@ spec:
       ### ref: https://github.com/brettinternet/homelab/tree/176df6db10916d8df6d7309742b171a23c414119/cluster/apps/auth
       # ssh:
       #   enabled: true
-      #   ingressClassName: nginx
+      #   ingressClassName: internal
       #   annotations:
       #     nginx.ingress.kubernetes.io/whitelist-source-range: |
       #       10.0.0.0/8,172.16.0.0/12,192.168.0.0/16

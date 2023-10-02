@@ -6,20 +6,19 @@ metadata:
   name: snapshot-validation-webhook
   namespace: kube-system
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: snapshot-validation-webhook
       version: 1.8.1
       sourceRef:
         kind: HelmRepository
-        name: piraeus-charts
+        name: piraeus
         namespace: flux-system
   maxHistory: 3
   dependsOn:
     - name: snapshot-controller
   install:
-    createNamespace: true
     crds: Skip
     remediation:
       retries: 3

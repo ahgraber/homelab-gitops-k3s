@@ -38,11 +38,11 @@ spec:
     #   #   name: <app>-user-secret
     ## Alternative bootstrap method: start from a backup
     recovery:
-      source: &s3-backup postgres-v3 # next time it will be postgres-v4
+      source: &old_db postgres-v4 # next time it will be postgres-v5
 
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: *s3-backup
+    - name: *old_db
       barmanObjectStore:
         endpointURL: https://${SECRET_S3_ENDPOINT}
         destinationPath: s3://postgres/
@@ -60,7 +60,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: postgres-v4 # next time it will be postgres-v5
+      serverName: &current_db postgres-v5 # next time it will be postgres-v6
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:

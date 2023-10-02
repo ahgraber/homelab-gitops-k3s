@@ -3,18 +3,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-monitoring-kubernetes-dashboard
+  name: monitoring-kubernetes-dashboard
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-networking-ingress-nginx
-    - name: apps-monitoring-kube-prometheus-stack
+    - name: cert-manager
+    - name: kube-system-metrics-server
   path: ./kubernetes/apps/monitoring/kubernetes-dashboard/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
-  wait: true
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

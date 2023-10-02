@@ -3,81 +3,41 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app kubernetes-dashboard
-  namespace: &namespace monitoring
+  name: kubernetes-dashboard
+  namespace: monitoring
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: kubernetes-dashboard
-      version: 7.0.2
+      version: 6.0.8
       sourceRef:
         kind: HelmRepository
-        name: kubernetes-dashboard-charts
+        name: kubernetes-dashboard
         namespace: flux-system
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
       retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    api:
-      containers:
-        # https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
-        args:
-          - --disable-settings-authorizer
-          - --enable-insecure-login
-          - --enable-skip-login
-          - --namespace=monitoring
-          - --token-ttl=43200
-        env:
-          - name: TZ
-            value: "${TIMEZONE}"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 200Mi
-          limits:
-            # cpu: 250m
-            memory: 400Mi
-    web:
-      containers:
-        # args: []
-        resources:
-          requests:
-            cpu: 100m
-            memory: 200Mi
-          limits:
-            # cpu: 250m
-            memory: 400Mi
+    extraArgs:
+      - --enable-insecure-login
+      - --enable-skip-login
+      - --disable-settings-authorizer
     ingress:
-      # hosts:
-      #   # Keep 'localhost' host only if you want to access Dashboard using 'kubectl port-forward ...' on:
-      #   # https://localhost:8443
-      #   - localhost
       enabled: true
-      ingressClassName: nginx
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      className: internal
       hosts:
         - &host "kubernetes.${SECRET_DOMAIN}"
-      # paths:
-      #   web: /
-      #   api: /api
-      secretName: null
       tls:
         - hosts:
             - *host
+          # secretName: kubernetes-dashboard-tls
     metricsScraper:
       enabled: true
-    metrics-server:
-      enabled: false # installed separately
-    cert-manager:
-      enabled: false
-    nginx:
-      enabled: false
-    serviceMonitor:
-      enabled: false

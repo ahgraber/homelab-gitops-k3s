@@ -9,12 +9,11 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://github.com/cloudnative-pg/charts
       chart: cloudnative-pg
       version: 0.18.2
       sourceRef:
         kind: HelmRepository
-        name: cloudnativepg-charts
+        name: cloudnativepg
         namespace: flux-system
   maxHistory: 3
   install:

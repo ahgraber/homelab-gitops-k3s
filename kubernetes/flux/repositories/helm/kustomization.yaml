@@ -2,45 +2,39 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+# yamllint disable rule:comments
+# prettier-ignore
 resources:
-  - ./actions-runner-controller.yaml
-  # - ./authentik-charts.yaml
-  - ./backube-charts.yaml # snapscheduler, volsync
-  - ./bitnami-charts.yaml
-  - ./bjws-charts.yaml
-  - ./calico-charts.yaml
-  - ./cloudflare-charts.yaml
-  - ./cloudnativepg-charts.yaml
-  - ./crowdsec-charts.yaml
-  - ./deliveryhero-charts.yaml # node-problem-detector (and others)
-  - ./democratic-csi-charts.yaml
-  - ./descheduler-charts.yaml
-  # - ./dysnix-charts.yaml # raw
-  - ./emberstack-charts.yaml # reflector
-  - ./external-dns-charts.yaml
-  - ./fairwinds-charts.yaml # goldilocks (and others)
-  - ./grafana-charts.yaml
-  - ./ingress-nginx-charts.yaml
-  - ./jetstack-charts.yaml # cert-manager
-  - ./jupyterhub-charts.yaml
-  - ./k8s-gateway-charts.yaml
-  - ./kubernetes-dashboard-charts.yaml
-  - ./kubereboot-charts.yaml # kured
-  - ./kyverno-charts.yaml
-  - ./lwolf-charts.yaml # kube-cleanup-operator
-  - ./metallb-charts.yaml
-  - ./metrics-server-charts.yaml
-  - ./movetokube-charts.yaml
-  # - ./mysql-charts.yaml
-  - ./node-feature-discovery-charts.yaml
-  - ./ot-charts.yaml
-  # - ./percona-charts.yaml
-  - ./piraeus-charts.yaml
-  - ./prefect-charts.yaml
-  - ./prometheus-community-charts.yaml
-  - ./rook-ceph-charts.yaml
-  - ./runix-charts.yaml # pgadmin
-  - ./stakater-charts.yaml # reloader
-  # - ./traefik-charts.yaml
-  - ./valheim-charts.yaml
-  - ./weave-gitops-charts.yaml
+  # - ./actions-runner-controller.yaml
+  - ./backube.yaml                # volsync
+  - ./bitnami.yaml
+  - ./bjw-s.yaml                  # common app-template
+  - ./cilium.yaml
+  - ./cloudnativepg.yaml
+  - ./coredns.yaml
+  - ./crowdsec.yaml
+  - ./csi-driver-nfs.yaml
+  - ./deliveryhero.yaml           # node-problem-detector (and others)
+  - ./democratic-csi.yaml
+  - ./descheduler.yaml
+  - ./emberstack.yaml             # reflector
+  - ./external-dns.yaml
+  - ./fairwinds.yaml              # goldilocks (and others)
+  - ./grafana.yaml
+  - ./ingress-nginx.yaml
+  - ./jetstack.yaml               # cert-manager
+  # - ./jupyterhub.yaml
+  - ./k8s-gateway.yaml
+  - ./kubernetes-dashboard.yaml
+  - ./lwolf.yaml                  # kube-cleanup-operator
+  - ./metrics-server.yaml
+  - ./movetokube.yaml             # ext-postgres-operator
+  - ./opstree.yaml                # redis-operator
+  - ./piraeus.yaml                # snapshot-controller
+  - ./prefect.yaml
+  - ./prometheus-community.yaml
+  - ./rook-ceph.yaml
+  - ./runix.yaml                  # pgadmin
+  - ./stakater.yaml               # reloader
+  # - ./valheim.yaml
+  - ./weave-gitops.yaml

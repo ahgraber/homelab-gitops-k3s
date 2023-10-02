@@ -3,14 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager
+  name: cert-manager
   namespace: flux-system
 spec:
   path: ./kubernetes/apps/cert-manager/cert-manager/app
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
   wait: true
   interval: 30m
   retryInterval: 1m
@@ -20,16 +20,17 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-issuers
+  name: cert-manager-issuers
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cert-manager
+    - name: cert-manager
   path: ./kubernetes/apps/cert-manager/cert-manager/issuers
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: true
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -38,18 +39,19 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-certs
+  name: cert-manager-certificates
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cert-manager
-    - name: apps-cert-manager-issuers
-    - name: apps-kube-system-reflector
-  path: ./kubernetes/apps/cert-manager/cert-manager/certs
+    - name: cert-manager
+    - name: cert-manager-issuers
+    # - name: kube-system-reflector
+  path: ./kubernetes/apps/cert-manager/cert-manager/certificates
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: true
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -58,17 +60,18 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-cert-manager-addons
+  name: cert-manager-addons
   namespace: flux-system
 spec:
   dependsOn:
-    - name: apps-cert-manager
-    - name: apps-monitoring-grafana
-  path: ./kubernetes/apps/cert-manager/cert-manager/certs
+    - name: cert-manager
+    - name: monitoring-grafana
+  path: ./kubernetes/apps/cert-manager/addons
   prune: true
   sourceRef:
     kind: GitRepository
-    name: homelab-gitops-k3s
+    name: home-kubernetes
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m

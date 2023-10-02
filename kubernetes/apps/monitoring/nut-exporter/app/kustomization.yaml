@@ -2,6 +2,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: monitoring
 resources:
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
@@ -9,7 +10,6 @@ resources:
 
 configMapGenerator:
   - name: nut-exporter-dashboard
-    namespace: monitoring
     files:
       - ./nut-exporter-dashboard.json
       # - nut-exporter.json=https://grafana.com/api/dashboards/15406/revisions/2/download

@@ -19,4 +19,3 @@ resources:
   - ./miniflux/ks.yaml
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
-  # - ./rxresume/ks.yaml
