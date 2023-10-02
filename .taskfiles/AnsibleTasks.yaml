@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/inventory"
+
+tasks:
+
+  list:
+    desc: List all the hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --list-hosts
+
+  ping:
+    desc: Ping all the hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes --one-line -m 'ping'
+
+  uptime:
+    desc: Uptime of all the hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -a 'uptime'
+
+  prepare:
+    desc: Prepare all the k8s nodes for running k3s
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-prepare.yaml
+
+  install:
+    desc: Install Kubernetes on the nodes
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-installation.yaml
+
+  rollout-update:
+    desc: Perform operating system updates and rollout restart the cluster
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-rollout-update.yaml
+
+  reboot:
+    desc: Reboot all the k8s nodes
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-reboot.yaml
+
+  poweroff:
+    desc: Shutdown all the k8s nodes
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes -a '/usr/bin/systemctl poweroff' --become
+
+  nuke:
+    desc: Uninstall Kubernetes on the nodes
+    dir: "{{.ANSIBLE_DIR}}"
+    interactive: true
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-nuke.yaml
+
+  ceph-cleanup:
+    desc: Clean up Rook-Ceph drives
+    dir: "{{.ANSIBLE_DIR}}"
+    interactive: true
+    cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/cluster-ceph-cleanup.yaml
