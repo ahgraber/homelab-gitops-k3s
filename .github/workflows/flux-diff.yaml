@@ -4,13 +4,14 @@ name: "Flux Diff"
 on: # yamllint disable-line rule:truthy
   pull_request:
     branches: ["main"]
-    paths: ["**.yaml"]
+    paths: ["kubernetes/**.yaml"]
 
 jobs:
   flux-diff:
     name: Flux Diff
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     strategy:
       matrix:
@@ -25,12 +26,13 @@ jobs:
           private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
       - name: Diff Resources
-        uses: allenporter/flux-local/action/diff@main
+        uses: allenporter/flux-local/action/diff@efbe055c6dc2a63d1102db582632d2aa03696664 # 3.1.1
         id: diff
         with:
-          live-branch: main
-          path: ${{ matrix.path }}
-          resource: ${{ matrix.resource }}
+          # live-branch: main
+          sources: home-kubernetes
+          path: "${{ matrix.path }}"
+          resource: "${{ matrix.resource }}"
           # debug: true
 
       - if: ${{ steps.diff.outputs.diff != '' }}
