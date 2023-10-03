@@ -60,8 +60,8 @@ data:
         # focus: true # Optional, will set focus to the search bar on page load
     - openmeteo:
         label: Home # optional
-        latitude: 40.008378
-        longitude: -75.290233
+        latitude: {{HOMEPAGE_VAR_LATITUDE}}
+        longitude: {{HOMEPAGE_VAR_LONGITUDE}}
         units: imperial # or metric
         cache: 5 # Time in minutes to cache API responses, to stay within limits
 
@@ -69,7 +69,7 @@ data:
     ---
     - Apps & Services:
         - HomeAssistant:
-            href: https://homeassistant.${SECRET_DOMAIN}:8123
+            href: https://homeassistant.${SECRET_DOMAIN}
             icon: home-assistant.png
             description: Smart Home Automation
         - ChangeDetection:
@@ -103,23 +103,32 @@ data:
 
     - Infrastructure:
         - OPNsense:
-            href: https://opnsense.${SECRET_DOMAIN}
+            href: https://opnsense.${SECRET_INT_DOMAIN}
             icon: opnsense.png
             description: NineRealmLabs Router
             # widget:
             #   type: opnsense
-            #   url: https://10.2.0.1.${SECRET_DOMAIN}
+            #   url: https://opnsense.${SECRET_INT_DOMAIN}
             #   username: apikey
             #   password: apisecret
         - AdGuard:
-            href: https://opnsense.${SECRET_DOMAIN}:44353
+            href: https://opnsense.${SECRET_INT_DOMAIN}:44353
             icon: adguard-home.png
             description: DNS Adblocking
             widget:
               type: adguard
-              url: https://10.2.0.1:44353
-              username: ${SECRET_ADMIN_USER}
-              password: ${SECRET_DEFAULT_PWD}
+              url: https://opnsense.${SECRET_INT_DOMAIN}:44353
+              username: {{HOMEPAGE_VAR_ADMIN_USER}}
+              password: {{HOMEPAGE_VAR_DEFAULT_PWD}}
+        - Cloudflared:
+            href: https://dash.cloudflare.com/
+            icon: cloudflare-zero-trust.png
+            description: Cloudflared Tunnel
+            widget:
+              type: cloudflared
+              accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT}}
+              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL}}
+              key: {{HOMEPAGE_VAR_CLOUDFLARED_TOKEN}}
     - Monitoring:
         - Karma:
             href: https://karma.${SECRET_DOMAIN}
@@ -152,9 +161,10 @@ data:
             # description: This is my service
             widget:
                 type: truenas
-                url: https://${SECRET_TRUENAS_IP}
-                username: ${SECRET_ADMIN_USER}
-                password: ${SECRET_DEFAULT_PWD}
+                url: https://{{HOMEPAGE_VAR_TRUENAS_IP}}
+                # username:
+                # password:
+                key: {{HOMEPAGE_VAR_TRUENAS_KEY}}
         - MinIO:
             href: https://truenas.${SECRET_DOMAIN}:9001
             icon: minio.png

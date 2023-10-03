@@ -40,6 +40,9 @@ spec:
     env:
       TZ: ${TIMEZONE}
       LOG_LEVEL: debug
+    envFrom:
+      - secretRef:
+          name: *app
 
     ingress:
       main:

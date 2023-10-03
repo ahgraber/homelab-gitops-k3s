@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./configmap.yaml
   - ./rbac.yaml
+  - ./secret.sops.yaml
