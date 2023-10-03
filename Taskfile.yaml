@@ -6,7 +6,9 @@ includes:
   ansible: .taskfiles/AnsibleTasks.yaml
   bootstrap: .taskfiles/BootstrapTasks.yaml
   brew: .taskfiles/BrewTasks.yaml
-  cluster: .taskfiles/ClusterTasks.yaml
+  cluster:
+    taskfile: .taskfiles/ClusterTasks.yaml
+    aliases: ["flux"]
   kubernetes:
     taskfile: .taskfiles/KubernetesTasks.yaml
     aliases: ["k8s"]
