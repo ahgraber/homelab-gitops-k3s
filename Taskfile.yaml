@@ -9,6 +9,7 @@ includes:
   cluster:
     taskfile: .taskfiles/ClusterTasks.yaml
     aliases: ["flux"]
+  db: .taskfiles/DBTasks.yaml
   kubernetes:
     taskfile: .taskfiles/KubernetesTasks.yaml
     aliases: ["k8s"]

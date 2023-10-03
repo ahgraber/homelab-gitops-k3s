@@ -1,0 +1,61 @@
+---
+version: "3"
+
+includes:
+  cluster:
+    taskfile: ./ClusterTasks.yaml
+    internal: true
+
+tasks:
+
+  hibernate:
+    desc: Scale a database down (useful for TrueNAS/Minio updates)
+    aliases: ["scaledown"]
+    cmds:
+      - kubectl annotate cluster '{{.cluster}}' -n '{{.namespace}}' --overwrite cnpg.io/hibernation=on
+    vars:
+      cluster: '{{ or .cluster (fail "Cluster `cluster` is required") }}'
+      namespace: '{{.namespace | default "default"}}'
+
+  hibernate-all:
+    desc: Scale all databases down (useful for TrueNAS/Minio updates)
+    aliases: ["scaledown-all"]
+    cmds:
+      - for: { var: clusters, as: DB, split: "\n" }
+        cmd: |
+          echo '{{.DB}}' |
+          xargs -L1 bash -c 'kubectl annotate cluster "$0" -n "$1" --overwrite cnpg.io/hibernation=on'
+    vars:
+      clusters:
+        sh: |
+          kubectl get cluster --all-namespaces -o json |
+          jq -rc '.items[] |
+            [.metadata.name, .metadata.namespace] |
+          @tsv'
+    status:
+      - 'test -z "{{.clusters}}"'
+
+  resume:
+    desc: Resume database after hibernation
+    cmds:
+      - kubectl annotate cluster '{{.cluster}}' -n '{{.namespace}}' cnpg.io/hibernation-
+    vars:
+      cluster: '{{ or .cluster (fail "Cluster `cluster` is required") }}'
+      namespace: '{{.namespace | default "default"}}'
+
+  resume-all:
+    desc: Resume all databases after hibernation
+    cmds:
+      - for: { var: clusters, as: DB, split: "\n" }
+        cmd: |
+          echo '{{.DB}}' |
+          xargs -L1 bash -c 'kubectl annotate cluster "$0" -n "$1" cnpg.io/hibernation-'
+    vars:
+      clusters:
+        sh: |
+          kubectl get cluster --all-namespaces -o json |
+          jq -rc '.items[] |
+            [.metadata.name, .metadata.namespace] |
+          @tsv'
+    status:
+      - 'test -z "{{.clusters}}"'
