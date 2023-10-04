@@ -9,7 +9,6 @@ spec:
   interval: 15m
   chart:
     spec:
-      # renovate: registryUrl=https://prefecthq.github.io/prefect-helm
       chart: prefect-agent
       version: 2023.09.18
       sourceRef:
