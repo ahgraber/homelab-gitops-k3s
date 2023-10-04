@@ -23,6 +23,16 @@
       "separateMinorPatch": true
     },
     {
+      "description": "Prefect Group",
+      "groupName": "Prefect",
+      "matchPackageNames": ["prefect"],
+      "matchDatasources": ["helm"],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
+    },
+    {
       "description": "External Snapshotter Group",
       "groupName": "External Snapshotter",
       "matchPackageNames": ["snapshot-controller", "snapshot-validation-webhook"],
