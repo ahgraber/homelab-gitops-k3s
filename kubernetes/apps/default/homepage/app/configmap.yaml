@@ -100,6 +100,10 @@ data:
             href: https://pairdrop.${SECRET_DOMAIN}
             icon: mdi-broadcast
             description: Local file sharing in your browser, inspired by Apple's AirDrop.
+        - PicoShare:
+            href: https://share.${SECRET_DOMAIN}
+            icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
+            description: A minimalist service for sharing images and other files
 
     - Infrastructure:
         - OPNsense:
