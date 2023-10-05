@@ -29,7 +29,7 @@ spec:
         reloader.stakater.com/search: "true"
 
     image:
-      repository: ghcr.io/benphelps/homepage
+      repository: ghcr.io/gethomepage
       tag: v0.7.1
       pullPolicy: IfNotPresent
 
