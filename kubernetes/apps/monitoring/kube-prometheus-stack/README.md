@@ -79,7 +79,7 @@ Add the following to the prometheus.yaml under `additionalScrapeConfigs`:
 ### etcd alerts
 
 Due to a change in alerting rules that have not yet propagated to kube-prometheus-stack,
-repeated etcd alerts may be raised.  To fix, use a custom [PrometheusRule](./prometheus-rules/etcd.yaml)
+repeated etcd alerts may be raised.  To fix, use a custom [PrometheusRule](./addons/rules/etcd.yaml)
 
 ### Remove metric
 
