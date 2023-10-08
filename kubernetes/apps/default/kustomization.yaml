@@ -16,6 +16,7 @@ resources:
   - ./letsblockit/ks.yaml
   - ./linkding/ks.yaml
   - ./mealie/ks.yaml
+  - ./memos/ks.yaml
   - ./miniflux/ks.yaml
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
