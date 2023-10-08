@@ -15,7 +15,7 @@ spec:
             ### api-key requires email; token does not
             # email: "${SECRET_ACME_EMAIL}"
             apiTokenSecretRef:
-              name: cert-manager-secret
+              name: cloudflare-api-token
               key: api-token
         selector:
           dnsZones:

@@ -37,7 +37,7 @@ spec:
 
     serverDefinitions:
       enabled: true
-      # included in pgadmin-secret, see: https://github.com/rowanruseler/helm-charts/issues/182
+      # included in pgadmin secret, see: https://github.com/rowanruseler/helm-charts/issues/182
 
     strategy:
       type: Recreate
@@ -71,4 +71,4 @@ spec:
 
     annotations:
       reloader.stakater.com/search: "true"
-      # secret.reloader.stakater.com/reload: "pgadmin-secret"
+      # secret.reloader.stakater.com/reload: "pgadmin"

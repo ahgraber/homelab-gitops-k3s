@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: grafana
+  name: &app grafana
   namespace: monitoring
 spec:
   interval: 30m
@@ -32,7 +32,7 @@ spec:
     deploymentStrategy:
       type: Recreate
     admin:
-      existingSecret: grafana-admin-secret
+      existingSecret: *app
     env:
       GF_EXPLORE_ENABLED: true
       GF_SERVER_ROOT_URL: "https://grafana.${SECRET_DOMAIN}"
