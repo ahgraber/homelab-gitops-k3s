@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: node-exporter-rules
+  name: node-exporter.rules
   namespace: monitoring
 spec:
   groups:

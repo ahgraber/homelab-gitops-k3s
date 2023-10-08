@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: etcd-rules
+  name: etcd.rules
   namespace: kube-system
 spec:
   groups:
