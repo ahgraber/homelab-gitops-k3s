@@ -6,6 +6,8 @@ metadata:
   name: default-picoshare
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/picoshare/app
   prune: true
   sourceRef:

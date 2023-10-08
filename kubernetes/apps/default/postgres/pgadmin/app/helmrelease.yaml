@@ -15,9 +15,8 @@ spec:
         kind: HelmRepository
         name: runix
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -26,6 +25,9 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
     env:
       email: admin@${SECRET_DOMAIN}
