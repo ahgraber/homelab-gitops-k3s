@@ -22,7 +22,7 @@ spec:
     #   - host all all 10.244.0.0/16 md5
 
   superuserSecret:
-    name: postgres-superuser-secret
+    name: postgres-superuser
 
   storage:
     size: 15Gi
@@ -35,7 +35,7 @@ spec:
     #   database: default
     #   owner: default
     #   # secret:
-    #   #   name: <app>-user-secret
+    #   #   name: <app>-user
     ## Alternative bootstrap method: start from a backup
     recovery:
       source: &old_db datasci-v2 # next time it will be datasci-v3
@@ -48,10 +48,10 @@ spec:
         destinationPath: s3://postgres/
         s3Credentials:
           accessKeyId:
-            name: postgres-s3-secret
+            name: postgres-s3
             key: S3_ACCESS_KEY
           secretAccessKey:
-            name: postgres-s3-secret
+            name: postgres-s3
             key: S3_SECRET_KEY
         wal:
           compression: bzip2
@@ -65,10 +65,10 @@ spec:
       destinationPath: s3://postgres/
       s3Credentials:
         accessKeyId:
-          name: postgres-s3-secret
+          name: postgres-s3
           key: S3_ACCESS_KEY
         secretAccessKey:
-          name: postgres-s3-secret
+          name: postgres-s3
           key: S3_SECRET_KEY
       wal:
         compression: bzip2

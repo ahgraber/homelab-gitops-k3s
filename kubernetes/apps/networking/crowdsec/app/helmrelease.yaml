@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: crowdsec
+  name: &app crowdsec
   namespace: networking
 spec:
   interval: 30m
@@ -59,7 +59,7 @@ spec:
         - name: ENROLL_KEY
           valueFrom:
             secretKeyRef:
-              name: crowdsec-secret
+              name: *app
               key: ENROLL_KEY
         - name: ENROLL_INSTANCE_NAME
           value: "k8s_cluster"
@@ -68,7 +68,7 @@ spec:
         - name: BOUNCER_KEY_INGRESS
           valueFrom:
             secretKeyRef:
-              name: crowdsec-secret
+              name: *app
               key: BOUNCER_KEY_INGRESS
 
       dashboard:
