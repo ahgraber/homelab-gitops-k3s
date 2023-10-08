@@ -8,6 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: cnpg-system-operator
+    - name: kube-system-local-path-provisioner
     - name: monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/datasci/postgres/cloudnative-pg/db
   prune: true

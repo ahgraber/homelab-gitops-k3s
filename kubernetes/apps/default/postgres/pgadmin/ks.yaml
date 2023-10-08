@@ -8,6 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: default-cnpg-db
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/postgres/pgadmin/app
   prune: true
   sourceRef:

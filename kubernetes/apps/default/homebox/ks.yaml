@@ -6,6 +6,8 @@ metadata:
   name: default-homebox
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/homebox/app
   prune: true
   sourceRef:

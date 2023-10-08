@@ -6,8 +6,8 @@ metadata:
   name: default-changedetection
   namespace: flux-system
 spec:
-  # dependsOn:
-  #   - name: networking-nginx-internal
+  dependsOn:
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/changedetection/app
   prune: true
   sourceRef:

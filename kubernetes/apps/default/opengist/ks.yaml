@@ -6,8 +6,8 @@ metadata:
   name: default-opengist
   namespace: flux-system
 spec:
-  # dependsOn:
-  #   - name: volsync
+  dependsOn:
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/opengist/app
   prune: true
   sourceRef:
