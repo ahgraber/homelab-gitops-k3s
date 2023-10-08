@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: network-ups-tools-rules
+  name: network-ups-tools.rules
   namespace: monitoring
 spec:
   groups:
