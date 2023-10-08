@@ -26,7 +26,7 @@ An example of a db deployment can be found in [_example-db](_example-db/)
 
 ## CLI
 
-Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.15.1/cnpg-plugin/)
+Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.18/cnpg-plugin/)
 
 ## Updating CNPG
 
