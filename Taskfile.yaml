@@ -54,5 +54,5 @@ tasks:
     cmds:
       - |
         unset noclobber
-        envsubst < ./{{.CLI_ARGS}}.tmpl > ./{{.CLI_ARGS}}
-        sops --encrypt --in-place ./{{.CLI_ARGS}}
+        envsubst < {{.CLI_ARGS}} > {{.CLI_ARGS | replace ".tmpl" ""}}
+        sops --encrypt --in-place {{.CLI_ARGS | replace ".tmpl" ""}}
