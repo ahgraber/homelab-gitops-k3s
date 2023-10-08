@@ -5,14 +5,11 @@ kind: Kustomization
 resources:
   - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
 patches:
-  ### https://raw.githubusercontent.com/rook/rook/master/deploy/charts/rook-ceph-cluster/prometheus/localrules.yaml
-  ### ref: https://rook.github.io/docs/rook/v1.9/ceph-monitoring.html#customize-alerts
   - target:
-      group: monitoring.coreos.com
-      version: v1
+      apiVersion: monitoring.coreos.com/v1
       kind: PrometheusRule
       name: prometheus-ceph-rules
-      namespace: monitoring
+      namespace: rook-ceph
     patch: |
       - op: replace
         path: /metadata/name
