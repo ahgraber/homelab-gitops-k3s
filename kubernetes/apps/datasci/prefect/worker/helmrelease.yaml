@@ -57,9 +57,18 @@ spec:
       #     name: prefect-api-key
       #     key: key
       #   cloudUrl: https://api.prefect.cloud/api
+      # selfHostedApiConfig:
+      #   apiUrl: "" # (PREFECT_API_URL)
+      #   accountId: ""
+      #   workspaceId: ""
+      #   apiKeySecret:
+      #     # -- prefect API secret name
+      #     key: key
+      #   uiUrl: ""
       serverApiConfig:
         # -- prefect API url (PREFECT_API_URL); should be in-cluster URL if the worker is deployed in the same cluster as the API
         apiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+        # uiUrl: http://localhost:4200
 
       replicaCount: 1
 
@@ -70,17 +79,17 @@ spec:
         limits:
           memory: 1Gi
 
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-    podSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      fsGroup: 1002
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-    containerSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+      podSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1002
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+      containerSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
 
     ## Role configuration
     role:

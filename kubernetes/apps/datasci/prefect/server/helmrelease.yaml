@@ -53,27 +53,34 @@ spec:
         # - name: PREFECT_PROFILE
         #   value: "default"
 
-    # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
-    resources:
-      requests:
-        {}
-        # cpu: 25m
-        # memory: 105M
-      limits:
-        {}
-        # memory: 105M
+      # # Autoscaling configuration
+      # # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
+      # autoscaling:
+      #   enabled: false
+      #   minReplicas: 1
+      #   maxReplicas: 100
+      #   targetCPU: 80
+      #   targetMemory: 80
 
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-    podSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      fsGroup: 1002
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-    containerSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
+      # # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
+      # resources:
+      #   requests:
+      #     # cpu: 25m
+      #     # memory: 105M
+      #   limits:
+      #     # memory: 105M
+
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+      podSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1002
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+      containerSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
 
     ## Service configuration
     service:
@@ -92,9 +99,10 @@ spec:
       annotations:
         nginx.ingress.kubernetes.io/whitelist-source-range: |
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      tls: # false
-        - hosts:
-            - *host
+      tls:
+        true
+        # - hosts:
+        #     - *host
       # extraTls:
       #   - hosts:
       #       - *host

@@ -74,17 +74,17 @@ spec:
         limits:
           memory: 1Gi
 
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-    podSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      fsGroup: 1002
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-    containerSecurityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+      podSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1002
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+      containerSecurityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
 
     ## Role configuration
     role:
