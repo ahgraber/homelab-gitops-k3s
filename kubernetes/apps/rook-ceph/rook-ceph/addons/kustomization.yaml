@@ -6,7 +6,8 @@ resources:
   - https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
 patches:
   - target:
-      apiVersion: monitoring.coreos.com/v1
+      # group: monitoring.coreos.com
+      version: v1
       kind: PrometheusRule
       name: prometheus-ceph-rules
       namespace: rook-ceph
