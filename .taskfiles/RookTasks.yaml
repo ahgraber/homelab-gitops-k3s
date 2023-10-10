@@ -210,8 +210,8 @@ tasks:
     cmds:
       - for: { var: configmaps, as: CFG, split: "\n" }
         cmd: |
-          # kubectl patch configmap '{{.CFG}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
           kubectl delete configmap '{{.CFG}}' -n {{.namespace}}
+          kubectl patch configmap '{{.CFG}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
       namespace: '{{.namespace | default "rook-ceph"}}'
       configmaps:
@@ -228,8 +228,8 @@ tasks:
     cmds:
       - for: { var: secrets, as: S, split: "\n" }
         cmd: |
-          # kubectl patch secret '{{.S}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
           kubectl delete secret '{{.S}}' -n {{.namespace}}
+          kubectl patch secret '{{.S}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
       namespace: '{{.namespace | default "rook-ceph"}}'
       secrets:
@@ -249,7 +249,7 @@ tasks:
           kubectl patch cephcluster {{.CC}} -n {{.namespace}} \
             --type merge --patch='{"spec":{"cleanupPolicy": {"confirmation":"yes-really-destroy-data"}}}'
           kubectl delete cephcluster {{.CC}} -n {{.namespace}}
-          # kubectl patch cephcluster {{.CC}}} -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
+          kubectl patch cephcluster {{.CC}}} -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
       namespace: '{{.namespace | default "rook-ceph"}}'
       # cephcluster: '{{.cephcluster | default "rook-ceph"}}'
