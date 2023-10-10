@@ -36,10 +36,10 @@ tasks:
     interactive: true
     vars:
       claim: '{{ or .claim (fail "PersistentVolumeClaim `claim` is required") }}'
-      namespace: '{{.namespace | default "default"}}'
+      n: '{{.n | default "default"}}'
     cmds:
       - |
-        kubectl run -n {{.namespace}} debug-{{.claim}} -i --tty --rm --image=null --privileged --overrides='
+        kubectl run -n {{.n}} debug-{{.claim}} -i --tty --rm --image=null --privileged --overrides='
           {
             "apiVersion": "v1",
             "spec": {
@@ -73,7 +73,7 @@ tasks:
             }
           }'
     preconditions:
-      - kubectl -n {{.namespace}} get pvc {{.claim}}
+      - kubectl -n {{.n}} get pvc {{.claim}}
 
   nodes:
     desc: List all the nodes in your cluster
