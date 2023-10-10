@@ -28,6 +28,18 @@ tasks:
     vars:
       SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
 
+  kubeconfig:
+    desc: Download kubeconfig from a remote k3s master node
+    dotenv: ['.env']
+    vars:
+      user: '{{.user | default "root"}}'
+      controller_host: '{{.controller_host | default "optiplex0"}}'
+      # kubernetes_api: '{{.kubernetes_api | default "192.168.1.1"}}'  # pull KUBE_VIP_ADDR from .env
+    cmds:
+      - rsync --verbose --progress --partial --rsync-path="sudo rsync" {{.user}}@{{.controller_host}}:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
+      - sed -i '' "s/127.0.0.1/$KUBE_VIP_ADDR/g" "${KUBECONFIG}"
+      - chmod go-r "${KUBECONFIG}"
+
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:

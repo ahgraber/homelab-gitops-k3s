@@ -23,6 +23,11 @@ tasks:
     dir: "{{.ANSIBLE_DIR}}"
     cmd: ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -a 'uptime'
 
+  # apt-update:
+  #   desc: Run apt-update on hosts
+  #   dir: "{{.ANSIBLE_DIR}}"
+  #   cmd: ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -l kubernetes {{.ANSIBLE_PLAYBOOK_DIR}}/apt-update.yaml
+
   prepare:
     desc: Prepare all the k8s nodes for running k3s
     dir: "{{.ANSIBLE_DIR}}"
