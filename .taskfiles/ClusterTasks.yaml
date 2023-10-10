@@ -38,23 +38,23 @@ tasks:
     desc: Suspend and resume helmrelease
     aliases: ["hr-bounce"]
     cmds:
-      - flux suspend hr -n {{.namespace}} {{.hr}}
-      - sleep 5
-      - flux resume hr -n {{.namespace}} {{.hr}}
+      - flux suspend hr '{{.hr}}' -n '{{.namespace}}'
+      - sleep 5'
+      - flux resume hr '{{.hr}}'  -n '{{.namespace}}'
     vars:
       hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
-      ns: '{{.ns | default "default"}}'
+      namespace: '{{.namespace | default "default"}}'
 
   bounce-ks:
     desc: Suspend and resume kustomization
     aliases: ["ks-bounce"]
     cmds:
-      - flux suspend kustomization -n {{.namespace}} {{.ks}}
+      - flux suspend kustomization '{{.ks}}' -n '{{.namespace}}'
       - sleep 5
-      - flux resume kustomization -n {{.namespace}} {{.ks}}
+      - flux resume kustomization '{{.ks}}' -n '{{.namespace}}'
     vars:
       ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
-      ns: '{{.ns | default "flux-system"}}'
+      namespace: '{{.namespace | default "flux-system"}}'
 
   bounce-failed-hr:
     desc: Restart all failed helmreleases

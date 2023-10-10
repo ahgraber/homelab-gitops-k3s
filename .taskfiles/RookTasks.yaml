@@ -39,10 +39,10 @@ tasks:
     desc: Suspend Ceph operator and cluster
     internal: true
     cmds:
-      - flux suspend kustomization {{.operator}} -n flux-system
-      - flux suspend kustomization {{.cluster}} -n flux-system
+      - flux suspend kustomization '{{.operator}}' -n flux-system
+      - flux suspend kustomization '{{.cluster}}' -n flux-system
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      # n: '{{.n | default "rook-ceph"}}'
       operator: '{{.operator | default "rook-ceph-operator"}}'
       cluster: '{{.cluster | default "rook-ceph-cluster"}}'
     env: *task-vars
@@ -51,7 +51,7 @@ tasks:
     desc: Scale down kube-prometheus-stack (managed by operator)
     internal: true
     cmds:
-      - flux suspend hr kube-prometheus-stack -n monitoring
+      - flux suspend hr kube-prometheus-stack -n '{{.namespace}}'
       - |
         kubectl patch Alertmanager '{{.name}}' -n '{{.namespace}}' \
         --type merge --patch='{"spec":{"replicas": 0}}'
