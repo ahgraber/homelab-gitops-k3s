@@ -35,7 +35,7 @@ spec:
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
-      prefectApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
+      # prefectApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
 
       # https://docs.prefect.io/latest/concepts/settings/
       env:
