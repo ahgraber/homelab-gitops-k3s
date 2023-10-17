@@ -12,8 +12,6 @@ The operator is deployed via helm release
 S3-compatible storage can be used as a live WAL backup.
 Since the native PVC/PV is using k8s-local local-path, the backup should use NAS-based s3.
 
-An example of a db deployment can be found in [_example-db](_example-db/)
-
 ## Restore
 
 [k8s-at-home discussion](https://discord.com/channels/673534664354430999/1036720267474509885)
