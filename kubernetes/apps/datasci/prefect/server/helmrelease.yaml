@@ -35,7 +35,7 @@ spec:
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
-      # prefectApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
+      prefectApiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
 
       # https://docs.prefect.io/latest/concepts/settings/
       env:
@@ -43,12 +43,12 @@ spec:
         #   value: ERROR
         # - name: PREFECT_LOGGING_LEVEL # overridden by server.image.debug
         #   value: INFO
-        - name: PREFECT_LOGGING_SERVER_LEVEL
-          value: DEBUG # WARNING
+        # - name: PREFECT_LOGGING_SERVER_LEVEL
+        #   value: DEBUG # WARNING
         - name: PREFECT_API_DATABASE_MIGRATE_ON_START
           value: "True"
-        - name: PREFECT_API_URL # internal/cluster fqdn
-          value: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+        # - name: PREFECT_API_URL # internal/cluster fqdn
+        #   value: "http://prefect-server.datasci.svc.cluster.local:4200/api"
         # - name: PREFECT_UI_API_URL  # set by publicApiUrl
         #   value: "https://prefect.${SECRET_DOMAIN}/api"
         # - name: PREFECT_PROFILE
