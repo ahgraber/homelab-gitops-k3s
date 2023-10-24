@@ -38,7 +38,7 @@ spec:
         reloader.stakater.com/search: "true"
 
     initContainers:
-      init-config:
+      db-upgrade:
         image: ghcr.io/ninerealmlabs/mlflow-server:2.4.2
         env:
           MLFLOW_BACKEND_STORE_URI:
