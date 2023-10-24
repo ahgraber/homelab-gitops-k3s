@@ -37,6 +37,18 @@ spec:
       annotations:
         reloader.stakater.com/search: "true"
 
+    initContainers:
+      init-config:
+        image: ghcr.io/ninerealmlabs/mlflow-server:2.4.2
+        env:
+          MLFLOW_BACKEND_STORE_URI:
+            valueFrom:
+              secretKeyRef:
+                name: &db_secret database-mlflow
+                key: POSTGRES_URL
+        # double "$$" escape flux substitutions
+        command: ["/bin/bash", "-c", 'mlflow db upgrade "$$MLFLOW_BACKEND_STORE_URI"']
+
     image:
       # renovate: datasource=docker image=ghcr.io/...
       repository: ghcr.io/ninerealmlabs/mlflow-server
