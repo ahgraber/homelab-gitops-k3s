@@ -87,7 +87,6 @@ spec:
     service:
       type: ClusterIP
       port: 4200
-      externalTrafficPolicy: Cluster
 
     # Ingress configuration
     ingress:
