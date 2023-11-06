@@ -10,7 +10,7 @@ includes:
     internal: true
 
 x-task-vars: &task-vars
-  namespace: '{{.namespace}}'
+  ns: '{{.ns}}'
   operator: '{{.operator}}'
   cluster: '{{.cluster}}'
   cephcluster: '{{.cephcluster}}'
@@ -51,16 +51,16 @@ tasks:
     desc: Scale down kube-prometheus-stack (managed by operator)
     internal: true
     cmds:
-      - flux suspend hr kube-prometheus-stack -n '{{.namespace}}'
+      - flux suspend hr kube-prometheus-stack -n '{{.ns}}'
       - |
-        kubectl patch Alertmanager '{{.name}}' -n '{{.namespace}}' \
+        kubectl patch Alertmanager '{{.name}}' -n '{{.ns}}' \
         --type merge --patch='{"spec":{"replicas": 0}}'
       - |
-        kubectl patch Prometheus '{{.name}}' -n '{{.namespace}}' \
+        kubectl patch Prometheus '{{.name}}' -n '{{.ns}}' \
         --type merge --patch='{"spec":{"replicas": 0}}'
     vars:
       name: kps
-      namespace: monitoring
+      ns: monitoring
 
   delete-hr-using-ceph:
     desc: Suspend kustomizations and delete helmreleases with rook-ceph PVCs
@@ -210,13 +210,13 @@ tasks:
     cmds:
       - for: { var: configmaps, as: CFG, split: "\n" }
         cmd: |
-          kubectl delete configmap '{{.CFG}}' -n {{.namespace}}
-          kubectl patch configmap '{{.CFG}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
+          kubectl delete configmap '{{.CFG}}' -n {{.ns}}
+          kubectl patch configmap '{{.CFG}}' -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       configmaps:
         sh: |
-          kubectl get configmaps -n '{{.namespace}}' -o json |
+          kubectl get configmaps -n '{{.ns}}' -o json |
           jq -rc '.items[] | .metadata.name'
     env: *task-vars
     status:
@@ -228,13 +228,13 @@ tasks:
     cmds:
       - for: { var: secrets, as: S, split: "\n" }
         cmd: |
-          kubectl delete secret '{{.S}}' -n {{.namespace}}
-          kubectl patch secret '{{.S}}' -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
+          kubectl delete secret '{{.S}}' -n {{.ns}}
+          kubectl patch secret '{{.S}}' -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       secrets:
         sh: |
-          kubectl get secrets -n '{{.namespace}}' -o json |
+          kubectl get secrets -n '{{.ns}}' -o json |
           jq -rc '.items[] | .metadata.name'
     env: *task-vars
     status:
@@ -246,16 +246,16 @@ tasks:
     cmds:
       - for: { var: cephclusters, as: CC, split: "\n" }
         cmd: |
-          kubectl patch cephcluster {{.CC}} -n {{.namespace}} \
+          kubectl patch cephcluster {{.CC}} -n {{.ns}} \
             --type merge --patch='{"spec":{"cleanupPolicy": {"confirmation":"yes-really-destroy-data"}}}'
-          kubectl delete cephcluster {{.CC}} -n {{.namespace}}
-          kubectl patch cephcluster {{.CC}}} -n {{.namespace}} --type merge --patch='{"metadata":{"finalizers": []}}'
+          kubectl delete cephcluster {{.CC}} -n {{.ns}}
+          kubectl patch cephcluster {{.CC}}} -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       # cephcluster: '{{.cephcluster | default "rook-ceph"}}'
       cephclusters:
         sh: |
-          kubectl get cephclusters -n {{.namespace}} -o json |
+          kubectl get cephclusters -n {{.ns}} -o json |
           jq -rc '.items[] | .metadata.name'
     env: *task-vars
     status:
@@ -265,10 +265,10 @@ tasks:
     desc: Delete rook-ceph cluster helmrelease and kustomization
     internal: true
     cmds:
-      - kubectl delete hr {{.cluster}} -n {{.namespace}} --ignore-not-found
+      - kubectl delete hr {{.cluster}} -n {{.ns}} --ignore-not-found
       - kubectl delete kustomization {{.cluster}} -n flux-system --ignore-not-found
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       cluster: '{{.helmrelease | default "rook-ceph-cluster"}}'
     env: *task-vars
 
@@ -276,10 +276,10 @@ tasks:
     desc: Delete rook-ceph operator helmrelease and kustomization
     internal: true
     cmds:
-      - kubectl delete hr {{.operator}} -n {{.namespace}} --ignore-not-found
+      - kubectl delete hr {{.operator}} -n {{.ns}} --ignore-not-found
       - kubectl delete kustomization {{.operator}} -n flux-system --ignore-not-found
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       operator: '{{.operator | default "rook-ceph-operator"}}'
     env: *task-vars
 
@@ -306,11 +306,11 @@ tasks:
     desc: Delete rook-ceph namespace
     internal: true
     cmds:
-      - kubectl delete ns {{.namespace}} --ignore-not-found
+      - kubectl delete ns {{.ns}} --ignore-not-found
       # - |
-      #   kubectl patch ns {{.namespace}} --type merge --patch='{"spec":{"finalizers": []}}'
+      #   kubectl patch ns {{.ns}} --type merge --patch='{"spec":{"finalizers": []}}'
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
     env: *task-vars
 
   # https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown/#delete-the-block-and-file-artifacts
@@ -346,7 +346,7 @@ tasks:
       - echo "!! Don't forget to run rook-ceph cleanup ansible script  --  `task ansible:ceph-cleanup` !!"
       - task: ansible:ceph-cleanup
     vars:
-      namespace: '{{.namespace | default "rook-ceph"}}'
+      ns: '{{.ns | default "rook-ceph"}}'
       operator: '{{.operator | default "rook-ceph-operator"}}'
       cluster: '{{.cluster | default "rook-ceph-cluster"}}'
       cephcluster: '{{.cephcluster | default "rook-ceph"}}'
@@ -357,16 +357,16 @@ tasks:
     internal: true
     cmds:
       - |
-        kubectl patch Alertmanager '{{.name}}' -n '{{.namespace}}' \
+        kubectl patch Alertmanager '{{.name}}' -n '{{.ns}}' \
         --type merge --patch='{"spec":{"replicas": '{{.replicas}}'}}'
       - |
-        kubectl patch Prometheus '{{.name}}' -n '{{.namespace}}' \
+        kubectl patch Prometheus '{{.name}}' -n '{{.ns}}' \
         --type merge --patch='{"spec":{"replicas": '{{.replicas}}'}}'
       - flux resume hr kube-prometheus-stack -n monitoring
       - flux resume kustomization monitoring-kube-prometheus-stack -n flux-system
     vars:
       name: kps
-      namespace: monitoring
+      ns: monitoring
       replicas: 1
 
   resume:
