@@ -33,7 +33,6 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: "internal.${SECRET_DOMAIN}"
           io.cilium/lb-ipam-ips: "10.2.118.3"
-        externalTrafficPolicy: Cluster
       ingressClassResource:
         name: internal
         default: true
