@@ -12,10 +12,10 @@ tasks:
     desc: Scale a database down (useful for TrueNAS/Minio updates)
     aliases: ["scaledown"]
     cmds:
-      - kubectl annotate cluster '{{.cluster}}' -n '{{.namespace}}' --overwrite cnpg.io/hibernation=on
+      - kubectl annotate cluster '{{.cluster}}' -n '{{.ns}}' --overwrite cnpg.io/hibernation=on
     vars:
       cluster: '{{ or .cluster (fail "Cluster `cluster` is required") }}'
-      namespace: '{{.namespace | default "default"}}'
+      ns: '{{.ns | default "default"}}'
 
   hibernate-all:
     desc: Scale all databases down (useful for TrueNAS/Minio updates)
@@ -28,9 +28,9 @@ tasks:
     vars:
       clusters:
         sh: |
-          kubectl get cluster --all-namespaces -o json |
+          kubectl get cluster --all-nss -o json |
           jq -rc '.items[] |
-            [.metadata.name, .metadata.namespace] |
+            [.metadata.name, .metadata.ns] |
           @tsv'
     status:
       - 'test -z "{{.clusters}}"'
@@ -38,10 +38,10 @@ tasks:
   resume:
     desc: Resume database after hibernation
     cmds:
-      - kubectl annotate cluster '{{.cluster}}' -n '{{.namespace}}' cnpg.io/hibernation-
+      - kubectl annotate cluster '{{.cluster}}' -n '{{.ns}}' cnpg.io/hibernation-
     vars:
       cluster: '{{ or .cluster (fail "Cluster `cluster` is required") }}'
-      namespace: '{{.namespace | default "default"}}'
+      ns: '{{.ns | default "default"}}'
 
   resume-all:
     desc: Resume all databases after hibernation
