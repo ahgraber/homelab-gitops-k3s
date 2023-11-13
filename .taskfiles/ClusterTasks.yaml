@@ -51,7 +51,7 @@ tasks:
     aliases: ["hr-bounce"]
     cmds:
       - flux suspend hr '{{.hr}}' -n '{{.ns}}'
-      - sleep 5'
+      - sleep 5
       - flux resume hr '{{.hr}}'  -n '{{.ns}}'
     vars:
       hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
