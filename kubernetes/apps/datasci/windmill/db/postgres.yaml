@@ -1,0 +1,25 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: &app windmill
+  namespace: &namespace datasci
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
+spec:
+  database: *app # db name in postgres cluster
+  extensions: # List of extensions that should be created in the database (optional)
+    - pg_trgm
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: &app windmill
+  namespace: &namespace datasci
+  annotations:
+    postgres.db.movetokube.com/instance: *namespace
+spec:
+  role: *app
+  database: *app # references the CR
+  secretName: database
+  privileges: OWNER
