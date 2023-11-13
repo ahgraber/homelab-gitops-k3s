@@ -38,3 +38,4 @@ resources:
   - ./stakater.yaml               # reloader
   # - ./valheim.yaml
   - ./weave-gitops.yaml
+  - ./windmill.yaml

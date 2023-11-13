@@ -88,6 +88,10 @@ data:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
             description: A self-hosted recipe manager and meal planner
+        - Memos:
+            href: https://memos.${SECRET_DOMAIN}
+            icon: https://github.com/usememos/memos/blob/35f0861d6eaa15ab13d5ce9c9220553f2a56954d/web/public/logo.png
+            description: A privacy-first, lightweight note-taking service
         - Miniflux:
             href: https://miniflux.${SECRET_DOMAIN}
             icon: miniflux.png
