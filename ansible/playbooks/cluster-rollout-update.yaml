@@ -1,6 +1,6 @@
 ---
 # https://github.com/kevincoakley/ansible-role-k8s-rolling-update
-- name: Cluster rollout update
+- name: Cluster update rollout
   hosts: all
   become: true
   gather_facts: true
@@ -26,37 +26,23 @@
         - not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
       block:
         - name: Cordon
-          kubernetes.core.k8s_drain:
-            name: "{{ inventory_hostname }}"
-            kubeconfig: /etc/rancher/k3s/k3s.yaml
-            state: cordon
-          delegate_to: "{{ groups['controller'][0] }}"
-
-        - name: Drain
-          ansible.builtin.command: "kubectl drain --pod-selector='app!=rook-ceph-osd,app!=csi-attacher,app!=csi-provisioner' --ignore-daemonsets --delete-emptydir-data --force --grace-period=300 {{ inventory_hostname }}"
+          ansible.builtin.command: "kubectl cordon {{ inventory_hostname }}"
           delegate_to: "{{ groups['controller'][0] }}"
           changed_when: false
 
-        ### pod_selectors feature in upcoming kubernetes.core 2.5.0 ###
-        # - name: Drain
-        #   kubernetes.core.k8s_drain:
-        #     name: "{{ inventory_hostname }}"
-        #     kubeconfig: /etc/rancher/k3s/k3s.yaml
-        #     state: drain
-        #     delete_options:
-        #       delete_emptydir_data: true
-        #       ignore_daemonsets: true
-        #       terminate_grace_period: 600
-        #       wait_timeout: 900
-        #       force: true
-        #     pod_selectors:
-        #       # Rook Ceph
-        #      - app!=rook-ceph-osd
-        #       # Longhorn
-        #      - app!=csi-attacher
-        #       # Longhorn
-        #      - app!=csi-provisioner
-        #   delegate_to: "{{ groups['controller'][0] }}"
+        - name: Wait to cordon
+          ansible.builtin.command: "kubectl get node {{ inventory_hostname }} -o json"
+          register: wait_for_cordon
+          retries: 10
+          delay: 10
+          delegate_to: "{{ groups['controller'][0] }}"
+          changed_when: false
+          until: (wait_for_cordon['stdout'] | from_json).spec.unschedulable
+
+        - name: Drain
+          ansible.builtin.command: "kubectl drain --ignore-daemonsets --delete-emptydir-data --force {{ inventory_hostname }}"
+          delegate_to: "{{ groups['controller'][0] }}"
+          changed_when: false
 
         - name: Update
           ansible.builtin.apt:
@@ -72,12 +58,18 @@
           when: reboot_required.stat.exists
           ansible.builtin.reboot:
             msg: Rebooting node
-            post_reboot_delay: 60
+            post_reboot_delay: 120
             reboot_timeout: 3600
 
         - name: Uncordon
-          kubernetes.core.k8s_drain:
-            name: "{{ inventory_hostname }}"
-            kubeconfig: /etc/rancher/k3s/k3s.yaml
-            state: uncordon
+          ansible.builtin.command: "kubectl uncordon {{ inventory_hostname }}"
           delegate_to: "{{ groups['controller'][0] }}"
+          changed_when: false
+
+        - name: Wait to uncordon
+          ansible.builtin.command: "kubectl get node {{ inventory_hostname }} -o json"
+          retries: 10
+          delay: 10
+          delegate_to: "{{ groups['controller'][0] }}"
+          changed_when: false
+          until: not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
