@@ -4,8 +4,9 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: &app syncthing
+  namespace: default
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -14,14 +15,21 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-      interval: 15m
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync
   values:
     controllers:
       main:
@@ -35,33 +43,11 @@ spec:
                 cpu: 15m
                 memory: 249Mi
               limits:
-                memory: 265Mi
+                memory: 512Mi
             env:
               PUID: "1000"
               PGID: "1000"
-    service:
-      main:
-        ports:
-          http:
-            port: 8384
-      discovery:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          discovery:
-            enabled: true
-            port: 21027
-            protocol: UDP
-      listen:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          listen:
-            enabled: true
-            port: 22000
-            protocol: TCP
+
     ingress:
       main:
         enabled: true
@@ -86,6 +72,31 @@ spec:
         tls:
           - hosts:
               - *host
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8384
+      discovery:
+        enabled: true
+        controller: main
+        type: LoadBalancer
+        ports:
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+      listen:
+        enabled: true
+        controller: main
+        type: LoadBalancer
+        ports:
+          listen:
+            enabled: true
+            port: 22000
+            protocol: TCP
+
     persistence:
       config:
         enabled: true
