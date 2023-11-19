@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: &app syncthinig
+  name: &app syncthing
   namespace: default
   labels:
     app.kubernetes.io/instance: *app
