@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app syncthing
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: syncthing/syncthing
+              tag: 1.26.1
+            resources:
+              requests:
+                cpu: 15m
+                memory: 249Mi
+              limits:
+                memory: 265Mi
+            env:
+              PUID: "1000"
+              PGID: "1000"
+    service:
+      main:
+        ports:
+          http:
+            port: 8384
+      discovery:
+        enabled: true
+        controller: main
+        type: LoadBalancer
+        ports:
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+      listen:
+        enabled: true
+        controller: main
+        type: LoadBalancer
+        ports:
+          listen:
+            enabled: true
+            port: 22000
+            protocol: TCP
+    ingress:
+      main:
+        enabled: true
+        primary: true
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        #   nginx.ingress.kubernetes.io/auth-method: GET
+        #   nginx.ingress.kubernetes.io/auth-url: http://authelia.authentication-system.svc.cluster.local:9091/api/verify
+        #   nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_DOMAIN_0}?rm=$request_method
+        #   nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+        #   nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+        hosts:
+          - host: &host sync.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /var/syncthing

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &app syncthinig
+  namespace: default
+  labels:
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: *app
+    snapshot.home.arpa/enabled: "true"
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ceph-fs
+  resources:
+    requests:
+      storage: 64Gi

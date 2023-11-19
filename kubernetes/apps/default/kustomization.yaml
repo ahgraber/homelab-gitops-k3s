@@ -20,3 +20,4 @@ resources:
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
   - ./picoshare/ks.yaml
+  - ./syncthing/ks.yaml
