@@ -208,7 +208,7 @@ spec:
                 cpu: 150m
                 memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 3Gi
         storageClass:
           enabled: true
           isDefault: false
