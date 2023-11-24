@@ -50,7 +50,7 @@ tasks:
     cmd: pre-commit run --all-files
 
   sops:
-    desc: Substitute and encrypt sops secret, given final filepath
+    desc: Substitute and encrypt sops secret, given tmpl
     cmds:
       - |
         unset noclobber
