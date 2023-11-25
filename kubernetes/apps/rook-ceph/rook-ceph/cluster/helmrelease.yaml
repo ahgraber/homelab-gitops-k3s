@@ -206,9 +206,9 @@ spec:
             resources:
               requests:
                 cpu: 150m
-                memory: 1Gi
+                memory: 4Gi
               limits:
-                memory: 3Gi
+                memory: 4Gi
         storageClass:
           enabled: true
           isDefault: false
