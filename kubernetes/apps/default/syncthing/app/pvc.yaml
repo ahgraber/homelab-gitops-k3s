@@ -10,7 +10,7 @@ metadata:
     snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: ceph-block # ceph-fs
   resources:
     requests:
