@@ -21,6 +21,6 @@ spec:
     # moverSecurityContext:
     #   runAsUser: 568
     #   runAsGroup: 568
-    storageClassName: ceph-fs # same as source
+    storageClassName: ceph-block # same as source
     copyMethod: Snapshot
-    volumeSnapshotClassName: csi-ceph-fs
+    volumeSnapshotClassName: csi-ceph-block
