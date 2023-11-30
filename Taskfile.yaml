@@ -66,9 +66,10 @@ tasks:
       - git remote get-url template >/dev/null 2>&1 || git remote add template git@github.com:onedr0p/flux-cluster-template
       - git fetch --all
       - git cherry-pick --no-commit --allow-empty $(cat {{.shafile}})..template/main
+      # - git cherry-pick --no-commit --allow-empty ffcd319c998f6840461423af64f0f95cc36dca7e..template/main
       - git ls-remote template HEAD | awk '{ print $1}' > {{.shafile}}
     vars:
-      shafile: "{{.ROOT_DIR}}/.tasks/.latest-template.sha"
+      shafile: "{{.ROOT_DIR}}/bootstrap/.latest-template.sha"
     preconditions:
       - { msg: "Git repository not up-to-date", sh: "git diff --exit-code" }
       - { msg: "Git repository not up-to-date", sh: "git diff --cached --exit-code" }
