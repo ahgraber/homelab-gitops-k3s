@@ -5,6 +5,10 @@ metadata:
   name: flux-system-discord-template-notifier
   namespace: flux-system
 spec:
+  targetNamespace: default
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: discord-template-notifier
   path: ./kubernetes/apps/default/discord-template-notifier/app
   prune: true
   sourceRef:

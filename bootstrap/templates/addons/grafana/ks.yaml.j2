@@ -5,6 +5,10 @@ metadata:
   name: monitoring-grafana
   namespace: flux-system
 spec:
+  targetNamespace: monitoring
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: grafana
   path: ./kubernetes/apps/monitoring/grafana/app
   prune: true
   sourceRef:

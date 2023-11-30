@@ -5,6 +5,10 @@ metadata:
   name: networking-nginx-certificates
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: nginx-certificates
   dependsOn:
     - name: cert-manager-issuers
   path: ./kubernetes/apps/networking/nginx/certificates
@@ -23,6 +27,10 @@ metadata:
   name: networking-nginx-external
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: nginx-external
   dependsOn:
     - name: networking-nginx-certificates
   path: ./kubernetes/apps/networking/nginx/external
@@ -41,6 +49,10 @@ metadata:
   name: networking-nginx-internal
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: nginx-internal
   dependsOn:
     - name: networking-nginx-certificates
   path: ./kubernetes/apps/networking/nginx/internal
