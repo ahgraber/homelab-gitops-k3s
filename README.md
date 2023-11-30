@@ -59,7 +59,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 4. Setup a install Ansible with pipx by running the following task command.
 
-    📍 _This commands requires Python 3.8+ to be installed_
+    📍 _This commands requires Python 3.10+ to be installed_
 
     ```sh
     # Platform agnostic
