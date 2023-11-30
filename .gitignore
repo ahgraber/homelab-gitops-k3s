@@ -42,6 +42,9 @@ ansible/.facts_cache/
 ansible/galaxy
 ansible/tmp
 
+# tasks
+bootstrap/.latest-template.sha
+
 # temp / working files & dirs
 *.bak
 *.iso
