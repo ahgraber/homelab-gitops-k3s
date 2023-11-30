@@ -13,16 +13,16 @@ Thumbs.db
 
 # secrets
 kubeconfig
-*kubeconfig*
-*.agekey
-*.key
-*key*
+# *kubeconfig*
+# *.agekey
+# *.key
+*.*key
 *.pem
 *.pgp
 *.pub
 .config.env
 .decrypted~*
-.decrypted~*.yaml
+# .decrypted~*.yaml
 .env
 .envrc
 
@@ -30,7 +30,6 @@ kubeconfig
 .terraform/
 *.tfstate*
 *.lock.hcl
-*.zip
 *.ova
 # main.tf  # allowing because all secrets are in .envrc
 govcvars.sh
@@ -46,6 +45,7 @@ ansible/tmp
 *.bak
 *.iso
 *.log
+*.zip
 **/*archive/
 **/*wip/
 .private/
