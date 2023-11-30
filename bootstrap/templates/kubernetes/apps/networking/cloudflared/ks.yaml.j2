@@ -5,6 +5,10 @@ metadata:
   name: networking-cloudflared
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: cloudflared
   dependsOn:
     - name: networking-external-dns
   path: ./kubernetes/apps/networking/cloudflared/app

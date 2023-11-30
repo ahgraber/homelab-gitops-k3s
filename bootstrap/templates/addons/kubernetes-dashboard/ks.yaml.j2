@@ -5,6 +5,10 @@ metadata:
   name: monitoring-kubernetes-dashboard
   namespace: flux-system
 spec:
+  targetNamespace: monitoring
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: kubernetes-dashboard
   dependsOn:
     - name: cert-manager
     - name: kube-system-metrics-server
