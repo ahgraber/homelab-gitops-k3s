@@ -17,4 +17,5 @@ resources:
   - ./reflector/ks.yaml
   - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml
+  - ./system-upgrade-controller/ks.yaml
   - ./ycl/ks.yaml # yeet-cpu-limits operator
