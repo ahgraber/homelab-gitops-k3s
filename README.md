@@ -8,7 +8,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 - Automated, reproducible, customizable setup through Ansible templates and playbooks
 - Opinionated implementation of Flux with [strong community support](https://github.com/onedr0p/flux-cluster-template/tree/main#-help)
 - Encrypted secrets thanks to [SOPS](https://github.com/getsops/sops) and [Age](https://github.com/FiloSottile/age)
-- Web application firewall thanks to [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+- Web application firewall thanks to [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
 - SSL certificates thanks to [Cloudflare](https://cloudflare.com) and [cert-manager](https://cert-manager.io)
 - HA control plane capability thanks to [kube-vip](https://kube-vip.io)
 - Next-gen networking thanks to [Cilium](https://cilium.io/)
