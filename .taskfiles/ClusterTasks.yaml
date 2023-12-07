@@ -70,12 +70,14 @@ tasks:
 
   bounce-failed-hr:
     desc: Restart all failed helmreleases
+    aliases: ["hr-bounce-failed"]
     cmds:
       - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend hr $0 -n $1'
       - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume hr $0 -n $1'
 
   bounce-failed-ks:
     desc: Restart all failed kustomizations
+    aliases: ["ks-bounce-failed"]
     cmds:
       - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend kustomization $0 -n $1'
       - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume kustomization $0 -n $1'
