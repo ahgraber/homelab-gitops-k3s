@@ -46,9 +46,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
     brew install direnv
     ```
 
-3. Install the most recent version of [pipx](https://pypa.github.io/pipx/)
+3. Install the most recent version of [pipx](https://pipx.pypa.io/stable/)
 
-    📍 _See the pipx [installation docs](https://pypa.github.io/pipx/installation/) for other platforms_
+    📍 _See the pipx [installation docs](https://pipx.pypa.io/stable/#install-pipx) for other platforms_
 
     ```sh
     # Brew
@@ -120,7 +120,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 4. Create Cloudflare Tunnel
 
-    📍 _To expose services to the internet you will need to create a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)._
+    📍 _To expose services to the internet you will need to create a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)._
 
     4a. Authenticate cloudflared to your domain
 
