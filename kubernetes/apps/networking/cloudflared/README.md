@@ -16,13 +16,13 @@ connections to Cloudflare's edge.
 
 ### Prerequisites
 
-Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide#1-download-and-install-cloudflared)
+Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/#1-download-and-install-cloudflared)
 
 ### Setup
 
 [github example docs](https://github.com/cloudflare/argo-tunnel-examples/tree/master/named-tunnel-k8s)
 [documentation](https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel#deploy-cloudflared)
-[config](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/tunnel-guide/local/local-management/ingress/)
+[config](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/local-management/configuration-file/)
 
 1. If you haven't, login to you Cloudflare account to obtain a certificate.
 
