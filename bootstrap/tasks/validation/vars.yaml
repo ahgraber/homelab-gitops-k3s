@@ -22,6 +22,7 @@
     - bootstrap_ipv6_enabled
     - bootstrap_k8s_gateway_addr
     - bootstrap_kube_vip_addr
+    - bootstrap_local_path_provisioner_path
     - bootstrap_node_cidr
     - bootstrap_service_cidr
     - bootstrap_timezone
