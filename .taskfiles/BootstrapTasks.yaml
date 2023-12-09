@@ -15,9 +15,9 @@ tasks:
   deps:
     desc: Install Ansible with pipx
     cmds:
-      - pipx install --include-deps ansible
-      - pipx runpip ansible install -r "{{.ROOT_DIR}}/requirements.txt"
-      - ansible-galaxy install --role-file "{{.ROOT_DIR}}/requirements.yaml" --force
+      - pipx install --force --include-deps ansible
+      - pipx runpip ansible install --force -r "{{.ROOT_DIR}}/requirements.txt"
+      - ansible-galaxy install --force --role-file "{{.ROOT_DIR}}/requirements.yaml"
     preconditions:
       - sh: command -v pipx
         msg: |
