@@ -99,7 +99,7 @@ repos:
     hooks:
       - id: gitleaks
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.23
+    rev: v1.16.24
     hooks:
       - id: typos
         args: [--config, .typos.toml]
