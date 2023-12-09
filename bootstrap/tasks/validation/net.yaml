@@ -154,4 +154,4 @@
   connection: local
   loop: "{{ bootstrap_nodes.controller + bootstrap_nodes.worker | default([]) }}"
   loop_control:
-    label: "{{ item.address }}"
+    label: "{{ current_address }}"
