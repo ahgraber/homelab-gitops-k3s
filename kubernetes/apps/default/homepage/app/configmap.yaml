@@ -16,6 +16,7 @@ data:
     favicon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/kubernetes/apps/default/homepage/app/icons/favicon.png
     theme: dark
     color: neutral
+    useEqualHeights: true
     layout: # key by group name in services.yaml
       Apps & Services:
         style: row
