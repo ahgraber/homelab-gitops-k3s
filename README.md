@@ -35,11 +35,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
     brew install go-task
     ```
 
-2. Install the most recent version of [direnv](https://direnv.net/)
+2. Install the most recent version of [direnv](https://direnv.net/), see the direnv [installation docs](https://direnv.net/docs/installation.html) for other supported platforms.
 
-    📍 _See the direnv [installation docs](https://direnv.net/docs/installation.html) for other platforms_
-
-    📍 _After installing `direnv` be sure to [hook it into your shell](https://direnv.net/docs/hook.html) and after that is done run `direnv allow` while in your repos directory._
+    📍 _After installing `direnv` be sure to **[hook it into your shell](https://direnv.net/docs/hook.html)** and after that is done run `direnv allow` while in your repos' directory._
 
     ```sh
     # Brew
@@ -68,14 +66,16 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 5. Install the required tools: [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared), [kubectl](https://kubernetes.io/docs/tasks/tools/), [sops](https://github.com/getsops/sops)
 
-   ```sh
-   # Brew
-   task brew:deps
-   ```
+   📍 _Not using brew? Make sure to look up how to install the latest version of each of these CLI tools yourself._
+
+    ```sh
+    # Brew
+    task brew:deps
+    ```
 
 ### 🔧 Do bootstrap configuration
 
-📍 _Both `bootstrap/vars/config.yaml` and `bootstrap/vars/addons.yaml` files contain necessary information that is needed by bootstrap process._
+📍 _Both `bootstrap/vars/config.yaml` and `bootstrap/vars/addons.yaml` files contain necessary information that is **vital** to the bootstrap process._
 
 1. Generate the `bootstrap/vars/config.yaml` and `bootstrap/vars/addons.yaml` configuration files.
 
@@ -284,18 +284,18 @@ The `external-dns` application created in the `networking` namespace will handle
 
 `k8s_gateway` will provide DNS resolution to external Kubernetes resources (i.e. points of entry to the cluster) from any device that uses your home DNS server. For this to work, your home DNS server must be configured to forward DNS queries for `${bootstrap_cloudflare_domain}` to `${bootstrap_k8s_gateway_addr}` instead of the upstream DNS server(s) it normally uses. This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
 
-📍 _Below is how to configure a Pi-hole for split DNS. Other platforms should be similar._
-
-1. Apply this file on the server
-
-   ```sh
-   # /etc/dnsmasq.d/99-k8s-gateway-forward.conf
-   server=/${bootstrap_cloudflare_domain}/${bootstrap_k8s_gateway_addr}
-   ```
-
-2. Restart dnsmasq on the server.
-
-3. Query an internal-only subdomain from your workstation (any `internal` class ingresses): `dig @${home-dns-server-ip} hubble.${bootstrap_cloudflare_domain}`. It should resolve to `${bootstrap_internal_ingress_addr}`.
+> [!TIP]
+> Below is how to configure a Pi-hole for split DNS. Other platforms should be similar.
+>
+> 1. Apply this file on the server
+>
+>    ```sh
+>    # /etc/dnsmasq.d/99-k8s-gateway-forward.conf
+>    server=/${bootstrap_cloudflare_domain}/${bootstrap_k8s_gateway_addr}
+>    ```
+>
+> 2. Restart dnsmasq on the server.
+> 3. Query an internal-only subdomain from your workstation (any `internal` class ingresses): `dig @${home-dns-server-ip} hubble.${bootstrap_cloudflare_domain}`. It should resolve to `${bootstrap_internal_ingress_addr}`.
 
 If you're having trouble with DNS be sure to check out these two GitHub discussions: [Internal DNS](https://github.com/onedr0p/flux-cluster-template/discussions/719) and [Pod DNS resolution broken](https://github.com/onedr0p/flux-cluster-template/discussions/635).
 
