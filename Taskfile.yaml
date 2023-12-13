@@ -73,3 +73,11 @@ tasks:
     preconditions:
       - { msg: "Git repository not up-to-date", sh: "git diff --exit-code" }
       - { msg: "Git repository not up-to-date", sh: "git diff --cached --exit-code" }
+
+  update-template-sha:
+    desc: Force update sha from the upstream flux-cluster-template repository
+    summary: task {{.TASK}}
+    cmds:
+      - git ls-remote template HEAD | awk '{ print $1}' > {{.shafile}}
+    vars:
+      shafile: "{{.ROOT_DIR}}/bootstrap/.latest-template.sha"
