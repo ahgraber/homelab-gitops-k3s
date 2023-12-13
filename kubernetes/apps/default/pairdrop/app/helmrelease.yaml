@@ -28,7 +28,7 @@ spec:
   values:
     image:
       repository: lscr.io/linuxserver/pairdrop
-      tag: 1.10.0@sha256:b9c4dd78f76ef081278f40947087212febd2409cc5a0d4d2cc2e17860dd0227c
+      tag: 1.10.1@sha256:783df3a2f7273040fec4b2ad48665ca5bb8b541da1ca7bf75f954c7ebc2317ae
 
     env:
       TZ: ${TIMEZONE}
