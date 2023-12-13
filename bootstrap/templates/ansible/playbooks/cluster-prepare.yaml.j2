@@ -93,17 +93,6 @@
               ff02::2 ip6-allrouters
             dest: /etc/hosts
             mode: preserve
-        # https://github.com/cilium/cilium/issues/18706
-        - name: Network Configuration | Cilium (1)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutingPolicyRules
-            line: ManageForeignRoutingPolicyRules=no
-        - name: Network Configuration | Cilium (2)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutes
-            line: ManageForeignRoutes=no
         # https://github.com/onedr0p/flux-cluster-template/discussions/635
         - name: Network Configuration | Remove immutable flag from /etc/resolv.conf
           ansible.builtin.file:
@@ -144,17 +133,18 @@
             fstype: swap
             state: absent
           loop: ["none", "swap"]
-        - name: System Configuration | Kernel modules (1)
-          community.general.modprobe:
-            name: "{% raw %}{{ item }}{% endraw %}"
-            state: present
-          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
-        - name: System Configuration | Kernel modules (2)
+        - name: System Configuration | Create Kernel modules
           ansible.builtin.copy:
             dest: "/etc/modules-load.d/{% raw %}{{ item }}{% endraw %}.conf"
             mode: "0644"
             content: "{% raw %}{{ item }}{% endraw %}"
           loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
+          register: modules_status
+        - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
+          when: modules_status.changed
+          ansible.builtin.systemd:
+            name: systemd-modules-load
+            state: restarted
         - name: System Configuration | Sysctl
           ansible.posix.sysctl:
             name: "{% raw %}{{ item.key }}{% endraw %}"
