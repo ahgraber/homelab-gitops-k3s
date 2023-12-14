@@ -1,6 +1,6 @@
 ---
 # https://github.com/fluxcd-community/flux2-schemas/blob/main/provider-notification-v1beta2.json
-apiVersion: notification.toolkit.fluxcd.io/v1beta2
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
   name: alert-manager
