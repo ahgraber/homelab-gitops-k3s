@@ -24,7 +24,13 @@
   "dependencyDashboardTitle": "🤖 Renovate Dashboard",
   "suppressNotifications": ["prIgnoreNotification"],
   "rebaseWhen": "conflicted",
+  "assigneesFromCodeOwners": true,
+  "reviewersFromCodeOwners": true,
   "commitBodyTable": true,
+  "ignorePaths": [
+    "**/*.sops.*",
+    "**/.archive/**"
+  ],
   "flux": {
     "fileMatch": [
       "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
