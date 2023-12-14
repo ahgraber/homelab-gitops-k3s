@@ -9,7 +9,7 @@ spec:
   type: alertmanager
   address: http://kps-alertmanager.monitoring:9093/api/v2/alerts/
 ---
-apiVersion: notification.toolkit.fluxcd.io/v1beta2
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
   name: alert-manager
