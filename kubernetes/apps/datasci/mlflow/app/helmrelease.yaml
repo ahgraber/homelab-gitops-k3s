@@ -39,7 +39,7 @@ spec:
 
     initContainers:
       db-upgrade:
-        image: ghcr.io/ninerealmlabs/mlflow-server:2.9.1
+        image: ghcr.io/ninerealmlabs/mlflow-server:2.9.2
         env:
           MLFLOW_BACKEND_STORE_URI:
             valueFrom:
@@ -52,7 +52,7 @@ spec:
     image:
       # renovate: datasource=docker image=ghcr.io/...
       repository: ghcr.io/ninerealmlabs/mlflow-server
-      tag: "2.9.1"
+      tag: "2.9.2"
     # -- Override the command(s) for the default container
     command: ["/bin/bash", "-c", "mlflow server"]
     # -- Override the args for the default container
