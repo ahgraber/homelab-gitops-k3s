@@ -15,7 +15,6 @@ spec:
         kind: HelmRepository
         name: crowdsec
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
