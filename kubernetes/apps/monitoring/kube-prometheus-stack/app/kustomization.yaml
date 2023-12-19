@@ -8,9 +8,16 @@ resources:
   - ./secret-additionalScrapeConfigs.sops.yaml
 
 configMapGenerator:
-  - name: alertmanager-config-tpl
+  - name: alertmanager-config
     files:
       - alertmanager.yaml=./alertmanager.yaml
+  - name: kube-state-metrics-config
+    files:
+      - kube-state-metrics.yaml=./kube-state-metrics.yaml
+    options:
+      labels:
+        app.kubernetes.io/part-of: flux
+        app.kubernetes.io/component: monitoring
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
