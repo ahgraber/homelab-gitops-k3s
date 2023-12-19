@@ -29,6 +29,10 @@ spec:
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  valuesFrom:
+    - kind: ConfigMap
+      name: kube-state-metrics-config
+      valuesKey: kube-state-metrics-config.yaml
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     fullnameOverride: kps
@@ -128,22 +132,7 @@ spec:
       enabled: false
     kubeStateMetrics:
       enabled: true
-    kube-state-metrics:
-      fullnameOverride: kube-state-metrics
-      releaseLabel: true # enable servicemonitor scraping with kube-prometheus-stack out of the box
-      metricLabelsAllowlist:
-        - "deployments=[*]"
-        - "persistentvolumeclaims=[*]"
-        - "pods=[*]"
-      prometheus:
-        monitor:
-          enabled: true
-          relabelings:
-            - action: replace
-              sourceLabels: ["__meta_kubernetes_pod_node_name"]
-              regex: ^(.*)$
-              replacement: $1
-              targetLabel: kubernetes_node
+      # config specified in configmap
 
     nodeExporter:
       enabled: false
@@ -228,62 +217,3 @@ spec:
                 namespace: not-used
                 annotations:
                   grafana_folder: Kubernetes
-  # ### exclude ceph-fs storageclass from inode calculations
-  # ### CephFS doesn't have the same notion of inodes as other fs do because it expands them dynamically.
-  # ### It reports a non-valid value to the check (0), causing it to trigger that alert
-  # ### https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/templates/prometheus/rules-1.14 # yamllint disable-line rule:line-length
-  #   - kustomize:
-  #       patches:
-  #         - target:
-  #             group: monitoring.coreos.com
-  #             version: v1
-  #             kind: PrometheusRule
-  #             name: kps-kubernetes-storage
-  #             namespace: monitoring
-  #           patch: |
-  #             # KubePersistentVolumeInodesFillingUp | critical
-  #             - op: replace
-  #               path: /spec/groups/0/rules/2/expr
-  #               value: |
-  #                 (
-  #                   kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}
-  #                   /
-  #                   kubelet_volume_stats_inodes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
-  #                 ) < 0.03
-  #                 and
-  #                 kubelet_volume_stats_inodes_used{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"}== 1
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}== 1
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_info{storageclass=~"ceph.*"} == 1
-
-  #             # KubePersistentVolumeInodesFillingUp | warning
-  #             - op: replace
-  #               path: /spec/groups/0/rules/3/expr
-  #               value: |
-  #                 (
-  #                   kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}
-  #                   /
-  #                   kubelet_volume_stats_inodes{job="kubelet", namespace=~".*", metrics_path="/metrics"}
-  #                 ) < 0.15
-  #                 and
-  #                 kubelet_volume_stats_inodes_used{job="kubelet", namespace=~".*", metrics_path="/metrics"} > 0
-  #                 and
-  #                 predict_linear(
-  #                   kubelet_volume_stats_inodes_free{job="kubelet", namespace=~".*", metrics_path="/metrics"}[6h],
-  #                   4 * 24 * 3600
-  #                 ) < 0
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"}== 1
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_labels{label_excluded_from_alerts="true"}== 1
-
-  #                 unless on(namespace, persistentvolumeclaim)
-  #                 kube_persistentvolumeclaim_info{storageclass=~"ceph.*"} == 1
