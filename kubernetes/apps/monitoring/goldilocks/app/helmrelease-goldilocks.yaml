@@ -15,7 +15,6 @@ spec:
         kind: HelmRepository
         name: fairwinds
         namespace: flux-system
-  maxHistory: 3
   dependsOn:
     - name: vpa
       namespace: monitoring
