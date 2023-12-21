@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: prefect-agent
-      version: 2023.12.14
+      version: 2023.12.20
       sourceRef:
         kind: HelmRepository
         name: prefect
