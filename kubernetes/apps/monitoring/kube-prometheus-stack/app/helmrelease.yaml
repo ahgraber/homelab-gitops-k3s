@@ -32,7 +32,7 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: kube-state-metrics-config
-      valuesKey: kube-state-metrics-config.yaml
+      valuesKey: kube-state-metrics.yaml
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     fullnameOverride: kps
