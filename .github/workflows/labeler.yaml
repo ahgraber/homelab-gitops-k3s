@@ -1,16 +1,18 @@
 ---
-name: "Meta Sync labels"
+name: "Labeler"
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
-  push:
+  pull_request:
     branches: ["main"]
-    paths: [".github/labels.yaml"]
 
 jobs:
-  labels:
-    name: Sync Labels
+  labeler:
+    name: Labeler
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Generate Token
         uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
@@ -19,12 +21,8 @@ jobs:
           app_id: "${{ secrets.BOT_APP_ID }}"
           private_key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Sync Labels
-        uses: EndBug/label-sync@v2
+      - name: Labeler
+        uses: actions/labeler@v5
         with:
-          config-file: .github/labels.yaml
-          token: "${{ steps.generate-token.outputs.token }}"
-          delete-other-labels: true
+          configuration-path: .github/labeler.yaml
+          repo-token: "${{ steps.generate-token.outputs.token }}"
