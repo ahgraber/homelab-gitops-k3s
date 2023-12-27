@@ -84,7 +84,7 @@ jobs:
           path: pull
 
       - name: Diff Resources
-        uses: allenporter/flux-local/action/diff@4.2.1
+        uses: allenporter/flux-local/action/diff@c4c5ce19ed7aa792b4ead75776597a82242866c6 # 4.2.1
         # uses: docker://ghcr.io/allenporter/flux-local:main
         with:
           args: >-
@@ -109,7 +109,7 @@ jobs:
 
       - if: ${{ steps.diff.outputs.diff != '' }}
         name: Add comment
-        uses: mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@7c0890544fb33b0bdd2e59467fbacb62e028a096 # v2
         with:
           repo-token: "${{ steps.app-token.outputs.token }}"
           message-id: "${{ github.event.pull_request.number }}/${{ matrix.paths }}/${{ matrix.resources }}"
