@@ -5,7 +5,7 @@ name: "Flux Diff"
 on: # yamllint disable-line rule:truthy
   pull_request:
     branches: ["main"]
-    paths: ["kubernetes/**"]
+    paths: ["kubernetes/**.yaml"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -66,52 +66,15 @@ jobs:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
-      # - name: Setup System Tools
-      #   shell: bash
-      #   run: sudo apt-get -qq update && sudo apt-get -qq install --no-install-recommends -y curl git
-
-      # - name: Checkout Live Branch
-      #   uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      #   with:
-      #     token: "${{ steps.app-token.outputs.token }}"
-      #     ref: main
-      #     path: default
-
-      # - name: Checkout PR branch
-      #   uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-      #   with:
-      #     token: "${{ steps.app-token.outputs.token }}"
-      #     path: pull
-
-      # - name: Diff Resources
-      #   uses: allenporter/flux-local/action/diff@4.2.1
-      #   # uses: docker://ghcr.io/allenporter/flux-local:main
-      #   with:
-      #     args: >-
-      #       --log-level DEBUG
-      #       diff ${{ matrix.resources }}
-      #       --unified 6
-      #       --path-orig /github/workspace/default/${{ matrix.paths }}
-      #       --path /github/workspace/pull/${{ matrix.paths }}
-      #       --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart"
-      #       --limit-bytes 10000
-      #       --all-namespaces
-      #       --sources "homelab-gitops-k3s"
-      #       --output-file diff.patch
-
-      # - name: Generate Diff
-      #   id: diff
-      #   run: |
-      #     cat diff.patch
-      #     echo "diff<<EOF" >> $GITHUB_OUTPUT
-      #     cat diff.patch >> $GITHUB_OUTPUT
-      #     echo "EOF" >> $GITHUB_OUTPUT
+      - name: Setup Flux CLI
+        uses: fluxcd/flux2/action@v2.2.2
 
       - name: Diff Resources
         uses: allenporter/flux-local/action/diff@4.2.1
         id: diff
         with:
-          sources: home-kubernetes
+          live-branch: main
+          # sources: homelab-gitops-k3s # home-kubernetes
           path: "${{ matrix.path }}"
           resource: "${{ matrix.resource }}"
 
