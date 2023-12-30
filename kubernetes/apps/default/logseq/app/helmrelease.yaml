@@ -39,32 +39,6 @@ spec:
               tag: latest
             env:
               TZ: "${TIMEZONE}"
-              DB_ENGINE: postgres
-              DB_DATABASE:
-                valueFrom:
-                  secretKeyRef:
-                    name: &db_secret database-APPNAME
-                    key: DATABASE_NAME
-              DB_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: LOGIN
-              DB_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: PASSWORD
-              DB_HOST:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: HOST
-              DB_PORT:
-                value: 5432
-            envFrom:
-              - secretRef:
-                  name: *app
             resources:
               requests:
                 cpu: 25m
