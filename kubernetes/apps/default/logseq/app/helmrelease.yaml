@@ -50,9 +50,10 @@ spec:
       main:
         ports:
           http:
-            port: 3001
+            port: &port 80
     ingress:
       main:
+        enabled: true
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
