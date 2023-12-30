@@ -17,4 +17,4 @@ spec:
   #   - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
+      storage: 128Mi # 1Gi
