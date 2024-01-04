@@ -37,7 +37,7 @@ spec:
 
     image:
       repository: ghcr.io/thomiceli/opengist
-      tag: 1.5.3
+      tag: 1.6.0
     command: # double "$$" escape flux substitutions
       - "./opengist"
     args:
