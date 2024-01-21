@@ -109,10 +109,10 @@ spec:
       limits:
         memory: 128Mi
 
-    lifecycle:
-      postStart:
-        exec:
-          command:
-            - /bin/bash
-            - -c
-            - /opt/scrutiny/bin/scrutiny-collector-metrics run --config /opt/scrutiny/config/collector.yaml
+    # lifecycle:
+    #   postStart:
+    #     exec:
+    #       command:
+    #         - /bin/bash
+    #         - -c
+    #         - /opt/scrutiny/bin/scrutiny-collector-metrics run --config /opt/scrutiny/config/collector.yaml
