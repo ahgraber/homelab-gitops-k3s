@@ -29,33 +29,33 @@ spec:
     controller:
       type: daemonset
 
-    initContainers:
-      init-config:
-        image: ghcr.io/onedr0p/alpine:3.19.0
-        env:
-          - name: COLLECTOR_API_ENDPOINT
-            value: http://scrutiny.monitoring.svc.cluster.local:8080
-          - name: NODE_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: spec.nodeName
-        command: # double "$$" escape flux substitutions
-          - /bin/bash
-          - -c
-          - |
-            mkdir -p /opt/scrutiny/config &&
-            cat << EOF > /opt/scrutiny/config/collector.yaml
-            ---
-            # config piped from lifecycle.postStart script
-            version: 1
-            host:
-              id: "$${NODE_NAME}"
-            api:
-              endpoint: "$${COLLECTOR_API_ENDPOINT}"
-            EOF
-        volumeMounts:
-          - name: config
-            mountPath: /opt/scrutiny/config
+    # initContainers:
+    #   init-config:
+    #     image: ghcr.io/onedr0p/alpine:3.19.0
+    #     env:
+    #       - name: COLLECTOR_API_ENDPOINT
+    #         value: http://scrutiny.monitoring.svc.cluster.local:8080
+    #       - name: NODE_NAME
+    #         valueFrom:
+    #           fieldRef:
+    #             fieldPath: spec.nodeName
+    #     command: # double "$$" escape flux substitutions
+    #       - /bin/bash
+    #       - -c
+    #       - |
+    #         mkdir -p /opt/scrutiny/config &&
+    #         cat << EOF > /opt/scrutiny/config/collector.yaml
+    #         ---
+    #         # config piped from lifecycle.postStart script
+    #         version: 1
+    #         host:
+    #           id: "$${NODE_NAME}"
+    #         api:
+    #           endpoint: "$${COLLECTOR_API_ENDPOINT}"
+    #         EOF
+    #     volumeMounts:
+    #       - name: config
+    #         mountPath: /opt/scrutiny/config
 
     image:
       repository: ghcr.io/analogj/scrutiny
@@ -70,10 +70,10 @@ spec:
     env:
       - name: COLLECTOR_API_ENDPOINT
         value: http://scrutiny.monitoring.svc.cluster.local:8080
-      # - name: NODE_NAME
-      #   valueFrom:
-      #     fieldRef:
-      #       fieldPath: spec.nodeName
+      - name: COLLECTOR_HOST_ID
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
 
     service:
       main:
