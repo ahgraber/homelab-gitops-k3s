@@ -32,7 +32,7 @@ spec:
 
     image:
       repository: ghcr.io/gethomepage/homepage
-      tag: v0.8.4
+      tag: v0.8.7
       pullPolicy: IfNotPresent
 
     serviceAccount:
