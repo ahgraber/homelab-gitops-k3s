@@ -48,6 +48,9 @@ spec:
         operator: Exists
 
     csi:
+      enableLiveness: true
+      serviceMonitor:
+        enabled: true
       # enableRbdDriver: true
       # enableCephfsDriver: true
       # enableGrpcMetrics: false

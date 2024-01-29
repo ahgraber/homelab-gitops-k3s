@@ -69,6 +69,14 @@ Run `task ceph:teardown`
 
 ## Troubleshooting
 
+### Ceph reports no orchestrator configured
+
+> run the following commands against the ceph-toolbox pod
+
+```sh
+ceph mgr module enable rook && ceph orch set backend rook && ceph orch status
+```
+
 ### Dashboard not accessible thru ingress
 
 > run the following commands against the ceph-toolbox pod
