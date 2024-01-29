@@ -25,6 +25,7 @@ Scrutiny is deployed as 3 distinct components:
 1. Scrutiny needs Smartmontools version 7+. Check on the TrueNAS terminal that version 7 is installed.
 
    ```sh
+   sudo su  # must be run as root!
    smartctl -V
    ```
 
@@ -56,7 +57,7 @@ Scrutiny is deployed as 3 distinct components:
    host:
      id: "truenas"
    api:
-     endpoint: "scrutiny.${SECRET_DOMAIN}"
+     endpoint: "https://scrutiny.${SECRET_DOMAIN}"
    ```
 
 5. Create a TrueNAS cron job (System Settings → Advanced → Cron Jobs):
