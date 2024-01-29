@@ -71,7 +71,7 @@ spec:
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
-
+      osd_class_update_on_start = false
     cephClusterSpec:
       crashCollector:
         disable: false
@@ -86,6 +86,15 @@ spec:
         ssl: false
       network:
         provider: host
+      placement:
+        mgr: &placement
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-role.kubernetes.io/control-plane
+                      operator: Exists
+        mon: *placement
       storage:
         useAllNodes: false
         useAllDevices: false

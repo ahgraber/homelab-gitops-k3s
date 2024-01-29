@@ -12,7 +12,7 @@ kube-state-metrics:
       relabelings:
         - action: replace
           sourceLabels: ["__meta_kubernetes_pod_node_name"]
-          regex: ^(.*)$
+          regex: (.*)
           replacement: $1
           targetLabel: kubernetes_node
   rbac:
