@@ -31,7 +31,7 @@ spec:
     image:
       # https://github.com/mtlynch/picoshare
       repository: docker.io/mtlynch/picoshare
-      tag: 1.4.1
+      tag: 1.4.2
     env:
       TZ: "${TIMEZONE}"
       PORT: 3001
