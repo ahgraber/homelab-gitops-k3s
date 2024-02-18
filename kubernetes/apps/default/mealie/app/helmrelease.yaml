@@ -36,46 +36,47 @@ spec:
           reloader.stakater.com/search: "true"
 
         containers:
-          image:
-            repository: ghcr.io/mealie-recipes/mealie
-            tag: v1.2.0
-          env:
-            TZ: ${TIMEZONE}
-            ALLOW_SIGNUP: "false"
-            BASE_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
-            # database settings
-            DB_ENGINE: postgres
-            POSTGRES_DB:
-              valueFrom:
-                secretKeyRef:
-                  name: &db_secret database-mealie
-                  key: DATABASE_NAME
-            POSTGRES_USER:
-              valueFrom:
-                secretKeyRef:
-                  name: *db_secret
-                  key: LOGIN
-            POSTGRES_PASSWORD:
-              valueFrom:
-                secretKeyRef:
-                  name: *db_secret
-                  key: PASSWORD
-            POSTGRES_SERVER:
-              valueFrom:
-                secretKeyRef:
-                  name: *db_secret
-                  key: HOST
-            POSTGRES_PORT: 5432
-          envFrom:
-            - secretRef:
-                name: *app
+          main:
+            image:
+              repository: ghcr.io/mealie-recipes/mealie
+              tag: v1.2.0
+            env:
+              TZ: ${TIMEZONE}
+              ALLOW_SIGNUP: "false"
+              BASE_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+              # database settings
+              DB_ENGINE: postgres
+              POSTGRES_DB:
+                valueFrom:
+                  secretKeyRef:
+                    name: &db_secret database-mealie
+                    key: DATABASE_NAME
+              POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: LOGIN
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: PASSWORD
+              POSTGRES_SERVER:
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: HOST
+              POSTGRES_PORT: 5432
+            envFrom:
+              - secretRef:
+                  name: *app
 
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128M
-            limits:
-              memory: 512M
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128M
+              limits:
+                memory: 512M
 
     service:
       main:
