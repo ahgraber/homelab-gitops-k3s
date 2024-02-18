@@ -21,7 +21,6 @@
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/labels.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/packageRules.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/semanticCommits.json5",
-    "helpers:pinGitHubActionDigests"
   ],
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
