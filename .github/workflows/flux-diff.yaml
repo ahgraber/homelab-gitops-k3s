@@ -25,20 +25,20 @@ jobs:
       fail-fast: false
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@f4c6bf6752984b3a29fcc135a5e70eb792c40c6b # v1
+        uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4
         with:
           token: "${{ steps.app-token.outputs.token }}"
           path: pull
 
       - name: Checkout Default Branch
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4
         with:
           token: "${{ steps.app-token.outputs.token }}"
           ref: "${{ github.event.repository.default_branch }}"
@@ -69,7 +69,7 @@ jobs:
 
       - if: ${{ steps.diff.outputs.diff != '' }}
         name: Add comment
-        uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2
+        uses: mshick/add-pr-comment@v2
         with:
           repo-token: "${{ steps.app-token.outputs.token }}"
           message-id: "${{ github.event.pull_request.number }}/${{ matrix.paths }}/${{ matrix.resources }}"
