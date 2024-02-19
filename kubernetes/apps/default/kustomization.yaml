@@ -16,7 +16,6 @@ resources:
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
   # - ./logseq/ks.yaml # WIP
-  - ./lubelog/ks.yaml
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
   - ./miniflux/ks.yaml
