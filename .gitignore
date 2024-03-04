@@ -65,4 +65,5 @@ report/
 
 # retain files
 !**.gitkeep
+!**.gitignore
 !*.sops.*

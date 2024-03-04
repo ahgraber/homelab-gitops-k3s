@@ -3,119 +3,46 @@
   "extends": [
     "config:recommended",
     "docker:enableMajor",
-    ":disableRateLimiting",
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":enablePreCommit",
     ":automergeDigest",
     ":automergeBranch",
+    ":disableRateLimiting",
+    ":dependencyDashboard",
+    ":enablePreCommit",
+    ":semanticCommits",
+    ":skipStatusChecks",
+    ":timezone(America/New_York)",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/allowedVersions.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/autoMerge.json5",
+    "github>ahgraber/homelab-gitops-k3s//.github/renovate/clusters.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/commitMessage.json5",
+    "github>ahgraber/homelab-gitops-k3s//.github/renovate/customManagers.json5",
+    "github>ahgraber/homelab-gitops-k3s//.github/renovate/grafanaDashboards.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/groups.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/labels.json5",
+    "github>ahgraber/homelab-gitops-k3s//.github/renovate/packageRules.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/semanticCommits.json5",
-    "helpers:pinGitHubActionDigests"
   ],
-  "timezone": "America/New_York",
-  "platform": "github",
-  "onboarding": false,
-  "requireConfig": "optional",
-  "dependencyDashboardTitle": "🤖 Renovate Dashboard",
-  "suppressNotifications": ["prIgnoreNotification"],
-  "rebaseWhen": "conflicted",
-  "assigneesFromCodeOwners": true,
-  "reviewersFromCodeOwners": true,
-  "commitBodyTable": true,
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
   "ignorePaths": [
     "**/*.sops.*",
-    "**/.archive/**"
+    "**/.archive/**",
+    "**/resources/**"
   ],
   "flux": {
     "fileMatch": [
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
   },
   "helm-values": {
     "fileMatch": [
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
   },
   "kubernetes": {
     "fileMatch": [
       "(^|/)\\.taskfiles/.+\\.ya?ml(\\.j2)?$",
-      "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
+      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
     ]
-  },
-  "kustomize": {
-    "fileMatch": [
-      "(^|/)kustomization\\.ya?ml(\\.j2)?$"
-    ]
-  },
-  "regexManagers": [
-    {
-      "description": "Process custom dependencies",
-      "fileMatch": [
-        "(^|/)addons/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)ansible/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)bootstrap/.+\\.ya?ml(\\.j2)?(\\.j2)?$",
-        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?(\\.j2)?$"
-      ],
-      "matchStrings": [
-        // Example: `k3s_release_version: "v1.27.3+k3s1"`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?\"(?<currentValue>.*)\"\n",
-        // Example: `- https://github.com/rancher/system-upgrade-controller/releases/download/v0.11.0/crd.yaml`
-        //          `- https://github.com/argoproj/argo-cd/raw/v2.7.10/manifests/install.yaml`
-        //          `- https://github.com/argoproj/argo-cd/raw/v2.7.10/manifests/ha/install.yaml`
-        //          `- https://raw.githubusercontent.com/keycloak/keycloak-k8s-resources/21.1.1/kubernetes/kubernetes.yml`
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?-\\s(.*?)\/(?<currentValue>(v|\\d)[^/]+)\/\\S+\n",
-        // Example: apiVersion=helm.cattle.io/v1 kind=HelmChart
-        "datasource=(?<datasource>\\S+)\n.*?repo: (?<registryUrl>\\S+)\n.*?chart: (?<depName>\\S+)\n.*?version: (?<currentValue>\\S+)\n"
-      ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-    },
-    {
-      "description": "Process imageName values",
-      "fileMatch": ["kubernetes/.+\\.ya?ml$"],
-      "matchStrings": ["imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "redhat"
-    },
-    {
-      "description": "Process CloudnativePG Postgresql version",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-      ],
-      "matchStrings": [
-        "imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"
-      ],
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "redhat"
-    }
-  ],
-  "packageRules": [
-    {
-      "description": "YYYY.MM.DD versioning for helm charts",
-      "matchDatasources": ["helm"],
-      "matchPackagePatterns": ["prefect"],
-      // "versioning": "loose"
-      "versioning": "regex:^(?<major>\\d{4})\\.((?<minor>\\d{2}))\\.((?<patch>\\d{2}))$"
-    },
-    {
-      "description": "Loose versioning for non-semver docker images",
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["changedetection"],
-      "versioning": "loose"
-    }
-  ]
+  }
 }

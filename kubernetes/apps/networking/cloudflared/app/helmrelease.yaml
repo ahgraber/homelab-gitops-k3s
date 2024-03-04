@@ -33,12 +33,13 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: docker.io/cloudflare/cloudflared
-      tag: 2024.1.5
+      tag: 2024.2.1
     env:
       TZ: "${TIMEZONE}"
       NO_AUTOUPDATE: "true"
       TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
       TUNNEL_METRICS: 0.0.0.0:8080
+      TUNNEL_MANAGEMENT_DIAGNOSTICS: false
       TUNNEL_TRANSPORT_PROTOCOL: quic
       TUNNEL_POST_QUANTUM: true
       TUNNEL_ID:
