@@ -36,7 +36,7 @@ spec:
     image:
       # https://hub.docker.com/r/sissbruecker/linkding
       repository: docker.io/sissbruecker/linkding
-      tag: 1.24.2
+      tag: 1.25.0
 
     # https://github.com/sissbruecker/linkding/blob/master/docs/Options.md
     env:
