@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: prefect-worker
-      version: 2023.12.20
+      version: 2024.3.21224814
       sourceRef:
         kind: HelmRepository
         name: prefect
@@ -45,18 +45,31 @@ spec:
         prefetchSeconds: 10
         # -- connect using HTTP/2 if the server supports it (experimental)
         http2: true
+        ## You can set the worker type here.
+        ## The default image includes only the type "kubernetes".
+        ## Custom workers must be properly registered with the prefect cli.
+        ## See the guide here: https://docs.prefect.io/2.11.3/guides/deployment/developing-a-new-worker-type/
+        # -- specify the worker type
+        type: kubernetes
+        ## one of 'always', 'if-not-present', 'never', 'prompt'
+        # --  install policy to use workers from Prefect integration packages.
+        installPolicy: prompt
+        # -- the name to give to the started worker. If not provided, a unique name will be generated.
+        name: null
+        # -- maximum number of flow runs to start simultaneously (default: unlimited)
+        limit: null
 
       ## connection settings
       # -- one of 'cloud' or 'server'
       apiConfig: "server"
-      # cloudApiConfig:
+      # selfHostedCloudApiConfig:
       #   accountId: ""
       #   workspaceId: ""
       #   apiKeySecret:
       #     name: prefect-api-key
       #     key: key
       #   cloudUrl: https://api.prefect.cloud/api
-      # selfHostedApiConfig:
+      # selfHostedCloudApiConfig:
       #   apiUrl: "" # (PREFECT_API_URL)
       #   accountId: ""
       #   workspaceId: ""

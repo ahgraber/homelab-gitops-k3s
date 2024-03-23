@@ -14,11 +14,10 @@
       "versioning": "loose"
     },
     {
-      "description": "YYYY.MM.DD versioning for helm charts",
+      "description": "Custom versioning for Prefect",
       "matchDatasources": ["helm"],
-      "matchPackagePatterns": ["prefect"],
-      // "versioning": "loose"
-      "versioning": "regex:^(?<major>\\d{4})\\.((?<minor>\\d{2}))\\.((?<patch>\\d{2}))$"
+      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$",
+      "matchPackagePatterns": ["prefect"]
     },
     {
       "description": ["Custom versioning for miniflux"],
