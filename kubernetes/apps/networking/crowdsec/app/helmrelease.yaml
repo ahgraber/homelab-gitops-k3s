@@ -81,7 +81,7 @@ spec:
         #   annotations:
         #     # metabase only supports http
         #     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        #   ingressClassName: nginx
+        #   ingressClassName: internal
         #   host: "crowdsec.${SECRET_DOMAIN}"
 
       resources:

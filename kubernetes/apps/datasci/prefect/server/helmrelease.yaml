@@ -90,7 +90,7 @@ spec:
     # Ingress configuration
     ingress:
       enabled: true
-      className: nginx
+      className: internal
       host:
         hostname: &host "prefect.${SECRET_DOMAIN}"
         path: /
