@@ -38,7 +38,7 @@ spec:
       ## general configuration of the agent
       config:
         # -- name of prefect work pool the worker will poll
-        workPool: ""
+        workPool: "default"
         # -- how often the worker will query for runs
         queryInterval: 5
         # -- when querying for runs, how many seconds in the future can they be scheduled
