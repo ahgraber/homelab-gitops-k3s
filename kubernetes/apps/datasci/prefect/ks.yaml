@@ -37,37 +37,18 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: datasci-prefect-agent
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: datasci-prefect-server
-    - name: datasci-prefect-db
-  path: ./kubernetes/apps/datasci/prefect/agent
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: home-kubernetes
-  wait: false
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
 # ---
+# # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
-#   name: datasci-prefect-worker
+#   name: datasci-prefect-agent
 #   namespace: flux-system
 # spec:
 #   dependsOn:
 #     - name: datasci-prefect-server
 #     - name: datasci-prefect-db
-#   path: ./kubernetes/apps/datasci/prefect/worker
+#   path: ./kubernetes/apps/datasci/prefect/agent
 #   prune: true
 #   sourceRef:
 #     kind: GitRepository
@@ -76,3 +57,22 @@ spec:
 #   interval: 30m
 #   retryInterval: 1m
 #   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: datasci-prefect-worker
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: datasci-prefect-server
+    - name: datasci-prefect-db
+  path: ./kubernetes/apps/datasci/prefect/worker
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
