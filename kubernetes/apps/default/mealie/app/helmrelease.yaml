@@ -39,7 +39,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mealie-recipes/mealie
-              tag: v1.3.2
+              tag: v1.4.0
             env:
               TZ: ${TIMEZONE}
               ALLOW_SIGNUP: "false"
