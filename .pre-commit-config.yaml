@@ -50,6 +50,7 @@ repos:
       - id: prettier
         args:
           - --ignore-unknown
+          - --no-error-on-unmatched-pattern
           # - "--ignore-path '**/*.md'"
           # - "--ignore-path '**/*.y*ml'"
   - repo: https://github.com/igorshubovych/markdownlint-cli
@@ -72,6 +73,12 @@ repos:
   #   hooks:
   #     - id: hadolint-docker
   #       entry: hadolint/hadolint hadolint
+  - repo: https://github.com/petalmd/dockerfile-pre-commit
+    rev: v1.0
+    hooks:
+      - id: dockerlint
+        stages: [commit]
+        # args: [--ignore, DL3025, --ignore, DL3018]
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.6
     hooks:
