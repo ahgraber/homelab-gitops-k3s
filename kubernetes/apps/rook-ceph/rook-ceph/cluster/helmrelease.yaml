@@ -85,8 +85,11 @@ spec:
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://kps-prometheus.monitoring.svc.cluster.local:9090
+        prometheusEndpointSSLVerify: false
       mgr:
         modules:
+          - name: rook
+            enabled: true
           - name: pg_autoscaler
             enabled: true
       network:

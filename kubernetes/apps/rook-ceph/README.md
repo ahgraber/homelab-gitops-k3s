@@ -72,6 +72,13 @@ Run `task ceph:teardown`
 ### Ceph reports no orchestrator configured
 
 > run the following commands against the ceph-toolbox pod
+>
+> access with
+>
+>  ```sh
+> kubectl -n rook-ceph exec -it \
+>   $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') -- bash
+> ```
 
 ```sh
 ceph mgr module enable rook && ceph orch set backend rook && ceph orch status
@@ -93,9 +100,9 @@ ceph mgr module enable dashboard
 
 ```sh
 ceph
-dashboard set-alertmanager-api-host 'http://kps-alertmanager.monitoring.svc:9093'
+dashboard set-alertmanager-api-host 'http://kps-alertmanager.monitoring.svc.cluster.local:9093'
 dashboard set-alertmanager-api-ssl-verify False
-dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc:9090'
+dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc.cluster.local:9090'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
