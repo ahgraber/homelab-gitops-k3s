@@ -32,7 +32,7 @@ spec:
 
     image:
       repository: ghcr.io/prymitive/karma
-      tag: v0.119
+      tag: v0.120
 
     env:
       - name: ALERTMANAGER_URI
