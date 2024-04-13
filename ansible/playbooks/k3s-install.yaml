@@ -61,6 +61,9 @@
     - name: Cilium
       when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/cilium.yaml
+    # - name: kube-vip
+    #   when: k3s_primary_control_node
+    #   ansible.builtin.include_tasks: tasks/kube-vip.yaml
 
     - name: Cruft
       when: k3s_primary_control_node

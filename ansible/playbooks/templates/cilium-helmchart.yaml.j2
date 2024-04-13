@@ -35,7 +35,7 @@ spec:
       enabled: false
     ipam:
       mode: kubernetes
-    ipv4NativeRoutingCIDR: "10.69.0.0/16"
+    ipv4NativeRoutingCIDR: "{{ cluster_cidr }}"
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444
     kubeProxyReplacement: true
