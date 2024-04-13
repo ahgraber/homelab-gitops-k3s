@@ -1,4 +1,27 @@
-# Rook-ceph
+# Rook-Ceph
+
+- [Rook-Ceph](#rook-ceph)
+  - [Intro](#intro)
+  - [Requirements](#requirements)
+  - [Updating](#updating)
+  - [Teardown and Cleanup](#teardown-and-cleanup)
+  - [Troubleshooting](#troubleshooting)
+    - [Dashboard not accessible thru ingress](#dashboard-not-accessible-thru-ingress)
+    - [Integrate with Prometheus/Alertmanager](#integrate-with-prometheusalertmanager)
+    - [Crash](#crash)
+    - [View OSD pods](#view-osd-pods)
+    - [Too many PGs per OSD](#too-many-pgs-per-osd)
+    - [Ceph Mon Low Space warning](#ceph-mon-low-space-warning)
+      - [Identify what is taking up all of the space](#identify-what-is-taking-up-all-of-the-space)
+      - [Clean up logs](#clean-up-logs)
+      - [Clean up unused images](#clean-up-unused-images)
+  - [Remove orphan rbd images](#remove-orphan-rbd-images)
+
+## Intro
+
+[Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
+[Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
+[eli5](https://koor.tech/blog/2022/kubernetes-deserves-more-than-ephemeral-data-persist-it-with-rook/)
 
 _Rook_ is an open source cloud-native storage orchestrator, providing the platform, framework, and support
 for running ceph on kubernetes.
@@ -13,53 +36,11 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
      or provided via local pvc using `local-path` storageClass or `spec.local.path` natively in pvc definition
    - If provisioning local disks, the disks must be raw/unformatted ([ref](https://rook.io/docs/rook/v1.9/pre-reqs.html))
 
-## Resources
-
-[Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
-[Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
-[eli5](https://koor.tech/blog/2022/kubernetes-deserves-more-than-ephemeral-data-persist-it-with-rook/)
-
 ## Updating
 
 [Health verification](https://rook.github.io/docs/rook/v1.10/Upgrade/health-verification/)
 [Rook upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/rook-upgrade/)
 [Ceph upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/ceph-upgrade/)
-
-### Rook version update
-
-<!-- markdownlint-disable -->
-```sh
-ROOK_CLUSTER_NAMESPACE="rook-ceph"
-
-# watch update occur
-watch --exec kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployments \
-  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
-  -o jsonpath='{range .items[*]}{.metadata.name}{"  \treq/upd/avl: "}{.spec.replicas}{"/"}{.status.updatedReplicas}{"/"}{.status.readyReplicas}{"  \trook-version="}{.metadata.labels.rook-version}{"\n"}{end}'
-
-# check only a single version is left
-kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
-  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
-  -o jsonpath='{range .items[*]}{"rook-version="}{.metadata.labels.rook-version}{"\n"}{end}' | sort | uniq
-```
-<!-- markdownlint-enable -->
-
-### Ceph version update
-
-<!-- markdownlint-disable -->
-```sh
-ROOK_CLUSTER_NAMESPACE="rook-ceph"
-
-# watch update occur
-watch --exec kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployments \
-  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
-  -o jsonpath='{range .items[*]}{.metadata.name}{"  \treq/upd/avl: "}{.spec.replicas}{"/"}{.status.updatedReplicas}{"/"}{.status.readyReplicas}{"  \tceph-version="}{.metadata.labels.ceph-version}{"\n"}{end}'
-
-# check only a single version is left
-kubectl -n "${ROOK_CLUSTER_NAMESPACE}" get deployment \
-  -l "rook_cluster=${ROOK_CLUSTER_NAMESPACE}" \
-  -o jsonpath='{range .items[*]}{"ceph-version="}{.metadata.labels.ceph-version}{"\n"}{end}' | sort | uniq
-```
-<!-- markdownlint-enable -->
 
 ## Teardown and Cleanup
 
@@ -69,7 +50,7 @@ Run `task ceph:teardown`
 
 ## Troubleshooting
 
-### Ceph reports no orchestrator configured
+<!-- ### Ceph reports no orchestrator configured
 
 > run the following commands against the ceph-toolbox pod
 >
@@ -82,11 +63,13 @@ Run `task ceph:teardown`
 
 ```sh
 ceph mgr module enable rook && ceph orch set backend rook && ceph orch status
-```
+``` -->
 
 ### Dashboard not accessible thru ingress
 
-> run the following commands against the ceph-toolbox pod
+> ! If this happens, doublecheck the `cephClusterSpec.dashboard` section of the helm values
+>
+> To fix manually, run the following commands against the ceph-toolbox pod:
 
 ```sh
 ceph mgr module disable dashboard
@@ -109,6 +92,7 @@ dashboard set-prometheus-api-ssl-verify False
 ### Crash
 
 > run the following commands against the ceph-toolbox pod
+> hint `task ceph:toolbox`
 
 ```sh
 ceph health detail
@@ -241,7 +225,26 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 
 ### Ceph Mon Low Space warning
 
-Clean up unused images:
+#### Identify what is taking up all of the space
+
+```sh
+# check disk space
+df -h
+# identify large directories
+sudo du -hsx /* | sort -rh | head -n 10
+# identify what is taking space in directory /var
+sudo du -a /var | sort -n -r | head -n 20
+```
+
+#### Clean up logs
+
+```sh
+# if /var/lib/journal is the problem, rotate and vacuum
+sudo systemctl kill --kill-who=main --signal=SIGUSR2 systemd-journald.service
+sudo journalctl --vacuum-size=50M
+```
+
+#### Clean up unused images
 
 ```sh
 ssh ...
