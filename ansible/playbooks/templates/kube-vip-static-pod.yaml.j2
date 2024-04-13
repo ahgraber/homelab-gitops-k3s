@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: kube-vip
-  namespace: kube-system
-  labels:
-    app.kubernetes.io/instance: kube-vip
-    app.kubernetes.io/name: kube-vip
+  name: &app kube-vip
+  namespace: &namespace kube-system
+  labels: &labels
+    app.kubernetes.io/instance: *app
+    app.kubernetes.io/name: *app
 spec:
   containers:
-    - name: kube-vip
-      image: ghcr.io/kube-vip/kube-vip:v0.7.0
+    - name: *app
+      image: ghcr.io/kube-vip/kube-vip:v0.7.2
       imagePullPolicy: IfNotPresent
       args: ["manager"]
       env:
@@ -44,7 +44,7 @@ spec:
           value: :2112
       securityContext:
         capabilities:
-          add: ["NET_ADMIN", "NET_RAW"]
+          add: ["NET_ADMIN", "NET_RAW", "SYS_TIME"]
       volumeMounts:
         - mountPath: /etc/kubernetes/admin.conf
           name: kubeconfig

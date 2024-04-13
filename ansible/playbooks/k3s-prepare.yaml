@@ -84,38 +84,48 @@
             content: |
               127.0.0.1 localhost
               127.0.1.1 {{ inventory_hostname }}
+
               # The following lines are desirable for IPv6 capable hosts
               ::1     localhost ip6-localhost ip6-loopback
               ff02::1 ip6-allnodes
               ff02::2 ip6-allrouters
             dest: /etc/hosts
             mode: preserve
-        # https://github.com/cilium/cilium/issues/18706
-        - name: Network Configuration | Cilium (1)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutingPolicyRules
-            line: ManageForeignRoutingPolicyRules=no
-        - name: Network Configuration | Cilium (2)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutes
-            line: ManageForeignRoutes=no
-        # https://github.com/onedr0p/flux-cluster-template/discussions/635
+        # # https://github.com/cilium/cilium/issues/18706
+        # - name: Network Configuration | Cilium (1)
+        #   ansible.builtin.lineinfile:
+        #     dest: /etc/systemd/networkd.conf
+        #     regexp: ManageForeignRoutingPolicyRules
+        #     line: ManageForeignRoutingPolicyRules=no
+        # - name: Network Configuration | Cilium (2)
+        #   ansible.builtin.lineinfile:
+        #     dest: /etc/systemd/networkd.conf
+        #     regexp: ManageForeignRoutes
+        #     line: ManageForeignRoutes=no
+        # https://github.com/onedr0p/cluster-template/discussions/635
+        - name: Network Configuration | Remove immutable flag from /etc/resolv.conf
+          ansible.builtin.file:
+            attributes: -i
+            path: /etc/resolv.conf
         - name: Network Configuration | Remove /etc/resolv.conf
           ansible.builtin.file:
+            attributes: -i
             path: /etc/resolv.conf
             state: absent
-        - name: Network Configuration | Remove search domain
+        - name: Network Configuration | Add custom /etc/resolv.conf
           ansible.builtin.copy:
             attributes: +i
-            mode: 644
+            mode: "0644"
             dest: /etc/resolv.conf
             content: |
               search .
               nameserver 127.0.0.53
               options edns0 trust-ad
-
+            # content: |
+            #   search .
+            #   nameserver 10.2.0.1
+            #   nameserver 10.0.0.1
+            #   options edns0 trust-ad
     - name: System Configuration
       notify: Reboot
       block:
@@ -125,6 +135,7 @@
             mode: "0755"
             content: neofetch --config none
         - name: System Configuration | Disable apparmor
+          when: ansible_facts.services['apparmor.service'] is defined
           ansible.builtin.systemd:
             name: apparmor
             state: stopped
@@ -135,17 +146,30 @@
             fstype: swap
             state: absent
           loop: ["none", "swap"]
-        - name: System Configuration | Kernel modules (1)
-          community.general.modprobe:
-            name: "{{ item }}"
-            state: present
-          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
-        - name: System Configuration | Kernel modules (2)
+        - name: System Configuration | Create Kernel modules
           ansible.builtin.copy:
             dest: "/etc/modules-load.d/{{ item }}.conf"
             mode: "0644"
             content: "{{ item }}"
-          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
+          loop:
+            [
+              "br_netfilter",
+              "ceph",
+              "ip_vs",
+              "ip_vs_rr",
+              "iptable_mangle",
+              "iptable_raw",
+              "nbd",
+              "overlay",
+              "rbd",
+              "xt_socket",
+            ]
+          register: modules_status
+        - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
+          when: modules_status.changed
+          ansible.builtin.systemd:
+            name: systemd-modules-load
+            state: restarted
         - name: System Configuration | Sysctl
           ansible.posix.sysctl:
             name: "{{ item.key }}"
@@ -158,9 +182,11 @@
               fs.inotify.max_queued_events: 65536
               fs.inotify.max_user_watches: 524288
               fs.inotify.max_user_instances: 8192
+              net.core.rmem_max: 2500000
+              net.core.wmem_max: 2500000
 
   handlers:
     - name: Reboot
       ansible.builtin.reboot:
-        msg: Rebooting nodes
+        msg: Rebooting hosts
         reboot_timeout: 3600

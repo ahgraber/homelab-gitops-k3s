@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: *app
-          image: ghcr.io/kube-vip/kube-vip:v0.7.0
+          image: ghcr.io/kube-vip/kube-vip:v0.7.2
           imagePullPolicy: IfNotPresent
           args: ["manager"]
           env:
@@ -52,7 +52,7 @@ spec:
               value: :2112
           securityContext:
             capabilities:
-              add: ["NET_ADMIN", "NET_RAW"]
+              add: ["NET_ADMIN", "NET_RAW", "SYS_TIME"]
           volumeMounts:
             - mountPath: /etc/kubernetes/admin.conf
               name: kubeconfig

@@ -1,6 +1,6 @@
 ---
 - name: Cluster Installation
-  hosts: all
+  hosts: kubernetes
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -20,6 +20,10 @@
       ansible.builtin.set_fact:
         k3s_server_manifests_templates: []
         k3s_server_manifests_urls: []
+
+    - name: Prevent downgrades
+      when: k3s_installed.stat.exists
+      ansible.builtin.include_tasks: tasks/version-check.yaml
 
     - name: Install Kubernetes
       ansible.builtin.include_role:
@@ -46,18 +50,14 @@
         wait_timeout: 360
       loop:
         - { name: cilium, kind: HelmChart, namespace: kube-system }
-        - { name: coredns, kind: HelmChart, namespace: kube-system }
         - { name: policy, kind: CiliumL2AnnouncementPolicy }
         - { name: pool, kind: CiliumLoadBalancerIPPool }
-        - { name: podmonitors.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: prometheusrules.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: scrapeconfigs.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: servicemonitors.monitoring.coreos.com, kind: CustomResourceDefinition }
+        - { name: kube-vip, kind: DaemonSet, namespace: kube-system }
+        # - { name: coredns, kind: HelmChart, namespace: kube-system }
 
     - name: Coredns
       when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/coredns.yaml
-
     - name: Cilium
       when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/cilium.yaml
