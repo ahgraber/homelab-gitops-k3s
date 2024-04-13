@@ -68,6 +68,7 @@ tasks:
     summary: |
       Args:
         path: Path to the Flux Kustomization resource (required)
+        ks: Name of Flux Kustomization resource (required); must match the metadata.name
         ns: Namespace the Flux Kustomization exists in (default: flux-system)
     cmd: |
       # flux build ks $(basename {{.path}}) \

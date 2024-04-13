@@ -13,19 +13,22 @@ tasks:
     status:
       - test -f "{{.AGE_FILE}}"
 
-  encode-tmpl:
+  encode:
     desc: Substitute and encrypt sops secret, given template
+    summary: |
+      Args:
+        tmpl: Path to the template file (./*/*.sops.yaml.tmpl)
     cmds:
       - |
         unset noclobber
-        envsubst < {{.file}} > {{.file | replace ".tmpl" ""}}
-        sops --encrypt --in-place {{.file | replace ".tmpl" ""}}
+        envsubst < {{.tmpl}} > {{.tmpl | replace ".tmpl" ""}}
+        sops --encrypt --in-place {{.tmpl | replace ".tmpl" ""}}
     requires:
-      vars: ["file"]
+      vars: ["tmpl"]
     preconditions:
       - { msg: "Missing Sops config file", sh: "test -f {{.SOPS_CONFIG_FILE}}" }
       - { msg: "Missing Sops Age key file", sh: "test -f {{.AGE_FILE}}" }
-      - { msg: "File is not a template", sh: '{{ if not (.file | contains ".sops.yaml.tmpl") }}exit 1;{{end}}'}
+      - { msg: "File is not a template", sh: '{{ if not (.tmpl | contains ".sops.yaml.tmpl") }}exit 1;{{end}}'}
 
   encrypt-all:
     desc: Encrypt all Kubernetes SOPS secrets that are not already encrypted
