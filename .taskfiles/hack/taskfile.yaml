@@ -39,7 +39,6 @@ tasks:
       cluster_secret_file: '{{.cluster_secret_file | default "./kubernetes/flux/vars/cluster-secrets.sops.yaml"}}'
       custom_secret_file: '{{.cluster_secret_file | default "./kubernetes/flux/vars/custom-secrets.sops.yaml"}}'
       cluster_config_file: '{{.cluster_config_file | default "./kubernetes/flux/vars/cluster-settings.yaml"}}'
-      custom_config_file: '{{.cluster_config_file | default "./kubernetes/flux/vars/custom-settings.yaml"}}'
       ks_path: '{{ or .ks_path (fail "kustomization `ks_path` is required") }}'
 
   ks-undeploy:
