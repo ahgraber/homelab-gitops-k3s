@@ -1,0 +1,106 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  PYTHON_BIN: python3
+  ANSIBLE_LINT_FILE: "{{.ROOT_DIR}}/.ansible-lint"
+  ANSIBLE_INVENTORY_FILE: "{{.ANSIBLE_DIR}}/inventory/hosts.yaml"
+  ANSIBLE_REQUIREMENTS_FILE: "{{.ANSIBLE_DIR}}/requirements.yaml"
+  ANSIBLE_PIP_REQUIREMENTS_FILE: "{{.ANSIBLE_DIR}}/requirements.txt"
+
+env:
+  ANSIBLE_CONFIG: "{{.ANSIBLE_DIR}}/ansible.cfg"
+  # ANSIBLE_LOCALHOST_WARNING: "False"
+  # ANSIBLE_INVENTORY_UNPARSED_WARNING: "False"
+
+tasks:
+
+  install:
+    desc: Install Ansible with pipx
+    cmds:
+      - pipx install --force --include-deps ansible
+      - pipx runpip ansible install --force -r "{{.ANSIBLE_PIP_REQUIREMENTS_FILE}}"
+      - ansible-galaxy install --force --role-file "{{.ANSIBLE_REQUIREMENTS_FILE}}"
+    preconditions:
+      - sh: command -v pipx
+        msg: |
+          pipx is not installed.
+          Head over to https://pypa.github.io/pipx/installation/ to get up and running.
+
+  # deps:
+  #   desc: Set up Ansible dependencies
+  #   deps: [":workstation:deps"] #, ":workstation:venv"]
+  #   cmds:
+  #     - '{{.VIRTUAL_ENV}}/bin/python3 -m pip install --upgrade pip setuptools wheel'
+  #     - '{{.VIRTUAL_ENV}}/bin/python3 -m pip install --upgrade --requirement "{{.ANSIBLE_PIP_REQUIREMENTS_FILE}}"'
+  #     - '{{.VIRTUAL_ENV}}/bin/ansible-galaxy install --role-file "{{.ANSIBLE_REQUIREMENTS_FILE}}" {{if eq .force "true"}}--force{{end}}'
+  #   preconditions:
+  #     - { msg: "Missing Pip requirements file", sh: "test -f {{.ANSIBLE_PIP_REQUIREMENTS_FILE}}" }
+  #     - { msg: "Missing Ansible requirements file", sh: "test -f {{.ANSIBLE_REQUIREMENTS_FILE}}" }
+  #   sources:
+  #     - "{{.ANSIBLE_PIP_REQUIREMENTS_FILE}}"
+  #     - "{{.ANSIBLE_REQUIREMENTS_FILE}}"
+  #   generates:
+  #     - "{{.VIRTUAL_ENV}}/bin/ansible"
+  #     - "{{.VIRTUAL_ENV}}/bin/ansible-galaxy"
+  #   vars:
+  #     force: '{{.force | default "true"}}'
+
+  list:
+    desc: List all the hosts in inventory
+    cmd: ansible all -i {{.ANSIBLE_DIR}}/inventory --list-hosts
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+
+  ping:
+    desc: Ping specified hosts
+    cmds:
+      - ansible -i {{.ANSIBLE_DIR}}/inventory {{.group}} --one-line -m 'ping'
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+
+  uptime:
+    desc: Uptime of specified hosts
+    cmd: ansible -i {{.ANSIBLE_DIR}}/inventory {{.group}} --one-line -a 'uptime'
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+
+  run:
+    aliases: ["playbook"]
+    desc: Run an Ansible playbook by name
+    summary: |
+      Args:
+        playbook: Playbook to run (required)
+      E.g., `task ansible:run playbook='k3s-install'`
+    prompt: Run Ansible playbook '{{.playbook}}' ... continue?
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+    requires:
+      vars: ["playbook"]
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{.ANSIBLE_DIR}}/inventory/hosts.yaml
+      - test -f {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml
+
+  cmd:
+    desc: Run an arbitrary command
+    summary: |
+      E.g.,
+      task ansible:cmd cmd="apt update && apt upgrade -y"
+      task ansible:cmd cmd="apt update && apt upgrade -y" --become
+    cmds:
+      # - echo "{{.CLI_ARGS}}"
+      - ansible -i {{.ANSIBLE_DIR}}/inventory {{.group}} -m ansible.builtin.shell -a "{{.cmd}}" {{.CLI_ARGS}}
+    requires:
+      vars: ["cmd"]
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}

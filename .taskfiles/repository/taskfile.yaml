@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  hooks:
+    desc: Initialize pre-commit hooks
+    cmds:
+      - pre-commit install --install-hooks
+
+  check:
+    desc: Run pre-commit
+    cmds:
+      - pre-commit run --all-files
+
+  update:
+    desc: Ensure repository is up to date
+    cmds:
+      - git fetch -p
+      - git pull
+      - pre-commit autoupdate
+
+  force-reset:
+    desc: Reset repo back to HEAD
+    prompt: Reset repo back to HEAD... continue?
+    cmds:
+      - git reset --hard HEAD
+      - git clean -f -d
+      - git pull origin main

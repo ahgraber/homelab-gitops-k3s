@@ -2,45 +2,49 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+vars:
+  # Binaries
+  PYTHON_BIN: python3
+  # Directories
+  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  PRIVATE_DIR: "{{.ROOT_DIR}}/.private"
+  SCRIPTS_DIR: "{{.ROOT_DIR}}/scripts"
+  # Files
+  AGE_FILE: "{{.ROOT_DIR}}/age.key"
+  BOOTSTRAP_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
+  KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
+  PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
+
 includes:
-  ansible: .taskfiles/AnsibleTasks.yaml
-  bootstrap: .taskfiles/BootstrapTasks.yaml
-  brew: .taskfiles/BrewTasks.yaml
-  cluster:
-    taskfile: .taskfiles/ClusterTasks.yaml
-    aliases: ["flux"]
-  db: .taskfiles/DBTasks.yaml
+  ansible: .taskfiles/Ansible/taskfile.yaml
+  flux:
+    taskfile: .taskfiles/flux/taskfile.yaml
+    aliases: ["f"]
+  db: .taskfiles/db/taskfile.yaml
   kubernetes:
-    taskfile: .taskfiles/KubernetesTasks.yaml
-    aliases: ["k8s"]
-  precommit:
-    taskfile: .taskfiles/PrecommitTasks.yaml
-    aliases: ["pc"]
+    taskfile: .taskfiles/kubernetes/taskfile.yaml
+    aliases: ["k"]
+  repository:
+    taskfile: .taskfiles/repository/taskfile.yaml
+    aliases: ["repo"]
   rook:
-    taskfile: .taskfiles/RookTasks.yaml
+    taskfile: .taskfiles/rook/taskfile.yaml
     aliases: ["ceph"]
-  volsync: .taskfiles/VolsyncTasks.yaml
+  volsync: .taskfiles/volsync/taskfile.yaml
+  workstation:
+    taskfile: .taskfiles/workstation/taskfile.yaml
+    aliases: ["ws"]
 
 dotenv: [".env"]
 
-vars:
-  PYTHON_BIN: python3
-  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
-  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
-  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
-  # equivalent to 'ROOT_DIR'
-  # PROJECT_DIR:
-  #   sh: "git rev-parse --show-toplevel"
-
 env:
-  KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  # K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  KUBECONFIG: "{{.KUBECONFIG_FILE}}"
+  PYTHONDONTWRITEBYTECODE: "1"
   SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
-  # PATH: "{{.ROOT_DIR}}/.venv/bin:$PATH"
-  # VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
-  # ANSIBLE_COLLECTIONS_PATH: "{{.ROOT_DIR}}/.venv/galaxy"
-  # ANSIBLE_ROLES_PATH: "{{.ROOT_DIR}}/.venv/galaxy/ansible_roles"
-  # ANSIBLE_VARS_ENABLED: "host_group_vars,community.sops.sops"
-  K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
 
 tasks:
   default: task -l
@@ -49,35 +53,14 @@ tasks:
     desc: Lint and Format with precommit
     cmd: pre-commit run --all-files
 
-  sops:
-    desc: Substitute and encrypt sops secret, given tmpl
+  bootstrap:
+    vars: &vars
+      cephnodes: optiplex3 optiplex4 optiplex5 # optiplex0 optiplex1 optiplex2
+      cephdisk: /dev/sda
     cmds:
-      - |
-        unset noclobber
-        envsubst < {{.CLI_ARGS}} > {{.CLI_ARGS | replace ".tmpl" ""}}
-        sops --encrypt --in-place {{.CLI_ARGS | replace ".tmpl" ""}}
-
-  update-template:
-    desc: Update from the upstream flux-cluster-template repository
-    summary: task {{.TASK}}
-    cmds:
-      - mkdir -p $(dirname {{.shafile}})
-      - touch {{.shafile}}
-      - git remote get-url template >/dev/null 2>&1 || git remote add template git@github.com:onedr0p/flux-cluster-template
-      - git fetch --all
-      - echo "Starting cherry-pick.  If task fails, run with 'git cherry-pic --continue'"
-      - git cherry-pick --no-commit --allow-empty $(cat {{.shafile}})..template/main
-      - git ls-remote template HEAD | awk '{ print $1}' > {{.shafile}}
-    vars:
-      shafile: "{{.ROOT_DIR}}/bootstrap/.latest-template.sha"
-    preconditions:
-      - { msg: "Git repository not up-to-date", sh: "git diff --exit-code" }
-      - { msg: "Git repository not up-to-date", sh: "git diff --cached --exit-code" }
-
-  update-template-sha:
-    desc: Force update sha from the upstream flux-cluster-template repository
-    summary: task {{.TASK}}
-    cmds:
-      - git ls-remote template HEAD | awk '{ print $1}' > {{.shafile}}
-    vars:
-      shafile: "{{.ROOT_DIR}}/bootstrap/.latest-template.sha"
+      - task: :rook:reset
+        vars: *vars
+      - task: :flux:bootstrap
+        vars: *vars
+    # preconditions:
+    #   ...
