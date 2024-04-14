@@ -103,16 +103,16 @@
             dest: /etc/resolv.conf
             content: |
               search .
-              nameserver 127.0.0.53
+              nameserver 10.2.0.1
+              nameserver 10.0.0.1
               options edns0 trust-ad
             # content: |
             #   search .
-            #   nameserver 10.2.0.1
-            #   nameserver 10.0.0.1
+            #   nameserver 127.0.0.53
             #   options edns0 trust-ad
 
     - name: Smartctl Configuration
-      notify: Smartd
+      notify: Restart smartd
       block:
         - name: Ensure smartmontools is installed
           apt:
@@ -199,13 +199,14 @@
               net.core.wmem_max: 2500000
 
   handlers:
-    - name: Reboot
-      ansible.builtin.reboot:
-        msg: Rebooting hosts
-        reboot_timeout: 3600
-    - name: Smartd
+    - name: Restart smartd
       systemd:
         name: smartd
         state: restarted
         enabled: true
-      listen: Restart smartd
+      # listen: Restart smartd
+
+    - name: Reboot
+      ansible.builtin.reboot:
+        msg: Rebooting hosts
+        reboot_timeout: 3600
