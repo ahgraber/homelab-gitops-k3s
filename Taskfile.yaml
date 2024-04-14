@@ -25,7 +25,7 @@ includes:
   db: .taskfiles/db/taskfile.yaml
   kubernetes:
     taskfile: .taskfiles/kubernetes/taskfile.yaml
-    aliases: ["k"]
+    aliases: ["k", "k3s", "k8s"]
   repository:
     taskfile: .taskfiles/repository/taskfile.yaml
     aliases: ["repo"]

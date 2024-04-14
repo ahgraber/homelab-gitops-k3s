@@ -177,10 +177,10 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
     # k8s-1          Ready    worker                      1h      v1.27.3+k3s1
     ```
 
-5. Review the resources currently running in the cluster
+5. Review the pods currently running in the cluster
 
    ```sh
-   task k8s:resources
+   kubectl get pods -A -o wide
    ```
 
 ### 🔹 Install Flux in your cluster
