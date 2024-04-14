@@ -77,6 +77,12 @@ spec:
           operator: Exists
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
+    discover:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+      nodeAffinity: node-role.kubernetes.io/control-plane=true
+
     disableAdmissionController: true
     # admissionController:
     #   tolerations:
