@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -25,77 +25,92 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    controller:
-      type: deployment
-      replicas: 3
-      strategy: RollingUpdate
-      annotations:
-        reloader.stakater.com/auto: "true"
-    image:
-      repository: docker.io/cloudflare/cloudflared
-      tag: 2024.3.0
-    env:
-      TZ: "${TIMEZONE}"
-      NO_AUTOUPDATE: "true"
-      TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
-      TUNNEL_METRICS: 0.0.0.0:8080
-      TUNNEL_MANAGEMENT_DIAGNOSTICS: false
-      TUNNEL_TRANSPORT_PROTOCOL: quic
-      TUNNEL_POST_QUANTUM: true
-      TUNNEL_ID:
-        valueFrom:
-          secretKeyRef:
-            name: cloudflared-credentials
-            key: TUNNEL_ID
-    args:
-      - tunnel
-      - --config
-      - /etc/cloudflared/config/config.yaml
-      - run
-      - "$(TUNNEL_ID)"
+    controllers:
+      cloudflared:
+        replicas: 2
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/cloudflare/cloudflared
+              tag: 2024.3.0
+            env:
+              TZ: "${TIMEZONE}"
+              NO_AUTOUPDATE: "true"
+              TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
+              TUNNEL_METRICS: 0.0.0.0:8080
+              TUNNEL_MANAGEMENT_DIAGNOSTICS: false
+              TUNNEL_TRANSPORT_PROTOCOL: quic
+              TUNNEL_POST_QUANTUM: true
+              TUNNEL_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: cloudflared-credentials
+                    key: TUNNEL_ID
+            args:
+              - tunnel
+              - --config
+              - /etc/cloudflared/config/config.yaml
+              - run
+              - "$(TUNNEL_ID)"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ready
+                    port: &port 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+              seccompProfile:
+                type: RuntimeDefault
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+        pod:
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
     service:
-      main:
+      app:
+        controller: cloudflared
         ports:
           http:
-            port: 8080
+            port: *port
     serviceMonitor:
-      main:
-        enabled: true
+      app:
+        serviceName: cloudflared
         endpoints:
           - port: http
             scheme: http
             path: /metrics
             interval: 1m
-            scrapeTimeout: 30s
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness: *probes
-      startup:
-        enabled: false
+            scrapeTimeout: 10s
     persistence:
       config:
-        enabled: true
         type: configMap
         name: *app
-        subPath: config.yaml
         mountPath: /etc/cloudflared/config/config.yaml
+        subPath: config.yaml
         readOnly: true
       creds:
-        enabled: true
         type: secret
         name: cloudflared-credentials
-        subPath: credentials.json
         mountPath: /etc/cloudflared/creds/credentials.json
+        subPath: credentials.json
         readOnly: true
     resources:
       requests:
