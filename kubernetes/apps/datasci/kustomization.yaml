@@ -5,11 +5,11 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  # Flux-Kustomizations | Databases
-  - ./postgres/
-  # # - ./redis/
-  # Flux-Kustomizations
-  - ./docat/ks.yaml
-  - ./mlflow/ks.yaml
-  - ./prefect/ks.yaml
-  - ./windmill/ks.yaml
+  # # Flux-Kustomizations | Databases
+  # - ./postgres/
+  # # # - ./redis/
+  # # Flux-Kustomizations
+  # - ./docat/ks.yaml
+  # - ./mlflow/ks.yaml
+  # - ./prefect/ks.yaml
+  # - ./windmill/ks.yaml
