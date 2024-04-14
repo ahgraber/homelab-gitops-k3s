@@ -28,6 +28,7 @@ spec:
     fullnameOverride: reloader
     reloader:
       reloadStrategy: annotations
+      readOnlyRootFileSystem: true
       podMonitor:
         enabled: true
         namespace: *namespace
