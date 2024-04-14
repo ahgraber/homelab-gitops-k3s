@@ -26,16 +26,22 @@ spec:
     keepHistory: false
   values:
     autoDirectNodeRoutes: true
+    bgpControlPlane:
+      enabled: true
     bpf:
-      masquerade: true
-    bgp:
-      enabled: false
+      masquerade: false
+    cgroup:
+      automount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
     cluster:
-      name: home-cluster
       id: 1
+      name: home-kubernetes
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
+    # NOTE: devices might need to be set if you have more than one active NIC on your hosts
+    # devices: eno+ eth+
     endpointRoutes:
       enabled: true
     hubble:
@@ -110,6 +116,22 @@ spec:
       annotations:
         grafana_folder: Cilium
     rollOutCiliumPods: true
-    securityContext:
-      privileged: true
     routingMode: native
+    securityContext:
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE

@@ -17,14 +17,16 @@
 
 ## Debian for AMD64
 
-1. Download the latest stable release of Debian from [here](https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd), then follow [this guide](https://www.linuxtechi.com/how-to-install-debian-12-step-by-step) to get it installed. Deviations from the guide:
+1. Download the latest stable release of Debian from [here](https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd), then follow [this guide](https://www.linuxtechi.com/how-to-install-debian-12-step-by-step) to get it installed.
 
-    ```txt
-    Choose "Guided - use entire disk"
-    Choose "All files in one partition"
-    Delete Swap partition
-    Uncheck all Debian desktop environment options
-    ```
+   Deviations from the guide:
+
+   > ```txt
+   > Choose "Guided - use entire disk"
+   > Choose "All files in one partition"
+   > Delete Swap partition
+   > Uncheck all Debian desktop environment options
+   > ```
 
 2. [Post install] Remove CD/DVD as apt source
 

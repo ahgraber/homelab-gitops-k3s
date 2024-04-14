@@ -8,12 +8,12 @@ resources:
   # - ./storageclass-local.yaml # overwrite local-path StorageClass to set as NOT default
   # Flux-Kustomizations
   - ./cilium/ks.yaml
-  - ./coredns/ks.yaml
+  # - ./coredns/ks.yaml # use k3s default
   - ./descheduler/ks.yaml
   - ./kube-cleanup-operator/ks.yaml
+  - ./kube-vip/ks.yaml
   - ./local-path-provisioner/ks.yaml
   - ./metrics-server/ks.yaml
-  # - ./node-feature-discovery/ks.yaml
   - ./reflector/ks.yaml
   - ./reloader/ks.yaml
   - ./snapshot-controller/ks.yaml

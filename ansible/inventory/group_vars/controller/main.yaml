@@ -5,38 +5,43 @@
 k3s_control_node: true
 k3s_server:
   node-ip: "{{ ansible_host }}"
-  tls-san:
-    - "{{ kube_vip_addr }}"
-  docker: false
-  flannel-backend: "none" # This needs to be in quotes
+  node-taint:
+    - "node-role.kubernetes.io/control-plane=true:NoSchedule"
+  cluster-cidr: "{{ cluster_cidr }}"
+  service-cidr: "{{ service_cidr }}"
   disable:
-    - coredns # Disable coredns                 - replaced with Coredns Helm Chart
+    # - coredns # Disable coredns                 - replaced with Coredns Helm Chart
     - flannel # Disable flannel                 - replaced with Cilium Helm Chart
     - local-storage # Disable local-path-provisioner  - installed with Flux
     - metrics-server # Disable metrics-server          - installed with Flux
     - servicelb # Disable servicelb               - replaced with Cilium Helm Chart
     - traefik # Disable traefik                 - replaced with ingress-nginx and installed with Flux
-  disable-network-policy: true
   disable-cloud-controller: true
   disable-kube-proxy: true # Cilium uses eBPF
-  write-kubeconfig-mode: "644"
-  cluster-cidr: "{{ cluster_cidr }}"
-  service-cidr: "{{ service_cidr }}"
+  disable-network-policy: true
+  docker: false
+  embedded-registry: true
   etcd-expose-metrics: true # Required to monitor etcd with kube-prometheus-stack
+  flannel-backend: "none" # This needs to be in quotes
+  write-kubeconfig-mode: "644"
+  secrets-encryption: true
+  tls-san:
+    - "{{ kube_vip_addr }}"
+
+  kube-apiserver-arg:
+    - "anonymous-auth=true" # Required for HAProxy health-checks
   kube-controller-manager-arg:
     - "bind-address=0.0.0.0" # Required to monitor kube-controller-manager with kube-prometheus-stack
   kube-scheduler-arg:
     - "bind-address=0.0.0.0" # Required to monitor kube-scheduler with kube-prometheus-stack
-  kube-apiserver-arg:
-    - "anonymous-auth=true" # Required for HAProxy health-checks
-  kubelet-arg:
-    # Enables the kubelet to gracefully evict pods during a node shutdown
-    - feature-gates=GracefulNodeShutdown=true
-    # # Allow k8s services to contain TCP and UDP on the same port
-    # - feature-gates=MixedProtocolLBService=true
-    # set more aggressive garbage collection
-    # https://kubernetes.io/docs/concepts/architecture/garbage-collection/#containers-images
-    - image-gc-high-threshold=70
-    - image-gc-low-threshold=60
-  node-taint:
-    - "node-role.kubernetes.io/control-plane=true:NoSchedule"
+  # kubelet-arg:
+  #   # Enables the kubelet to gracefully evict pods during a node shutdown
+  #   - feature-gates=GracefulNodeShutdown=true
+  #   # Allow k8s services to contain TCP and UDP on the same port
+  #   - feature-gates=MixedProtocolLBService=true
+  #   # # https://github.com/k3s-io/k3s/issues/1264
+  #   # - node-status-update-frequency=4s
+  #   # # set more aggressive garbage collection
+  #   # # https://kubernetes.io/docs/concepts/architecture/garbage-collection/#containers-images
+  #   # - image-gc-high-threshold=70
+  #   # - image-gc-low-threshold=60
