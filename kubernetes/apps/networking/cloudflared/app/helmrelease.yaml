@@ -68,17 +68,18 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+            resources:
+              requests:
+                cpu: 5m
+                memory: 10Mi
+              limits:
+                memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 256Mi
         pod:
           securityContext:
             runAsUser: 65534
@@ -86,13 +87,13 @@ spec:
             runAsNonRoot: true
     service:
       app:
-        controller: cloudflared
+        controller: *app
         ports:
           http:
             port: *port
     serviceMonitor:
       app:
-        serviceName: cloudflared
+        serviceName: *app
         endpoints:
           - port: http
             scheme: http
@@ -112,9 +113,3 @@ spec:
         mountPath: /etc/cloudflared/creds/credentials.json
         subPath: credentials.json
         readOnly: true
-    resources:
-      requests:
-        cpu: 5m
-        memory: 10Mi
-      limits:
-        memory: 256Mi

@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,29 +26,38 @@ spec:
     - name: scrutiny
       namespace: monitoring
   values:
-    controller:
-      type: daemonset
-
-    image:
-      repository: ghcr.io/analogj/scrutiny
-      tag: master-collector
-
-    env:
-      - name: COLLECTOR_API_ENDPOINT
-        value: http://scrutiny.monitoring.svc.cluster.local:8080
-      - name: COLLECTOR_HOST_ID
-        valueFrom:
-          fieldRef:
-            fieldPath: spec.nodeName
-
+    defaultPodOptions:
+      automountServiceAccountToken: false
+    controllers:
+      scrutiny-collector:
+        type: daemonset
+        # strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/analogj/scrutiny
+              tag: master-collector
+            env:
+              - name: COLLECTOR_API_ENDPOINT
+                value: http://scrutiny.monitoring.svc.cluster.local:8080
+              - name: COLLECTOR_HOST_ID
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              privileged: true
+              readOnlyRootFilesystem: true
+              # capabilities: { add: ["SYS_RAWIO"] } # allow access to smartctl
     service:
-      main:
+      app:
+        controller: scrutiny-collector
         enabled: false
-
-    securityContext:
-      privileged: true
-      # capabilities:
-      #   add: ["SYS_RAWIO"] # allow access to smartctl
 
     persistence:
       config:
@@ -61,16 +70,15 @@ spec:
         type: hostPath
         hostPath: /run/udev
         readOnly: true
+      nvme0n1:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/nvme0n1
+        globalMounts:
+          - path: /dev/nvme0n1
       sda:
         enabled: true
         mountPath: /dev/sda
         type: hostPath
         hostPath: /dev/sda
         readOnly: true
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        memory: 128Mi

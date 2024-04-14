@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -25,29 +25,50 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    image:
-      repository: ghcr.io/druggeri/nut_exporter
-      tag: 3.1.1
-    env:
-      TZ: "${TIMEZONE}"
-    envFrom:
-      - secretRef:
-          name: *app
-    args:
-      - --log.level=debug
-      - --nut.vars_enable="battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status"
-      # # the first time I set this, the first and last entries were ignored, so I have doubled them.
-      # - --nut.vars_enable="battery.charge,battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status,ups.status"
-
+    controllers:
+      nut-exporter:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/druggeri/nut_exporter
+              tag: 3.1.1
+            env:
+              TZ: "${TIMEZONE}"
+            envFrom:
+              - secretRef:
+                  name: *app
+            args:
+              - --log.level=debug
+              - --nut.vars_enable="battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status"
+              # # the first time I set this, the first and last entries were ignored, so I have doubled them.
+              # - --nut.vars_enable="battery.charge,battery.charge,battery.runtime,battery.voltage,battery.voltage.nominal,input.voltage,input.voltage.nominal,ups.load,ups.status,ups.status"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 105Mi
+              limits:
+                memory: 105Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+              seccompProfile:
+                type: RuntimeDefault
+        pod:
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
     service:
-      main:
+      app:
+        controller: *app
         ports:
           http:
             port: 9199
     serviceMonitor:
-      main:
-        enabled: true
-        serviceName: nut-exporter
+      app:
+        serviceName: *app
         endpoints:
           - port: http
             scheme: http
