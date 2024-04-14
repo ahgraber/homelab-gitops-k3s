@@ -63,5 +63,6 @@ tasks:
         vars: *vars
       - task: :flux:bootstrap
         vars: *vars
-    # preconditions:
-    #   ...
+    preconditions:
+      - msg: "k3s cluster not found."
+        sh: kubectl get nodes

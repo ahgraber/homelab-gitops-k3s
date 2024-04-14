@@ -58,7 +58,3 @@
     curl https://github.com/${github_username}.keys > ~/.ssh/authorized_keys
     chmod 600 ~/.ssh/authorized_keys
     ```
-
-## 🚀 Getting Started
-
-Once you have installed Debian on your nodes, there are 6 stages to getting a Flux-managed cluster up and running.

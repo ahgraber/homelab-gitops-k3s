@@ -70,6 +70,30 @@ tasks:
     preconditions:
       - {msg: "Ansible not found", sh: "type ansible"}
 
+  prepare:
+    desc: Prepare nodes for k3s
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+      playbook: 'k3s-prepare'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{.ANSIBLE_DIR}}/inventory/hosts.yaml
+      - test -f {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml
+
+  k3s:
+    desc: Install k3s
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+      playbook: 'k3s-install'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{.ANSIBLE_DIR}}/inventory/hosts.yaml
+      - test -f {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml
+
   run:
     aliases: ["playbook"]
     desc: Run an Ansible playbook by name

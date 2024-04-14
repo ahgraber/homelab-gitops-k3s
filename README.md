@@ -6,12 +6,12 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 ## ✨ Features
 
 - Automated, reproducible, customizable setup through Ansible templates and playbooks
-- Opinionated implementation of Flux with [strong community support](https://github.com/onedr0p/flux-cluster-template/tree/main#-help)
-- Encrypted secrets thanks to [SOPS](https://github.com/getsops/sops) and [Age](https://github.com/FiloSottile/age)
-- Web application firewall thanks to [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
-- SSL certificates thanks to [Cloudflare](https://cloudflare.com) and [cert-manager](https://cert-manager.io)
-- HA control plane capability thanks to [kube-vip](https://kube-vip.io)
-- Next-gen networking thanks to [Cilium](https://cilium.io/)
+- Opinionated implementation of Flux from the [Home Operations Community's template](https://github.com/onedr0p/flux-cluster-template/tree/main#-help)
+- Encrypted secrets with [SOPS](https://github.com/getsops/sops) and [Age](https://github.com/FiloSottile/age)
+- Web application firewall provided by [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+- SSL certificates from [Cloudflare](https://cloudflare.com) and [cert-manager](https://cert-manager.io)
+- HA control plane capability via [kube-vip](https://kube-vip.io)
+- Next-gen networking using [Cilium](https://cilium.io/)
 - A [Renovate](https://www.mend.io/renovate)-ready repository with pull request diffs provided by [flux-local](https://github.com/allenporter/flux-local)
 - Integrated [GitHub Actions](https://github.com/features/actions)
 
@@ -28,136 +28,97 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Install the most recent version of [task](https://taskfile.dev/)
 
-    📍 _See the task [installation docs](https://taskfile.dev/installation/) for other platforms_
+   📍 _See the task [installation docs](https://taskfile.dev/installation/) for other platforms_
 
-    ```sh
-    # Brew
-    brew install go-task
-    ```
+   ```sh
+   # Brew
+   brew install go-task
+   ```
 
 2. Install the most recent version of [direnv](https://direnv.net/), see the direnv [installation docs](https://direnv.net/docs/installation.html) for other supported platforms.
 
-    📍 _After installing `direnv` be sure to **[hook it into your shell](https://direnv.net/docs/hook.html)** and after that is done run `direnv allow` while in your repos' directory._
+   📍 _After installing `direnv` be sure to **[hook it into your shell](https://direnv.net/docs/hook.html)** and after that is done run `direnv allow` while in your repos' directory._
 
-    ```sh
-    # Brew
-    brew install direnv
-    ```
+   ```sh
+   # Brew
+   brew install direnv
+   ```
 
 3. Install the most recent version of [pipx](https://pipx.pypa.io/stable/)
 
     📍 _See the pipx [installation docs](https://pipx.pypa.io/stable/#install-pipx) for other platforms_
 
-    ```sh
-    # Brew
-    brew install pipx
-    pipx ensurepath
-    pipx completions
-    ```
+   ```sh
+   # Brew
+   brew install pipx
+   pipx ensurepath
+   pipx completions
+   ```
 
-4. Setup a install Ansible with pipx by running the following task command.
+4. With these prerequisites out of the way, we can finish configuring the workstation.  This command will install ansible in a pipx environment, then use brew to install other necessary binaries like [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared), [kubectl](https://kubernetes.io/docs/tasks/tools/), [sops](https://github.com/getsops/sops)
 
-    📍 _This commands requires Python 3.10+ to be installed_
+   ```sh
+   task workstation:setup
+   ```
 
-    ```sh
-    # Platform agnostic
-    task bootstrap:deps
-    ```
+### 🔧 Initial configuration
 
-5. Install the required tools: [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared), [kubectl](https://kubernetes.io/docs/tasks/tools/), [sops](https://github.com/getsops/sops)
-
-   📍 _Not using brew? Make sure to look up how to install the latest version of each of these CLI tools yourself._
-
-    ```sh
-    # Brew
-    task brew:deps
-    ```
-
-### 🔧 Do bootstrap configuration
-
-📍 _Both `bootstrap/vars/config.yaml` and `bootstrap/vars/addons.yaml` files contain necessary information that is **vital** to the bootstrap process._
-
-1. Generate the `bootstrap/vars/config.yaml` and `bootstrap/vars/addons.yaml` configuration files.
-
-    ```sh
-    task bootstrap:init
-    ```
-
-2. Setup Age private / public key
+1. Setup Age private / public key
 
     📍 _Using [SOPS](https://github.com/getsops/sops) with [Age](https://github.com/FiloSottile/age) allows us to encrypt secrets and use them in Ansible and Flux._
 
-    2a. Create a Age private / public key (this file is gitignored)
+   a. Create a Age private / public key (this file is gitignored)
 
       ```sh
       age-keygen -o age.key
       ```
 
-    2b. Fill out the appropriate vars in `bootstrap/vars/config.yaml`
+    b. Fill out the appropriate vars in `bootstrap/vars/config.yaml`
 
-3. Create Cloudflare API Token
+2. Create Cloudflare API Token
 
     📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create a API Token._
 
-   3a. Head over to Cloudflare and create a API Token by going [here](https://dash.cloudflare.com/profile/api-tokens).
+   a. Head over to Cloudflare and create a API Token by going [here](https://dash.cloudflare.com/profile/api-tokens).
 
-   3b. Under the `API Tokens` section click the blue `Create Token` button.
+   b. Under the `API Tokens` section click the blue `Create Token` button.
 
-   3c. Click the blue `Use template` button for the `Edit zone DNS` template.
+   c. Click the blue `Use template` button for the `Edit zone DNS` template.
 
-   3d. Name your token something like `home-kubernetes`
+   d. Name your token something like `home-kubernetes`
 
-   3e. Under `Permissions`, click `+ Add More` and add each permission below:
+   e. Under `Permissions`, click `+ Add More` and add each permission below:
 
-    ```text
-    Zone - DNS - Edit
-    Account - Cloudflare Tunnel - Read
-    ```
+      ```text
+      Zone - DNS - Edit
+      Account - Cloudflare Tunnel - Read
+      ```
 
-   3f. Limit the permissions to a specific account and zone resources.
+   f. Limit the permissions to a specific account and zone resources.
 
-   3g. Fill out the appropriate vars in `bootstrap/vars/config.yaml`
+   g. Fill out the appropriate vars in `.env` file:
+      CLOUDFLARE_EMAIL, CLOUDFLARE_TOKEN, CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
 
-4. Create Cloudflare Tunnel
+3. Create Cloudflare Tunnel
 
-    📍 _To expose services to the internet you will need to create a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)._
+   📍 _To expose services to the internet you will need to create a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)._
 
-    4a. Authenticate cloudflared to your domain
+   a. Authenticate cloudflared to your domain
 
       ```sh
       cloudflared tunnel login
       ```
 
-    4b. Create the tunnel
+   b. Create the tunnel
 
       ```sh
       cloudflared tunnel create k8s
       ```
 
-    4c. In the `~/.cloudflared` directory there will be a json file with details you need. Ignore the `cert.pem` file.
+   c. Fill out the appropriate Cloudflare Tunnel vars in `.env` file:
+      CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
 
-    4d. Fill out the appropriate vars in `bootstrap/vars/config.yaml`
-
-5. Complete filling out the rest of the `bootstrap/vars/config.yaml` configuration file.
-
-    5a. Ensure `bootstrap_acme_production_enabled` is set to `false`.
-
-    5b. [Optional] Update `bootstrap/vars/addons.yaml` and enable applications you would like included.
-
-6. Once done run the following command which will verify and generate all the files needed to continue.
-
-   ```sh
-   task bootstrap:render
-   ```
-
-   📍 _The configure task will create a `./ansible` directory and the following directories under `./kubernetes`._
-
-   ```sh
-   📁 kubernetes      # Kubernetes cluster defined as code
-   ├─📁 bootstrap     # Flux installation (not tracked by Flux)
-   ├─📁 flux          # Main Flux configuration of repository
-   └─📁 apps          # Apps deployed into the cluster grouped by namespace
-   ```
+      > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`
 
 ### ⚡ Prepare your nodes for k3s
 
@@ -183,7 +144,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
     task ansible:prepare
     ```
 
-### 🛰️ Use Ansible to install k3s
+### 🛰️ Build your k3s cluster with Ansible
 
 📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role. If you run into problems, you can run `task ansible:nuke` to destroy the k3s cluster and start over from this point._
 
@@ -202,12 +163,12 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 3. Install k3s with Ansible
 
     ```sh
-    task ansible:install
+    task ansible:k3s
     ```
 
-4. Verify the nodes are online
+   > The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.
 
-    📍 _If this command **fails** you likely haven't configured `direnv` as mentioned previously in the guide._
+4. Verify the nodes are online
 
     ```sh
     kubectl get nodes -o wide
@@ -216,11 +177,13 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
     # k8s-1          Ready    worker                      1h      v1.27.3+k3s1
     ```
 
-5. The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.
+5. Review the resources currently running in the cluster
+
+   ```sh
+   task k8s:resources
+   ```
 
 ### 🔹 Install Flux in your cluster
-
-📍 _Here we will be installing [flux](https://fluxcd.io/flux/) after some quick bootstrap steps._
 
 1. Verify Flux can be installed
 
@@ -245,7 +208,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 3. Install Flux and sync the cluster to the Git repository
 
     ```sh
-    task cluster:install
+    task flux:bootstrap
     # namespace/flux-system configured
     # customresourcedefinition.apiextensions.k8s.io/alerts.notification.toolkit.fluxcd.io created
     # ...
