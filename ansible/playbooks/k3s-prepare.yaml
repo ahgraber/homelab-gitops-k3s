@@ -57,22 +57,6 @@
               - util-linux
             install_recommends: false
 
-    - name: User Configuration
-      block:
-        - name: User Configuration | SSH keys
-          ansible.posix.authorized_key:
-            user: "{{ ansible_user }}"
-            key: "https://github.com/{{ github_username }}.keys"
-        - name: User Configuration | Silence login
-          ansible.builtin.file:
-            dest: "{{ '/home/' + ansible_user if ansible_user != 'root' else '/root' }}/.hushlogin"
-            state: touch
-            owner: "{{ ansible_user }}"
-            group: "{{ ansible_user }}"
-            mode: "0644"
-            modification_time: preserve
-            access_time: preserve
-
     - name: Network Configuration
       notify: Reboot
       block:
@@ -126,6 +110,35 @@
             #   nameserver 10.2.0.1
             #   nameserver 10.0.0.1
             #   options edns0 trust-ad
+
+    - name: Smartctl Configuration
+      notify: Smartd
+      block:
+        - name: Ensure smartmontools is installed
+          apt:
+            name: smartmontools
+            state: present
+          tags: smartmontools
+
+        - name: Enable SMART on OS disks
+          command: smartctl -s on /dev/{{ item }}
+          with_items:
+            - nvme0
+          register: smart_enable_os
+          changed_when: "'SMART is already enabled' not in smart_enable_os.stdout"
+
+        - name: Enable SMART on Ceph disks
+          when: ceph_drives | default([]) | length > 0
+          command: smartctl -s on {{ item }}
+          loop: "{{ ceph_drives }}"
+          register: smart_enable_ceph
+          changed_when: "'SMART is already enabled' not in smart_enable_ceph.stdout"
+
+        - name: Configure smartd for regular tests
+          template:
+            src: smartd.conf.j2
+            dest: /etc/smartd.conf
+
     - name: System Configuration
       notify: Reboot
       block:
@@ -190,3 +203,9 @@
       ansible.builtin.reboot:
         msg: Rebooting hosts
         reboot_timeout: 3600
+    - name: Smartd
+      systemd:
+        name: smartd
+        state: restarted
+        enabled: true
+      listen: Restart smartd
