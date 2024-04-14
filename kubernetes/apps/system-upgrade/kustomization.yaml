@@ -5,5 +5,4 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./system-upgrade-controller/ks.yaml
-  - ./k3s/ks.yaml
+  - ./controller/ks.yaml
