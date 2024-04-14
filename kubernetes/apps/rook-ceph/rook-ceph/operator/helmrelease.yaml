@@ -42,8 +42,7 @@ spec:
     nodeSelector:
       node-role.kubernetes.io/control-plane: "true"
     tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
+      - key: node-role.kubernetes.io/control-plane
         operator: Exists
 
     csi:
@@ -64,8 +63,7 @@ spec:
       # Set provisonerTolerations and provisionerNodeAffinity for provisioner pod.
       # The CSI provisioner would be best to start on the same nodes as other ceph daemons.
       provisionerTolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
+        - key: node-role.kubernetes.io/control-plane
           operator: Exists
       # provisionerNodeAffinity: node-role.kubernetes.io/control-plane=true
       # Set pluginTolerations and pluginNodeAffinity for plugin daemonset pods.
@@ -75,8 +73,7 @@ spec:
           operator: "Exists"
         - effect: "NoSchedule"
           operator: "Exists"
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
+        - key: node-role.kubernetes.io/control-plane
           operator: Exists
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
