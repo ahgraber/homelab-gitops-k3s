@@ -100,7 +100,9 @@ tasks:
     summary: |
       Args:
         playbook: Playbook to run (required)
-      E.g., `task ansible:run playbook='k3s-install'`
+      E.g.,
+      task ansible:run playbook='k3s-prepare'
+      task ansible:run playbook='k3s-install' -- '--become'
     prompt: Run Ansible playbook '{{.playbook}}' ... continue?
     dir: "{{.ANSIBLE_DIR}}"
     cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
@@ -118,7 +120,7 @@ tasks:
     summary: |
       E.g.,
       task ansible:cmd cmd="apt update && apt upgrade -y"
-      task ansible:cmd cmd="apt update && apt upgrade -y" --become
+      task ansible:cmd cmd="apt update && apt upgrade -y" -- '--become'
     cmds:
       # - echo "{{.CLI_ARGS}}"
       - ansible -i {{.ANSIBLE_DIR}}/inventory {{.group}} -m ansible.builtin.shell -a "{{.cmd}}" {{.CLI_ARGS}}
