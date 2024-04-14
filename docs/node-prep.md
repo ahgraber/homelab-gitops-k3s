@@ -52,11 +52,19 @@
 
 4. [Post install] Add SSH keys (or use `ssh-copy-id` on the client that is connecting)
 
-    📍 _First make sure your ssh keys are up-to-date and added to your github account as [instructed](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)._
+   a. Add with `ssh-copy-id`
 
-    ```sh
-    mkdir -m 700 ~/.ssh
-    sudo apt install -y curl
-    curl https://github.com/${github_username}.keys > ~/.ssh/authorized_keys
-    chmod 600 ~/.ssh/authorized_keys
-    ```
+      ```sh
+      ssh-copy-id -i ~/.ssh/id_ed25519 <user>@<host>
+      ```
+
+   b. Add with github
+
+      📍 _First make sure your ssh keys are up-to-date and added to your github account as [instructed](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)._
+
+      ```sh
+      mkdir -m 700 ~/.ssh
+      sudo apt install -y curl
+      curl https://github.com/${github_username}.keys > ~/.ssh/authorized_keys
+      chmod 600 ~/.ssh/authorized_keys
+      ```
