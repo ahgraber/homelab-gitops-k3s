@@ -88,5 +88,5 @@ spec:
       data:
         existingClaim: scrutiny
         globalMounts:
-          path: /var/lib/influxdb2
-          subPath: scrutiny_influxdb
+          - path: /var/lib/influxdb2
+            subPath: scrutiny_influxdb

@@ -35,12 +35,12 @@ spec:
             env:
               SPEEDTEST_PORT: &port 9798
               # SPEEDTEST_SERVER: "10292"
-          resources:
-            requests:
-              cpu: 15m
-              memory: 50M
-            limits:
-              memory: 100M
+            resources:
+              requests:
+                cpu: 15m
+                memory: 50M
+              limits:
+                memory: 100M
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

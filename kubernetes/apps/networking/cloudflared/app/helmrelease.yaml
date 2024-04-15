@@ -105,13 +105,13 @@ spec:
         type: configMap
         name: *app
         globalMounts:
-          path: /etc/cloudflared/config/config.yaml
-          subPath: config.yaml
-          readOnly: true
+          - path: /etc/cloudflared/config/config.yaml
+            subPath: config.yaml
+            readOnly: true
       creds:
         type: secret
         name: cloudflared-credentials
         globalMounts:
-          path: /etc/cloudflared/creds/credentials.json
-          subPath: credentials.json
-          readOnly: true
+          - path: /etc/cloudflared/creds/credentials.json
+            subPath: credentials.json
+            readOnly: true

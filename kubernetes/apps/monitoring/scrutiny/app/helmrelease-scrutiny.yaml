@@ -106,5 +106,5 @@ spec:
       config:
         existingClaim: *app
         globalMounts:
-          path: /opt/scrutiny/config
-          subPath: scrutiny
+          - path: /opt/scrutiny/config
+            subPath: scrutiny
