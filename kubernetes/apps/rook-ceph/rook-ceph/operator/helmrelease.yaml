@@ -78,10 +78,15 @@ spec:
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
     discover:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
-      nodeAffinity: node-role.kubernetes.io/control-plane=true
 
     disableAdmissionController: true
     # admissionController:
