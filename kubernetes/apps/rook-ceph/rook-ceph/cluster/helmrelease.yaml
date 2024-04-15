@@ -106,7 +106,8 @@ spec:
           tolerations:
             - key: node-role.kubernetes.io/control-plane
               operator: Exists
-        mon: *placement
+        mon:
+          <<: *placement
       storage:
         useAllNodes: false
         useAllDevices: false
