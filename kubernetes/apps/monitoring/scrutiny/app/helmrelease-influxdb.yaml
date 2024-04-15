@@ -72,8 +72,8 @@ spec:
               capabilities:
                 drop: ["ALL"]
                 add:
-                  - "CAP_DAC_OVERRIDE"
-                  # - "CAP_FOWNER"
+                  # - "CAP_DAC_OVERRIDE"
+                  - "CAP_FOWNER"
               seccompProfile:
                 type: RuntimeDefault
         pod:
