@@ -7,7 +7,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: networking-nginx-internal
+    - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/networking/external-services/services
   prune: true
   sourceRef:

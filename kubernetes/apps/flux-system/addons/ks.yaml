@@ -28,7 +28,7 @@ metadata:
 spec:
   # dependsOn:
   #   - name: networking-cloudflared
-  #   - name: networking-nginx-external
+  #   - name: networking-ingress-nginx-external
   #   - name: monitoring-kube-prometheus-stack
   path: ./kubernetes/apps/flux-system/addons/webhooks
   prune: true

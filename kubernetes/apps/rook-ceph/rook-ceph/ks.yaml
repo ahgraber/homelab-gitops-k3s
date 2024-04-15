@@ -28,7 +28,7 @@ spec:
   dependsOn:
     - name: rook-ceph-operator
     - name: kube-system-snapshot-controller
-    # - name: networking-nginx-internal
+    # - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
   sourceRef:
