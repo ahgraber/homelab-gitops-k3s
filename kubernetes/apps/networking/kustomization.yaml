@@ -5,9 +5,9 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  # # Flux-Kustomizations
-  # - ./cloudflared/ks.yaml
-  # - ./external-dns/ks.yaml
-  # - ./external-services/ks.yaml
-  # - ./ingress-nginx/ks.yaml
-  # - ./k8s-gateway/ks.yaml
+  # Flux-Kustomizations
+  - ./cloudflared/ks.yaml
+  - ./external-dns/ks.yaml
+  - ./external-services/ks.yaml
+  - ./ingress-nginx/ks.yaml
+  - ./k8s-gateway/ks.yaml
