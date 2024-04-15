@@ -69,11 +69,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
-              capabilities:
-                drop: ["ALL"]
-                add:
-                  # - "CAP_DAC_OVERRIDE"
-                  - "CAP_FOWNER"
+              capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
         pod:
