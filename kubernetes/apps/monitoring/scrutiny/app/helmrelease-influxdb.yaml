@@ -68,7 +68,7 @@ spec:
                 memory: 384M
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
