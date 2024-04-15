@@ -63,13 +63,14 @@ spec:
       config:
         enabled: true
         type: emptyDir
-        mountPath: /opt/scrutiny/config
+        globalMounts:
+          - path: /opt/scrutiny/config
       udev:
         enabled: true
-        mountPath: /run/udev
         type: hostPath
         hostPath: /run/udev
-        readOnly: true
+        globalMounts:
+          - path: /run/udev
       nvme0n1:
         enabled: true
         type: hostPath
@@ -78,7 +79,7 @@ spec:
           - path: /dev/nvme0n1
       sda:
         enabled: true
-        mountPath: /dev/sda
         type: hostPath
         hostPath: /dev/sda
-        readOnly: true
+        globalMounts:
+          - path: /dev/sda
