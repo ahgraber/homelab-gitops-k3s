@@ -26,6 +26,14 @@ spec:
   #   - name: scrutiny-influxdb
   #     namespace: monitoring
   values:
+    defaultPodOptions: # NOTE: may have to remove pod.securityContext during initial startup (blank PVC) to ensure the file paths can be created
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
     controllers:
       scrutiny:
         strategy: RollingUpdate
@@ -108,18 +116,11 @@ spec:
                 memory: 128M
               limits:
                 memory: 384M
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   # readOnlyRootFilesystem: true
-            #   capabilities: { drop: ["ALL"] }
-            #   seccompProfile:
-            #     type: RuntimeDefault
-        # pod:
-        #   # NOTE: may have to remove pod.securityContext during initial startup (blank PVC) to ensure the file paths can be created
-        #   securityContext:
-        #     runAsUser: 65534
-        #     runAsGroup: 65534
-        #     runAsNonRoot: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+              seccompProfile:
+                type: RuntimeDefault
     service:
       app:
         controller: scrutiny

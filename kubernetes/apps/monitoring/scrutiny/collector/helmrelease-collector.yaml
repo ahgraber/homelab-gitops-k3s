@@ -27,9 +27,16 @@ spec:
       namespace: monitoring
   values:
     defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
+
     controllers:
       scrutiny-collector:
         type: daemonset
