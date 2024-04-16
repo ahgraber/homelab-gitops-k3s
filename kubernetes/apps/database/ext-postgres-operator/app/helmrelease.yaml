@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app ext-postgres-operator-default
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: ext-postgres-operator
+      version: 1.2.6
+      sourceRef:
+        kind: HelmRepository
+        name: movetokube
+        namespace: flux-system
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+
+  values:
+    replicaCount: 1
+    fullnameOverride: *app
+    podAnnotations:
+      reloader.stakater.com/search: "true"
+
+    env:
+      OPERATOR_NAME: *app
+      POSTGRES_INSTANCE: "postgres"
+    existingSecret: *app
+
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    # Which namespace to watch in kubernetes, empty string means all namespaces
+    watchNamespace: "default,monitoring"
