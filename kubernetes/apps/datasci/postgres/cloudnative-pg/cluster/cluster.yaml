@@ -7,7 +7,7 @@ metadata:
   annotations:
     kyverno.io/ignore: "true"
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:14.11-10
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-13
   instances: 3
   primaryUpdateStrategy: unsupervised
 
@@ -39,7 +39,7 @@ spec:
     #   #   name: <app>-user
     ## Alternative bootstrap method: start from a backup
     recovery:
-      source: &old_db datasci-v2 # next time it will be datasci-v3
+      source: &old_db datasci-v3 # next time it will be datasci-v4
 
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
@@ -61,7 +61,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: &current_db datasci-v3 # next time it will be datasci-v4
+      serverName: &current_db datasci-v4 # next time it will be datasci-v5
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:
@@ -88,7 +88,16 @@ spec:
 
   affinity:
     enablePodAntiAffinity: true
+    podAntiAffinityType: preferred
     topologyKey: kubernetes.io/hostname
+    additionalPodAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: postgresql
+                operator: Exists
+                values: []
+          topologyKey: "kubernetes.io/hostname"
 
   monitoring:
     enablePodMonitor: true

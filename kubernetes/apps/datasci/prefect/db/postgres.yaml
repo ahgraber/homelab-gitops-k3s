@@ -5,7 +5,7 @@ metadata:
   name: &app prefect
   namespace: &namespace datasci
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: datasci
 spec:
   database: *app # db name in postgres cluster
   extensions: # List of extensions that should be created in the database (optional)
@@ -17,7 +17,7 @@ metadata:
   name: &app prefect
   namespace: &namespace datasci
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: datasci
 spec:
   role: *app
   database: *app # references the CR

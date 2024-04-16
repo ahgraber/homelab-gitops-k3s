@@ -5,7 +5,7 @@ metadata:
   name: &app miniflux
   namespace: &namespace default
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: postgres
 spec:
   database: *app # db name in postgres cluster
 ---
@@ -15,7 +15,7 @@ metadata:
   name: &app miniflux
   namespace: &namespace default
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: postgres
 spec:
   role: *app
   database: *app # references the CR

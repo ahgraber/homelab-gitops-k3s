@@ -8,7 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: cnpg-cluster-datasci
-  path: ./kubernetes/apps/datasci/postgres/postgres-operator/app
+  path: ./kubernetes/apps/datasci/postgres/ext-postgres-operator/app
   prune: true
   sourceRef:
     kind: GitRepository

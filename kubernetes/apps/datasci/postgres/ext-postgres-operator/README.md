@@ -13,7 +13,7 @@ metadata:
   name: &app <app>
   namespace: &namespace datasci
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: postgres
 spec:
   database: *app # db name in postgres cluster
 ---
@@ -23,7 +23,7 @@ metadata:
   name: &app <app>-user
   namespace: &namespace datasci
   annotations:
-    postgres.db.movetokube.com/instance: *namespace
+    postgres.db.movetokube.com/instance: postgres
 spec:
   role: *app
   database: <app> # references the CR
