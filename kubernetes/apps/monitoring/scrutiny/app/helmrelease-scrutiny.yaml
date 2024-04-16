@@ -73,6 +73,46 @@ spec:
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
+          influxdb:
+            image:
+              repository: docker.io/library/influxdb
+              tag: 2.7-alpine
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health
+                    port: &port 8086
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 0
+                  timeoutSeconds: 1
+                  periodSeconds: 5
+                  failureThreshold: 30
+                  httpGet:
+                    path: /health
+                    port: *port
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128M
+              limits:
+                memory: 384M
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   # readOnlyRootFilesystem: true
+            #   capabilities: { drop: ["ALL"] }
+            #   seccompProfile:
+            #     type: RuntimeDefault
         pod:
           securityContext:
             runAsUser: 65534

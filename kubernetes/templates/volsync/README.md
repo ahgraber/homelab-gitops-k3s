@@ -39,7 +39,6 @@ resources:
       APP: *app
       APP_UID: "0"
       APP_GID: "0"
-      VOLSYNC_CLAIM: *app
       VOLSYNC_CAPACITY: 5Gi
 ```
 
@@ -59,6 +58,5 @@ For defining a replication source/destination:
 
 For defining a PVC for restoration:
 
-- VOLSYNC_CLAIM: \*app
 - VOLSYNC_CAPACITY - default: 5Gi
 - VOLSYNC_STORAGECLASS - default: 'ceph-block'
