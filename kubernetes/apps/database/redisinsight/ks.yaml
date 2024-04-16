@@ -10,8 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: redis-operator
+  # dependsOn:
+  #   - name: redis-operator
   path: ./kubernetes/apps/default/redis/redisinsight/app
   prune: true
   sourceRef:

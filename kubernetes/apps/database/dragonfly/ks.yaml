@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/database/dragonfly/app
+  path: ./kubernetes/apps/database/dragonfly/operator
   prune: true
   sourceRef:
     kind: GitRepository
