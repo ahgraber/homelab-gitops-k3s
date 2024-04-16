@@ -15,7 +15,6 @@ resources:
   - ./kubernetes-dashboard/ks.yaml    # NOTE: do not upgrade; versions>6.* have breaking & unresolved changes
   - ./loki-stack/ks.yaml
   - ./nut-exporter/ks.yaml
-  - ./node-exporter/ks.yaml
   - ./node-problem-detector/ks.yaml
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
