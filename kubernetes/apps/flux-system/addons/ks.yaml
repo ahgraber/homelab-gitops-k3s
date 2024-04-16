@@ -6,9 +6,10 @@ metadata:
   name: flux-system-monitoring
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: monitoring-kube-prometheus-stack
-    - name: monitoring-grafana
+  targetNamespace: flux-system
+  # dependsOn:
+  #   - name: monitoring-kube-prometheus-stack
+  #   - name: monitoring-grafana
   path: ./kubernetes/apps/flux-system/addons/monitoring
   prune: true
   sourceRef:
@@ -23,9 +24,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: flux-system-webhooks
+  name: &app flux-system-webhooks
   namespace: flux-system
 spec:
+  targetNamespace: flux-system
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   # dependsOn:
   #   - name: networking-cloudflared
   #   - name: networking-ingress-nginx-external

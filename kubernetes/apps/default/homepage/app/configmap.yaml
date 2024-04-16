@@ -114,7 +114,7 @@ data:
         - OPNsense:
             href: https://opnsense.${SECRET_INT_DOMAIN}
             icon: opnsense.png
-            description: NineRealmLabs Router
+            description: Homelab Router
             # widget:
             #   type: opnsense
             #   url: https://opnsense.${SECRET_INT_DOMAIN}

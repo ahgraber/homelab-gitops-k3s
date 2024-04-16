@@ -3,9 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: rook-ceph-operator
+  name: &app rook-ceph-operator
   namespace: flux-system
 spec:
+  targetNamespace: rook-ceph
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   # dependsOn:
   #   - name: cert-manager # for rook-ceph admission controller
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
@@ -22,12 +26,16 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: rook-ceph-cluster
+  name: &app rook-ceph-cluster
   namespace: flux-system
 spec:
+  targetNamespace: rook-ceph
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-operator
-    - name: kube-system-snapshot-controller
+    - name: snapshot-controller
     # - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
@@ -46,10 +54,11 @@ metadata:
   name: rook-ceph-addons
   namespace: flux-system
 spec:
+  targetNamespace: rook-ceph
   dependsOn:
     - name: rook-ceph-cluster
-    - name: monitoring-kube-prometheus-stack
-    - name: monitoring-grafana
+    - name: kube-prometheus-stack
+    # - name: grafana
   path: ./kubernetes/apps/rook-ceph/rook-ceph/addons
   prune: true
   sourceRef:

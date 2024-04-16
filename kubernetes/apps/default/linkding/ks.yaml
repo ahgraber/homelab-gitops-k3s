@@ -3,12 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: default-linkding-db
+  name: &app linkding-db
   namespace: flux-system
 spec:
+  targetNamespace: default
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: default-cnpg-db
-    - name: default-postgres-operator
+    - name: cnpg-cluster-default
+    - name: ext-postgres-operator
   path: ./kubernetes/apps/default/linkding/db
   prune: true
   sourceRef:
@@ -23,11 +27,15 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: default-linkding
+  name: &app linkding
   namespace: flux-system
 spec:
+  targetNamespace: default
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: default-linkding-db
+    - name: linkding-db
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/linkding/app
   prune: true
