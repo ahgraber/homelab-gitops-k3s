@@ -45,15 +45,16 @@ spec:
       enabled: true
       fullnameOverride: alertmanager
       alertmanagerSpec:
+        replicas: 3
         retention: 72h
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block
+              storageClassName: local-path
               resources:
                 requests:
                   storage: 1Gi
-      # config:  # see configmap
+      # config:  # see alertmanager.yaml configmap
       ingress:
         enabled: true
         ingressClassName: internal
@@ -71,8 +72,10 @@ spec:
       forceDeployDashboards: true
       sidecar:
         dashboards:
+          annotations:
+            grafana_folder: Kubernetes
           multicluster:
-            global:
+            etcd:
               enabled: true
 
     # coreDns:
@@ -115,10 +118,21 @@ spec:
       enabled: false
     kubeStateMetrics:
       enabled: true
-      # config specified in configmap
+      # config specified in kube-state-metrics.yaml configmap
 
     nodeExporter:
-      enabled: false
+      enabled: true
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
 
     prometheusOperator:
       resources:
@@ -155,11 +169,13 @@ spec:
           registry: quay.io
           repository: prometheus/prometheus
           tag: v2.51.0-dedupelabels
-        # podMetadata:
-        #   annotations:
-        #     secret.reloader.stakater.com/reload: ...
-        replicas: 1
+        podMetadata:
+          annotations:
+            secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+        replicas: 3
         replicaExternalLabelName: __replica__
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+
         enableAdminAPI: true
         externalLabels:
           cluster: home-kubernetes
@@ -181,33 +197,20 @@ spec:
         resources:
           requests:
             cpu: 763m
-            memory: 7Gi
           limits:
-            memory: 7Gi
+            memory: 1500Mi
 
-        retention: 3d
+        retention: 2d
         retentionSize: 8GiB
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block
+              storageClassName: local-path
               resources:
                 requests:
                   storage: 10Gi
-
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              version: v1
-              kind: ConfigMap
-              labelSelector: grafana_dashboard in (1)
-            patch: |-
-              apiVersion: v1
-              kind: ConfigMap
-              metadata:
-                name: not-used
-                namespace: not-used
-                annotations:
-                  grafana_folder: Kubernetes
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true
