@@ -28,9 +28,9 @@ spec:
   values:
     defaultPodOptions: # NOTE: may have to remove pod.securityContext during initial startup (blank PVC) to ensure the file paths can be created
       securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
-        runAsNonRoot: true
+        # runAsGroup: 65534
+        # runAsUser: 65534
+        # runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
 
@@ -118,6 +118,7 @@ spec:
                 memory: 384M
             securityContext:
               allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
