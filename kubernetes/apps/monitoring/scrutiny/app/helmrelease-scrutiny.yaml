@@ -22,9 +22,9 @@ spec:
   upgrade:
     remediation:
       retries: 3
-  dependsOn:
-    - name: scrutiny-influxdb
-      namespace: monitoring
+  # dependsOn:
+  #   - name: scrutiny-influxdb
+  #     namespace: monitoring
   values:
     controllers:
       scrutiny:
@@ -78,7 +78,7 @@ spec:
               repository: docker.io/library/influxdb
               tag: 2.7-alpine
             probes:
-              liveness: &probes
+              liveness: &probes-db
                 enabled: true
                 custom: true
                 spec:
@@ -88,8 +88,8 @@ spec:
                   failureThreshold: 3
                   httpGet:
                     path: /health
-                    port: &port 8086
-              readiness: *probes
+                    port: &port-db 8086
+              readiness: *probes-db
               startup:
                 enabled: true
                 custom: true
