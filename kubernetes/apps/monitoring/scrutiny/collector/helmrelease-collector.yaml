@@ -54,8 +54,8 @@ spec:
                 memory: 128Mi
             securityContext:
               privileged: true
-              readOnlyRootFilesystem: true
-              # capabilities: { add: ["SYS_RAWIO"] } # allow access to smartctl
+              # readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"], add: ["SYS_RAWIO"] } # allow access to smartctl
     service:
       app:
         controller: scrutiny-collector
