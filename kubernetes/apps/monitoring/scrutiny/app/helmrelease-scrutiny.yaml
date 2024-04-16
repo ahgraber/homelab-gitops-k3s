@@ -36,13 +36,14 @@ spec:
               tag: master-web
             env:
               TZ: "${TIMEZONE}"
-              SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
+              # SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
+              SCRUTINY_WEB_INFLUXDB_HOST: influxdb # use container name
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
-                  initialDelaySeconds: 30
+                  initialDelaySeconds: 60
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
@@ -113,11 +114,12 @@ spec:
             #   capabilities: { drop: ["ALL"] }
             #   seccompProfile:
             #     type: RuntimeDefault
-        pod:
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            runAsNonRoot: true
+        # pod:
+        #   # NOTE: may have to remove pod.securityContext during initial startup (blank PVC) to ensure the file paths can be created
+        #   securityContext:
+        #     runAsUser: 65534
+        #     runAsGroup: 65534
+        #     runAsNonRoot: true
     service:
       app:
         controller: scrutiny
