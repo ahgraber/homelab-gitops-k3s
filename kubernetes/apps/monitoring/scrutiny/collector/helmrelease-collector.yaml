@@ -27,7 +27,9 @@ spec:
       namespace: monitoring
   values:
     defaultPodOptions:
-      automountServiceAccountToken: false
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
     controllers:
       scrutiny-collector:
         type: daemonset
