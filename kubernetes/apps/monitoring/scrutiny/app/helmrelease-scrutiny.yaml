@@ -119,6 +119,9 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
+              runAsGroup: 1000 # defined in influxdb image
+              runAsUser: 1000 # defined in influxdb image
+              runAsNonRoot: true
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
