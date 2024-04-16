@@ -37,7 +37,7 @@ spec:
             env:
               TZ: "${TIMEZONE}"
               # SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
-              SCRUTINY_WEB_INFLUXDB_HOST: influxdb # use container name
+              SCRUTINY_WEB_INFLUXDB_HOST: localhost
             probes:
               liveness: &probes
                 enabled: true
