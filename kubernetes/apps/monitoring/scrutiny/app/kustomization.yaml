@@ -6,4 +6,4 @@ namespace: monitoring
 resources:
   # - ./helmrelease-influxdb.yaml
   - ./helmrelease-scrutiny.yaml
-  # - ./pvc.yaml
+  - ./pvc.yaml
