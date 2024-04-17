@@ -26,7 +26,7 @@ Since the native PVC/PV is using k8s-local local-path, the backup should use NAS
 
 Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.18/cnpg-plugin/)
 
-## Updating CNPG
+## Updating postgres versions with CNPG
 
 [ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)
 
