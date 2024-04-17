@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kube-prometheus-stack
-    - name: grafana
+    # - name: grafana
   path: ./kubernetes/apps/monitoring/nut-exporter/app
   prune: true
   sourceRef:
