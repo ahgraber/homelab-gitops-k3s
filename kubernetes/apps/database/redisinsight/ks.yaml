@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   # dependsOn:
   #   - name: redis-operator
-  path: ./kubernetes/apps/default/redis/redisinsight/app
+  path: ./kubernetes/apps/database/redisinsight/app
   prune: true
   sourceRef:
     kind: GitRepository
