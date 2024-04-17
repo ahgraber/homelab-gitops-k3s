@@ -28,7 +28,9 @@ Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.18/cnpg-p
 
 ## Updating postgres versions with CNPG
 
-[ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)
+[The Current State of Major PostgreSQL Upgrades with CloudNativePG | EDB](https://www.enterprisedb.com/blog/current-state-major-postgresql-upgrades-cloudnativepg-kubernetes)
+
+[k8s-at-home ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)
 
 > @bjw-s presents: "A cnpg database migration in two commits":
 >

@@ -35,18 +35,18 @@ spec:
     #   # secret:
     #   #   name: <app>-user
     # ## Alternative bootstrap method: start from a backup
-    # recovery:
-    #   source: &prior_db postgres-v5 # next time it will be postgres-v6
-    ## For major postgres version upgrade
-    initdb:
-      import:
-        type: monolith
-        databases:
-          - "*"
-        roles:
-          - "*"
-        source:
-          externalCluster: &prior_db postgres-v5
+    recovery:
+      source: &prior_db postgres-v5 # next time it will be postgres-v6
+    # ## For major postgres version upgrade
+    # initdb:
+    #   import:
+    #     type: monolith
+    #     databases:
+    #       - "*"
+    #     roles:
+    #       - "*"
+    #     source:
+    #       externalCluster: &prior_db postgres-v5
 
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
@@ -68,7 +68,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: &current_db postgres16-v0 # next time it will be postgres16-v2
+      serverName: &current_db postgres14-before-migration # next time it will be postgres16-v1
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:
