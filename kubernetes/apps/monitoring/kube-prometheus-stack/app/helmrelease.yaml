@@ -29,6 +29,8 @@ spec:
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: thanos
+      namespace: monitoring
   valuesFrom:
     - kind: ConfigMap
       name: kube-state-metrics-config

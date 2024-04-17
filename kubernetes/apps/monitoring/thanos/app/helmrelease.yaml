@@ -90,7 +90,7 @@ spec:
         enabled: true
         ingressClassName: internal
         hosts:
-          - &host thanos.${SECRET_DOMAIN}"
+          - &host "thanos.${SECRET_DOMAIN}"
         tls:
           - hosts: [*host]
       podAnnotations: &podAnnotations
