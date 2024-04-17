@@ -18,3 +18,4 @@ resources:
   - ./node-problem-detector/ks.yaml
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
+  - ./thanos/ks.yaml
