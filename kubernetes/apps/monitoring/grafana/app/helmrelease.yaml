@@ -41,24 +41,25 @@ spec:
       GF_EXPLORE_ENABLED: true
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SERVER_ROOT_URL: "https://grafana.${SECRET_DOMAIN}"
-      GF_DATABASE_NAME: *app
-      GF_DATABASE_HOST: # do not include database name
-        valueFrom:
-          secretKeyRef:
-            name: &db_secret database-grafana
-            key: HOST
-      GF_DATABASE_USER:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: LOGIN
-      GF_DATABASE_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: PASSWORD
-      GF_DATABASE_SSL_MODE: disable
-      GF_DATABASE_TYPE: postgres
+      # GF_DATABASE_TYPE: postgres
+      # GF_DATABASE_NAME: *app
+      # GF_DATABASE_HOST: # do not include database name; _do_ include port
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: &db_secret database-grafana
+      #       key: HOST
+      # GF_DATABASE_USER:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: *db_secret
+      #       key: LOGIN
+      # GF_DATABASE_PASSWORD:
+      #   valueFrom:
+      #     secretKeyRef:
+      #       name: *db_secret
+      #       key: PASSWORD
+      # GF_DATABASE_SSL_MODE: disable
+
     grafana.ini:
       analytics:
         check_for_updates: false
