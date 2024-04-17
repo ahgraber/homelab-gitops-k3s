@@ -161,6 +161,7 @@ spec:
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
           - &host "prometheus.${SECRET_DOMAIN}"
+        pathType: Prefix
         tls:
           - hosts:
               - *host
@@ -171,7 +172,9 @@ spec:
           tag: v2.51.0-dedupelabels
         podMetadata:
           annotations:
-            secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+            secret.reloader.stakater.com/reload: &secret thanos-bucket
+        podAntiAffinity: soft
+        podAntiAffinityTopologyKey: kubernetes.io/hostname
         replicas: 3
         replicaExternalLabelName: __replica__
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
@@ -191,6 +194,7 @@ spec:
         scrapeConfigSelectorNilUsesHelmValues: false
 
         enableFeatures:
+          - auto-gomemlimit
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
 
@@ -210,6 +214,31 @@ spec:
               resources:
                 requests:
                   storage: 10Gi
+        thanos:
+          image: "quay.io/thanos/thanos:${THANOS_VERSION}"
+          version: "${THANOS_VERSION#v}"
+          objectStorageConfig:
+            # renders new secret
+            secret:
+              type: S3
+              config:
+                bucket: thanos
+                endpoint: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc.cluster.local
+                region:
+                access_key:
+                  valueFrom:
+                    secretKeyRef:
+                      name: *secret
+                      key: AWS_ACCESS_KEY_ID
+                secret_key:
+                  valueFrom:
+                    secretKeyRef:
+                      name: *secret
+                      key: AWS_SECRET_ACCESS_KEY
+            # # use existing secret
+            # existingSecret:
+            #   name: *secret
+            #   key: config
       thanosService:
         enabled: true
       thanosServiceMonitor:
