@@ -34,8 +34,8 @@ Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.18/cnpg-p
 4. Ensure new cluster has a scheduledBackup pointing to it
 5. Redirect `ext-postgres-operator` to new cluster (edit the cluster fqdn in the secret)
 6. Redirect apps to new cluster
-7. Scale up apps 🤞🏼
-8. Remove the old cluster
+7. Remove the old cluster (remove before scaling up to make sure apps fully switch over)
+8. Scale up apps 🤞🏼
 
 Refs:
 
