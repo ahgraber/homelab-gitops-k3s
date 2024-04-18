@@ -5,6 +5,6 @@ kind: Kustomization
 resources:
   - ./cluster.yaml
   - ./scheduledbackup.yaml
-  - ./cluster16.yaml
-  - ./scheduledbackup16.yaml
+  # - ./cluster16.yaml
+  # - ./scheduledbackup16.yaml
   - ./secrets.sops.yaml
