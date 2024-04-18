@@ -35,26 +35,26 @@ spec:
     - kind: ConfigMap
       name: kube-state-metrics-config
       valuesKey: kube-state-metrics.yaml
-    - targetPath: prometheus.thanos.objectStorageConfig.secret.config.bucket
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_NAME
-    - targetPath: prometheus.thanos.objectStorageConfig.secret.config.endpoint
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_HOST
-    - targetPath: prometheus.thanos.objectStorageConfig.secret.config.region
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_REGION
-    - targetPath: prometheus.thanos.objectStorageConfig.secret.config.access_key
-      kind: Secret
-      name: thanos-bucket
-      valuesKey: AWS_ACCESS_KEY_ID
-    - targetPath: prometheus.thanos.objectStorageConfig.secret.config.secret_key
-      kind: Secret
-      name: thanos-bucket
-      valuesKey: AWS_SECRET_ACCESS_KEY
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.bucket
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_NAME
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.endpoint
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_HOST
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.region
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_REGION
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.access_key
+    #   kind: Secret
+    #   name: thanos-bucket
+    #   valuesKey: AWS_ACCESS_KEY_ID
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.secret_key
+    #   kind: Secret
+    #   name: thanos-bucket
+    #   valuesKey: AWS_SECRET_ACCESS_KEY
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     fullnameOverride: kps
@@ -194,7 +194,7 @@ spec:
           tag: v2.51.0-dedupelabels
         podMetadata:
           annotations:
-            secret.reloader.stakater.com/reload: &secret thanos-bucket
+            secret.reloader.stakater.com/reload: &secret thanos-objstore-config
         podAntiAffinity: soft
         podAntiAffinityTopologyKey: kubernetes.io/hostname
         replicas: 3
@@ -240,27 +240,27 @@ spec:
           image: "quay.io/thanos/thanos:${THANOS_VERSION}"
           version: "${THANOS_VERSION#v}"
           objectStorageConfig:
-            # renders new secret
-            secret:
-              type: S3
-              # config:
-              #   bucket: thanos
-              #   endpoint: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc.cluster.local
-              #   region:
-              #   access_key:
-              #     valueFrom:
-              #       secretKeyRef:
-              #         name: *secret
-              #         key: AWS_ACCESS_KEY_ID
-              #   secret_key:
-              #     valueFrom:
-              #       secretKeyRef:
-              #         name: *secret
-              #         key: AWS_SECRET_ACCESS_KEY
-            # # use existing secret
-            # existingSecret:
-            #   name: *secret
-            #   key: config
+            # # renders new secret
+            # secret:
+            #   type: S3
+            #   # config:
+            #   #   bucket: thanos
+            #   #   endpoint: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc.cluster.local
+            #   #   region:
+            #   #   access_key:
+            #   #     valueFrom:
+            #   #       secretKeyRef:
+            #   #         name: *secret
+            #   #         key: AWS_ACCESS_KEY_ID
+            #   #   secret_key:
+            #   #     valueFrom:
+            #   #       secretKeyRef:
+            #   #         name: *secret
+            #   #         key: AWS_SECRET_ACCESS_KEY
+            # use existing secret
+            existingSecret:
+              name: *secret
+              key: config
       thanosService:
         enabled: true
       thanosServiceMonitor:
