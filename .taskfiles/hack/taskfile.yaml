@@ -4,6 +4,20 @@ version: "3"
 
 tasks:
 
+  relpath:
+    desc: Calculate relative path from one file to another
+    summary: ...
+    dir: "{{.ROOT_DIR}}"
+    cmd: echo $(realpath --relative-to=$(dirname "{{.start}}") "{{.end}}")
+    requires:
+      vars: ["start"]
+    vars:
+      # start:
+      end: '{{.end | default "./kubernetes/templates/volsync"}}'
+    # preconditions:
+    #   - { msg: "Start file not found", sh: "test -f {{.start}}" }
+    #   - { msg: "End file not found", sh: "test -f {{.end}}" }
+
   ks-deploy:
     desc: Deploy from local (for testing)
     cmds:

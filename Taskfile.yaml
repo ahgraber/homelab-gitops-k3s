@@ -23,6 +23,7 @@ includes:
     taskfile: .taskfiles/flux/taskfile.yaml
     aliases: ["f"]
   db: .taskfiles/db/taskfile.yaml
+  hack: .taskfiles/hack/taskfile.yaml
   kubernetes:
     taskfile: .taskfiles/kubernetes/taskfile.yaml
     aliases: ["k", "k3s", "k8s"]
