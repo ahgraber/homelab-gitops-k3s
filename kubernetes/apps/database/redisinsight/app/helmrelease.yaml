@@ -26,9 +26,6 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
 
@@ -66,7 +63,7 @@ spec:
         controller: *app
         ports:
           http:
-            port: 5440
+            port: 5540
 
     serviceAccount:
       create: true
@@ -88,10 +85,3 @@ spec:
         tls:
           - hosts:
               - *host
-    persistence:
-      db:
-        enabled: true
-        type: emptyDir
-        # mountPath: /db
-        # accessMode: ReadWriteOnce
-        # size: 1Gi
