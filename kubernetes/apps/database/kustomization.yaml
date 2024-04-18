@@ -10,5 +10,4 @@ resources:
   - ./dragonfly/ks.yaml
   - ./ext-postgres-operator/ks.yaml
   - ./pgadmin/ks.yaml
-  # - ./redis/ks.yaml
   - ./redisinsight/ks.yaml
