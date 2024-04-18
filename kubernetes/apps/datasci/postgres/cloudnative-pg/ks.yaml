@@ -6,7 +6,7 @@ metadata:
   name: &app cnpg-cluster-datasci
   namespace: flux-system
 spec:
-  targetNamespace: database
+  targetNamespace: datasci
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app

@@ -26,13 +26,18 @@ Since the native PVC/PV is using k8s-local local-path, the backup should use NAS
 
 Install the [kubectl plugin](https://cloudnative-pg.io/documentation/1.18/cnpg-plugin/)
 
-## Updating CNPG
+## Updating postgres versions with CNPG
 
-[ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)
+1. Scale down apps using old cluster
+2. Ensure old cluster is running
+3. Spin up new cluster, pointing `.connectionParameters` to the old cluster
+4. Ensure new cluster has a scheduledBackup pointing to it
+5. Redirect `ext-postgres-operator` to new cluster (edit the cluster fqdn in the secret)
+6. Redirect apps to new cluster
+7. Scale up apps 🤞🏼
+8. Remove the old cluster
 
-> @bjw-s presents: "A cnpg database migration in two commits":
->
-> Preamble: scale down any workloads that are connected to the existing cluster
-> Act 1, spinning up the new cluster alongside the old: bjw-s/home-ops@0a26675 (you can probably determine what you need to uncomment there)
-> Intermezzo: Grab some coffee, or do as I did and watch kubectl output like a hawk
-> Act 2, remove the old cluster: bjw-s/home-ops@0f656ce
+Refs:
+
+- [The Current State of Major PostgreSQL Upgrades with CloudNativePG | EDB](https://www.enterprisedb.com/blog/current-state-major-postgresql-upgrades-cloudnativepg-kubernetes)
+- [k8s-at-home ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)

@@ -34,7 +34,7 @@ spec:
 
     env:
       OPERATOR_NAME: *app
-      POSTGRES_INSTANCE: "postgres"
+      POSTGRES_INSTANCE: "postgres" # match with `postgres.db.movetokube.com/instance: postgres` in CRs
     existingSecret: *app
 
     resources:
