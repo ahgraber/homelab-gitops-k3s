@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: grafana-db
   path: ./kubernetes/apps/monitoring/grafana/app
   prune: true
   sourceRef:
