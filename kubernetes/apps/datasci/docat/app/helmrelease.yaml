@@ -4,24 +4,23 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app docat
-  namespace: &app-namespace datasci
 spec:
   interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -31,38 +30,66 @@ spec:
     - name: volsync
       namespace: volsync-system
   values:
-    global:
-      nameOverride: *app
-      annotations:
-        reloader.stakater.com/search: "true"
-
-    image:
-      # renovate: datasource=docker image=ghcr.io/...
-      repository: ghcr.io/docat-org/docat
-      tag: 47cc0cc96bf20886ec0a260e03fa0ee097e46810
-    # -- Override the command(s) for the default container
-    # command: ["/bin/bash", "-c", "mlflow server"]
-    # -- Override the args for the default container
-    # args:
-    #   - "--backend-store-uri"
-    #   - "$(POSTGRES_URL)"
-    #   - "--default-artifact-root"
-    #   - "/data"
-    #   - "--host"
-    #   - "0.0.0.0"
-
-    env:
-      TZ: "${TIMEZONE}"
+    controllers:
+      docat:
+        strategy: RollingUpdate
+        containers:
+          app:
+            image:
+              # renovate: datasource=docker image=ghcr.io/...
+              repository: ghcr.io/docat-org/docat
+              tag: 47cc0cc96bf20886ec0a260e03fa0ee097e46810
+            env:
+              TZ: "${TIMEZONE}"
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 80
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: *port
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            resources:
+              requests:
+                cpu: 25m
+                memory: 105M
+              # limits:
+              #   memory: 105M
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
 
     service:
-      main:
+      app:
+        controller: *app
         ports:
           http:
-            port: 80
+            port: *port
     ingress:
-      main:
-        enabled: true
-        ingressClassName: internal
+      app:
+        className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
@@ -71,6 +98,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
@@ -78,10 +108,5 @@ spec:
       data:
         enabled: true
         existingClaim: *app
-        mountPath: /var/docat # defaults to persistence.key
-    resources:
-      requests:
-        cpu: 25m
-        memory: 105M
-      # limits:
-      #   memory: 105M
+        globalMounts:
+          - path: /var/docat

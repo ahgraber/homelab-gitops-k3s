@@ -127,7 +127,7 @@ spec:
                 type: RuntimeDefault
     service:
       app:
-        controller: scrutiny
+        controller: *app
         ports:
           http:
             port: *port
