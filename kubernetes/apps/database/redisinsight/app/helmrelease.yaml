@@ -40,16 +40,13 @@ spec:
         containers:
           app:
             image:
-              repository: redislabs/redisinsight
-              tag: 1.14.0
+              repository: redis/redisinsight
+              tag: 2.48.0
             env:
-              # - name: RITRUSTEDORIGINS
-              #   value: https://redisinsight.${SECRET_DOMAIN}
-              RITRUSTEDORIGINS: "https://redisinsight.${SECRET_DOMAIN}"
-              # RIHOST: "0.0.0.0"
-              # RIPORT: "8001"
-              # RIHOMEDIR: /db
-              # RILOGDIR: /db
+              - name: RI_FILES_LOGGER
+                value: "false"
+              - name: RI_STDOUT_LOGGER
+                value: "true"
             resources:
               requests:
                 cpu: 50m
@@ -69,8 +66,7 @@ spec:
         controller: *app
         ports:
           http:
-            port: 80
-            targetPort: 8001
+            port: 5440
 
     serviceAccount:
       create: true
