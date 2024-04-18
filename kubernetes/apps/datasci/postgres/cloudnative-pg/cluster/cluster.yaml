@@ -3,11 +3,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: &app datasci
-  namespace: &namespace datasci
-  annotations:
-    kyverno.io/ignore: "true"
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-13
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.11-10
   instances: 3
   primaryUpdateStrategy: unsupervised
 
@@ -61,7 +58,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
-      serverName: &current_db datasci-v4 # next time it will be datasci-v5
+      serverName: &current_db datasci14-before-migration # next time it will be datasci-v5
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:

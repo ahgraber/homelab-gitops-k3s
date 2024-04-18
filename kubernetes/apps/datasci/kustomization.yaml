@@ -6,8 +6,7 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # # Flux-Kustomizations | Databases
-  # - ./postgres/
-  # # # - ./redis/
+  - ./postgres/
   # # Flux-Kustomizations
   # - ./docat/ks.yaml
   # - ./mlflow/ks.yaml
