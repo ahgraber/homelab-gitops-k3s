@@ -52,7 +52,7 @@ spec:
     - name: *prior_db
       connectionParameters:
         # Use the correct IP or host name for the source database
-        host: datasci-ro.database.svc.cluster.local
+        host: datasci-ro.datasci.svc.cluster.local
         user: postgres
         dbname: postgres
       password:
