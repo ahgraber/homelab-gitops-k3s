@@ -37,16 +37,6 @@ spec:
     # ## Alternative bootstrap method: start from a backup
     recovery:
       source: &prior_db postgres-v5 # next time it will be postgres-v6
-    # ## For major postgres version upgrade
-    # initdb:
-    #   import:
-    #     type: monolith
-    #     databases:
-    #       - "*"
-    #     roles:
-    #       - "*"
-    #     source:
-    #       externalCluster: &prior_db postgres-v5
 
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
