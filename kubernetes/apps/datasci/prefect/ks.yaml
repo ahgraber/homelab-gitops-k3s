@@ -35,7 +35,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-prefect-db
+    - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/server
   prune: true
   sourceRef:
