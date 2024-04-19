@@ -46,7 +46,9 @@ spec:
 
         initContainers:
           db-upgrade:
-            image: ghcr.io/ninerealmlabs/mlflow-server:2.9.2
+            image:
+              repository: ghcr.io/ninerealmlabs/mlflow-server
+              tag: 2.9.2
             env:
               MLFLOW_BACKEND_STORE_URI:
                 valueFrom:
