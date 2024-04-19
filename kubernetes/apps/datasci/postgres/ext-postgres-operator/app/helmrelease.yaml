@@ -15,18 +15,13 @@ spec:
         name: movetokube
         namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-
   values:
     replicaCount: 1
     fullnameOverride: *app

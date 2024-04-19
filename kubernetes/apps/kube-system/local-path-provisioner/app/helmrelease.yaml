@@ -21,8 +21,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     helperImage:
       repository: public.ecr.aws/docker/library/busybox

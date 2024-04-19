@@ -22,8 +22,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     worker:
       # -- unique cluster identifier, if none is provided this value will be inferred at time of helm install

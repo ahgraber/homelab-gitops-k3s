@@ -22,8 +22,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
     rbac:
       create: true

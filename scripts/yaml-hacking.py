@@ -31,7 +31,7 @@ for hr_file in hrs:
         hr = yaml.load(file)
 
         # replace content
-        hr["metadata"].pop("namespace", None)
+        hr["metadata"].pop("namespace", None)  # remove field
 
         hr["spec"]["install"] = {
             "remediation": {
@@ -45,6 +45,7 @@ for hr_file in hrs:
                 "retries": 3,
             },
         }
+        hr["spec"].pop("uninstall", None)  # remove field
 
     with open(hr_file, "w") as file:
         yaml.dump(hr, file)
