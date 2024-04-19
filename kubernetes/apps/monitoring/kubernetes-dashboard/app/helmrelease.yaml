@@ -22,13 +22,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
+  # driftDetection:
+  #   mode: enabled
+  #   ignore:
+  #     - paths:
+  #         - /spec/containers/resources/limits
+  #       target:
+  #         kind: Pod
   values:
     extraArgs:
       - --enable-insecure-login

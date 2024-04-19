@@ -63,20 +63,22 @@ for hr_file in hrs:
                 "retries": 3,
             },
         }
-        # https://github.com/fluxcd/flux2/issues/4511
-        # https://github.com/fluxcd/helm-controller/issues/643
-        hr["spec"]["driftDetection"] = {
-            "mode": "enabled",
-            "ignore": [
-                # allow resource limit mods w/o drift correction
-                {
-                    "paths": ["/spec/containers/resources/limits"],
-                    "target": {
-                        "kind": "Pod",
-                    },
-                },
-            ],
-        }
+
+        # ### not all hrs need driftDetection
+        # # https://github.com/fluxcd/flux2/issues/4511
+        # # https://github.com/fluxcd/helm-controller/issues/643
+        # hr["spec"]["driftDetection"] = {
+        #     "mode": "enabled",
+        #     "ignore": [
+        #         # allow resource limit mods w/o drift correction
+        #         {
+        #             "paths": ["/spec/containers/resources/limits"],
+        #             "target": {
+        #                 "kind": "Pod",
+        #             },
+        #         },
+        #     ],
+        # }
 
         # remove field
         hr["spec"].pop("uninstall", None)
