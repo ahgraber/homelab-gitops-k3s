@@ -26,7 +26,7 @@ spec:
     ignore:
       - paths:
           - /spec/containers/resources/limits
-      - target:
+        target:
           kind: Pod
   values:
     # defaultPodOptions:

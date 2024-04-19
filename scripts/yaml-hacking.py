@@ -69,11 +69,11 @@ for hr_file in hrs:
             "mode": "enabled",
             "ignore": [
                 # allow resource limit mods w/o drift correction
-                {"paths": ["/spec/containers/resources/limits"]},
                 {
+                    "paths": ["/spec/containers/resources/limits"],
                     "target": {
                         "kind": "Pod",
-                    }
+                    },
                 },
             ],
         }

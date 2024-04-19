@@ -34,7 +34,7 @@ spec:
     ignore:
       - paths:
           - /spec/containers/resources/limits
-      - target:
+        target:
           kind: Pod
   valuesFrom:
     - kind: ConfigMap
