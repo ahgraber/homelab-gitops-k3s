@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: &app grafana
 spec:
-  interval: 30m
   chart:
     spec:
       chart: grafana
@@ -14,6 +13,14 @@ spec:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    # - name: local-path-provisioner
+    #   namespace: kube-system
+    - name: kube-prometheus-stack
+      namespace: monitoring
+    - name: loki-stack
+      namespace: monitoring
   install:
     remediation:
       retries: 3
@@ -22,13 +29,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    # - name: local-path-provisioner
-    #   namespace: kube-system
-    - name: kube-prometheus-stack
-      namespace: monitoring
-    - name: loki-stack
-      namespace: monitoring
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     deploymentStrategy:
       type: Recreate

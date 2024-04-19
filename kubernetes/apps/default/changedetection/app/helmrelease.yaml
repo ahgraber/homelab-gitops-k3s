@@ -6,7 +6,6 @@ kind: HelmRelease
 metadata:
   name: &app changedetection
 spec:
-  interval: 15m
   chart:
     spec:
       chart: app-template
@@ -15,6 +14,12 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
   install:
     remediation:
       retries: 3
@@ -23,11 +28,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     image:
       repository: ghcr.io/dgtlmoon/changedetection.io

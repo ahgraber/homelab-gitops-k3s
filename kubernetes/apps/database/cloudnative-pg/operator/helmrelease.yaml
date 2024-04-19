@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: cnpg-operator
 spec:
-  interval: 15m
   chart:
     spec:
       chart: cloudnative-pg
@@ -14,6 +13,10 @@ spec:
         kind: HelmRepository
         name: cloudnativepg
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: local-path-provisioner
+      namespace: kube-system
   install:
     remediation:
       retries: 3
@@ -22,9 +25,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: local-path-provisioner
-      namespace: kube-system
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     crds:
       create: true

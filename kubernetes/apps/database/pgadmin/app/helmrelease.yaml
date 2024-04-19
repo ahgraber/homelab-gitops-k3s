@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: &app pgadmin
 spec:
-  interval: 15m
   chart:
     spec:
       chart: pgadmin4
@@ -14,6 +13,10 @@ spec:
         kind: HelmRepository
         name: runix
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   install:
     remediation:
       retries: 3
@@ -22,9 +25,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     env:
       email: admin@${SECRET_DOMAIN}

@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: &app prefect-server
 spec:
-  interval: 15m
   chart:
     spec:
       chart: prefect-server
@@ -14,6 +13,7 @@ spec:
         kind: HelmRepository
         name: prefect
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
@@ -22,6 +22,30 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
+  valuesFrom:
+    - kind: Secret
+      name: &db_secret database-prefect
+      valuesKey: DATABASE_NAME
+      targetPath: postgresql.auth.database
+    - kind: Secret
+      name: *db_secret
+      valuesKey: LOGIN
+      targetPath: postgresql.auth.username
+    - kind: Secret
+      name: *db_secret
+      valuesKey: PASSWORD
+      targetPath: postgresql.auth.password
+    - kind: Secret
+      name: *db_secret
+      valuesKey: HOST
+      targetPath: postgresql.externalHostname
   values:
     server:
       image:
@@ -101,21 +125,3 @@ spec:
     postgresql:
       enabled: true
       useSubChart: false
-
-  valuesFrom:
-    - kind: Secret
-      name: &db_secret database-prefect
-      valuesKey: DATABASE_NAME
-      targetPath: postgresql.auth.database
-    - kind: Secret
-      name: *db_secret
-      valuesKey: LOGIN
-      targetPath: postgresql.auth.username
-    - kind: Secret
-      name: *db_secret
-      valuesKey: PASSWORD
-      targetPath: postgresql.auth.password
-    - kind: Secret
-      name: *db_secret
-      valuesKey: HOST
-      targetPath: postgresql.externalHostname

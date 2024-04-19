@@ -41,7 +41,6 @@ else:
 # %%
 hrs = repo.glob("**/helmrelease.yaml")
 
-# %%
 for hr_file in hrs:
     with open(hr_file, "r") as file:
         hr = yaml.load(file)
@@ -50,7 +49,7 @@ for hr_file in hrs:
         hr["metadata"].pop("namespace", None)
 
         # update to standardize
-        hr["spec"].update({"interval": "30m"})
+        hr["spec"].update({"interval": "15m"})
         # replace content
         hr["spec"]["install"] = {
             "remediation": {
@@ -64,8 +63,41 @@ for hr_file in hrs:
                 "retries": 3,
             },
         }
+        # https://github.com/fluxcd/flux2/issues/4511
+        # https://github.com/fluxcd/helm-controller/issues/643
+        hr["spec"]["driftDetection"] = {
+            "mode": "enabled",
+            "ignore": [
+                # allow resource limit mods w/o drift correction
+                {"paths": ["/spec/containers/resources/limits"]},
+                {
+                    "target": {
+                        "kind": "Pod",
+                    }
+                },
+            ],
+        }
+
         # remove field
         hr["spec"].pop("uninstall", None)
+
+        # ensure order of spec keys:
+        keys = [
+            "chart",
+            "interval",
+            "dependsOn",
+            "install",
+            "upgrade",
+            "driftDetection",
+            "uninstall",
+            "valuesFrom",
+            "values",
+            "postRenderers",
+        ]
+        for key in keys:
+            if key in hr["spec"]:
+                data = hr["spec"].pop(key)  # NOQA: N816
+                hr["spec"][key] = data
 
     with open(hr_file, "w") as file:
         yaml.dump(hr, file)
@@ -73,7 +105,6 @@ for hr_file in hrs:
 # %%
 kss = repo.glob("**/ks.yaml")
 
-# %%
 for ks_file in kss:
     for i, subdoc in enumerate(yaml.load_all(ks_file)):
         # add 'targetNamespace', update so will see in git diffs

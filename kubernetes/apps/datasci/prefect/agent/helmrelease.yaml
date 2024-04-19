@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: &app prefect-agent
 spec:
-  interval: 15m
   chart:
     spec:
       chart: prefect-agent
@@ -14,6 +13,7 @@ spec:
         kind: HelmRepository
         name: prefect
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
@@ -22,6 +22,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     agent:
       # -- unique cluster identifier, if none is provided this value will be inferred at time of helm install

@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: thanos
 spec:
-  interval: 30m
   timeout: 15m
   chart:
     spec:
@@ -15,6 +14,12 @@ spec:
         kind: HelmRepository
         name: stevehipwell
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: local-path-provisioner
+      namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   install:
     remediation:
       retries: 3
@@ -23,11 +28,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: local-path-provisioner
-      namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   valuesFrom:
     - targetPath: objstoreConfig.value.config.bucket
       kind: ConfigMap

@@ -4,7 +4,6 @@ kind: HelmRelease
 metadata:
   name: &app picoshare
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -13,6 +12,10 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   install:
     remediation:
       retries: 3
@@ -21,9 +24,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+      - target:
+          kind: Pod
   values:
     image:
       # https://github.com/mtlynch/picoshare
