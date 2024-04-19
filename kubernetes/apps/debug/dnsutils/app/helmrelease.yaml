@@ -53,6 +53,6 @@ spec:
     service:
       app:
         controller: *app
-        # ports:
-        #   http:
-        #     port: *port
+        ports:
+          http:
+            port: 80
