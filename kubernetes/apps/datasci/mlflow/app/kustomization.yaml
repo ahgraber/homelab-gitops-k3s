@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   # - ./backup/  # nothing to back up currently
   - ./helmrelease.yaml
-  - ./pvc.yaml
+  - ../../../../templates/volsync
+  # - ./pvc.yaml
