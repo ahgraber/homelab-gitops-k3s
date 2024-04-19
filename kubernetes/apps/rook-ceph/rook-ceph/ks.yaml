@@ -51,10 +51,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: rook-ceph-addons
+  name: &app rook-ceph-addons
   namespace: flux-system
 spec:
   targetNamespace: rook-ceph
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-cluster
     - name: kube-prometheus-stack
