@@ -100,7 +100,7 @@ tasks:
   #   cmds:
   #     - flux suspend hr '{{.hr}}' -n '{{.ns}}'
   #     - sleep 5
-  #     - flux resume hr '{{.hr}}'  -n '{{.ns}}'
+  #     - flux resume hr '{{.hr}}'  -n '{{.ns}}' --force
   #   vars:
   #     hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
   #     ns: '{{.ns | default "default"}}'
