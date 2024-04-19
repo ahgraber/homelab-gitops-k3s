@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: descheduler
-  namespace: kube-system
 spec:
   interval: 30m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -44,7 +44,7 @@ spec:
         RemovePodsViolatingNodeAffinity:
           enabled: true
           params:
-            nodeAffinityType: ["requiredDuringSchedulingIgnoredDuringExecution"]
+            nodeAffinityType: [requiredDuringSchedulingIgnoredDuringExecution]
         RemovePodsViolatingTopologySpreadConstraint:
           enabled: true
           params:
@@ -60,7 +60,7 @@ spec:
           params:
             failedPods:
               includingInitContainers: true
-              excludeOwnerKinds: ["Job"]
+              excludeOwnerKinds: [Job]
               minPodLifetimeSeconds: 3600
         RemovePodsHavingTooManyRestarts:
           enabled: true
@@ -83,7 +83,7 @@ spec:
     annotations:
       reloader.stakater.com/search: "true"
     podAnnotations:
-      configmap.reloader.stakater.com/reload: "descheduler"
+      configmap.reloader.stakater.com/reload: descheduler
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -93,7 +93,7 @@ spec:
                 matchExpressions:
                   - key: app.kubernetes.io/name
                     operator: In
-                    values: ["descheduler"]
+                    values: [descheduler]
               topologyKey: kubernetes.io/hostname
     nodeSelector:
       node-role.kubernetes.io/control-plane: "true"

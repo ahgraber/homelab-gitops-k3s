@@ -15,13 +15,12 @@ spec:
         name: movetokube
         namespace: flux-system
   install:
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
-    crds: CreateReplace
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -34,7 +33,7 @@ spec:
 
     env:
       OPERATOR_NAME: *app
-      POSTGRES_INSTANCE: "postgres" # match with `postgres.db.movetokube.com/instance: postgres` in CRs
+      POSTGRES_INSTANCE: postgres # match with `postgres.db.movetokube.com/instance: postgres` in CRs
     existingSecret: *app
 
     resources:
@@ -45,4 +44,4 @@ spec:
         memory: 128Mi
 
     # Which namespace to watch in kubernetes, empty string means all namespaces
-    watchNamespace: "default,monitoring"
+    watchNamespace: default,monitoring

@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app miniflux
-  namespace: default
 spec:
   interval: 15m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -38,7 +38,7 @@ spec:
       tag: 2.1.0
 
     env:
-      BASE_URL: "https://miniflux.${SECRET_DOMAIN}"
+      BASE_URL: https://miniflux.${SECRET_DOMAIN}
       CREATE_ADMIN: "1"
       ADMIN_USERNAME:
         valueFrom:
@@ -52,7 +52,7 @@ spec:
             key: ADMIN_PASSWORD
       DEBUG: "1"
       LOG_DATE_TIME: "1"
-      METRICS_ALLOWED_NETWORKS: "${CLUSTER_CIDR}"
+      METRICS_ALLOWED_NETWORKS: ${CLUSTER_CIDR}
       METRICS_COLLECTOR: "1"
       # OAUTH2_CLIENT_ID: miniflux
       # OAUTH2_CLIENT_SECRET: "${SECRET_MINIFLUX_OAUTH_CLIENT_SECRET}"

@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app grafana
-  namespace: monitoring
 spec:
   interval: 30m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -40,7 +40,7 @@ spec:
     env:
       GF_EXPLORE_ENABLED: true
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
-      GF_SERVER_ROOT_URL: "https://grafana.${SECRET_DOMAIN}"
+      GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
 
     grafana.ini:
       analytics:
@@ -300,7 +300,7 @@ spec:
         nginx.ingress.kubernetes.io/whitelist-source-range: |
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       hosts:
-        - &host "grafana.${SECRET_DOMAIN}"
+        - &host grafana.${SECRET_DOMAIN}
       tls:
         - hosts:
             - *host

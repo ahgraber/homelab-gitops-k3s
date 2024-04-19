@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: rook-ceph-operator
-  namespace: rook-ceph
 spec:
   interval: 30m
   chart:
@@ -16,12 +15,12 @@ spec:
         name: rook-ceph
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -69,10 +68,10 @@ spec:
       # Set pluginTolerations and pluginNodeAffinity for plugin daemonset pods.
       # The CSI plugins need to be started on all the nodes where the clients need to mount the storage.
       pluginTolerations:
-        - effect: "NoExecute"
-          operator: "Exists"
-        - effect: "NoSchedule"
-          operator: "Exists"
+        - effect: NoExecute
+          operator: Exists
+        - effect: NoSchedule
+          operator: Exists
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true

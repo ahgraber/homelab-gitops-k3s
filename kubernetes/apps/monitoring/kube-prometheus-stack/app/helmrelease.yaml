@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: monitoring
 spec:
   interval: 30m
   chart:
@@ -16,13 +15,12 @@ spec:
         name: prometheus-community
         namespace: flux-system
   install:
-    createNamespace: true
-    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
-    crds: CreateReplace
+    cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   dependsOn:
     - name: local-path-provisioner
@@ -84,7 +82,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - "alertmanager.${SECRET_DOMAIN}"
+          - alertmanager.${SECRET_DOMAIN}
         # tls:
         #   - hosts:
         #       - *host
@@ -112,7 +110,7 @@ spec:
           - action: labeldrop
             regex: (id|name)
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
     kubeApiServer:
       enabled: true
@@ -120,10 +118,10 @@ spec:
         metricRelabelings:
           # Drop high cardinality labels
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
     kubeControllerManager:
       enabled: true
@@ -153,7 +151,7 @@ spec:
             - action: replace
               regex: (.*)
               replacement: $1
-              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              sourceLabels: [__meta_kubernetes_pod_node_name]
               targetLabel: kubernetes_node
 
     prometheusOperator:
@@ -182,7 +180,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - &host "prometheus.${SECRET_DOMAIN}"
+          - &host prometheus.${SECRET_DOMAIN}
         pathType: Prefix
         # tls:
         #   - hosts:
@@ -237,8 +235,8 @@ spec:
                 requests:
                   storage: 10Gi
         thanos:
-          image: "quay.io/thanos/thanos:${THANOS_VERSION}"
-          version: "${THANOS_VERSION#v}"
+          image: quay.io/thanos/thanos:${THANOS_VERSION}
+          version: ${THANOS_VERSION#v}
           objectStorageConfig:
             # # renders new secret
             # secret:

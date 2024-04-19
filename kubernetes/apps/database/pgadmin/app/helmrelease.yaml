@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app pgadmin
-  namespace: &namespace default
 spec:
   interval: 15m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -48,7 +48,7 @@ spec:
         nginx.ingress.kubernetes.io/whitelist-source-range: |
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       hosts:
-        - host: &host "pgadmin.${SECRET_DOMAIN}"
+        - host: &host pgadmin.${SECRET_DOMAIN}
           paths:
             - path: /
               pathType: Prefix

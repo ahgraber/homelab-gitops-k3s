@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app windmill
-  namespace: &app-namespace datasci
 spec:
   interval: 15m
   chart:
@@ -16,12 +15,12 @@ spec:
         name: windmill
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -49,32 +48,32 @@ spec:
       workerGroups:
         # workers configuration
         # The default worker group
-        - name: "default"
+        - name: default
           replicas: 1
           resources:
             requests:
-              memory: "1028Mi"
-              cpu: "500m"
+              memory: 1028Mi
+              cpu: 500m
             limits:
-              memory: "2048Mi"
-              cpu: "1000m"
+              memory: 2048Mi
+              cpu: 1000m
 
-        - name: "gpu"
+        - name: gpu
           replicas: 0
           nodeSelector: {}
           tolerations: []
           affinity: {}
           resources: {}
 
-        - name: "native"
+        - name: native
           replicas: 1
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: 128Mi
+              cpu: 100m
             limits:
-              memory: "256Mi"
-              cpu: "200m"
+              memory: 256Mi
+              cpu: 200m
 
       # app configuration
       appReplicas: 1
@@ -92,7 +91,7 @@ spec:
       # lsp (worker) configuration
       lspReplicas: 1
       lsp:
-        tag: "latest"
+        tag: latest
         resources: {}
         # lsp autoscaling configuration
         autoscaling:
@@ -106,7 +105,7 @@ spec:
       # multiplayer configuration
       multiplayerReplicas: 1
       multiplayer:
-        tag: "latest"
+        tag: latest
         resources: {}
         # lsp autoscaling configuration
         autoscaling:
@@ -126,8 +125,8 @@ spec:
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       tls:
         - hosts:
-            - "windmill.${SECRET_DOMAIN}"
-          secretName: "${SECRET_DOMAIN/./-}-production-tls"
+            - windmill.${SECRET_DOMAIN}
+          secretName: ${SECRET_DOMAIN/./-}-production-tls
 
     enterprise:
       enabled: false

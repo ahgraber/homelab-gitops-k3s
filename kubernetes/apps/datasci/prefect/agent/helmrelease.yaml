@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app prefect-agent
-  namespace: &app-namespace datasci
 spec:
   interval: 15m
   chart:
@@ -16,12 +15,12 @@ spec:
         name: prefect
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -52,7 +51,7 @@ spec:
 
       ## connection settings
       # -- one of 'cloud' or 'server'
-      apiConfig: "server"
+      apiConfig: server
       # cloudApiConfig:
       #   accountId: ""
       #   workspaceId: ""
@@ -62,7 +61,7 @@ spec:
       #   cloudUrl: https://api.prefect.cloud/api
       serverApiConfig:
         # -- prefect API url (PREFECT_API_URL); should be in-cluster URL if the agent is deployed in the same cluster as the API
-        apiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+        apiUrl: http://prefect-server.datasci.svc.cluster.local:4200/api
 
       replicaCount: 1
 

@@ -15,7 +15,6 @@ spec:
         name: cloudnativepg
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -49,4 +48,4 @@ spec:
       node-role.kubernetes.io/control-plane: "true"
     tolerations:
       - key: node-role.kubernetes.io/control-plane
-        operator: "Exists"
+        operator: Exists

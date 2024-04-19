@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
-  namespace: rook-ceph
 spec:
   interval: 30m
   chart:
@@ -16,12 +15,12 @@ spec:
         name: rook-ceph
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -45,7 +44,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         host:
-          name: &host "ceph.${SECRET_DOMAIN}"
+          name: &host ceph.${SECRET_DOMAIN}
           path: /
         tls:
           - hosts:
@@ -119,13 +118,13 @@ spec:
         nodes:
           - name: optiplex3
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000052"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000052
           - name: optiplex4
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000015
           - name: optiplex5
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000028"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000028
       resources:
         mgr:
           requests:

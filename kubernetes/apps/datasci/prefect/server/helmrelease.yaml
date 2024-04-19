@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app prefect-server
-  namespace: &app-namespace datasci
 spec:
   interval: 15m
   chart:
@@ -16,12 +15,12 @@ spec:
         name: prefect
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -34,7 +33,7 @@ spec:
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
-      prefectApiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+      prefectApiUrl: http://prefect-server.datasci.svc.cluster.local:4200/api
 
       # https://docs.prefect.io/latest/concepts/settings/
       env:
@@ -92,7 +91,7 @@ spec:
       enabled: true
       className: internal
       host:
-        hostname: &host "prefect.${SECRET_DOMAIN}"
+        hostname: &host prefect.${SECRET_DOMAIN}
         path: /
         pathType: Prefix
       annotations:

@@ -20,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -53,7 +54,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: { drop: [ALL] }
     service:
       app:
         # name should not be 'redisinsight'  since the service creates environment variables
@@ -75,7 +76,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - host: &host "redisinsight.${SECRET_DOMAIN}"
+          - host: &host redisinsight.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix

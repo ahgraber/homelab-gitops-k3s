@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: k8s-gateway
-  namespace: networking
 spec:
   interval: 30m
   chart:
@@ -21,15 +20,16 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
   values:
     fullnameOverride: k8s-gateway
-    domain: "${SECRET_DOMAIN}"
+    domain: ${SECRET_DOMAIN}
     ttl: 1
     service:
       type: LoadBalancer
       port: 53
       annotations:
-        io.cilium/lb-ipam-ips: "10.2.118.2"
+        io.cilium/lb-ipam-ips: 10.2.118.2

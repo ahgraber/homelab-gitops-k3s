@@ -40,7 +40,7 @@ spec:
               repository: ghcr.io/docat-org/docat
               tag: 47cc0cc96bf20886ec0a260e03fa0ee097e46810
             env:
-              TZ: "${TIMEZONE}"
+              TZ: ${TIMEZONE}
             probes:
               liveness:
                 enabled: true
@@ -73,7 +73,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: { drop: [ALL] }
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -94,7 +94,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - host: &host "docs.${SECRET_DOMAIN}"
+          - host: &host docs.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix

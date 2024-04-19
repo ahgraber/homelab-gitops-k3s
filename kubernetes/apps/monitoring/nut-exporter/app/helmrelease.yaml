@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app nut-exporter
-  namespace: monitoring
 spec:
   interval: 30m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -42,7 +42,7 @@ spec:
               repository: ghcr.io/druggeri/nut_exporter
               tag: 3.1.1
             env:
-              TZ: "${TIMEZONE}"
+              TZ: ${TIMEZONE}
             envFrom:
               - secretRef:
                   name: *app
@@ -60,7 +60,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: { drop: [ALL] }
     service:
       app:
         controller: *app
@@ -78,7 +78,7 @@ spec:
             path: /ups_metrics
             params:
               targets:
-                - "10.2.0.1:3493"
+                - 10.2.0.1:3493
             relabelings:
               - sourceLabels: [__param_target]
                 targetLabel: target

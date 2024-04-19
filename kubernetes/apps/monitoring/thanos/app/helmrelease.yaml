@@ -57,7 +57,7 @@ spec:
           insecure: true
     additionalEndpoints:
       - dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local
-    additionalReplicaLabels: ["__replica__"]
+    additionalReplicaLabels: [__replica__]
     serviceMonitor:
       enabled: true
     compact:
@@ -85,12 +85,12 @@ spec:
             configMapKeyRef:
               name: &configMap thanos-cache-configmap
               key: cache.yaml
-      extraArgs: ["--query-range.response-cache-config=$(THANOS_CACHE_CONFIG)"]
+      extraArgs: [--query-range.response-cache-config=$(THANOS_CACHE_CONFIG)]
       ingress:
         enabled: true
         ingressClassName: internal
         hosts:
-          - &host "thanos.${SECRET_DOMAIN}"
+          - &host thanos.${SECRET_DOMAIN}
         tls:
           - hosts: [*host]
       podAnnotations: &podAnnotations
@@ -98,7 +98,7 @@ spec:
     rule:
       enabled: true
       replicas: 3
-      extraArgs: ["--web.prefix-header=X-Forwarded-Prefix"]
+      extraArgs: [--web.prefix-header=X-Forwarded-Prefix]
       alertmanagersConfig:
         value: |-
           alertmanagers:
@@ -121,6 +121,6 @@ spec:
     storeGateway:
       replicas: 3
       extraEnv: *extraEnv
-      extraArgs: ["--index-cache.config=$(THANOS_CACHE_CONFIG)"]
+      extraArgs: [--index-cache.config=$(THANOS_CACHE_CONFIG)]
       persistence: *persistence
       podAnnotations: *podAnnotations

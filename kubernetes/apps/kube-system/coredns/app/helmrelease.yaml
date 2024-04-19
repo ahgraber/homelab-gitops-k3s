@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: coredns
-  namespace: kube-system
 spec:
   interval: 30m
   chart:
@@ -21,6 +20,7 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   uninstall:
     keepHistory: false
@@ -30,7 +30,7 @@ spec:
     k8sAppLabelOverride: kube-dns
     service:
       name: kube-dns
-      clusterIP: "${COREDNS_ADDR}"
+      clusterIP: ${COREDNS_ADDR}
     serviceAccount:
       create: true
     deployment:
