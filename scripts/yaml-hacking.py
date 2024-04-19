@@ -50,3 +50,24 @@ for hr_file in hrs:
         yaml.dump(hr, file)
 
 # %%
+kss = repo.glob("**/ks.yaml")
+
+# %%
+for ks_file in kss:
+    for i, subdoc in enumerate(yaml.load_all(Path(ks_file))):
+        # replace content
+        if "targetNamespace" not in subdoc["spec"]:
+            subdoc["spec"]["targetNamespace"] = ""
+
+        subdoc["spec"]["commonMetadata"] = {
+            "labels": {"app.kubernetes.io/name": "*app"}
+        }
+
+        if i == 0:
+            with open(ks_file, "w") as file:
+                yaml.dump(subdoc, file)
+        else:
+            with open(ks_file, "a") as file:
+                yaml.dump(subdoc, file)
+
+# %%

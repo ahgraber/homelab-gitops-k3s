@@ -6,6 +6,10 @@ metadata:
   name: &app ingress-nginx-external
   namespace: flux-system
 spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/ingress-nginx/external
