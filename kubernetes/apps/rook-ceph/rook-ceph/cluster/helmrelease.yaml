@@ -25,13 +25,13 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  driftDetection:
-    mode: warn
-    # ignore:
-    #   - paths:
-    #       - /spec/containers/resources/limits
-    #     target:
-    #       kind: Pod
+  # driftDetection:
+  #   mode: warn
+  #   ignore:
+  #     - paths:
+  #         - /spec/containers/resources/limits
+  #       target:
+  #         kind: Pod
   values:
     annotations:
       all:
