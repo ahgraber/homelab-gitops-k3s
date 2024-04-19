@@ -23,9 +23,15 @@ spec:
     cleanupOnFail: true
     crds: CreateReplace
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     controller:
       enabled: true

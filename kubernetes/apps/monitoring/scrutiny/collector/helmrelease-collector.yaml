@@ -16,12 +16,19 @@ spec:
         name: bjw-s
         namespace: flux-system
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     remediation:
+      strategy: rollback
       retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   dependsOn:
     - name: scrutiny
       namespace: monitoring
