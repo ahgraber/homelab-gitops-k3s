@@ -96,7 +96,7 @@ spec:
 
     persistence:
       config:
-        type: configmap
+        type: configMap
         name: *app
         globalMounts:
           - subPath: settings.yaml
