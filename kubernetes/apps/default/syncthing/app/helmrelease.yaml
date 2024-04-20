@@ -72,7 +72,7 @@ spec:
             port: 8384
       discovery:
         enabled: true
-        controller: main
+        controller: *app
         ports:
           discovery:
             enabled: true
