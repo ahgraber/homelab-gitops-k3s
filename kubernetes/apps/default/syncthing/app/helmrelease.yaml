@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.2.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -36,26 +36,58 @@ spec:
           kind: Pod
   values:
     controllers:
-      main:
+      syncthing:
         containers:
-          main:
+          app:
             image:
               repository: syncthing/syncthing
               tag: 1.27.5
+            env:
+              PUID: "1000"
+              PGID: "1000"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 15m
                 memory: 249Mi
               limits:
                 memory: 512Mi
-            env:
-              PUID: "1000"
-              PGID: "1000"
 
-    ingress:
-      main:
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 8384
+      discovery:
         enabled: true
-        primary: true
+        controller: main
+        ports:
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+          listen:
+            enabled: true
+            port: 22000
+            protocol: TCP
+          listen-udp:
+            enabled: true
+            port: 22000
+            protocol: UDP
+    ingress:
+      app:
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
@@ -71,39 +103,14 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
 
-    service:
-      main:
-        ports:
-          http:
-            port: 8384
-      discovery:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          discovery:
-            enabled: true
-            port: 21027
-            protocol: UDP
-      listen:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          listen:
-            enabled: true
-            port: 22000
-            protocol: TCP
-
     persistence:
-      config:
-        enabled: true
+      data:
         existingClaim: *app
         globalMounts:
           - path: /var/syncthing
