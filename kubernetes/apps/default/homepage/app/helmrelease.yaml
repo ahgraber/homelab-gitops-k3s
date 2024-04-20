@@ -32,9 +32,6 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
 
@@ -63,7 +60,6 @@ spec:
                 memory: 225M
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
