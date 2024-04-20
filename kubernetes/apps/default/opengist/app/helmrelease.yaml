@@ -37,8 +37,8 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
+        # runAsGroup: 65534
+        # runAsUser: 65534
         # runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
