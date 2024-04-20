@@ -42,9 +42,9 @@ spec:
             image:
               repository: syncthing/syncthing
               tag: 1.27.5
-            # env:
-            #   PUID: "1000"
-            #   PGID: "1000"
+            env:
+              PUID: "1000"
+              PGID: "1000"
             securityContext:
               # allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: false
