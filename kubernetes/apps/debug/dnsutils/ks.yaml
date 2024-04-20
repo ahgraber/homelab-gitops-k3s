@@ -6,7 +6,7 @@ metadata:
   name: &app dnsutils
   namespace: flux-system
 spec:
-  targetNamespace: default
+  targetNamespace: debug
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
