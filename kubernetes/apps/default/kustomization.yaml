@@ -8,7 +8,7 @@ resources:
   # Flux-Kustomizations | Apps
   - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
-  # - ./homebox/ks.yaml
+  - ./homebox/ks.yaml
   # - ./homepage/ks.yaml
   # - ./linkding/ks.yaml
   # # - ./logseq/ks.yaml # WIP
