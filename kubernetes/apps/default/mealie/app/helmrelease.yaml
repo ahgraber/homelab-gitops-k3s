@@ -99,7 +99,6 @@ spec:
         ports:
           http:
             port: 9000
-
     ingress:
       app:
         className: internal
@@ -112,7 +111,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
