@@ -13,7 +13,7 @@ resources:
   - ./linkding/ks.yaml
   # # - ./logseq/ks.yaml # WIP
   - ./mealie/ks.yaml
-  # - ./memos/ks.yaml
+  - ./memos/ks.yaml
   # - ./miniflux/ks.yaml
   # - ./opengist/ks.yaml
   # - ./pairdrop/ks.yaml
