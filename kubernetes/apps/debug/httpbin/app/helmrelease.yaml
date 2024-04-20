@@ -48,12 +48,12 @@ spec:
             image:
               repository: kennethreitz/httpbin
               tag: latest
-          resources:
-            requests:
-              cpu: 15m
-              memory: 105M
-            limits:
-              memory: 105M
+            resources:
+              requests:
+                cpu: 15m
+                memory: 105M
+              limits:
+                memory: 105M
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
