@@ -35,13 +35,13 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        # runAsGroup: 65534
-        # runAsUser: 65534
-        # runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+    # defaultPodOptions:
+    #   securityContext:
+    #     # runAsGroup: 65534
+    #     # runAsUser: 65534
+    #     # runAsNonRoot: true
+    #     seccompProfile:
+    #       type: RuntimeDefault
     controllers:
       mealie:
         annotations:
@@ -89,9 +89,9 @@ spec:
                 memory: 128M
               limits:
                 memory: 512M
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities: { drop: ["ALL"] }
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   capabilities: { drop: ["ALL"] }
 
     service:
       app:
