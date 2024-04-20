@@ -42,12 +42,12 @@ spec:
             image:
               repository: syncthing/syncthing
               tag: 1.27.5
-            env:
-              PUID: "1000"
-              PGID: "1000"
+            # env:
+            #   PUID: "1000"
+            #   PGID: "1000"
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              # allowPrivilegeEscalation: false
+              # readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
@@ -58,9 +58,9 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        runAsGroup: 1000
-        runAsUser: 1000
-        runAsNonRoot: true
+        # runAsGroup: 1000
+        # runAsUser: 1000
+        # runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
 
