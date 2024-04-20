@@ -39,7 +39,7 @@ spec:
           type: RuntimeDefault
 
     controllers:
-      homebox:
+      homepage:
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/search: "true"
