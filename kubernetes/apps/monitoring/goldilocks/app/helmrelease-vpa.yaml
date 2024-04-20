@@ -6,7 +6,6 @@ metadata:
   name: &app vpa
   namespace: &namespace monitoring
 spec:
-  interval: 30m
   chart:
     spec:
       chart: *app
@@ -16,6 +15,7 @@ spec:
         name: fairwinds
         namespace: flux-system
       interval: 15m
+  interval: 15m
   install:
     createNamespace: true
     crds: CreateReplace
@@ -26,8 +26,13 @@ spec:
     crds: CreateReplace
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     # monitors the current and past resource consumption and
     # provides recommended values containers' cpu and memory requests

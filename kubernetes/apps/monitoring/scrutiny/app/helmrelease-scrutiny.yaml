@@ -6,7 +6,6 @@ metadata:
   name: &app scrutiny
   namespace: monitoring
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -15,6 +14,7 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
