@@ -17,6 +17,6 @@ resources:
   - ./miniflux/ks.yaml
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
-  # - ./picoshare/ks.yaml
+  - ./picoshare/ks.yaml
   # - ./stirling-pdf/ks.yaml
   # - ./syncthing/ks.yaml
