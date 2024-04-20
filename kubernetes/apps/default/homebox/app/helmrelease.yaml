@@ -37,9 +37,9 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
-        runAsNonRoot: true
+        # runAsGroup: 65534
+        # runAsUser: 65534
+        # runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
     controllers:
@@ -100,8 +100,3 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /data
-      # tmp:
-      #   enabled: true
-      #   type: emptyDir
-      #   globalMounts:
-      #     - path: /tmp
