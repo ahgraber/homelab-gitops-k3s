@@ -37,8 +37,8 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65532
-        runAsUser: 65532
+        runAsGroup: 65534
+        runAsUser: 65534
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
@@ -51,7 +51,7 @@ spec:
           app:
             image:
               repository: ghcr.io/hay-kot/homebox
-              tag: v0.10.3-rootless
+              tag: v0.10.3
               # tag: frontend-v1.0.0beta-5
             env:
               TZ: ${TIMEZONE}
@@ -100,8 +100,8 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /data
-      tmp:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
+      # tmp:
+      #   enabled: true
+      #   type: emptyDir
+      #   globalMounts:
+      #     - path: /tmp
