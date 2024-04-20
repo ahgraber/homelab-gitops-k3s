@@ -50,19 +50,6 @@ spec:
             args:
               - --config
               - /mnt/config.yml
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /healthcheck
-                    port: &port 6157
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
             resources:
               requests:
                 cpu: 100m
@@ -87,7 +74,7 @@ spec:
         controller: *app
         ports:
           http:
-            port: *port
+            port: 6157
           ssh:
             port: 2222
     ingress:
