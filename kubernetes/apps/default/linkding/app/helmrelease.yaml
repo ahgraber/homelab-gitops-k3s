@@ -33,15 +33,6 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
-        runAsGroup: 33
-        runAsUser: 33
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-
     controllers:
       linkding:
         strategy: RollingUpdate
@@ -110,8 +101,16 @@ spec:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
+
+    defaultPodOptions:
+      securityContext:
+        # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
+        runAsGroup: 33
+        runAsUser: 33
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
     service:
       app:
         controller: *app

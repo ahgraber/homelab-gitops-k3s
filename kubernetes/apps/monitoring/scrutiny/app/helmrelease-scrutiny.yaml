@@ -88,8 +88,6 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
           influxdb:
             image:
               repository: docker.io/library/influxdb
@@ -131,8 +129,6 @@ spec:
               runAsUser: 1000 # defined in influxdb image
               runAsNonRoot: true
               capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
     service:
       app:
         controller: *app

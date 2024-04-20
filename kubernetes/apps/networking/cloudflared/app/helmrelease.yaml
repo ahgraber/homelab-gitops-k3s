@@ -30,21 +30,6 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        runAsGroup: 65534
-        runAsNonRoot: true
-        runAsUser: 65534
-        seccompProfile:
-          type: RuntimeDefault
-      topologySpreadConstraints:
-        - labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: cloudflared
-          maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-
     controllers:
       cloudflared:
         replicas: 2
@@ -98,6 +83,22 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudflared
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+
     service:
       app:
         controller: *app

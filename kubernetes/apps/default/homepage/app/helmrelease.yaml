@@ -61,8 +61,6 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
     serviceAccount:
       # allow scraping of k8s resources for widget
       create: true

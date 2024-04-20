@@ -33,14 +33,6 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        seccompProfile:
-          type: RuntimeDefault
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-
     controllers:
       scrutiny-collector:
         type: daemonset
@@ -67,6 +59,15 @@ spec:
               privileged: true
               # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"], add: ["SYS_RAWIO"] } # allow access to smartctl
+
+    defaultPodOptions:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+
     service:
       app:
         controller: scrutiny-collector

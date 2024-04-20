@@ -32,14 +32,6 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        runAsGroup: 65534
-        # runAsUser: 65534
-        # runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-
     controllers:
       picoshare:
         annotations:
@@ -67,8 +59,15 @@ spec:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
+
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        # runAsUser: 65534
+        # runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
     service:
       app:
         controller: *app

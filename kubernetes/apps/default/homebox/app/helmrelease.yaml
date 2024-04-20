@@ -35,13 +35,6 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        # runAsGroup: 65534
-        # runAsUser: 65534
-        # runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
     controllers:
       homebox:
         annotations:
@@ -68,6 +61,14 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        # runAsGroup: 65534
+        # runAsUser: 65534
+        # runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 
     service:
       app:
