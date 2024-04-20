@@ -79,7 +79,7 @@ spec:
                 memory: 256M
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
@@ -132,7 +132,6 @@ spec:
           - subPath: config.yml
             path: /mnt/config.yml
         defaultMode: 0775
-        readOnly: true
       data:
         enabled: true
         existingClaim: *app
