@@ -36,6 +36,20 @@ spec:
             image:
               repository: ghcr.io/stirling-tools/s-pdf
               tag: 0.22.8
+            env:
+              TZ: ${TIMEZONE}
+              DOCKER_ENABLE_SECURITY: "false"
+            probes:
+              liveness: &probe
+                enabled: true
+                type: HTTP
+                path: /api/v1/info/status
+              readiness: *probe
+              startup:
+                <<: *probe
+                spec:
+                  failureThreshold: 90
+                  periodSeconds: 5
             resources:
               requests:
                 cpu: 100m
@@ -44,14 +58,16 @@ spec:
                 memory: 512M
             securityContext:
               # allowPrivilegeEscalation: false
-              # readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       securityContext:
-        # runAsGroup: 65534
-        # runAsUser: 65534
-        # runAsNonRoot: true
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
 
@@ -78,3 +94,19 @@ spec:
         tls:
           - hosts:
               - *host
+
+    persistence:
+      configs:
+        enabled: true
+        type: emptyDir
+      logs:
+        enabled: true
+        type: emptyDir
+      tmp:
+        enabled: true
+        type: emptyDir
+      tessdata:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /usr/share/tessdata
