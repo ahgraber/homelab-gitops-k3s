@@ -36,8 +36,8 @@ spec:
     defaultPodOptions:
       securityContext:
         # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
-        runAsGroup: 65534 # 33
-        runAsUser: 65534 # 33
+        runAsGroup: 33
+        runAsUser: 33
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
@@ -108,7 +108,7 @@ spec:
                 memory: 256M
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              # readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
               seccompProfile:
                 type: RuntimeDefault
