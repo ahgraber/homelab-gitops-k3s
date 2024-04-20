@@ -14,7 +14,7 @@ resources:
   # # - ./logseq/ks.yaml # WIP
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
-  # - ./miniflux/ks.yaml
+  - ./miniflux/ks.yaml
   # - ./opengist/ks.yaml
   # - ./pairdrop/ks.yaml
   # - ./picoshare/ks.yaml

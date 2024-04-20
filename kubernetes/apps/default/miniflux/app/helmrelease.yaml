@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -30,65 +30,109 @@ spec:
         target:
           kind: Pod
   values:
-    global:
-      annotations:
-        reloader.stakater.com/auto: "true"
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
 
-    # controller:
-    #   replicas: 3
-    #   strategy: RollingUpdate
-
-    image:
-      repository: docker.io/miniflux/miniflux
-      tag: 2.1.0
-
-    env:
-      BASE_URL: https://miniflux.${SECRET_DOMAIN}
-      CREATE_ADMIN: "1"
-      ADMIN_USERNAME:
-        valueFrom:
-          secretKeyRef:
-            name: *app
-            key: ADMIN_USERNAME
-      ADMIN_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: *app
-            key: ADMIN_PASSWORD
-      DEBUG: "1"
-      LOG_DATE_TIME: "1"
-      METRICS_ALLOWED_NETWORKS: ${CLUSTER_CIDR}
-      METRICS_COLLECTOR: "1"
-      # OAUTH2_CLIENT_ID: miniflux
-      # OAUTH2_CLIENT_SECRET: "${SECRET_MINIFLUX_OAUTH_CLIENT_SECRET}"
-      # OAUTH2_USER_CREATION: "1"
-      # OAUTH2_OIDC_DISCOVERY_ENDPOINT\: "https://auth.${SECRET_DOMAIN}"
-      # OAUTH2_PROVIDER: oidc
-      # OAUTH2_REDIRECT_URL: "https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback"
-      POLLING_SCHEDULER: entry_frequency
-      POLLING_FREQUENCY: "15"
-      RUN_MIGRATIONS: "1"
-      # - name: FETCH_YOUTUBE_WATCH_TIME
-      #   value: "1"
-      # - name: INVIDIOUS_INSTANCE
-      #   value: "yewtu.be"
-      POSTGRES_USER:
-        valueFrom:
-          secretKeyRef:
-            name: &db_secret database-miniflux
-            key: LOGIN
-      POSTGRES_PASS:
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: PASSWORD
-      DATABASE_URL:
-        # "postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASS }}@postgres-rw.default.svc.cluster.local/miniflux?sslmode=disable"
-        valueFrom:
-          secretKeyRef:
-            name: *db_secret
-            key: POSTGRES_URL
-
+    controllers:
+      miniflux:
+        replicas: 3
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/miniflux/miniflux
+              tag: 2.0.50-distroles
+            env:
+              BASE_URL: https://miniflux.${SECRET_DOMAIN}
+              PORT: &port 80
+              CREATE_ADMIN: "1"
+              ADMIN_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: *app
+                    key: ADMIN_USERNAME
+              ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: *app
+                    key: ADMIN_PASSWORD
+              DEBUG: "1"
+              LOG_DATE_TIME: "1"
+              METRICS_ALLOWED_NETWORKS: ${CLUSTER_CIDR}
+              METRICS_COLLECTOR: "1"
+              # OAUTH2_CLIENT_ID: miniflux
+              # OAUTH2_CLIENT_SECRET: "${SECRET_MINIFLUX_OAUTH_CLIENT_SECRET}"
+              # OAUTH2_USER_CREATION: "1"
+              # OAUTH2_OIDC_DISCOVERY_ENDPOINT\: "https://auth.${SECRET_DOMAIN}"
+              # OAUTH2_PROVIDER: oidc
+              # OAUTH2_REDIRECT_URL: "https://miniflux.${SECRET_DOMAIN}/oauth2/oidc/callback"
+              POLLING_SCHEDULER: entry_frequency
+              POLLING_FREQUENCY: "15"
+              RUN_MIGRATIONS: "1"
+              # - name: FETCH_YOUTUBE_WATCH_TIME
+              #   value: "1"
+              # - name: INVIDIOUS_INSTANCE
+              #   value: "yewtu.be"
+              POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: &db_secret database-miniflux
+                    key: LOGIN
+              POSTGRES_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: PASSWORD
+              DATABASE_URL:
+                # "postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASS }}@postgres-rw.default.svc.cluster.local/miniflux?sslmode=disable"
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: POSTGRES_URL
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthcheck
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 100Mi
+              limits:
+                memory: 750Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
     ingress:
       main:
         enabled: true
@@ -101,44 +145,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
-
-    service:
-      main:
-        ports:
-          http:
-            port: &port 8080
-    serviceMonitor:
-      main:
-        enabled: true
-        endpoints:
-          - port: http
-            scheme: http
-            path: /metrics
-            interval: 60s
-            scrapeTimeout: 10s
-
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          httpGet:
-            path: /healthcheck
-            port: *port
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness: *probes
-      startup:
-        enabled: false
-
-    resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
-      limits:
-        memory: 750Mi
