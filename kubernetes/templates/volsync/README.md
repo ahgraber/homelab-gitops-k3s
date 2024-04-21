@@ -1,5 +1,7 @@
 # VolSync Template
 
+Autorestore PVCs on rebuild.
+
 ## How it works
 
 When deploying `fluxtomization` will substitute the variables (`postBuild.substitute`) into all resources involved in the deployment.

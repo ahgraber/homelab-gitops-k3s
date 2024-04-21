@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ./secret.yaml
   - ./replicationsource.yaml
-  # - ./replicationdestination.yaml
-  # - ./claim.yaml
+  - ./replicationdestination.yaml
+  - ./claim.yaml
