@@ -3,7 +3,6 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
   name: &app mlflow
-  namespace: &namespace datasci
   annotations:
     postgres.db.movetokube.com/instance: datasci
 spec:
@@ -13,7 +12,6 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
   name: &app mlflow
-  namespace: &namespace datasci
   annotations:
     postgres.db.movetokube.com/instance: datasci
 spec:

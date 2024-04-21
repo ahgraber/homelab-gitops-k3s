@@ -11,7 +11,6 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: Postgres
 metadata:
   name: &app <app>
-  namespace: &namespace default
   annotations:
     postgres.db.movetokube.com/instance: postgres
 spec:
@@ -21,7 +20,6 @@ apiVersion: db.movetokube.com/v1alpha1
 kind: PostgresUser
 metadata:
   name: &app <app>-user
-  namespace: &namespace default
   annotations:
     postgres.db.movetokube.com/instance: postgres
 spec:
