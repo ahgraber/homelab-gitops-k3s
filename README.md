@@ -26,60 +26,55 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 📍 Set up your local environment
 
-1. Install the most recent version of [task](https://taskfile.dev/)
-
-   📍 _See the task [installation docs](https://taskfile.dev/installation/) for other platforms_
-
-   ```sh
-   # Brew
-   brew install go-task
-   ```
-
-2. Install the most recent version of [direnv](https://direnv.net/), see the direnv [installation docs](https://direnv.net/docs/installation.html) for other supported platforms.
-
-   📍 _After installing `direnv` be sure to **[hook it into your shell](https://direnv.net/docs/hook.html)** and after that is done run `direnv allow` while in your repos' directory._
+1. Install [task](https://taskfile.dev/).
+2. Install [direnv](https://direnv.net/).
+3. Install [pipx](https://pipx.pypa.io/stable/), then ensure hooks are set with:
 
    ```sh
-   # Brew
-   brew install direnv
-   ```
-
-3. Install the most recent version of [pipx](https://pipx.pypa.io/stable/)
-
-    📍 _See the pipx [installation docs](https://pipx.pypa.io/stable/#install-pipx) for other platforms_
-
-   ```sh
-   # Brew
-   brew install pipx
    pipx ensurepath
    pipx completions
    ```
 
-4. With these prerequisites out of the way, we can finish configuring the workstation.  This command will install ansible in a pipx environment, then use brew to install other necessary binaries like [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared), [kubectl](https://kubernetes.io/docs/tasks/tools/), [sops](https://github.com/getsops/sops)
+4. Finish configuring the workstation.  
+   Conveniently, we can use a `task` that has been defined for this!
 
    ```sh
    task workstation:setup
    ```
 
+   > This command will install ansible in a pipx environment, then use brew to install other necessary binaries like
+   > [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared),
+   > [kubectl](https://kubernetes.io/docs/tasks/tools/), and [sops](https://github.com/getsops/sops)
+
 ### 🔧 Initial configuration
 
 1. Setup Age private / public key
 
-    📍 _Using [SOPS](https://github.com/getsops/sops) with [Age](https://github.com/FiloSottile/age) allows us to encrypt secrets and use them in Ansible and Flux._
+   📍 _Using [SOPS](https://github.com/getsops/sops) with [Age](https://github.com/FiloSottile/age) allows us to encrypt secrets and use them in Ansible and Flux._
 
-   a. Create a Age private / public key (this file is gitignored)
+   a. Create an Age private / public key (this file is gitignored)
 
       ```sh
       age-keygen -o age.key
       ```
 
-    b. Fill out the appropriate vars in `bootstrap/vars/config.yaml`
+   b. Ensure that this key is available as an environment variable.  
+
+      Add the following to the `.envrc`:
+
+      ```sh
+      # export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/Library/Application Support/sops/age/keys.txt")"
+      export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/.config/sops/age/keys.txt")"
+      export AGE_PUBLIC_KEY="$(grep "public key" "$SOPS_AGE_KEY_FILE" | awk '{ print $4 }')"
+      ```
+
+      Then run `direnv allow .` to refresh the environment.
 
 2. Create Cloudflare API Token
 
-    📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create a API Token._
+   📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create a API Token._
 
-   a. Head over to Cloudflare and create a API Token by going [here](https://dash.cloudflare.com/profile/api-tokens).
+   a. Create a Cloudflare API Token by going [here](https://dash.cloudflare.com/profile/api-tokens).
 
    b. Under the `API Tokens` section click the blue `Create Token` button.
 
@@ -97,7 +92,14 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    f. Limit the permissions to a specific account and zone resources.
 
    g. Fill out the appropriate vars in `.env` file:
-      CLOUDFLARE_EMAIL, CLOUDFLARE_TOKEN, CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
+
+      ```sh
+      CLOUDFLARE_EMAIL=''
+      CLOUDFLARE_TOKEN=''
+      CLOUDFLARE_ACCOUNT=''
+      CLOUDFLARE_TUNNELID=''
+      CLOUDFLARE_TUNNEL_SECRET=''
+      ```
 
 3. Create Cloudflare Tunnel
 
@@ -128,21 +130,21 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 2. Verify Ansible can view your config
 
-    ```sh
-    task ansible:list
-    ```
+   ```sh
+   task ansible:list
+   ```
 
 3. Verify Ansible can ping your nodes
 
-    ```sh
-    task ansible:ping
-    ```
+   ```sh
+   task ansible:ping
+   ```
 
 4. Run the Ansible prepare playbook (nodes will reboot when done)
 
-    ```sh
-    task ansible:prepare
-    ```
+   ```sh
+   task ansible:prepare
+   ```
 
 ### 🛰️ Build your k3s cluster with Ansible
 
@@ -150,32 +152,32 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Verify Ansible can view your config
 
-    ```sh
-    task ansible:list
-    ```
+   ```sh
+   task ansible:list
+   ```
 
 2. Verify Ansible can ping your nodes
 
-    ```sh
-    task ansible:ping
-    ```
+   ```sh
+   task ansible:ping
+   ```
 
 3. Install k3s with Ansible
 
-    ```sh
-    task ansible:k3s
-    ```
+   ```sh
+   task ansible:k3s
+   ```
 
    > The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.
 
 4. Verify the nodes are online
 
-    ```sh
-    kubectl get nodes -o wide
-    # NAME           STATUS   ROLES                       AGE     VERSION
-    # k8s-0          Ready    control-plane,etcd,master   1h      v1.27.3+k3s1
-    # k8s-1          Ready    worker                      1h      v1.27.3+k3s1
-    ```
+   ```sh
+   kubectl get nodes -o wide
+   # NAME           STATUS   ROLES                       AGE     VERSION
+   # k8s-0          Ready    control-plane,etcd,master   1h      v1.27.3+k3s1
+   # k8s-1          Ready    worker                      1h      v1.27.3+k3s1
+   ```
 
 5. Review the pods currently running in the cluster
 
@@ -187,53 +189,53 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Verify Flux can be installed
 
-    ```sh
-    flux check --pre
-    # ► checking prerequisites
-    # ✔ kubectl 1.27.3 >=1.18.0-0
-    # ✔ Kubernetes 1.27.3+k3s1 >=1.16.0-0
-    # ✔ prerequisites checks passed
-    ```
+   ```sh
+   flux check --pre
+   # ► checking prerequisites
+   # ✔ kubectl 1.27.3 >=1.18.0-0
+   # ✔ Kubernetes 1.27.3+k3s1 >=1.16.0-0
+   # ✔ prerequisites checks passed
+   ```
 
 2. Push you changes to git
 
    📍 **Verify** all the `*.sops.yaml` and `*.sops.yaml` files under the `./ansible`, and `./kubernetes` directories are **encrypted** with SOPS
 
-    ```sh
-    git add -A
-    git commit -m "Initial commit :rocket:"
-    git push
-    ```
+   ```sh
+   git add -A
+   git commit -m "Initial commit :rocket:"
+   git push
+   ```
 
 3. Install Flux and sync the cluster to the Git repository
 
-    ```sh
-    task flux:bootstrap
-    # namespace/flux-system configured
-    # customresourcedefinition.apiextensions.k8s.io/alerts.notification.toolkit.fluxcd.io created
-    # ...
-    ```
+   ```sh
+   task flux:bootstrap
+   # namespace/flux-system configured
+   # customresourcedefinition.apiextensions.k8s.io/alerts.notification.toolkit.fluxcd.io created
+   # ...
+   ```
 
 4. Verify Flux components are running in the cluster
 
-    ```sh
-    kubectl -n flux-system get pods -o wide
-    # NAME                                       READY   STATUS    RESTARTS   AGE
-    # helm-controller-5bbd94c75-89sb4            1/1     Running   0          1h
-    # kustomize-controller-7b67b6b77d-nqc67      1/1     Running   0          1h
-    # notification-controller-7c46575844-k4bvr   1/1     Running   0          1h
-    # source-controller-7d6875bcb4-zqw9f         1/1     Running   0          1h
-    ```
+   ```sh
+   kubectl -n flux-system get pods -o wide
+   # NAME                                       READY   STATUS    RESTARTS   AGE
+   # helm-controller-5bbd94c75-89sb4            1/1     Running   0          1h
+   # kustomize-controller-7b67b6b77d-nqc67      1/1     Running   0          1h
+   # notification-controller-7c46575844-k4bvr   1/1     Running   0          1h
+   # source-controller-7d6875bcb4-zqw9f         1/1     Running   0          1h
+   ```
 
 ### ☑️ Verification Steps
 
 1. Output all the common resources in your cluster.
 
-    📍 _Feel free to use the provided [cluster tasks](.taskfiles/ClusterTasks.yaml) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
+   📍 _Feel free to use the provided [cluster tasks](.taskfiles/ClusterTasks.yaml) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
 
-    ```sh
-    task k8s:resources
-    ```
+   ```sh
+   task k8s:resources
+   ```
 
 2. ⚠️ It might take `cert-manager` awhile to generate certificates, this is normal so be patient.
 
@@ -241,11 +243,15 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 🌐 Public DNS
 
-The `external-dns` application created in the `networking` namespace will handle creating public DNS records. By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet. In order to make additional applications public you must set set the correct ingress class name and ingress annotations like in the HelmRelease for `echo-server`.
+The `external-dns` application created in the `networking` namespace will handle creating public DNS records.
+By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
+In order to make additional applications public you must set set the correct ingress class name and ingress annotations like in the HelmRelease for `echo-server`.
 
 ### 🏠 Home DNS
 
-`k8s_gateway` will provide DNS resolution to external Kubernetes resources (i.e. points of entry to the cluster) from any device that uses your home DNS server. For this to work, your home DNS server must be configured to forward DNS queries for `${bootstrap_cloudflare_domain}` to `${bootstrap_k8s_gateway_addr}` instead of the upstream DNS server(s) it normally uses. This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
+`k8s_gateway` will provide DNS resolution to external Kubernetes resources (i.e. points of entry to the cluster) from any device that uses your home DNS server.
+For this to work, your home DNS server must be configured to forward DNS queries for `${bootstrap_cloudflare_domain}` to `${bootstrap_k8s_gateway_addr}` instead of the upstream DNS server(s) it normally uses.
+This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
 
 > [!TIP]
 > Below is how to configure a Pi-hole for split DNS. Other platforms should be similar.
@@ -274,21 +280,22 @@ By default this template will deploy a wildcard certificate using the Let's Encr
 
 By default Flux will periodically check your git repository for changes. In order to have Flux reconcile on `git push` you must configure Github to send `push` events.
 
-1. Obtain the webhook path
+1. Follow [FluxCD instructions](https://fluxcd.io/flux/guides/webhook-receivers/#define-a-git-repository-receiver) to generate a token.
+2. Obtain the webhook path
 
-    📍 _Hook id and path should look like `/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123`_
+   📍 _Hook id and path should look like `/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123`_
 
-    ```sh
-    kubectl -n flux-system get receiver github-receiver -o jsonpath='{.status.webhookPath}'
-    ```
+   ```sh
+   kubectl -n flux-system get receiver github-receiver -o jsonpath='{.status.webhookPath}'
+   ```
 
-2. Piece together the full URL with the webhook path appended
+3. Piece together the full URL with the webhook path appended
 
-    ```text
-    https://flux-webhook.${bootstrap_cloudflare_domain}/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123
-    ```
+   ```text
+   https://flux-webhook.${bootstrap_cloudflare_domain}/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123
+   ```
 
-3. Navigate to the settings of your repository on Github, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
+4. Navigate to the settings of your repository on Github, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
 
 ### 🤖 Renovate
 
@@ -304,60 +311,45 @@ Below is a general guide on trying to debug an issue with an resource or applica
 
 1. Start by checking all Flux Kustomizations & Git Repository & OCI Repository and verify they are healthy.
 
-    ```sh
-    flux get sources oci -A
-    flux get sources git -A
-    flux get ks -A
-    ```
+   ```sh
+   flux get sources oci -A
+   flux get sources git -A
+   flux get ks -A
+   ```
 
 2. Then check all the Flux Helm Releases and verify they are healthy.
 
-    ```sh
-    flux get hr -A
-    ```
+   ```sh
+   flux get hr -A
+   ```
 
 3. Then check the if the pod is present.
 
-    ```sh
-    kubectl -n <namespace> get pods -o wide
-    ```
+   ```sh
+   kubectl -n <namespace> get pods -o wide
+   ```
 
 4. Then check the logs of the pod if its there.
 
-    ```sh
-    kubectl -n <namespace> logs <pod-name> -f
-    # or
-    stern -n <namespace> <fuzzy-name>
-    ```
+   ```sh
+   kubectl -n <namespace> logs <pod-name> -f
+   # or
+   stern -n <namespace> <fuzzy-name>
+   ```
 
 5. If a resource exists try to describe it to see what problems it might have.
 
-    ```sh
-    kubectl -n <namespace> describe <resource> <name>
-    ```
+   ```sh
+   kubectl -n <namespace> describe <resource> <name>
+   ```
 
 6. Check the namespace events
 
-    ```sh
-    kubectl -n <namespace> get events --sort-by='.metadata.creationTimestamp'
-    ```
+   ```sh
+   kubectl -n <namespace> get events --sort-by='.metadata.creationTimestamp'
+   ```
 
 Resolving problems that you have could take some tweaking of your YAML manifests in order to get things working, other times it could be a external factor like permissions on NFS. If you are unable to figure out your problem see the help section below.
-
-### Updates
-
-Use `git cherry-pick` to keep up-to-date
-
-```sh
-git remote add upstream https://github.com/onedr0p/flux-cluster-template.git
-git fetch --all
-# for individual commits
-git cherry-pick <commitid>
-# brute force
-git merge upstream/main --allow-unrelated-histories
-# remove upstream after
-git remote rm upstream
-```
 
 ### Authenticate Flux over SSH
 
@@ -377,9 +369,9 @@ The benefits of a public repository include:
 
 1. Generate new SSH key:
 
-    ```sh
-    ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./kubernetes/bootstrap/github-deploy.key -q -P ""
-    ```
+   ```sh
+   ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./kubernetes/bootstrap/github-deploy.key -q -P ""
+   ```
 
 2. Paste public key in the deploy keys section of your repository settings
 
@@ -406,46 +398,46 @@ The benefits of a public repository include:
 
 4. Encrypt secret:
 
-    ```sh
-    sops --encrypt --in-place ./kubernetes/bootstrap/github-deploy-key.sops.yaml
-    ```
+   ```sh
+   sops --encrypt --in-place ./kubernetes/bootstrap/github-deploy-key.sops.yaml
+   ```
 
 5. Apply secret to cluster:
 
-    ```sh
-    sops --decrypt ./kubernetes/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
-    ```
+   ```sh
+   sops --decrypt ./kubernetes/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
+   ```
 
 6. Update `./kubernetes/flux/config/cluster.yaml`:
 
-    ```yaml
-    apiVersion: source.toolkit.fluxcd.io/v1beta2
-    kind: GitRepository
-    metadata:
-      name: home-kubernetes
-      namespace: flux-system
-    spec:
-      interval: 10m
-      # 6a: Change this to your user and repo names
-      url: ssh://git@github.com/$user/$repo
-      ref:
-        branch: main
-      secretRef:
-        name: github-deploy-key
-    ```
+   ```yaml
+   apiVersion: source.toolkit.fluxcd.io/v1beta2
+   kind: GitRepository
+   metadata:
+   name: home-kubernetes
+   namespace: flux-system
+   spec:
+   interval: 10m
+   # 6a: Change this to your user and repo names
+   url: ssh://git@github.com/$user/$repo
+   ref:
+     branch: main
+   secretRef:
+     name: github-deploy-key
+   ```
 
 7. Commit and push changes
 8. Force flux to reconcile your changes
 
-    ```sh
-    flux reconcile -n flux-system kustomization cluster --with-source
-    ```
+   ```sh
+   flux reconcile -n flux-system kustomization cluster --with-source
+   ```
 
 9. Verify git repository is now using SSH:
 
-    ```sh
-    flux get sources git -A
-    ```
+   ```sh
+   flux get sources git -A
+   ```
 
 10. Optionally set your repository to Private in your repository settings.
 
@@ -455,4 +447,4 @@ The benefits of a public repository include:
 
 ## 🤝 Thanks
 
-This would not be possible without onedr0p and the k8s-at-home team
+This would not be possible without onedr0p and the k8s-at-home community!
