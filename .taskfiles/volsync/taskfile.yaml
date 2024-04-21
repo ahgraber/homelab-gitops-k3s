@@ -11,11 +11,11 @@ x-task-vars: &task-vars
   previous: '{{.previous}}'
 
 vars:
-  destinationTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/ReplicationDestination.tmpl.yaml"
-  wipeJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/WipeJob.tmpl.yaml"
-  waitForJobScript: "{{.ROOT_DIR}}/.taskfiles/VolSync/wait-for-job.sh"
-  listJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/ListJob.tmpl.yaml"
-  unlockJobTemplate: "{{.ROOT_DIR}}/.taskfiles/VolSync/UnlockJob.tmpl.yaml"
+  destinationTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/templates/ReplicationDestination.tmpl.yaml"
+  wipeJobTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/templates/WipeJob.tmpl.yaml"
+  waitForJobScript: "{{.ROOT_DIR}}/.taskfiles/volsync/scripts/wait-for-job.sh"
+  listJobTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/templates/ListJob.tmpl.yaml"
+  unlockJobTemplate: "{{.ROOT_DIR}}/.taskfiles/volsync/templates/UnlockJob.tmpl.yaml"
   ts: '{{now | date "150405"}}'
 
 tasks:
@@ -93,7 +93,7 @@ tasks:
       app: '{{ or .app (fail "Variable `app` is required") }}'
       ns: '{{.ns | default "default"}}'
       # 1) Query to find the Flux Kustomization associated with the ReplicationSource (app)
-      kustomization:
+      ks:
         sh: |
           kubectl -n {{.ns}} get replicationsource {{.app}} \
             -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
