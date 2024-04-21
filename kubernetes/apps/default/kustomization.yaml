@@ -6,17 +6,17 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations | Apps
-  - ./changedetection/ks.yaml
+  # - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
-  - ./homebox/ks.yaml
+  # - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
   # # - ./logseq/ks.yaml # WIP
-  - ./mealie/ks.yaml
-  - ./memos/ks.yaml
+  # - ./mealie/ks.yaml
+  # - ./memos/ks.yaml
   - ./miniflux/ks.yaml
-  - ./opengist/ks.yaml
+  # - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
   - ./picoshare/ks.yaml
   - ./stirling-pdf/ks.yaml
-  - ./syncthing/ks.yaml
+  # - ./syncthing/ks.yaml
