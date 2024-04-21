@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./secret.sops.yaml
   - ../../../../templates/volsync/init
+  # - ../../../../templates/volsync/restore
