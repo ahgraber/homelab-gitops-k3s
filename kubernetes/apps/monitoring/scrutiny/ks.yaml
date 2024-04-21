@@ -13,12 +13,6 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/monitoring/scrutiny/app
-  postBuild:
-    substitute:
-      APP: *app
-      # APP_UID: "0"
-      # APP_GID: "0"
-      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
@@ -27,6 +21,12 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_STORAGECLASS: ceph-fs
+
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
