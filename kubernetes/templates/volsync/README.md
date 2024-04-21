@@ -39,9 +39,12 @@ resources:
   postBuild:
     substitute:
       APP: *app
-      APP_UID: "0"
-      APP_GID: "0"
+      APP_UID: # set if defined in values
+      APP_GID: # set if defined in values
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_STORAGECLASS: ceph-block # default
+      VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
+      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
 ```
 
 ### Available Variables
