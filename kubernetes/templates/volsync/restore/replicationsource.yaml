@@ -9,7 +9,7 @@ spec:
   trigger:
     schedule: "0 * * * *"
   restic:
-    repository: ${APP}-backup # secret name
+    repository: ${APP}-volsync-backup # secret name
     pruneIntervalDays: 10
     retain:
       daily: 5
