@@ -35,7 +35,7 @@ spec:
   values:
     controllers:
       linkding:
-        strategy: RollingUpdate
+        strategy: Recreate
         annotations:
           reloader.stakater.com/search: "true"
         containers:

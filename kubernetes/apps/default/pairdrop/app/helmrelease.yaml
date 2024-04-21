@@ -41,7 +41,7 @@ spec:
     controllers:
       pairdrop:
         replicas: 2
-        strategy: RollingUpdate
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:

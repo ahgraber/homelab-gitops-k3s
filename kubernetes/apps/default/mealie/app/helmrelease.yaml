@@ -39,7 +39,7 @@ spec:
       mealie:
         annotations:
           reloader.stakater.com/search: "true"
-        # strategy: RollingUpdate
+        strategy: Recreate
         containers:
           app:
             image:

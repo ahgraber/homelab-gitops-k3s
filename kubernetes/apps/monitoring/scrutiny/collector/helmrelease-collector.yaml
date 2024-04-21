@@ -36,7 +36,7 @@ spec:
     controllers:
       scrutiny-collector:
         type: daemonset
-        # strategy: RollingUpdate
+        # strategy: Recreate
         containers:
           app:
             image:

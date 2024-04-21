@@ -47,7 +47,7 @@ spec:
       mlflow:
         annotations:
           reloader.stakater.com/search: "true"
-        strategy: RollingUpdate
+        strategy: Recreate
 
         initContainers:
           db-upgrade:

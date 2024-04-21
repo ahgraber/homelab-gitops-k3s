@@ -32,7 +32,7 @@ spec:
   values:
     controllers:
       dnsutils:
-        strategy: RollingUpdate
+        strategy: Recreate
         containers:
           app:
             image:

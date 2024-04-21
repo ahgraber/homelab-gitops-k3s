@@ -40,7 +40,7 @@ spec:
 
     controllers:
       echo-server:
-        strategy: RollingUpdate
+        strategy: Recreate
         containers:
           app:
             image:

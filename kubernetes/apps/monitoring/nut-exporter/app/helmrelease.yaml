@@ -32,7 +32,7 @@ spec:
   values:
     controllers:
       nut-exporter:
-        strategy: RollingUpdate
+        strategy: Recreate
         containers:
           app:
             image:

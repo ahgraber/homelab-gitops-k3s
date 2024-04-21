@@ -37,7 +37,7 @@ spec:
 
     controllers:
       homepage:
-        strategy: RollingUpdate
+        strategy: Recreate
         annotations:
           reloader.stakater.com/search: "true"
 

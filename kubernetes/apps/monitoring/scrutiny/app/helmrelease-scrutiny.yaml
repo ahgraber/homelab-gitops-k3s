@@ -44,7 +44,7 @@ spec:
 
     controllers:
       scrutiny:
-        strategy: RollingUpdate
+        strategy: Recreate
         containers:
           app:
             image:
