@@ -2,6 +2,14 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+x-task-vars: &task-vars
+  app: '{{.app}}'
+  controller: '{{.controller}}'
+  ns: '{{.ns}}'
+  claim: '{{.claim}}'
+  ts: '{{.ts}}'
+  ks: '{{.ks}}'
+
 vars:
   KUBECONFORM_SCRIPT: "{{.SCRIPTS_DIR}}/kubeconform.sh"
 
@@ -40,18 +48,6 @@ tasks:
         flux pull artifact oci://ghcr.io/onedr0p/kubernetes-schemas-oci:latest \
             --output={{.CLUSTER_DIR}}/schemas
 
-  browse-pvc:
-    desc: Browse PersistentVolumeClaims
-    summary: |
-      Args:
-        ns: Namespace to browse PersistentVolumeClaims in (default: default)
-        claim: PersistentVolumeClaim to browse (required)
-    interactive: true
-    cmd: kubectl browse-pvc --namespace {{.ns}} {{.claim}}
-    vars:
-      ns: '{{.ns | default "default"}}'
-    requires:
-      vars: ["claim"]
 
   drain:
     desc: Drain a node
@@ -79,3 +75,62 @@ tasks:
         certificaterequests
         ingresses
         pods
+
+  # --------------------------------------------------------------------------
+  browse-pvc:
+    desc: Browse PersistentVolumeClaims
+    summary: |
+      Args:
+        ns: Namespace to browse PersistentVolumeClaims in (default: default)
+        claim: PersistentVolumeClaim to browse (required)
+    interactive: true
+    cmds:
+      - task: suspend-task
+        vars: *task-vars
+      - task: browse-task
+        vars: *task-vars
+      - task: resume-task
+        vars: *task-vars
+    vars:
+      app: '{{ or .app (fail "Variable `app` is required") }}'
+      ns: '{{.ns | default "default"}}'
+      # 1) Query to find the Flux Kustomization associated with the ReplicationSource (app)
+      ks:
+        sh: |
+          kubectl -n {{.ns}} get replicationsource {{.app}} \
+            -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
+      # 2) Query to find the controller associated with the PersistentVolumeClaim (claim)
+      controller:
+        sh: |
+          app=$(kubectl -n {{.ns}} get persistentvolumeclaim {{.claim}} -o jsonpath="{.metadata.labels.app\.kubernetes\.io/name}")
+          if kubectl -n {{ .ns }} get deployment.apps/$app >/dev/null 2>&1 ; then
+            echo "deployment.apps/$app"
+          else
+            echo "statefulset.apps/$app"
+          fi
+    requires:
+      vars: ["claim"]
+    env: *task-vars
+
+  suspend-task:
+    internal: true
+    cmds:
+      - flux -n flux-system suspend kustomization {{.ks}}
+      - flux -n {{.ns}} suspend helmrelease {{.app}}
+      - kubectl -n {{.ns}} scale {{.controller}} --replicas 0
+      - kubectl -n {{.ns}} wait pod --for delete --selector="app.kubernetes.io/name={{.app}}" --timeout=2m
+    env: *task-vars
+
+  browse-task:
+    internal: true
+    interactive: true
+    cmd: kubectl browse-pvc --namespace {{.ns}} {{.claim}}
+    env: *task-vars
+
+  # Resume Flux ks and hr
+  resume-task:
+    internal: true
+    cmds:
+      - flux -n {{.ns}} resume helmrelease {{.app}}
+      - flux -n flux-system resume kustomization {{.ks}}
+    env: *task-vars
