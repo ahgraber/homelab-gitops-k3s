@@ -96,8 +96,8 @@ spec:
         tls:
           - hosts:
               - *host
-    persistence:
-      data:
-        existingClaim: *app
-        globalMounts:
-          - path: /var/opt/memos
+    # persistence:
+    #   data:
+    #     existingClaim: *app
+    #     globalMounts:
+    #       - path: /var/opt/memos
