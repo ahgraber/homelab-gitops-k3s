@@ -8,6 +8,15 @@ When deploying `fluxtomization` will substitute the variables (`postBuild.substi
 
 If the specified PVC does not exist, VolSync will attempt to restore it from the restic repo specified in the `replicationsource.yaml`
 
+### Adding to new application
+
+1. Add the `/templates/volsync/init` directory into the application kustomization.yaml
+   (typically `../../../../templates/volsync/init` -- use `task volsync:relpath` to confirm the relative path from the application kustomization file).
+2. Ensure the application `ks.yaml` is configured with `postBuild` variables
+3. Wait for at least one backup (_Note: data must be present in the PVC for a backup to occur_).
+4. During the first recovery, redirect to the `/templates/volsync/restore` location
+   (typically `../../../../templates/volsync/restore` -- use `task volsync:relpath` to confirm the relative path from the application kustomization file).
+
 ### Adding on to an existing repo
 
 1. Exclude `replicationdestination.yaml` or `claim.yaml` from `templates/volsync/kustomization.yaml`.  The destination will attempt to create a new PVC based on an empty/nonexistent snapshots as the backup is not yet populated.
