@@ -19,4 +19,4 @@ resources:
   - ./pairdrop/ks.yaml
   - ./picoshare/ks.yaml
   - ./stirling-pdf/ks.yaml
-  # - ./syncthing/ks.yaml
+  - ./syncthing/ks.yaml

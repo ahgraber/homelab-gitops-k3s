@@ -5,5 +5,4 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ./helmrelease-scrutiny.yaml
-  # - ../../../../templates/volsync/init/init_claim.yaml
   - ../../../../templates/volsync/init
