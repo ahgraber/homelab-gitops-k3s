@@ -11,7 +11,7 @@ spec:
   dataSourceRef:
     kind: ReplicationDestination
     apiGroup: volsync.backube
-    name: "${APP}-dst"
+    name: "${APP}-bootstrap-restore"
   resources:
     requests:
       storage: "${VOLSYNC_CAPACITY}"
