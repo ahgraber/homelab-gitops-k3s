@@ -19,7 +19,7 @@ spec:
     #   namespace: kube-system
     - name: kube-prometheus-stack
       namespace: monitoring
-    - name: loki-stack
+    - name: loki
       namespace: monitoring
   install:
     remediation:
@@ -137,13 +137,13 @@ spec:
               prometheusType: Thanos
               timeInterval: 1m
             isDefault: true
-          # - name: Loki
-          #   type: loki
-          #   uid: loki
-          #   access: proxy
-          #   url: http://loki-gateway.monitoring.svc.cluster.local
-          #   jsonData:
-          #     maxLines: 250
+          - name: Loki
+            type: loki
+            uid: loki
+            access: proxy
+            url: http://loki-gateway.monitoring.svc.cluster.local
+            jsonData:
+              maxLines: 250
           - name: Alertmanager
             type: alertmanager
             uid: alertmanager
