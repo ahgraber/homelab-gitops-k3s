@@ -75,8 +75,8 @@ spec:
         ports:
           http:
             port: 6157
-          ssh:
-            port: 2222
+          # ssh:
+          #   port: 2222
     ingress:
       app:
         className: internal
