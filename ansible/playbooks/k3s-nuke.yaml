@@ -26,6 +26,27 @@
     - name: Stop Kubernetes # noqa: ignore-errors
       ignore_errors: true
       block:
+        - name: Cordon
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: cordon
+          delegate_to: "{{ groups['controller'][0] }}"
+
+        - name: Drain
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: drain
+            delete_options:
+              delete_emptydir_data: true
+              ignore_daemonsets: true
+              terminate_grace_period: 600
+              wait_timeout: 900
+            # pod_selectors:
+            #   - app!=rook-ceph-osd # Rook Ceph
+          delegate_to: "{{ groups['controller'][0] }}"
+
         - name: Stop Kubernetes
           ansible.builtin.include_role:
             name: xanmanning.k3s

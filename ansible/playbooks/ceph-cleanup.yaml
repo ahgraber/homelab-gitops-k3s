@@ -58,3 +58,8 @@
         - name: Wipe (partprobe) # noqa: no-changed-when
           ansible.builtin.command: "partprobe {{ item }}"
           loop: "{{ ceph_drives }}"
+
+    - name: Reboot
+      ansible.builtin.reboot:
+        msg: Rebooting hosts
+        reboot_timeout: 3600

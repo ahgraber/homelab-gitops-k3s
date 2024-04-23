@@ -131,7 +131,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 2. Verify Ansible can view your config
 
    ```sh
-   task ansible:list
+   task ansible:hosts
    ```
 
 3. Verify Ansible can ping your nodes
@@ -153,7 +153,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 1. Verify Ansible can view your config
 
    ```sh
-   task ansible:list
+   task ansible:hosts
    ```
 
 2. Verify Ansible can ping your nodes

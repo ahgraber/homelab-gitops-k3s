@@ -105,7 +105,7 @@ tasks:
       - test -f {{.ROOK_SCRIPTS_DIR}}/wait-for-job.sh
       - test -f {{.ROOK_TEMPLATES_DIR}}/WipeDataJob.tmpl.yaml
 
-  suspend:
+  _suspend-ceph:
     desc: Suspend Ceph operator and cluster
     internal: true
     cmds:

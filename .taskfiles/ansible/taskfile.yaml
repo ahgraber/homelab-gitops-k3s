@@ -47,7 +47,7 @@ tasks:
   #   vars:
   #     force: '{{.force | default "true"}}'
 
-  list:
+  hosts:
     desc: List all the hosts in inventory
     cmd: ansible all -i {{.ANSIBLE_DIR}}/inventory --list-hosts
     preconditions:
@@ -84,6 +84,7 @@ tasks:
 
   k3s:
     desc: Install k3s
+    prompt: This will install k3s ... continue?
     dir: "{{.ANSIBLE_DIR}}"
     cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml --become
     vars:
@@ -93,6 +94,30 @@ tasks:
       - {msg: "Ansible not found", sh: "type ansible"}
       - test -f {{.ANSIBLE_DIR}}/inventory/hosts.yaml
       - test -f {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml
+
+  nuke:
+    desc: Uninstall k3s
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: ansible-playbook -i {{.ANSIBLE_DIR}}/inventory -l {{.group}} {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml --become
+    vars:
+      group: '{{.group | default "kubernetes"}}'
+      playbook: 'k3s-nuke'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{.ANSIBLE_DIR}}/inventory/hosts.yaml
+      - test -f {{.ANSIBLE_DIR}}/playbooks/{{.playbook}}.yaml
+
+  list:
+    desc: List all available Ansible playbooks
+    dir: "{{.ANSIBLE_DIR}}"
+    cmd: |
+      find {{.ANSIBLE_DIR}}/playbooks -maxdepth 1 -type f \
+        \( -name "*.yaml" -o -name "*.yml" \) \
+        -exec basename {} \; |
+        sort
+    preconditions:
+      - sh: "test -d {{.ANSIBLE_DIR}}/playbooks"
+        msg: "Error, could not find playbook directory '{{.ANSIBLE_DIR}}/playbooks'"
 
   run:
     aliases: ["playbook"]
