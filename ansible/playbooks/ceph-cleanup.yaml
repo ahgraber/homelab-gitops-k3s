@@ -33,14 +33,15 @@
         timeout: 300
 
   tasks:
+    - name: Delete (/var/lib/rook)
+      ansible.builtin.file:
+        state: absent
+        path: /var/lib/rook
+
     - name: Reset Ceph Drives # noqa: ignore-errors
       ignore_errors: true
       when: ceph_drives | default([]) | length > 0
       block:
-        - name: Delete (/var/lib/rook)
-          ansible.builtin.file:
-            state: absent
-            path: /var/lib/rook
         - name: Delete (/dev/mapper/ceph-*) # noqa: no-changed-when
           ansible.builtin.shell: |
             set -o pipefail
