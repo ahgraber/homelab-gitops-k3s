@@ -43,6 +43,9 @@
               wait_timeout: 900
             pod_selectors:
               - app!=rook-ceph-osd # Rook Ceph
+              - app.kubernetes.io/name!=kube-vip
+              - app.kubernetes.io/name!=cilium-agent
+              - app.kubernetes.io/name!=cilium-operator
           delegate_to: "{{ groups['controller'][0] }}"
 
         - name: Update

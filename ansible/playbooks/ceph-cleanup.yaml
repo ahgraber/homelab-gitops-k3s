@@ -11,8 +11,13 @@
         /!\    1. Ensure you have removed rook-ceph from k8s cluster  /!\
         /!\    2. This will completely delete all stored data!!!      /!\
         Type CONFIRM to proceed
-      default: "n"
+      default: "no"
       private: false
+    - name: reboot_confirmation
+      prompt: "Do you want to reboot the hosts? (yes/No)"
+      default: "no"
+      private: false
+
   pre_tasks:
     - name: Check for confirmation
       ansible.builtin.fail:
@@ -60,6 +65,8 @@
           loop: "{{ ceph_drives }}"
 
     - name: Reboot
+      # when: reboot_check.user_input | bool
+      when: reboot_confirmation == 'yes'
       ansible.builtin.reboot:
         msg: Rebooting hosts
         reboot_timeout: 3600
