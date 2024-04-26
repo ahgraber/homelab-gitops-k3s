@@ -148,7 +148,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 🛰️ Build your k3s cluster with Ansible
 
-📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role. If you run into problems, you can run `task ansible:nuke` to destroy the k3s cluster and start over from this point._
+📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role. If you run into problems, you can run `task k3s:nuke` to destroy the k3s cluster and start over from this point._
 
 1. Verify Ansible can view your config
 
@@ -162,10 +162,10 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    task ansible:ping
    ```
 
-3. Install k3s with Ansible
+3. Install k3s
 
    ```sh
-   task ansible:k3s
+   task k3s:install
    ```
 
    > The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.

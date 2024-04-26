@@ -75,6 +75,6 @@ tasks:
     desc: Run ansible playbook to clean and zap disks
     interactive: true
     cmds:
-      - task: ansible:run
+      - task: ansible:playbook
         vars:
           playbook: 'ceph-cleanup'

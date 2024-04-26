@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# Enable case-insensitive pattern matching
+shopt -s nocasematch
+
 patch_cephclusters () {
   mapfile -t -O "${#instances[@]}" instances < <( \
     kubectl get cephcluster -A \
@@ -16,6 +19,24 @@ patch_cephclusters () {
   done;
 }
 
+delete_resource () {
+  kind="$1"
+
+  unset instances
+  mapfile -t -O "${#instances[@]}" instances < <( \
+    kubectl get "${kind}" -A \
+      -o jsonpath='{range .items[*]}{.kind}{" "}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}' \
+  )
+
+  for instance in "${instances[@]}"; do
+    echo "Deleting ${instance}"
+    # split instance by space into array
+    IFS=' ' read -ra _instance <<< "${instance}"
+    # delete
+    kubectl delete "${_instance[@]}"
+  done;
+}
+
 delete_CRs () {
   # get all CR kinds associated with rook-ceph
   mapfile -t customresources < <(kubectl api-resources | grep ceph.rook.io | awk '{ print $1 }')
@@ -23,34 +44,12 @@ delete_CRs () {
   # get all instances of these CRs
   for kind in "${customresources[@]}"; do
     # handle cephcluster separately
-    if [[ "${kind}" != "cephclusters" ]]; then
-      mapfile -t -O "${#instances[@]}" instances < <( \
-        kubectl get "${kind}" -A \
-          -o jsonpath='{range .items[*]}{.kind}{" "}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}' \
-      )
-
-      for instance in "${instances[@]}"; do
-        echo "Removing ${kind} ${instance}..."
-        # split instance by space into array
-        IFS=' ' read -ra _instance <<< "${instance}"
-        kubectl delete "${_instance[@]}"
-      done;
+    if [[ "${kind}" =~ "cephcluster" ]]; then
+      : # pass
+    else
+      echo "Removing ${kind} instances..."
+      delete_resource "${kind}"
     fi;
-  done;
-}
-
-delete_cephclusters () {
-  mapfile -t -O "${#instances[@]}" instances < <( \
-    kubectl get cephcluster -A \
-      -o jsonpath='{range .items[*]}{.kind}{" "}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}' \
-  )
-
-  for instance in "${instances[@]}"; do
-    echo "Removing ${kind} ${instance}..."
-    # split instance by space into array
-    IFS=' ' read -ra _instance <<< "${instance}"
-    # delete
-    kubectl delete "${_instance[@]}"
   done;
 }
 
@@ -90,12 +89,16 @@ delete_crds () {
   done;
 }
 
+delete_ns () {
+  kubectl delete namespace rook-ceph
+}
 #--------------------------------------------------
 echo "Removing rook-ceph..."
 
 patch_cephclusters
 delete_CRs
-delete_cephclusters
+delete_resource "cephcluster"
 delete_helmreleases
 delete_storageclasses
 delete_crds
+delete_ns

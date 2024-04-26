@@ -82,8 +82,9 @@ tasks:
       - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
       - test -f {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml
 
-  k3s:
+  _k3s_install:
     desc: Install k3s
+    internal: true
     prompt: This will install k3s ... continue?
     dir: "{{ .ANSIBLE_DIR }}"
     cmd: ansible-playbook -i {{ .ANSIBLE_DIR }}/inventory -l {{ .group }} {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml --become
@@ -95,7 +96,8 @@ tasks:
       - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
       - test -f {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml
 
-  stop:
+  _k3s_stop:
+    internal: true
     desc: Stop k3s process (safely)
     prompt: This will stop k3s (without uninstalling) ... continue?
     dir: "{{ .ANSIBLE_DIR }}"
@@ -108,7 +110,8 @@ tasks:
       - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
       - test -f {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml
 
-  nuke:
+  _k3s_nuke:
+    internal: true
     desc: Uninstall k3s
     dir: "{{ .ANSIBLE_DIR }}"
     cmd: ansible-playbook -i {{ .ANSIBLE_DIR }}/inventory -l {{ .group }} {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml --become
@@ -132,15 +135,14 @@ tasks:
       - sh: "test -d {{ .ANSIBLE_DIR }}/playbooks"
         msg: "Error, could not find playbook directory '{{ .ANSIBLE_DIR }}/playbooks'"
 
-  run:
-    aliases: ["playbook"]
+  playbook:
     desc: Run an Ansible playbook by name
     summary: |
       Args:
         playbook: Playbook to run (required)
       E.g.,
-      task ansible:run playbook='k3s-prepare'
-      task ansible:run playbook='k3s-install' -- '--become'
+      task ansible:playbook playbook='k3s-prepare'
+      task ansible:playbook playbook='k3s-install' -- '--become'
     prompt: Run Ansible playbook '{{ .playbook }}' ... continue?
     dir: "{{ .ANSIBLE_DIR }}"
     cmd: ansible-playbook -i {{ .ANSIBLE_DIR }}/inventory -l {{ .group }} {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml {{ .CLI_ARGS }}
