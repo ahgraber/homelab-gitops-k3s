@@ -12,10 +12,10 @@ tasks:
     desc: Scale a database down (useful for TrueNAS/Minio updates)
     aliases: ["scaledown"]
     cmds:
-      - kubectl annotate cluster '{{.cnpg}}' -n '{{.ns}}' --overwrite cnpg.io/hibernation=on
+      - kubectl annotate cluster '{{ .cnpg }}' -n '{{ .ns }}' --overwrite cnpg.io/hibernation=on
     vars:
       cnpg: '{{ or .cnpg (fail "Cluster `cnpg` is required") }}'
-      ns: '{{.ns | default "default"}}'
+      ns: '{{ .ns | default "default" }}'
 
   hibernate-all:
     desc: Scale all databases down (useful for TrueNAS/Minio updates)
@@ -23,7 +23,7 @@ tasks:
     cmds:
       - for: { var: cnpgs, as: DB, split: "\n" }
         cmd: |
-          echo '{{.DB}}' |
+          echo '{{ .DB }}' |
           xargs -L1 bash -c 'kubectl annotate cluster "$0" -n "$1" --overwrite cnpg.io/hibernation=on'
     vars:
       cnpgs:
@@ -33,22 +33,22 @@ tasks:
             [.metadata.name, .metadata.ns] |
           @tsv'
     status:
-      - 'test -z "{{.cnpgs}}"'
+      - 'test -z "{{ .cnpgs }}"'
 
   resume:
     desc: Resume database after hibernation
     cmds:
-      - kubectl annotate cluster '{{.cnpg}}' -n '{{.ns}}' cnpg.io/hibernation-
+      - kubectl annotate cluster '{{ .cnpg }}' -n '{{ .ns }}' cnpg.io/hibernation-
     vars:
       cnpg: '{{ or .cnpg (fail "Cluster `cnpg` is required") }}'
-      ns: '{{.ns | default "default"}}'
+      ns: '{{ .ns | default "default" }}'
 
   resume-all:
     desc: Resume all databases after hibernation
     cmds:
       - for: { var: cnpgs, as: DB, split: "\n" }
         cmd: |
-          echo '{{.DB}}' |
+          echo '{{ .DB }}' |
           xargs -L1 bash -c 'kubectl annotate cluster "$0" -n "$1" cnpg.io/hibernation-'
     vars:
       cnpgs:
@@ -58,4 +58,4 @@ tasks:
             [.metadata.name, .metadata.namespace] |
           @tsv'
     status:
-      - 'test -z "{{.cnpgs}}"'
+      - 'test -z "{{ .cnpgs }}"'

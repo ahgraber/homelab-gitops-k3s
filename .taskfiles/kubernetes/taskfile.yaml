@@ -2,16 +2,8 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
-x-task-vars: &task-vars
-  app: '{{.app}}'
-  controller: '{{.controller}}'
-  ns: '{{.ns}}'
-  claim: '{{.claim}}'
-  ts: '{{.ts}}'
-  ks: '{{.ks}}'
-
 vars:
-  KUBECONFORM_SCRIPT: "{{.SCRIPTS_DIR}}/kubeconform.sh"
+  KUBECONFORM_SCRIPT: "{{ .SCRIPTS_DIR }}/kubeconform.sh"
 
 tasks:
 
@@ -19,19 +11,19 @@ tasks:
     desc: Download kubeconfig from a remote k3s master node
     dotenv: ['.env']
     vars:
-      user: '{{.user | default "root"}}'
-      controller_host: '{{.controller_host | default "optiplex0"}}'
-      # kubernetes_api: '{{.kubernetes_api | default "192.168.1.1"}}'  # pull KUBE_VIP_ADDR from .env
+      user: '{{ .user | default "root" }}'
+      controller_host: '{{ .controller_host | default "optiplex0" }}'
+      # kubernetes_api: '{{ .kubernetes_api | default "192.168.1.1" }}'  # pull KUBE_VIP_ADDR from .env
     cmds:
-      - rsync --verbose --progress --partial --rsync-path="sudo rsync" {{.user}}@{{.controller_host}}:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
+      - rsync --verbose --progress --partial --rsync-path="sudo rsync" {{ .user }}@{{ .controller_host }}:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
       - sed -i '' "s/127.0.0.1/$KUBE_VIP_ADDR/g" "${KUBECONFIG}"
       - chmod go-r "${KUBECONFIG}"
 
   kubeconform:
     desc: Validate Kubernetes manifests with kubeconform
-    cmd: bash {{.KUBECONFORM_SCRIPT}} {{.KUBERNETES_DIR}}
+    cmd: bash {{ .KUBECONFORM_SCRIPT }} {{ .KUBERNETES_DIR }}
     preconditions:
-      - { msg: "Missing kubeconform script", sh: "test -f {{.KUBECONFORM_SCRIPT}}" }
+      - { msg: "Missing kubeconform script", sh: "test -f {{ .KUBECONFORM_SCRIPT }}" }
 
   dash-pass:
     desc: Get secret for kubernetes-dashboard login
@@ -40,22 +32,13 @@ tasks:
         kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
       - echo "Token is in clipboard ready to paste!"
 
-  schemas:
-    desc: Pull the latest CRD schemas for this cluster
-    cmds:
-      - |
-        mkdir -p {{.CLUSTER_DIR}}/schemas
-        flux pull artifact oci://ghcr.io/onedr0p/kubernetes-schemas-oci:latest \
-            --output={{.CLUSTER_DIR}}/schemas
-
-
   drain:
     desc: Drain a node
     summary: |
       Args:
         cluster: Cluster to run command against (required)
         node: Node to drain (required)
-    cmd: kubectl drain {{.node}} --ignore-daemonsets --delete-local-data --force
+    cmd: kubectl drain {{ .node }} --ignore-daemonsets --delete-local-data --force
     requires:
       vars: ["node"]
 
@@ -63,7 +46,7 @@ tasks:
     desc: Gather common resources in your cluster, useful when asking for support
     cmds:
       - for: { var: resource }
-        cmd: kubectl get {{.ITEM}} {{.CLI_ARGS | default "-A"}}
+        cmd: kubectl get {{ .ITEM }} {{ .CLI_ARGS | default "-A" }}
     vars:
       resource: >-
         nodes
@@ -75,63 +58,3 @@ tasks:
         certificaterequests
         ingresses
         pods
-
-  # --------------------------------------------------------------------------
-  # requires https://github.com/clbx/kubectl-browse-pvc krew plugin
-  browse-pvc:
-    desc: Browse PersistentVolumeClaims
-    summary: |
-      Args:
-        ns: Namespace to browse PersistentVolumeClaims in (default: default)
-        claim: PersistentVolumeClaim to browse (required)
-    interactive: true
-    cmds:
-      - task: suspend-task
-        vars: *task-vars
-      - task: browse-task
-        vars: *task-vars
-      - task: resume-task
-        vars: *task-vars
-    vars:
-      app: '{{ or .app (fail "Variable `app` is required") }}'
-      ns: '{{.ns | default "default"}}'
-      # 1) Query to find the Flux Kustomization associated with the ReplicationSource (app)
-      ks:
-        sh: |
-          kubectl -n {{.ns}} get replicationsource {{.app}} \
-            -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
-      # 2) Query to find the controller associated with the PersistentVolumeClaim (claim)
-      controller:
-        sh: |
-          app=$(kubectl -n {{.ns}} get persistentvolumeclaim {{.claim}} -o jsonpath="{.metadata.labels.app\.kubernetes\.io/name}")
-          if kubectl -n {{ .ns }} get deployment.apps/$app >/dev/null 2>&1 ; then
-            echo "deployment.apps/$app"
-          else
-            echo "statefulset.apps/$app"
-          fi
-    requires:
-      vars: ["claim"]
-    env: *task-vars
-
-  suspend-task:
-    internal: true
-    cmds:
-      - flux -n flux-system suspend kustomization {{.ks}}
-      - flux -n {{.ns}} suspend helmrelease {{.app}}
-      - kubectl -n {{.ns}} scale {{.controller}} --replicas 0
-      - kubectl -n {{.ns}} wait pod --for delete --selector="app.kubernetes.io/name={{.app}}" --timeout=2m
-    env: *task-vars
-
-  browse-task:
-    internal: true
-    interactive: true
-    cmd: kubectl browse-pvc --namespace {{.ns}} {{.claim}}
-    env: *task-vars
-
-  # Resume Flux ks and hr
-  resume-task:
-    internal: true
-    cmds:
-      - flux -n {{.ns}} resume helmrelease {{.app}}
-      - flux -n flux-system resume kustomization {{.ks}}
-    env: *task-vars

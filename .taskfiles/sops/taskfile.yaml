@@ -3,15 +3,15 @@
 version: "3"
 
 vars:
-  SOPS_CONFIG_FILE: "{{.ROOT_DIR}}/.sops.yaml"
+  SOPS_CONFIG_FILE: "{{ .ROOT_DIR }}/.sops.yaml"
 
 tasks:
 
   age-keygen:
     desc: Initialize Age Key for Sops
-    cmd: age-keygen --output {{.AGE_FILE}}
+    cmd: age-keygen --output {{ .AGE_FILE }}
     status:
-      - test -f "{{.AGE_FILE}}"
+      - test -f "{{ .AGE_FILE }}"
 
   encode:
     desc: Substitute and encrypt sops secret, given template
@@ -21,14 +21,14 @@ tasks:
     cmds:
       - |
         unset noclobber
-        envsubst < {{.tmpl}} > {{.tmpl | replace ".tmpl" ""}}
-        sops --encrypt --in-place {{.tmpl | replace ".tmpl" ""}}
+        envsubst < {{ .tmpl }} > {{ .tmpl | replace ".tmpl" ""}}
+        sops --encrypt --in-place {{ .tmpl | replace ".tmpl" ""}}
     requires:
       vars: ["tmpl"]
     preconditions:
-      - { msg: "Missing Sops config file", sh: "test -f {{.SOPS_CONFIG_FILE}}" }
-      - { msg: "Missing Sops Age key file", sh: "test -f {{.AGE_FILE}}" }
-      - { msg: "File is not a template", sh: '{{ if not (.tmpl | contains ".sops.yaml.tmpl") }}exit 1;{{end}}'}
+      - { msg: "Missing Sops config file", sh: "test -f {{ .SOPS_CONFIG_FILE }}" }
+      - { msg: "Missing Sops Age key file", sh: "test -f {{ .AGE_FILE }}" }
+      - { msg: "File is not a template", sh: '{{ if not (.tmpl | contains ".sops.yaml.tmpl") }}exit 1;{{ end }}'}
 
   encrypt-all:
     desc: Encrypt all Kubernetes SOPS secrets that are not already encrypted
@@ -36,19 +36,19 @@ tasks:
       - for: { var: file }
         task: .encrypt-file
         vars:
-          file: "{{.ITEM}}"
+          file: "{{ .ITEM }}"
     vars:
       file:
         sh: |
-          if [ -d "{{.KUBERNETES_DIR}}" ]; then
-              find "{{.KUBERNETES_DIR}}" -type f -name "*.sops.*" -exec grep -L "ENC\[AES256_GCM" {} \;
+          if [ -d "{{ .KUBERNETES_DIR }}" ]; then
+              find "{{ .KUBERNETES_DIR }}" -type f -name "*.sops.*" -exec grep -L "ENC\[AES256_GCM" {} \;
           fi
 
   .encrypt-file:
     internal: true
-    cmd: sops --encrypt --in-place {{.file}}
+    cmd: sops --encrypt --in-place {{ .file }}
     requires:
       vars: ["file"]
     preconditions:
-      - { msg: "Missing Sops config file", sh: "test -f {{.SOPS_CONFIG_FILE}}" }
-      - { msg: "Missing Sops Age key file", sh: "test -f {{.AGE_FILE}}" }
+      - { msg: "Missing Sops config file", sh: "test -f {{ .SOPS_CONFIG_FILE }}" }
+      - { msg: "Missing Sops Age key file", sh: "test -f {{ .AGE_FILE }}" }

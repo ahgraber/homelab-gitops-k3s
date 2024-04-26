@@ -2,35 +2,31 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
-# includes:
-#   # ansible:
-#   #   taskfile: ./AnsibleTasks.yaml
-#   #   internal: true
-#   cluster:
-#     taskfile: ./ClusterTasks.yaml
-#     internal: true
-
-x-task-vars: &task-vars
-  ns: '{{.ns}}'
-  operator: '{{.operator}}'
-  ceph: '{{.ceph}}'
-  cephcluster: '{{.cephcluster}}'
-
-x-env: &env
-  disk: "{{.disk}}"
-  job: "{{.job}}"
-  node: "{{.node}}"
+includes:
+  ansible:
+    taskfile: ../ansible/taskfile.yaml
+    internal: true
+  flux:
+    taskfile: ../flux/taskfile.yaml
+    internal: true
+  volsync:
+    taskfile: ../volsync/taskfile.yaml
+    internal: true
 
 vars:
-  ROOK_SCRIPTS_DIR: "{{.ROOT_DIR}}/.taskfiles/Rook/scripts"
-  ROOK_TEMPLATES_DIR: "{{.ROOT_DIR}}/.taskfiles/Rook/templates"
+  ROOK_TASK_DIR: "{{ .ROOT_DIR }}/.taskfiles/Rook"
+  ROOK_SCRIPTS_DIR: "{{ .ROOK_TASK_DIR }}/scripts"
+  ROOK_TEMPLATES_DIR: "{{ .ROOK_TASK_DIR }}/templates"
+
+  # cephnodes: ['optiplex3','optiplex4','optiplex5']
+  # cephdisk: '/dev/sda'
 
 tasks:
 
   toolbox:
     desc: Open a shell to debug ceph via the toolbox
     interactive: true
-    cmd: kubectl exec -it {{.pod}} -n rook-ceph -- bash
+    cmd: kubectl exec -it {{ .pod }} -n rook-ceph -- bash
     vars:
       pod:
         sh: kubectl get pod -l "app=rook-ceph-tools" -n rook-ceph -o json | jq '.items[] | .metadata.name'
@@ -45,404 +41,40 @@ tasks:
         pbcopy
       - echo "Token is in clipboard ready to paste!"
 
-  reset:
-    desc: Reset Rook
-    vars: &vars
-      disk: "{{.cephdisk}}"
-      node: "{{.ITEM}}"
-    cmds:
-      - task: suspend-ceph
-      - task: scaledown-kps
-      - for: { var: cephnodes }
-        task: reset-data
-        vars: *vars
-      - for: { var: cephnodes }
-        task: reset-disk
-        vars: *vars
-    requires:
-      vars: ["cephnodes", "cephdisk"]
 
-  reset-disk:
-    desc: Reset a rook disk on a node
-    prompt: Reset rook disk with '{{.node}}/{{.disk}}' ... continue?
-    summary: |
-      Args:
-        disk: Disk to wipe (required)
-        node: Node the disk is on (required)
+  decommission:
+    desc: Decommision by scaling dependants down
     cmds:
-      - envsubst < <(cat {{.ROOK_TEMPLATES_DIR}}/WipeDiskJob.tmpl.yaml) | kubectl apply -f -
-      - bash {{.ROOK_SCRIPTS_DIR}}/wait-for-job.sh {{.job}} default
-      - kubectl -n default wait job/{{.job}} --for condition=complete --timeout=1m
-      - kubectl -n default logs job/{{.job}}
-      - kubectl -n default delete job {{.job}}
-    # env: *env
-    requires:
-      vars: ["disk", "node"]
-    vars:
-      job: wipe-disk-{{.node}}-{{.disk | replace "/" "-"}}
-    preconditions:
-      - test -f {{.ROOK_SCRIPTS_DIR}}/wait-for-job.sh
-      - test -f {{.ROOK_TEMPLATES_DIR}}/WipeDiskJob.tmpl.yaml
+      # - task: _snapshot-all
+      - task: flux:suspend_ks
+      - task: flux:suspend_hr
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/scaledown-consumers.sh
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/remove-rook-ceph.sh
+      - task: _zap
+      # - task: flux:resume_ks
+      # - task: flux:resume_hr
 
-  reset-data:
-    desc: Reset rook data on a node
-    prompt: Reset rook data on node '{{.node}}' ... continue?
-    summary: |
-      Args:
-        node: Node the data is on (required)
-    cmds:
-      - envsubst < <(cat {{.ROOK_TEMPLATES_DIR}}/WipeDataJob.tmpl.yaml) | kubectl apply -f -
-      - bash {{.ROOK_SCRIPTS_DIR}}/wait-for-job.sh {{.job}} default
-      - kubectl -n default wait job/{{.job}} --for condition=complete --timeout=1m
-      - kubectl -n default logs job/{{.job}}
-      - kubectl -n default delete job {{.job}}
-    env: *env
-    requires:
-      vars: ["node"]
-    vars:
-      job: wipe-data-{{.node}}
-    preconditions:
-      - test -f {{.ROOK_SCRIPTS_DIR}}/wait-for-job.sh
-      - test -f {{.ROOK_TEMPLATES_DIR}}/WipeDataJob.tmpl.yaml
-
-  _suspend-ceph:
-    desc: Suspend Ceph operator and cluster
+  _snapshot-all:
+    desc: Trigger a Restic ReplicationSource snapshot for all ReplicationSources
     internal: true
     cmds:
-      - flux suspend kustomization '{{.operator}}' -n flux-system
-      - flux suspend kustomization '{{.ceph}}' -n flux-system
+      - for: { var: sources, split: "\n"}
+        task: volsync:snapshot
+        vars:
+          app: "{{ ( split \"\t\" .ITEM )._0 }}"
+          ns: "{{ ( split \"\t\" .ITEM )._1 }}"
     vars:
-      # n: '{{.n | default "rook-ceph"}}'
-      operator: '{{.operator | default "rook-ceph-operator"}}'
-      ceph: '{{.ceph | default "rook-ceph-cluster"}}'
-    env: *task-vars
+      sources:
+        sh: |
+          kubectl get replicationsources -A \
+          -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\n"}{end}'
 
-  scaledown-kps:
-    desc: Scale down kube-prometheus-stack (managed by operator)
-    internal: true
+  _zap:
+    desc: Run ansible playbook to clean and zap disks
+    interactive: true
     cmds:
-      - flux suspend hr kube-prometheus-stack -n '{{.ns}}'
-      - |
-        kubectl patch Alertmanager '{{.name}}' -n '{{.ns}}' \
-        --type merge --patch='{"spec":{"replicas": 0}}'
-      - |
-        kubectl patch Prometheus '{{.name}}' -n '{{.ns}}' \
-        --type merge --patch='{"spec":{"replicas": 0}}'
-    vars:
-      name: kps
-      ns: monitoring
-
-  # delete-hr-using-ceph:
-  #   desc: Suspend kustomizations and delete helmreleases with rook-ceph PVCs
-  #   internal: true
-  #   cmds:
-  #     - for: { var: ceph_ks, as: KS, split: "\n" }
-  #       cmd: flux suspend kustomization '{{.KS}}' -n flux-system
-  #     - for: { var: ceph_ks, as: KS, split: "\n" }
-  #       cmd: |
-  #         kubectl get hr --all-namespaces -o json |
-  #         jq -rc --arg ks '{{.KS}}' '.items[] |
-  #           select(.metadata.labels."kustomize.toolkit.fluxcd.io/name"==$ks) |
-  #           [.metadata.name, .metadata.namespace] |
-  #           @tsv' |
-  #         xargs -L1 bash -c 'kubectl delete hr "$0" -n "$1"'
-  #   vars:
-  #     ceph_ks:  # get kustomization names associated with pvcs using 'ceph' storageclasses
-  #       sh: |
-  #         kubectl get pvc --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           select(.spec.storageClassName | contains("ceph")) |
-  #           select(.metadata.labels."kustomize.toolkit.fluxcd.io/name"!=null) |
-  #           .metadata.labels."kustomize.toolkit.fluxcd.io/name"
-  #         '
-  #   status:
-  #     - 'test -z "{{.ceph_ks}}"'
-
-  # delete-ceph-blockpools:
-  #   desc: Delete ceph blockpools
-  #   internal: true
-  #   cmds:
-  #     - for: { var: blockpools, as: BP, split: "\n" }
-  #       cmd: |
-  #         echo '{{.BP}}' |
-  #         xargs -L1 bash -c 'kubectl delete cephblockpool "$0" -n "$1"'
-  #         # kubectl patch cephblockpool "$0" -n "$1" --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     blockpools:
-  #       sh: |
-  #         kubectl get cephblockpool --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           [.metadata.name, .metadata.namespace] |
-  #           @tsv
-  #         '
-  #   status:
-  #     - 'test -z "{{.blockpools}}"'
-
-  # delete-ceph-filesystems:
-  #   desc: Delete ceph filesystems
-  #   internal: true
-  #   cmds:
-  #     - for: { var: filesystems, as: FS, split: "\n" }
-  #       cmd: |
-  #         echo '{{.FS}}' |
-  #         xargs -L1 bash -c 'kubectl delete cephfilesystem "$0" -n "$1"'
-  #         # kubectl patch cephfilesystem "$0" -n "$1" --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     filesystems:
-  #       sh: |
-  #         kubectl get cephfilesystem --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           [.metadata.name, .metadata.namespace] |
-  #           @tsv
-  #         '
-  #   status:
-  #     - 'test -z "{{.filesystems}}"'
-
-  # delete-ceph-objectstores:
-  #   desc: Delete ceph objectstores
-  #   internal: true
-  #   cmds:
-  #     - for: { var: objectstores, as: OS, split: "\n" }
-  #       cmd: |
-  #         echo '{{.OS}}' |
-  #         xargs -L1 bash -c 'kubectl delete cephobjectstore "$0" -n "$1"'
-  #         # kubectl patch cephobjectstore "$0" -n "$1" --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     objectstores:
-  #       sh: |
-  #         kubectl get cephobjectstore --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           [.metadata.name, .metadata.namespace] |
-  #           @tsv
-  #         '
-  #   status:
-  #     - 'test -z "{{.objectstores}}"'
-
-  # delete-ceph-storageclasses:
-  #   desc: Delete storage classes starting with 'ceph'
-  #   internal: true
-  #   cmds:
-  #     - for: { var: storageclasses, as: SC, split: "\n" }
-  #       cmd: kubectl delete storageclass '{{.SC}}'
-  #   vars:
-  #     storageclasses:
-  #       sh: |
-  #           kubectl get storageclass -o json |
-  #           jq -rc '.items[] |
-  #             select(.metadata.name | contains("ceph")) |
-  #             .metadata.name
-  #           '
-  #   status:
-  #     - 'test -z "{{.storageclasses}}"'
-
-  # delete-ceph-pvcs:
-  #   desc: Delete pvcs using 'ceph' storageclasses
-  #   internal: true
-  #   cmds:
-  #     - for: { var: ceph_pvcs, as: PVC, split: "\n" }
-  #       cmd: |
-  #         echo '{{.PVC}}' |
-  #         xargs -L1 bash -c 'kubectl delete pvc "$0" -n "$1"'
-  #   vars:
-  #     ceph_pvcs:  # get pvc names associated with pvcs using 'ceph' storageclasses
-  #       sh: |
-  #         kubectl get pvc --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           select(.spec.storageClassName | contains("ceph")) |
-  #           [.metadata.name, .metadata.namespace] |
-  #           @tsv
-  #         '
-  #   status:
-  #     - 'test -z "{{.ceph_pvcs}}"'
-
-  # delete-ceph-pvs:
-  #   desc: Delete pvs using 'ceph' storageclasses
-  #   internal: true
-  #   cmds:
-  #     - for: { var: ceph_pvs, as: PV, split: "\n" }
-  #       cmd: |
-  #         # kubectl patch pv '{{.PV}}' --type merge --patch='{"metadata":{"finalizers": []}}'
-  #         kubectl delete pv '{{.PV}}'
-  #   vars:
-  #     ceph_pvs:  # get pv names associated with pvcs using 'ceph' storageclasses
-  #       sh: |
-  #         kubectl get pv --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           select(.spec.storageClassName | contains("ceph")) |
-  #           .metadata.name
-  #         '
-  #   status:
-  #     - 'test -z "{{.ceph_pvs}}"'
-
-  # delete-ceph-configmaps:
-  #   desc: Patch and delete configmaps in namespace
-  #   internal: true
-  #   cmds:
-  #     - for: { var: configmaps, as: CFG, split: "\n" }
-  #       cmd: |
-  #         kubectl delete configmap '{{.CFG}}' -n {{.ns}}
-  #         kubectl patch configmap '{{.CFG}}' -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     configmaps:
-  #       sh: |
-  #         kubectl get configmaps -n '{{.ns}}' -o json |
-  #         jq -rc '.items[] | .metadata.name'
-  #   env: *task-vars
-  #   status:
-  #     - 'test -z "{{.configmaps}}"'
-
-  # delete-ceph-secrets:
-  #   desc: Patch and delete secrets in namespace
-  #   internal: true
-  #   cmds:
-  #     - for: { var: secrets, as: S, split: "\n" }
-  #       cmd: |
-  #         kubectl delete secret '{{.S}}' -n {{.ns}}
-  #         kubectl patch secret '{{.S}}' -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     secrets:
-  #       sh: |
-  #         kubectl get secrets -n '{{.ns}}' -o json |
-  #         jq -rc '.items[] | .metadata.name'
-  #   env: *task-vars
-  #   status:
-  #     - 'test -z "{{.secrets}}"'
-
-  # delete-ceph-cluster:
-  #   desc: Patch and delete cephcluster object
-  #   internal: true
-  #   cmds:
-  #     - for: { var: cephclusters, as: CC, split: "\n" }
-  #       cmd: |
-  #         kubectl patch cephcluster {{.CC}} -n {{.ns}} \
-  #           --type merge --patch='{"spec":{"cleanupPolicy": {"confirmation":"yes-really-destroy-data"}}}'
-  #         kubectl delete cephcluster {{.CC}} -n {{.ns}}
-  #         kubectl patch cephcluster {{.CC}}} -n {{.ns}} --type merge --patch='{"metadata":{"finalizers": []}}'
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     # cephcluster: '{{.cephcluster | default "rook-ceph"}}'
-  #     cephclusters:
-  #       sh: |
-  #         kubectl get cephclusters -n {{.ns}} -o json |
-  #         jq -rc '.items[] | .metadata.name'
-  #   env: *task-vars
-  #   status:
-  #     - 'test -z "{{.cephclusters}}"'
-
-  # delete-cluster-flux:
-  #   desc: Delete rook-ceph cluster helmrelease and kustomization
-  #   internal: true
-  #   cmds:
-  #     - kubectl delete hr {{.ceph}} -n {{.ns}} --ignore-not-found
-  #     - kubectl delete kustomization {{.ceph}} -n flux-system --ignore-not-found
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     ceph: '{{.helmrelease | default "rook-ceph-cluster"}}'
-  #   env: *task-vars
-
-  # delete-operator-flux:
-  #   desc: Delete rook-ceph operator helmrelease and kustomization
-  #   internal: true
-  #   cmds:
-  #     - kubectl delete hr {{.operator}} -n {{.ns}} --ignore-not-found
-  #     - kubectl delete kustomization {{.operator}} -n flux-system --ignore-not-found
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     operator: '{{.operator | default "rook-ceph-operator"}}'
-  #   env: *task-vars
-
-  # delete-ceph-crds:
-  #   desc: Delete rook-ceph crds
-  #   internal: true
-  #   cmds:
-  #     - for: { var: crds, as: CRD, split: "\n" }
-  #       cmd: |
-  #         # kubectl patch crd '{{.CRD}}' --type merge --patch='{"metadata":{"finalizers": []}}'
-  #         kubectl delete crd '{{.CRD}}'
-  #   vars:
-  #     crds:
-  #       sh: |
-  #         kubectl get crd --all-namespaces -o json |
-  #         jq -rc '.items[] |
-  #           select(.metadata.name | contains("ceph.rook.io")) |
-  #           .metadata.name
-  #         '
-  #   status:
-  #     - 'test -z "{{.crds}}"'
-
-  # delete-ceph-ns:
-  #   desc: Delete rook-ceph namespace
-  #   internal: true
-  #   cmds:
-  #     - kubectl delete ns {{.ns}} --ignore-not-found
-  #     # - |
-  #     #   kubectl patch ns {{.ns}} --type merge --patch='{"spec":{"finalizers": []}}'
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #   env: *task-vars
-
-  # # https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown/#delete-the-block-and-file-artifacts
-  # teardown:
-  #   desc: Tear down rook-ceph cluster
-  #   interactive: true
-  #   prompt: Are you sure you want to nuke rook-ceph cluster?
-  #   cmds:
-  #     - flux suspend kustomization apps -n flux-system
-  #     - task: suspend-ceph
-  #       vars: *task-vars
-  #     - task: scaledown-kps
-  #     - task: delete-hr-using-ceph
-  #     - task: delete-ceph-pvcs
-  #     - task: delete-ceph-pvs
-  #     - task: delete-ceph-blockpools
-  #     - task: delete-ceph-filesystems
-  #     - task: delete-ceph-objectstores
-  #     - task: delete-ceph-storageclasses
-  #     - task: delete-ceph-configmaps
-  #       vars: *task-vars
-  #     - task: delete-ceph-secrets
-  #       vars: *task-vars
-  #     - task: delete-ceph-cluster
-  #       vars: *task-vars
-  #     - task: delete-cluster-flux
-  #       vars: *task-vars
-  #     - task: delete-operator-flux
-  #       vars: *task-vars
-  #     - task: delete-ceph-crds
-  #     - task: delete-ceph-ns
-  #       vars: *task-vars
-  #     - echo "!! Don't forget to run rook-ceph cleanup ansible script  --  `task ansible:ceph-cleanup` !!"
-  #     - task: ansible:ceph-cleanup
-  #   vars:
-  #     ns: '{{.ns | default "rook-ceph"}}'
-  #     operator: '{{.operator | default "rook-ceph-operator"}}'
-  #     ceph: '{{.ceph | default "rook-ceph-cluster"}}'
-  #     cephcluster: '{{.cephcluster | default "rook-ceph"}}'
-  #   env: *task-vars
-
-  # resume-kps:
-  #   desc: Resume kube-prometheus-stack (managed by operator)
-  #   internal: true
-  #   cmds:
-  #     - |
-  #       kubectl patch Alertmanager '{{.name}}' -n '{{.ns}}' \
-  #       --type merge --patch='{"spec":{"replicas": '{{.replicas}}'}}'
-  #     - |
-  #       kubectl patch Prometheus '{{.name}}' -n '{{.ns}}' \
-  #       --type merge --patch='{"spec":{"replicas": '{{.replicas}}'}}'
-  #     - flux resume hr kube-prometheus-stack -n monitoring
-  #     - flux resume kustomization monitoring-kube-prometheus-stack -n flux-system
-  #   vars:
-  #     name: kps
-  #     ns: monitoring
-  #     replicas: 1
-
-  # resume:
-  #   desc: Resume applications
-  #   cmds:
-  #     - task: cluster:resume-all-hr
-  #     - task: cluster:resume-all-ks
-  #     - task: resume-kps
-  #     - task: cluster:reconcile
+      - task: ansible:run
+        vars:
+          playbook: 'ceph-cleanup'
