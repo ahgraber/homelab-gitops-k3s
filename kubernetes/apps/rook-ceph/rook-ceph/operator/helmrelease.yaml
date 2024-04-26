@@ -36,12 +36,12 @@ spec:
     monitoring:
       enabled: true
 
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        memory: 256Mi
+    # resources:
+    #   requests:
+    #     cpu: 100m
+    #     memory: 128Mi
+    #   limits:
+    #     memory: 256Mi
 
     nodeSelector:
       node-role.kubernetes.io/control-plane: "true"

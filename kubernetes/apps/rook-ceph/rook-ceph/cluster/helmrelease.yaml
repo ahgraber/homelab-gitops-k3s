@@ -62,12 +62,12 @@ spec:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
-      resources:
-        requests:
-          cpu: 100m
-          memory: 64M
-        limits:
-          memory: 128M
+      # resources:
+      #   requests:
+      #     cpu: 100m
+      #     memory: 64M
+      #   limits:
+      #     memory: 128M
 
     # https://rook.io/docs/rook/v1.10/Storage-Configuration/Advanced/ceph-configuration/#custom-cephconf-settings
     configOverride: |
@@ -130,59 +130,59 @@ spec:
           - name: optiplex5
             devices:
               - name: /dev/disk/by-id/ata-SATA_SSD_22010312000028
-      resources:
-        mgr:
-          requests:
-            cpu: 125m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        mon:
-          requests:
-            cpu: 125m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        osd:
-          requests:
-            cpu: 500m
-            memory: 256Mi
-          limits:
-            memory: 2Gi
-        prepareosd:
-          requests:
-            cpu: 250m
-            memory: 50M
-          # limits: It is not recommended to set limits on the OSD prepare job
-          #         since it's a one-time burst for memory that must be allowed to
-          #         complete without an OOM kill...
-          #         for larger devices 2Gi may be required
-          limits:
-            memory: 2Gi # set arbitrarily large
-        mgr-sidecar:
-          requests:
-            cpu: 50m
-            memory: 94M
-          limits:
-            memory: 256M
-        crashcollector:
-          requests:
-            cpu: 15m
-            memory: 64M
-          limits:
-            memory: 64M
-        logcollector:
-          requests:
-            cpu: 100m
-            memory: 100M
-          limits:
-            memory: 1Gi
-        cleanup:
-          requests:
-            cpu: 500m
-            memory: 100M
-          limits:
-            memory: 1G
+      # resources:
+      #   mgr:
+      #     requests:
+      #       cpu: 125m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   mon:
+      #     requests:
+      #       cpu: 125m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   osd:
+      #     requests:
+      #       cpu: 500m
+      #       memory: 256Mi
+      #     limits:
+      #       memory: 2Gi
+      #   prepareosd:
+      #     requests:
+      #       cpu: 250m
+      #       memory: 50M
+      #     # limits: It is not recommended to set limits on the OSD prepare job
+      #     #         since it's a one-time burst for memory that must be allowed to
+      #     #         complete without an OOM kill...
+      #     #         for larger devices 2Gi may be required
+      #     limits:
+      #       memory: 2Gi # set arbitrarily large
+      #   mgr-sidecar:
+      #     requests:
+      #       cpu: 50m
+      #       memory: 94M
+      #     limits:
+      #       memory: 256M
+      #   crashcollector:
+      #     requests:
+      #       cpu: 15m
+      #       memory: 64M
+      #     limits:
+      #       memory: 64M
+      #   logcollector:
+      #     requests:
+      #       cpu: 100m
+      #       memory: 100M
+      #     limits:
+      #       memory: 1Gi
+      #   cleanup:
+      #     requests:
+      #       cpu: 500m
+      #       memory: 100M
+      #     limits:
+      #       memory: 1G
 
     # https://github.com/rook/rook/blob/HEAD/deploy/examples/csi/rbd/storageclass.yaml
     cephBlockPools:
@@ -240,12 +240,12 @@ spec:
                     matchLabels:
                       app.kubernetes.io/name: ceph-mds
                       app.kubernetes.io/part-of: *cephFileSystemName
-            resources:
-              requests:
-                cpu: 150m
-                memory: 4Gi
-              limits:
-                memory: 4Gi
+            # resources:
+            #   requests:
+            #     cpu: 150m
+            #     memory: 4Gi
+            #   limits:
+            #     memory: 4Gi
         storageClass:
           enabled: true
           isDefault: false
@@ -285,12 +285,12 @@ spec:
           preservePoolsOnDelete: true
           gateway:
             port: 80
-            resources:
-              requests:
-                cpu: 500m
-                memory: 1Gi
-              limits:
-                memory: 2Gi
+            # resources:
+            #   requests:
+            #     cpu: 500m
+            #     memory: 1Gi
+            #   limits:
+            #     memory: 2Gi
             instances: 2
             priorityClassName: system-cluster-critical
           healthCheck:
