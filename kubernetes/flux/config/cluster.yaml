@@ -9,8 +9,7 @@ spec:
   interval: 30m
   url: "https://github.com/ahgraber/homelab-gitops-k3s.git"
   ref:
-    # branch: main
-    branch: "template_redeploy"
+    branch: main
   ignore: |
     # exclude all
     /*
