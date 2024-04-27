@@ -5,4 +5,4 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ./helmrelease.yaml
-  - ./rbac.yaml
+  - ./clusterrolebinding.yaml
