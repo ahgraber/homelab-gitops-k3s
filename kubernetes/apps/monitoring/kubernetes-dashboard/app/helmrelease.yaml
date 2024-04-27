@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kubernetes-dashboard
-      version: 6.0.8
+      version: 7.3.2
       sourceRef:
         kind: HelmRepository
         name: kubernetes-dashboard
@@ -22,26 +22,46 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  # driftDetection:
-  #   mode: enabled
-  #   ignore:
-  #     - paths:
-  #         - /spec/containers/resources/limits
-  #       target:
-  #         kind: Pod
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
-    extraArgs:
-      - --enable-insecure-login
-      - --enable-skip-login
-      - --disable-settings-authorizer
+    api:
+      containers:
+        # https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
+        args:
+          # When enabled, the skip button on the login page will be shown.
+          - --enable-skip-login
+          # When enabled, Dashboard settings page will not require user to be logged in and authorized to access settings page.
+          - --disable-settings-authorizer
+          # When enabled, Dashboard login view will also be shown when Dashboard is not served over HTTPS.
+          - --enable-insecure-login
+
     ingress:
       enabled: true
       className: internal
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          auth_request_set $required_groups 'kubernetes_dashboard';
+        nginx.ingress.kubernetes.io/whitelist-source-range: |
+          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       hosts:
         - &host kubernetes.${SECRET_DOMAIN}
       tls:
         - hosts:
             - *host
           # secretName: kubernetes-dashboard-tls
+
     metricsScraper:
       enabled: true
+    nginx:
+      enabled: false
+    cert-manager:
+      enabled: false
+    metrics-server:
+      enabled: false
