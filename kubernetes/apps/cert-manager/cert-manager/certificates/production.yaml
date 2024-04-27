@@ -3,17 +3,16 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN/./-}-production"
-  namespace: networking
 spec:
   secretName: "${SECRET_DOMAIN/./-}-production-tls"
-  # secretTemplate:
-  #   annotations:
-  #     # allow replication?
-  #     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-  #     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "" # Allow all namespaces
-  #     # automatically create replicated resources?
-  #     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "false"
-  #     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ""
+  secretTemplate:
+    annotations:
+      # allow replication?
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "networking" # Allow all namespaces
+      # automatically create replicated resources?
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "networking"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
