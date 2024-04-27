@@ -13,10 +13,6 @@
         Type CONFIRM to proceed
       default: "no"
       private: false
-    - name: reboot_confirmation
-      prompt: "Do you want to reboot the hosts? (yes/No)"
-      default: "no"
-      private: false
 
   pre_tasks:
     - name: Check for confirmation
@@ -64,10 +60,3 @@
         - name: Wipe (partprobe) # noqa: no-changed-when
           ansible.builtin.command: "partprobe {{ item }}"
           loop: "{{ ceph_drives }}"
-
-    - name: Reboot
-      # when: reboot_check.user_input | bool
-      when: reboot_confirmation == 'yes'
-      ansible.builtin.reboot:
-        msg: Rebooting hosts
-        reboot_timeout: 3600

@@ -46,7 +46,7 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 
 > Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown)
 
-Run `task ceph:teardown`
+Run `task rook:decommission`
 
 ## Troubleshooting
 
@@ -92,7 +92,7 @@ dashboard set-prometheus-api-ssl-verify False
 ### Crash
 
 > run the following commands against the ceph-toolbox pod
-> hint `task ceph:toolbox`
+> hint `task rook:toolbox`
 
 ```sh
 ceph health detail

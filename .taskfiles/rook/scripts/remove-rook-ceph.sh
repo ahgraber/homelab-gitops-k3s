@@ -10,7 +10,7 @@ patch_cephclusters () {
   )
 
   for instance in "${instances[@]}"; do
-    echo "Removing ${kind} ${instance}..."
+    echo "Patching ${kind}: ${instance}..."
     # split instance by space into array
     IFS=' ' read -ra _instance <<< "${instance}"
     # patch cleanup policy
@@ -93,7 +93,7 @@ delete_ns () {
   kubectl delete namespace rook-ceph
 }
 #--------------------------------------------------
-echo "Removing rook-ceph..."
+echo "Decommissioning rook-ceph..."
 
 patch_cephclusters
 delete_CRs

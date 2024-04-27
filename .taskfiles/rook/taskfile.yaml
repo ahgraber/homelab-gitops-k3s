@@ -41,7 +41,6 @@ tasks:
         pbcopy
       - echo "Token is in clipboard ready to paste!"
 
-
   decommission:
     desc: Decommision by scaling dependants down
     cmds:
