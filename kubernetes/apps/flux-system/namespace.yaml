@@ -6,3 +6,5 @@ metadata:
   labels:
     goldilocks.fairwinds.com/enabled: "true"
     kustomize.toolkit.fluxcd.io/prune: disabled # don't prune namespace
+  annotations:
+    volsync.backube/privileged-movers: "true"
