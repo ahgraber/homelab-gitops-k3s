@@ -35,10 +35,8 @@ tasks:
     desc: Retrieve the rook-ceph dashboard password
     cmds:
       - |
-        kubectl get secret rook-ceph-dashboard-password -n rook-ceph -o json |
-        jq '.data.password' |
-        base64 --decode |
-        pbcopy
+        kubectl get secret rook-ceph-dashboard-password -n rook-ceph \
+          -o jsonpath="{.data.password}" | base64 --decode | pbcopy
       - echo "Token is in clipboard ready to paste!"
 
   decommission:
