@@ -39,7 +39,7 @@ spec:
 
     controllers:
       miniflux:
-        replicas: 3
+        replicas: 2
         strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"

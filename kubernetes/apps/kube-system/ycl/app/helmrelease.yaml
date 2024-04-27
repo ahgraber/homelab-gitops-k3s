@@ -31,7 +31,7 @@ spec:
           kind: Pod
   values:
     controller:
-      replicas: 3
+      replicas: 2
     image:
       repository: ghcr.io/bjw-s/k8s-ycl
       tag: v0.2.0@sha256:3e78959d126ad6d5dbdb4301839ce2a200e95c46699c81eef591a06a2ef91646
