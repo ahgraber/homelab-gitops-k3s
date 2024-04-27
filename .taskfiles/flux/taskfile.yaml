@@ -49,15 +49,6 @@ tasks:
       - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }}
       - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }}
 
-  # reinstall:
-  #   desc: Reinstall Flux into a Kubernetes cluster
-  #   cmds:
-  #     - task: :rook:reset
-  #       vars:
-  #         cephnodes: optiplex0 optiplex1 optiplex2 optiplex3 optiplex4 optiplex5
-  #         cephdisk: /dev/nvme0n1
-  #     - task: bootstrap
-
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
@@ -93,6 +84,65 @@ tasks:
       - test -f {{ .KUBERNETES_DIR }}/apps/{{ .path }}/ks.yaml
 
 # ----------------------------------------------------------------------------
+  suspend_app:
+    internal: true
+    cmds:
+      - flux -n flux-system suspend kustomization {{ .ks }}
+      - flux -n {{ .ns }} suspend helmrelease {{ .app }}
+      - kubectl -n {{ .ns }} scale {{ .controller }} --replicas 0
+      - kubectl -n {{ .ns }} wait pod --for delete --selector="app.kubernetes.io/name={{ .app }}" --timeout=2m
+    vars:
+      app: '{{ or .app (fail "Variable `app` is required") }}'
+      ns: '{{ .ns | default "default" }}'
+      ks:
+        sh: |
+          kubectl -n {{ .ns }} get replicationsource {{ .app }} \
+            -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
+      hr:
+        sh: |
+          ...
+      controller:
+        sh: |
+          kubectl get deployment,statefulset -A \
+            --selector app.kubernetes.io/name="${app}" \
+            -o jsonpath='{range .items[*]}{.kind}{" "}{.metadata.name}{end}'
+
+  resume_app:
+    cmds:
+      - flux -n {{ .ns }} resume helmrelease {{ .app }}
+      - flux -n flux-system resume kustomization {{ .ks }}
+
+  # --------------------------------------------------------------------------
+  suspend_ks:
+    desc: Suspend all flux kustomizations
+    cmd: flux suspend kustomization --all
+
+  suspend_hr:
+    desc: Suspend all flux helmreleases
+    cmds:
+      - for: {var: helmreleases, split: "\n"}
+        cmd: flux suspend helmrelease {{ .ITEM }}
+    vars:
+      helmreleases:
+        sh: |
+          kubectl get helmreleases -A \
+            -o jsonpath='{range .items[*]}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}'
+
+  resume_ks:
+    desc: Resume all flux kustomizations
+    cmds:
+      - flux resume kustomization --all
+
+  resume_hr:
+    desc: Resume all flux helmreleases
+    cmds:
+      - for: {var: helmreleases, split: "\n"}
+        cmd: flux resume helmrelease {{ .ITEM }}
+    vars:
+      helmreleases:
+        sh: |
+          kubectl get helmreleases -A \
+            -o jsonpath='{range .items[*]}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}'
 
   # bounce-hr:
   #   desc: Suspend and resume helmrelease
