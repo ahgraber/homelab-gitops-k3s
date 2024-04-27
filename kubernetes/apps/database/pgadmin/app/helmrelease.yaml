@@ -43,7 +43,7 @@ spec:
 
     serverDefinitions:
       enabled: true
-      # included in pgadmin secret, see: https://github.com/rowanruseler/helm-charts/issues/182
+      resourceType: Secret
       existingSecret: *app
 
     strategy:
