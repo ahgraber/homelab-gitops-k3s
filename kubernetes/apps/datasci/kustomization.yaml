@@ -8,7 +8,7 @@ resources:
   # # Flux-Kustomizations | Databases
   - ./postgres/
   # # Flux-Kustomizations
-  # - ./docat/ks.yaml
-  # - ./mlflow/ks.yaml
-  # - ./prefect/ks.yaml
-  # - ./windmill/ks.yaml
+  - ./docat/ks.yaml
+  - ./mlflow/ks.yaml
+  - ./prefect/ks.yaml
+  - ./windmill/ks.yaml

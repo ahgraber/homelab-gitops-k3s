@@ -84,8 +84,8 @@ spec:
         ssl-protocols: TLSv1.3 TLSv1.2
         use-geoip2: true
       extraArgs:
-        # default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
-        default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
+        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
+        # default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
       metrics:
         enabled: true
         serviceMonitor:
