@@ -1,0 +1,8 @@
+# ignore everything
+*
+
+# except local roles, if they exist
+
+# except gitfiles
+!.gitignore
+!.gitkeep

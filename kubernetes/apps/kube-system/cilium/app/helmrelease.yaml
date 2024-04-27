@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: cilium
-  namespace: kube-system
 spec:
-  interval: 30m
   chart:
     spec:
       chart: cilium
@@ -15,27 +13,40 @@ spec:
         kind: HelmRepository
         name: cilium
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     autoDirectNodeRoutes: true
+    bgpControlPlane:
+      enabled: true
     bpf:
-      masquerade: true
-    bgp:
-      enabled: false
+      masquerade: false
+    cgroup:
+      automount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
     cluster:
-      name: home-cluster
       id: 1
+      name: home-kubernetes
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
+    # NOTE: devices might need to be set if you have more than one active NIC on your hosts
+    # devices: eno+ eth+
     endpointRoutes:
       enabled: true
     hubble:
@@ -68,15 +79,15 @@ spec:
           enabled: true
           className: internal
           hosts:
-            - &host "hubble.${SECRET_DOMAIN}"
+            - &host hubble.${SECRET_DOMAIN}
           tls:
             - hosts:
                 - *host
     ipam:
       mode: kubernetes
-    ipv4NativeRoutingCIDR: "${CLUSTER_CIDR}"
-    k8sServiceHost: "${KUBE_VIP_ADDR}"
-    k8sServicePort: 6443
+    ipv4NativeRoutingCIDR: ${CLUSTER_CIDR}
+    k8sServiceHost: 127.0.0.1
+    k8sServicePort: 6444
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     l2announcements:
@@ -110,6 +121,22 @@ spec:
       annotations:
         grafana_folder: Cilium
     rollOutCiliumPods: true
-    securityContext:
-      privileged: true
     routingMode: native
+    securityContext:
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE

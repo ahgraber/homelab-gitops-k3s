@@ -7,9 +7,10 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  ref:
-    branch: main
   url: "https://github.com/ahgraber/homelab-gitops-k3s.git"
+  ref:
+    # branch: main
+    branch: "template_redeploy"
   ignore: |
     # exclude all
     /*
@@ -38,8 +39,6 @@ spec:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-settings
-      - kind: ConfigMap
-        name: custom-settings
       - kind: Secret
         name: cluster-secrets
       - kind: Secret

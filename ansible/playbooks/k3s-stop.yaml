@@ -1,0 +1,54 @@
+---
+- name: Stop k3s service
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  vars_prompt:
+    - name: stop
+      prompt: |-
+        /!\  Are you sure you want to halt this k3s cluster?          /!\
+        /!\    1. Ensure you have backed up all important data / DBs  /!\
+        Type CONFIRM to proceed
+      default: "n"
+      private: false
+  pre_tasks:
+    - name: Check for confirmation
+      ansible.builtin.fail:
+        msg: Cluster halt aborted
+      when: stop != 'CONFIRM'
+
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+  tasks:
+    - name: Stop Kubernetes # noqa: ignore-errors
+      ignore_errors: true
+      block:
+        - name: Cordon
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: cordon
+          delegate_to: "{{ groups['controller'][0] }}"
+
+        - name: Drain
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: drain
+            delete_options:
+              delete_emptydir_data: true
+              ignore_daemonsets: true
+              terminate_grace_period: 60
+              wait_timeout: 90
+            pod_selectors:
+              - app!=rook-ceph-osd # Rook Ceph
+          delegate_to: "{{ groups['controller'][0] }}"
+
+        - name: Stop Kubernetes
+          ansible.builtin.include_role:
+            name: xanmanning.k3s
+            public: true
+          vars:
+            k3s_state: stopped

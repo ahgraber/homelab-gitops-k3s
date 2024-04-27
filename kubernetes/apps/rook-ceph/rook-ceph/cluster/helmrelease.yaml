@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
-  namespace: rook-ceph
 spec:
-  interval: 30m
   chart:
     spec:
       chart: rook-ceph-cluster
@@ -15,19 +13,25 @@ spec:
         kind: HelmRepository
         name: rook-ceph
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-operator
+      namespace: rook-ceph
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-  dependsOn:
-    - name: rook-ceph-operator
-      namespace: rook-ceph
+  # driftDetection:
+  #   mode: warn
+  #   ignore:
+  #     - paths:
+  #         - /spec/containers/resources/limits
+  #       target:
+  #         kind: Pod
   values:
     annotations:
       all:
@@ -45,7 +49,7 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         host:
-          name: &host "ceph.${SECRET_DOMAIN}"
+          name: &host ceph.${SECRET_DOMAIN}
           path: /
         tls:
           - hosts:
@@ -53,25 +57,26 @@ spec:
 
     toolbox:
       enabled: true
-      tolerations:
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/control-plane
-          operator: Exists
       nodeSelector:
         node-role.kubernetes.io/control-plane: "true"
-      resources:
-        requests:
-          cpu: 100m
-          memory: 64M
-        limits:
-          memory: 128M
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+      # resources:
+      #   requests:
+      #     cpu: 100m
+      #     memory: 64M
+      #   limits:
+      #     memory: 128M
 
     # https://rook.io/docs/rook/v1.10/Storage-Configuration/Advanced/ceph-configuration/#custom-cephconf-settings
     configOverride: |
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
-      osd_class_update_on_start = false
+
+      [mon]
+      mon_compact_on_start = true
     cephClusterSpec:
       crashCollector:
         disable: false
@@ -80,11 +85,13 @@ spec:
         enabled: true
         periodicity: daily # one of: hourly, daily, weekly, monthly
         maxLogSize: 500M # SUFFIX may be 'M' or 'G'. Must be at least 1M.
+      dataDirHostPath: /var/lib/rook
       dashboard:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://kps-prometheus.monitoring.svc.cluster.local:9090
+        # prometheusEndpoint: http://kps-prometheus.monitoring.svc.cluster.local:9090
+        prometheusEndpoint: http://thanos-query-frontend.monitoring.svc.cluster.local:10902
         prometheusEndpointSSLVerify: false
       mgr:
         modules:
@@ -94,6 +101,8 @@ spec:
             enabled: true
       network:
         provider: host
+        connections:
+          requireMsgr2: true
       placement:
         mgr: &placement
           nodeAffinity:
@@ -102,7 +111,11 @@ spec:
                 - matchExpressions:
                     - key: node-role.kubernetes.io/control-plane
                       operator: Exists
-        mon: *placement
+          tolerations:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+        mon:
+          <<: *placement
       storage:
         useAllNodes: false
         useAllDevices: false
@@ -111,66 +124,66 @@ spec:
         nodes:
           - name: optiplex3
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000052"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000052
           - name: optiplex4
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000015"
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000015
           - name: optiplex5
             devices:
-              - name: "/dev/disk/by-id/ata-SATA_SSD_22010312000028"
-      resources:
-        mgr:
-          requests:
-            cpu: 125m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        mon:
-          requests:
-            cpu: 125m
-            memory: 512Mi
-          limits:
-            memory: 1Gi
-        osd:
-          requests:
-            cpu: 500m
-            memory: 256Mi
-          limits:
-            memory: 2Gi
-        prepareosd:
-          requests:
-            cpu: 250m
-            memory: 50M
-          # limits: It is not recommended to set limits on the OSD prepare job
-          #         since it's a one-time burst for memory that must be allowed to
-          #         complete without an OOM kill...
-          #         for larger devices 2Gi may be required
-          limits:
-            memory: 2Gi # set arbitrarily large
-        mgr-sidecar:
-          requests:
-            cpu: 50m
-            memory: 94M
-          limits:
-            memory: 256M
-        crashcollector:
-          requests:
-            cpu: 15m
-            memory: 64M
-          limits:
-            memory: 64M
-        logcollector:
-          requests:
-            cpu: 100m
-            memory: 100M
-          limits:
-            memory: 1Gi
-        cleanup:
-          requests:
-            cpu: 500m
-            memory: 100M
-          limits:
-            memory: 1G
+              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000028
+      # resources:
+      #   mgr:
+      #     requests:
+      #       cpu: 125m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   mon:
+      #     requests:
+      #       cpu: 125m
+      #       memory: 512Mi
+      #     limits:
+      #       memory: 1Gi
+      #   osd:
+      #     requests:
+      #       cpu: 500m
+      #       memory: 256Mi
+      #     limits:
+      #       memory: 2Gi
+      #   prepareosd:
+      #     requests:
+      #       cpu: 250m
+      #       memory: 50M
+      #     # limits: It is not recommended to set limits on the OSD prepare job
+      #     #         since it's a one-time burst for memory that must be allowed to
+      #     #         complete without an OOM kill...
+      #     #         for larger devices 2Gi may be required
+      #     limits:
+      #       memory: 2Gi # set arbitrarily large
+      #   mgr-sidecar:
+      #     requests:
+      #       cpu: 50m
+      #       memory: 94M
+      #     limits:
+      #       memory: 256M
+      #   crashcollector:
+      #     requests:
+      #       cpu: 15m
+      #       memory: 64M
+      #     limits:
+      #       memory: 64M
+      #   logcollector:
+      #     requests:
+      #       cpu: 100m
+      #       memory: 100M
+      #     limits:
+      #       memory: 1Gi
+      #   cleanup:
+      #     requests:
+      #       cpu: 500m
+      #       memory: 100M
+      #     limits:
+      #       memory: 1G
 
     # https://github.com/rook/rook/blob/HEAD/deploy/examples/csi/rbd/storageclass.yaml
     cephBlockPools:
@@ -197,7 +210,6 @@ spec:
             csi.storage.k8s.io/fstype: ext4
             pg_num: "128" # create the pool with a pre-configured placement group number
             pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
-
     cephBlockPoolsVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-block
@@ -206,7 +218,7 @@ spec:
 
     # https://github.com/rook/rook/blob/HEAD/deploy/examples/filesystem.yaml
     cephFileSystems:
-      - name: ceph-filesystem
+      - name: &cephFileSystemName ceph-filesystem
         spec:
           metadataPool:
             replicated:
@@ -219,12 +231,22 @@ spec:
           metadataServer:
             activeCount: 1
             activeStandby: true
-            resources:
-              requests:
-                cpu: 150m
-                memory: 4Gi
-              limits:
-                memory: 4Gi
+            priorityClassName: system-cluster-critical
+            placement:
+              topologySpreadConstraints:
+                - maxSkew: 1
+                  topologyKey: kubernetes.io/hostname
+                  whenUnsatisfiable: DoNotSchedule
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: ceph-mds
+                      app.kubernetes.io/part-of: *cephFileSystemName
+            # resources:
+            #   requests:
+            #     cpu: 150m
+            #     memory: 4Gi
+            #   limits:
+            #     memory: 4Gi
         storageClass:
           enabled: true
           isDefault: false
@@ -264,13 +286,14 @@ spec:
           preservePoolsOnDelete: true
           gateway:
             port: 80
-            resources:
-              requests:
-                cpu: 500m
-                memory: 1Gi
-              limits:
-                memory: 2Gi
-            instances: 1
+            # resources:
+            #   requests:
+            #     cpu: 500m
+            #     memory: 1Gi
+            #   limits:
+            #     memory: 2Gi
+            instances: 2
+            priorityClassName: system-cluster-critical
           healthCheck:
             bucket:
               interval: 60s
@@ -282,3 +305,47 @@ spec:
             region: us-east-1
             pg_num: "128" # create the pool with a pre-configured placement group number
             pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
+        # ingress:
+        #   enabled: true
+        #   ingressClassName: internal
+        #   host:
+        #     name: rgw.${SECRET_DOMAIN}
+        #     path: /
+
+  # # TODO: update CephCluster CR with prometheus and alertmanager endpoints?
+  # # prometheusEndpoint: http://kps-prometheus.monitoring.svc.cluster.local:9090
+  # # prometheusEndpointSSLVerify: false
+  # postRenderers:
+  #   - kustomize:
+  #       patches:
+  #         - target:
+  #             version: v1
+  #             kind: ConfigMap
+  #             labelSelector: grafana_dashboard in (1)
+  #           patch: |-
+  #             apiVersion: v1
+  #             kind: ConfigMap
+  #             metadata:
+  #               name: not-used
+  #               namespace: not-used
+  #               annotations:
+  #                 grafana_folder: Kubernetes
+  #   - kustomize:
+  #       patchesStrategicMerge:
+  #         - apiVersion: apps/v1
+  #           kind: Deployment
+  #           metadata:
+  #             name: volsync
+  #           spec:
+  #             template:
+  #               spec:
+  #                 containers:
+  #                   - name: manager
+  #                     volumeMounts:
+  #                       - name: tz-config
+  #                         mountPath: /etc/localtime
+  #                 volumes:
+  #                   - name: tz-config
+  #                     hostPath:
+  #                       path: /usr/share/zoneinfo/America/New_York
+  #                       type: File

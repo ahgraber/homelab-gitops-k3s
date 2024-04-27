@@ -1,0 +1,158 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+includes:
+  ansible:
+    taskfile: ../ansible/taskfile.yaml
+    internal: true
+  flux:
+    taskfile: ../flux/taskfile.yaml
+    internal: true
+
+x-task-vars: &task-vars
+  app: '{{ .app }}'
+  controller: '{{ .controller }}'
+  ns: '{{ .ns }}'
+  claim: '{{ .claim }}'
+  ts: '{{ .ts }}'
+  ks: '{{ .ks }}'
+
+tasks:
+
+  # relpath:
+  #   desc: Calculate relative path from one file to another
+  #   summary: ...
+  #   dir: "{{ .ROOT_DIR }}"
+  #   cmd: echo $(realpath --relative-to=$(dirname "{{ .start }}") "{{ .end }}")
+  #   requires:
+  #     vars: ["start"]
+  #   vars:
+  #     # start:
+  #     end: '{{ .end | default "./kubernetes/templates/volsync" }}'
+  #   # preconditions:
+  #   #   - { msg: "Start file not found", sh: "test -f {{ .start }}" }
+  #   #   - { msg: "End file not found", sh: "test -f {{ .end }}" }
+
+  # --------------------------------------------------------------------------
+  # requires https://github.com/clbx/kubectl-browse-pvc krew plugin
+  browse-pvc:
+    desc: Browse PersistentVolumeClaims
+    summary: |
+      Args:
+        ns: Namespace to browse PersistentVolumeClaims in (default: default)
+        claim: PersistentVolumeClaim to browse (required)
+    interactive: true
+    cmds:
+      - task: _suspend-task
+        vars: *task-vars
+      - task: _browse-task
+        vars: *task-vars
+      - task: _resume-task
+        vars: *task-vars
+    vars:
+      app: '{{ or .app (fail "Variable `app` is required") }}'
+      ns: '{{ .ns | default "default" }}'
+      # 1) Query to find the Flux Kustomization associated with the ReplicationSource (app)
+      ks:
+        sh: |
+          kubectl -n {{ .ns }} get replicationsource {{ .app }} \
+            -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
+      # 2) Query to find the controller associated with the PersistentVolumeClaim (claim)
+      controller:
+        sh: |
+          app=$(kubectl -n {{ .ns }} get persistentvolumeclaim {{ .claim }} -o jsonpath="{.metadata.labels.app\.kubernetes\.io/name}")
+          if kubectl -n {{ .ns }} get deployment.apps/$app >/dev/null 2>&1 ; then
+            echo "deployment.apps/$app"
+          else
+            echo "statefulset.apps/$app"
+          fi
+    requires:
+      vars: ["claim"]
+    env: *task-vars
+
+  _suspend-task:
+    internal: true
+    cmds:
+      - flux -n flux-system suspend kustomization {{ .ks }}
+      - flux -n {{ .ns }} suspend helmrelease {{ .app }}
+      - kubectl -n {{ .ns }} scale {{ .controller }} --replicas 0
+      - kubectl -n {{ .ns }} wait pod --for delete --selector="app.kubernetes.io/name={{ .app }}" --timeout=2m
+    env: *task-vars
+
+  _browse-task:
+    internal: true
+    interactive: true
+    cmd: kubectl browse-pvc --namespace {{ .ns }} {{ .claim }}
+    env: *task-vars
+
+  # Resume Flux ks and hr
+  _resume-task:
+    internal: true
+    cmds:
+      - flux -n {{ .ns }} resume helmrelease {{ .app }}
+      - flux -n flux-system resume kustomization {{ .ks }}
+    env: *task-vars
+
+  ks-deploy:
+    desc: Deploy from local (for testing)
+    cmds:
+      - |
+        # Export vars in the config and secret files to the current env
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(sops -d "{{ .cluster_secret_file }}" | yq eval '.stringData' - | sed 's/: /=/g')
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(sops -d "{{ .custom_secret_file }}" | yq eval '.stringData' - | sed 's/: /=/g')
+
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(yq eval '.data' "{{ .cluster_config_file }}" | sed 's/: /=/g')
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(yq eval '.data' "{{ .custom_config_file }}" | sed 's/: /=/g')
+
+        # Build the manifests in ks_path, substitute env with the variables and then apply to the cluster
+        kustomize build --load-restrictor=LoadRestrictionsNone "{{ .ks_path }}" \
+            | envsubst \
+                | kubectl apply --server-side -f -
+    vars:
+      cluster_secret_file: '{{ .cluster_secret_file | default "./kubernetes/flux/vars/cluster-secrets.sops.yaml" }}'
+      custom_secret_file: '{{ .cluster_secret_file | default "./kubernetes/flux/vars/custom-secrets.sops.yaml" }}'
+      cluster_config_file: '{{ .cluster_config_file | default "./kubernetes/flux/vars/cluster-settings.yaml" }}'
+      ks_path: '{{ or .ks_path (fail "kustomization `ks_path` is required") }}'
+
+  ks-undeploy:
+    desc: Revert deployment from local (for testing)
+    cmds:
+      - |
+        # Export vars in the config and secret files to the current env
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(sops -d "{{ .cluster_secret_file }}" | yq eval '.stringData' - | sed 's/: /=/g')
+
+        while read -r line; do
+          # skip comments
+          [[ "$line" = \#* ]] && continue;
+          declare -x "${line}";
+        done < <(yq eval '.data' "{{ .cluster_config_file }}" | sed 's/: /=/g')
+
+        # Build the manifests in ks_path, substitute env with the variables and then apply to the cluster
+        kustomize build --load-restrictor=LoadRestrictionsNone "{{ .ks_path }}" \
+            | envsubst \
+                | kubectl delete -f -
+    vars:
+      cluster_secret_file: '{{ .cluster_secret_file | default "./kubernetes/flux/vars/cluster-secrets.sops.yaml" }}'
+      cluster_config_file: '{{ .cluster_config_file | default "./kubernetes/flux/vars/cluster-settings.yaml" }}'
+      ks_path: '{{ or .ks_path (fail "kustomization `ks_path` is required") }}'

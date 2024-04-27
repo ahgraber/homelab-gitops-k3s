@@ -3,12 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: monitoring-nut-exporter
+  name: &app nut-exporter
   namespace: flux-system
 spec:
+  targetNamespace: monitoring
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: monitoring-kube-prometheus-stack
-    - name: monitoring-grafana
+    - name: kube-prometheus-stack
+    # - name: grafana
   path: ./kubernetes/apps/monitoring/nut-exporter/app
   prune: true
   sourceRef:

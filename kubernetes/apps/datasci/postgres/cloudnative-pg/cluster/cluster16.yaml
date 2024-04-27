@@ -1,0 +1,134 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: &app datasci16
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-13
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+
+  postgresql:
+    parameters:
+      max_connections: "300"
+      shared_buffers: 256MB
+      # pg_stat_statements.max: "10000"
+      # pg_stat_statements.track: all
+      # auto_explain.log_min_duration: "10s"
+    # pg_hba:
+    #   - host all all 10.244.0.0/16 md5
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres-superuser
+
+  storage:
+    size: 15Gi
+    storageClass: local-path
+
+  # ## for initial setup
+  # bootstrap:
+  #   initdb:
+  #     # set up 'default' db/owner
+  #     database: default
+  #     owner: default
+  #     secret:
+  #       name: <app>-user
+
+  # ## For major postgres version upgrade
+  # bootstrap:
+  #   initdb:
+  #     import:
+  #       type: monolith
+  #       databases:
+  #         - "*"
+  #       roles:
+  #         - "*"
+  #       source:
+  #         externalCluster: &prior_db datasci14-before-migration
+  # # externalClusters is needed when recovering from an existing cnpg cluster
+  # externalClusters:
+  #   - name: *prior_db
+  #     connectionParameters:
+  #       # Use the correct IP or host name for the source database
+  #       host: datasci-ro.datasci.svc.cluster.local
+  #       user: postgres
+  #       dbname: postgres
+  #     password:
+  #       name: postgres-superuser
+  #       key: password
+
+  ## Restore from a backup
+  # yamllint disable rule:comments
+  # prettier-ignore
+  bootstrap:
+    recovery:                           # s3 blob folder to recover from
+      source: &prior_db datasci16-init  # next time it will be datasci16-v1
+  # externalClusters is needed when recovering from an existing cnpg cluster
+  externalClusters:
+    - name: *prior_db
+      barmanObjectStore:
+        endpointURL: https://${SECRET_S3_ENDPOINT}
+        destinationPath: s3://postgres/
+        s3Credentials:
+          accessKeyId:
+            name: postgres-s3
+            key: S3_ACCESS_KEY
+          secretAccessKey:
+            name: postgres-s3
+            key: S3_SECRET_KEY
+        wal:
+          compression: bzip2
+          maxParallel: 8
+  # yamllint enable
+
+  # yamllint disable rule:comments
+  # prettier-ignore
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore:                        # name of s3 folder to save to
+      serverName: &current_db datasci16-v1    # next time it will be datasci16-v2
+      endpointURL: https://${SECRET_S3_ENDPOINT}
+      destinationPath: s3://postgres/
+      s3Credentials:
+        accessKeyId:
+          name: postgres-s3
+          key: S3_ACCESS_KEY
+        secretAccessKey:
+          name: postgres-s3
+          key: S3_SECRET_KEY
+      wal:
+        compression: bzip2
+        maxParallel: 8
+      data:
+        compression: bzip2
+        immediateCheckpoint: false
+        jobs: 4
+  # yamllint enable
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 50m
+    limits:
+      memory: 1Gi
+
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: preferred
+    topologyKey: kubernetes.io/hostname
+    additionalPodAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: postgresql
+                operator: Exists
+                values: []
+          topologyKey: "kubernetes.io/hostname"
+
+  monitoring:
+    enablePodMonitor: true
+
+  nodeMaintenanceWindow:
+    inProgress: false
+    reusePVC: false

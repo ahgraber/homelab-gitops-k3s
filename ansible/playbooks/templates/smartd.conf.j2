@@ -1,0 +1,5 @@
+# /etc/smartd.conf
+/dev/nvme0 -a -o on -S on -s (S/../../../.././02|L/../../../6/03)
+{% for drive in hostvars[inventory_hostname]['ceph_drives'] | default([]) %}
+{{ drive }} -a -o on -S on -s (S/../../../.././02|L/../../../6/03)
+{% endfor %}

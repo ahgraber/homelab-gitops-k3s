@@ -4,53 +4,92 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app syncthing
-  namespace: default
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.2.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: volsync
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     controllers:
-      main:
+      syncthing:
         containers:
-          main:
+          app:
             image:
               repository: syncthing/syncthing
               tag: 1.27.5
+            env:
+              PUID: "1000"
+              PGID: "1000"
+            securityContext:
+              # allowPrivilegeEscalation: false
+              # readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 15m
                 memory: 249Mi
               limits:
                 memory: 512Mi
-            env:
-              PUID: "1000"
-              PGID: "1000"
 
-    ingress:
-      main:
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        # runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 8384
+      discovery:
         enabled: true
-        primary: true
+        controller: *app
+        ports:
+          discovery:
+            enabled: true
+            port: 21027
+            protocol: UDP
+          listen:
+            enabled: true
+            port: 22000
+            protocol: TCP
+          listen-udp:
+            enabled: true
+            port: 22000
+            protocol: UDP
+    ingress:
+      app:
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
@@ -61,44 +100,19 @@ spec:
         #   nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
         #   nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
         hosts:
-          - host: &host "sync.${SECRET_DOMAIN}"
+          - host: &host sync.${SECRET_DOMAIN}
             paths:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
 
-    service:
-      main:
-        ports:
-          http:
-            port: 8384
-      discovery:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          discovery:
-            enabled: true
-            port: 21027
-            protocol: UDP
-      listen:
-        enabled: true
-        controller: main
-        type: LoadBalancer
-        ports:
-          listen:
-            enabled: true
-            port: 22000
-            protocol: TCP
-
     persistence:
-      config:
-        enabled: true
+      data:
         existingClaim: *app
         globalMounts:
           - path: /var/syncthing

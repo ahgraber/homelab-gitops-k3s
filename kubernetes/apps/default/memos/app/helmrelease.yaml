@@ -4,44 +4,49 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app memos
-  namespace: &app-namespace default
 spec:
-  interval: 15m
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: volsync
-      namespace: volsync
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     controllers:
-      main:
+      memos:
         annotations:
           reloader.stakater.com/search: "true"
 
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/usememos/memos
               tag: 0.21.0
             env:
-              TZ: "${TIMEZONE}"
+              TZ: ${TIMEZONE}
               MEMOS_PORT: "5230" # https://github.com/usememos/memos/issues/1782
               MEMOS_DRIVER: postgres
               MEMOS_DSN:
@@ -55,16 +60,28 @@ spec:
                 memory: 105M
               limits:
                 memory: 105M
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 
     service:
-      main:
+      app:
+        controller: *app
         ports:
           http:
             port: 5230
     ingress:
-      main:
-        enabled: true
-        ingressClassName: internal
+      app:
+        className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
@@ -74,14 +91,13 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
-    persistence:
-      data:
-        enabled: true
-        ### existing pvc
-        existingClaim: *app
-        mountPath: /var/opt/memos
+    # persistence:
+    #   data:
+    #     existingClaim: *app
+    #     globalMounts:
+    #       - path: /var/opt/memos

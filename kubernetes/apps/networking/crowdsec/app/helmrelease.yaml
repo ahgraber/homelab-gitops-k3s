@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app crowdsec
-  namespace: networking
 spec:
-  interval: 30m
   chart:
     spec:
       chart: crowdsec
@@ -15,15 +13,22 @@ spec:
         kind: HelmRepository
         name: crowdsec
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     # -- for raw logs format: json or cri (docker|containerd)
     container_runtime: containerd
@@ -48,7 +53,7 @@ spec:
     lapi:
       env:
         - name: TZ
-          value: "${TIMEZONE}"
+          value: ${TIMEZONE}
         ### by default disable the agent for local API pods --> this is set in lapi-deployment helm template
         # - name: DISABLE_AGENT
         #   value: "true"
@@ -61,7 +66,7 @@ spec:
               name: *app
               key: ENROLL_KEY
         - name: ENROLL_INSTANCE_NAME
-          value: "k8s_cluster"
+          value: k8s_cluster
         # - name: ENROLL_TAGS
         #   value: "k8s linux test"
         - name: BOUNCER_KEY_INGRESS
@@ -98,21 +103,21 @@ spec:
           enabled: true
           accessModes:
             - ReadWriteMany
-          storageClassName: "ceph-fs"
+          storageClassName: ceph-fs
           size: 1Gi
         # -- Persistent volume for config folder. Stores e.g. online api credentials
         config:
           enabled: true
           accessModes:
             - ReadWriteMany
-          storageClassName: "ceph-fs"
+          storageClassName: ceph-fs
           size: 100Mi
 
       nodeSelector:
         node-role.kubernetes.io/control-plane: "true"
       tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
 
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
       metrics:
@@ -143,12 +148,12 @@ spec:
           enabled: true
           accessModes:
             - ReadWriteMany
-          storageClassName: "ceph-fs"
+          storageClassName: ceph-fs
           size: 100Mi
       # -- environment variables from crowdsecurity/crowdsec docker image
       env:
         - name: TZ
-          value: "${TIMEZONE}"
+          value: ${TIMEZONE}
         # # default disable local API on the agent pod --> this is set in agent-daemonset helm template
         # - name: DISABLE_ONLINE_API
         #   value: "false"
@@ -181,8 +186,8 @@ spec:
         #   value: |
       # -- tolerations for agent
       tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
 
       # -- Enable service monitoring (exposes "metrics" port "6060" for Prometheus)
       metrics:

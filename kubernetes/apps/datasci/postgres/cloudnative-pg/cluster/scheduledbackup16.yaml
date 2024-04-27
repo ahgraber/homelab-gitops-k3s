@@ -1,0 +1,12 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: datasci16
+spec:
+  # schedule: "@weekly"
+  schedule: "0 0 0 * * *" # midnight
+  immediate: true
+  backupOwnerReference: self
+  cluster:
+    name: datasci16

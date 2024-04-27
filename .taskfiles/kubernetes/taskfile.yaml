@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+includes:
+  ansible:
+    taskfile: ../ansible/taskfile.yaml
+    internal: true
+
+vars:
+  KUBECONFORM_SCRIPT: "{{ .SCRIPTS_DIR }}/kubeconform.sh"
+
+tasks:
+
+  install:
+    desc: Install k3s with ansible
+    cmds:
+      - task: ansible:_k3s_install
+
+  stop:
+    desc: Halt k3s cluster with ansible
+    cmds:
+      - task: ansible:_k3s_stop
+
+  nuke:
+    desc: Destroy k3s cluster with ansible
+    cmds:
+      - task: ansible:_k3s_nuke
+
+  kubeconfig:
+    desc: Download kubeconfig from a remote k3s master node
+    dotenv: ['.env']
+    vars:
+      # user: '{{ .user | default "root" }}'
+      controller_host: '{{ .controller_host | default "optiplex0" }}'
+      # kubernetes_api: '{{ .kubernetes_api | default "192.168.1.1" }}'  # pull KUBE_VIP_ADDR from .env
+    requires:
+      vars: ['user']
+    cmds:
+      - scp nrl@optiplex0:/etc/rancher/k3s/k3s.yaml "${KUBECONFIG}"
+      # - sed -i '' "s/127.0.0.1/$KUBE_VIP_ADDR/g" "${KUBECONFIG}"  # mac sed
+      - sed -i "s/127.0.0.1/$KUBE_VIP_ADDR/g" "${KUBECONFIG}"  # gnu/nix sed
+      - chmod go-r "${KUBECONFIG}"
+
+  kubeconform:
+    desc: Validate Kubernetes manifests with kubeconform
+    cmd: bash {{ .KUBECONFORM_SCRIPT }} {{ .KUBERNETES_DIR }}
+    preconditions:
+      - { msg: "Missing kubeconform script", sh: "test -f {{ .KUBECONFORM_SCRIPT }}" }
+
+  dash-pass:
+    desc: Get secret for kubernetes-dashboard login
+    cmds:
+      - >-
+        kubectl -n monitoring get secret kubernetes-dashboard -o jsonpath='{.data.token}' | base64 --decode | pbcopy
+      - echo "Token is in clipboard ready to paste!"
+
+  drain:
+    desc: Drain a node
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+        node: Node to drain (required)
+    cmd: kubectl drain {{ .node }} --ignore-daemonsets --delete-local-data --force
+    requires:
+      vars: ["node"]
+
+  resources:
+    desc: Gather common resources in your cluster, useful when asking for support
+    cmds:
+      - for: { var: resource }
+        cmd: kubectl get {{ .ITEM }} {{ .CLI_ARGS | default "-A" }}
+    vars:
+      resource: >-
+        nodes
+        gitrepositories
+        kustomizations
+        helmrepositories
+        helmreleases
+        certificates
+        certificaterequests
+        ingresses
+        pods

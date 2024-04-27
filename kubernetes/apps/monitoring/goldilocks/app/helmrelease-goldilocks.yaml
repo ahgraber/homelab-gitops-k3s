@@ -6,7 +6,6 @@ metadata:
   name: &app goldilocks
   namespace: &namespace monitoring
 spec:
-  interval: 30m
   chart:
     spec:
       chart: *app
@@ -15,19 +14,25 @@ spec:
         kind: HelmRepository
         name: fairwinds
         namespace: flux-system
+  interval: 15m
   dependsOn:
     - name: vpa
       namespace: monitoring
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     image:
       repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks

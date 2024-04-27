@@ -59,9 +59,9 @@ bootstrap/.latest-template.sha
 .todo*
 report/
 
-#extras
-*pytest*
-*cache*
+# extras
+**/*pytest*/
+**/*cache*/
 
 # retain files
 !**.gitkeep

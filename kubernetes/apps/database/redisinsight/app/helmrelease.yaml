@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app redisinsight
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 15m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    defaultPodOptions:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+
+    controllers:
+      redisinsight:
+        annotations:
+          reloader.stakater.com/search: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: redis/redisinsight
+              tag: 2.48.0
+            env:
+              - name: RI_FILES_LOGGER
+                value: "false"
+              - name: RI_STDOUT_LOGGER
+                value: "true"
+            resources:
+              requests:
+                cpu: 50m
+                memory: 127M
+              limits:
+                memory: 378M
+            securityContext:
+              allowPrivilegeEscalation: false
+              # readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
+    service:
+      app:
+        # name should not be 'redisinsight'  since the service creates environment variables
+        # that conflicts with redisinsight application's environment variables:
+        # `REDISINSIGHT_HOST` and `REDISINSIGHT_PORT`
+        nameOverride: redisinsight-svc
+        controller: *app
+        ports:
+          http:
+            port: 5540
+
+    serviceAccount:
+      create: true
+    ingress:
+      app:
+        enabled: true
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host redisinsight.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host

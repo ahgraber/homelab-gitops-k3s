@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: reloader
-  namespace: &namespace kube-system
 spec:
-  interval: 30m
   chart:
     spec:
       chart: reloader
@@ -15,19 +13,27 @@ spec:
         kind: HelmRepository
         name: stakater
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     fullnameOverride: reloader
     reloader:
       reloadStrategy: annotations
+      readOnlyRootFileSystem: true
       podMonitor:
         enabled: true
-        namespace: *namespace
+        namespace: &namespace kube-system

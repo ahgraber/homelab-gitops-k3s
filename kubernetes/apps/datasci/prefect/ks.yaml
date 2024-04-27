@@ -3,12 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: datasci-prefect-db
+  name: &app prefect-db
   namespace: flux-system
 spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-cnpg-db
-    - name: datasci-postgres-operator
+    - name: cnpg-cluster-datasci
+    - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/prefect/db
   prune: true
   sourceRef:
@@ -23,11 +27,15 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: datasci-prefect-server
+  name: &app prefect-server
   namespace: flux-system
 spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-prefect-db
+    - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/server
   prune: true
   sourceRef:
@@ -42,12 +50,16 @@ spec:
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
-#   name: datasci-prefect-agent
+#   name: &app prefect-agent
 #   namespace: flux-system
 # spec:
+#   targetNamespace: datasci
+#   commonMetadata:
+#     labels:
+#       app.kubernetes.io/name: *app
 #   dependsOn:
-#     - name: datasci-prefect-server
-#     - name: datasci-prefect-db
+#     - name: prefect-server
+#     - name: prefect-db
 #   path: ./kubernetes/apps/datasci/prefect/agent
 #   prune: true
 #   sourceRef:
@@ -61,12 +73,16 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: datasci-prefect-worker
+  name: &app prefect-worker
   namespace: flux-system
 spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-prefect-server
-    - name: datasci-prefect-db
+    - name: prefect-server
+    - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/worker
   prune: true
   sourceRef:

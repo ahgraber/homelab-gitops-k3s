@@ -6,38 +6,138 @@ metadata:
   name: &app scrutiny
   namespace: monitoring
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  dependsOn:
-    - name: scrutiny-influxdb
-      namespace: monitoring
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  # dependsOn:
+  #   - name: scrutiny-influxdb
+  #     namespace: monitoring
   values:
-    image:
-      repository: ghcr.io/analogj/scrutiny
-      tag: master-web
+    defaultPodOptions:
+      securityContext:
+        # runAsGroup: 65534
+        # runAsUser: 65534
+        # runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
 
-    env:
-      TZ: "${TIMEZONE}"
-      SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
-
+    controllers:
+      scrutiny:
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/analogj/scrutiny
+              tag: master-web
+            env:
+              TZ: "${TIMEZONE}"
+              # SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
+              SCRUTINY_WEB_INFLUXDB_HOST: localhost
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 60
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+                  httpGet:
+                    path: /api/health
+                    port: &port 8080
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 0
+                  timeoutSeconds: 1
+                  periodSeconds: 5
+                  failureThreshold: 30
+                  httpGet:
+                    path: /api/health
+                    port: *port
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          influxdb:
+            image:
+              repository: docker.io/library/influxdb
+              tag: 2.7-alpine
+            probes:
+              liveness: &probes-db
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health
+                    port: &port-db 8086
+              readiness: *probes-db
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 0
+                  timeoutSeconds: 1
+                  periodSeconds: 5
+                  failureThreshold: 30
+                  httpGet:
+                    path: /health
+                    port: *port
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128M
+              limits:
+                memory: 384M
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              runAsGroup: 1000 # defined in influxdb image
+              runAsUser: 1000 # defined in influxdb image
+              runAsNonRoot: true
+              capabilities: { drop: ["ALL"] }
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
     ingress:
-      main:
-        enabled: true
-        ingressClassName: internal
+      app:
+        className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
@@ -46,51 +146,16 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
 
-    service:
-      main:
-        ports:
-          http:
-            port: &port 8080
-
-    probes:
-      liveness: &health
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-          httpGet:
-            path: /api/health
-            port: *port
-      readiness: *health
-      startup:
-        enabled: true
-        custom: true
-        spec:
-          initialDelaySeconds: 0
-          timeoutSeconds: 1
-          periodSeconds: 5
-          failureThreshold: 30
-          httpGet:
-            path: /api/health
-            port: *port
-
     persistence:
       config:
-        enabled: true
         existingClaim: *app
-        mountPath: /opt/scrutiny/config
-        subPath: scrutiny
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        memory: 128Mi
+        globalMounts:
+          - path: /opt/scrutiny/config
+            subPath: scrutiny
