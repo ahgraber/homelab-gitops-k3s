@@ -57,7 +57,7 @@ spec:
                 memory: 128Mi
             securityContext:
               privileged: true
-              # readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"], add: ["SYS_RAWIO"] } # allow access to smartctl
 
     defaultPodOptions:
