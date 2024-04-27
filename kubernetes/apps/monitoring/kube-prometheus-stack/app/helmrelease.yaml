@@ -72,7 +72,7 @@ spec:
       enabled: true
       fullnameOverride: alertmanager
       alertmanagerSpec:
-        replicas: 3
+        replicas: 2
         retention: 72h
         storage:
           volumeClaimTemplate:
@@ -202,7 +202,7 @@ spec:
             secret.reloader.stakater.com/reload: &secret thanos-objstore-config
         podAntiAffinity: soft
         podAntiAffinityTopologyKey: kubernetes.io/hostname
-        replicas: 3
+        replicas: 2
         replicaExternalLabelName: __replica__
         scrapeInterval: 1m # Must match interval in Grafana Helm chart
 
