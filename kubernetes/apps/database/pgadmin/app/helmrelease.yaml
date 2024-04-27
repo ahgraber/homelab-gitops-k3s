@@ -35,6 +35,8 @@ spec:
   values:
     env:
       email: admin@${SECRET_DOMAIN}
+
+    # set password in secret
     existingSecret: *app
     secretKeys:
       pgadminPasswordKey: password
@@ -42,6 +44,7 @@ spec:
     serverDefinitions:
       enabled: true
       # included in pgadmin secret, see: https://github.com/rowanruseler/helm-charts/issues/182
+      existingSecret: *app
 
     strategy:
       type: Recreate
