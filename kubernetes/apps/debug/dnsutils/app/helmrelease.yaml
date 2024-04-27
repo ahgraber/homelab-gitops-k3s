@@ -3,36 +3,66 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: dnsutils
-  namespace: debug
+  name: &app dnsutils
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  interval: 15m
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
+    controllers:
+      dnsutils:
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: registry.k8s.io/e2e-test-images/jessie-dnsutils
+              tag: "1.7"
+            command:
+              - sleep
+              - "3600"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
     service:
-      main:
-        enabled: false
-    image:
-      repository: registry.k8s.io/e2e-test-images/jessie-dnsutils
-      tag: "1.7"
-    command:
-      - sleep
-      - "3600"
-    # ingress: {}  # None
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 80

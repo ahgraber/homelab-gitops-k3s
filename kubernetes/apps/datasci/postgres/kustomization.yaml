@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   # Flux-Kustomizations
   - ./cloudnative-pg/ks.yaml
-  - ./postgres-operator/ks.yaml
+  - ./ext-postgres-operator/ks.yaml

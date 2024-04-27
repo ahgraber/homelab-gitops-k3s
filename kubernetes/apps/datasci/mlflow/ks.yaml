@@ -3,12 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: datasci-mlflow-db
+  name: &app mlflow-db
   namespace: flux-system
 spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-cnpg-db
-    - name: datasci-postgres-operator
+    - name: cnpg-cluster-datasci
+    - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/mlflow/db
   prune: true
   sourceRef:
@@ -22,11 +26,15 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: datasci-mlflow
+  name: &app mlflow
   namespace: flux-system
 spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: datasci-mlflow-db
+    - name: mlflow-db
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/datasci/mlflow/app
   prune: true
@@ -37,3 +45,10 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_STORAGECLASS: ceph-block # default
+      VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
+      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path

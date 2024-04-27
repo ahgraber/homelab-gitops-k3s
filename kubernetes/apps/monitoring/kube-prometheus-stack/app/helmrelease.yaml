@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: monitoring
 spec:
-  interval: 30m
   chart:
     spec:
       chart: kube-prometheus-stack
@@ -15,24 +13,53 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-  install:
-    createNamespace: true
-    crds: CreateReplace
-    remediation:
-      retries: 3
-  upgrade:
-    crds: CreateReplace
-    remediation:
-      retries: 3
+  interval: 15m
   dependsOn:
     - name: local-path-provisioner
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: thanos
+      namespace: monitoring
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   valuesFrom:
     - kind: ConfigMap
       name: kube-state-metrics-config
       valuesKey: kube-state-metrics.yaml
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.bucket
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_NAME
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.endpoint
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_HOST
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.region
+    #   kind: ConfigMap
+    #   name: thanos-bucket
+    #   valuesKey: BUCKET_REGION
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.access_key
+    #   kind: Secret
+    #   name: thanos-bucket
+    #   valuesKey: AWS_ACCESS_KEY_ID
+    # - targetPath: prometheus.thanos.objectStorageConfig.secret.config.secret_key
+    #   kind: Secret
+    #   name: thanos-bucket
+    #   valuesKey: AWS_SECRET_ACCESS_KEY
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     fullnameOverride: kps
@@ -45,15 +72,16 @@ spec:
       enabled: true
       fullnameOverride: alertmanager
       alertmanagerSpec:
+        replicas: 3
         retention: 72h
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block
+              storageClassName: local-path
               resources:
                 requests:
                   storage: 1Gi
-      # config:  # see configmap
+      # config:  # see alertmanager.yaml configmap
       ingress:
         enabled: true
         ingressClassName: internal
@@ -61,18 +89,20 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - &host "alertmanager.${SECRET_DOMAIN}"
-        tls:
-          - hosts:
-              - *host
+          - alertmanager.${SECRET_DOMAIN}
+        # tls:
+        #   - hosts:
+        #       - *host
 
     grafana:
       enabled: false # manage by itself
       forceDeployDashboards: true
       sidecar:
         dashboards:
+          annotations:
+            grafana_folder: Kubernetes
           multicluster:
-            global:
+            etcd:
               enabled: true
 
     # coreDns:
@@ -87,7 +117,7 @@ spec:
           - action: labeldrop
             regex: (id|name)
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
     kubeApiServer:
       enabled: true
@@ -95,10 +125,10 @@ spec:
         metricRelabelings:
           # Drop high cardinality labels
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
           - action: drop
-            sourceLabels: ["__name__"]
+            sourceLabels: [__name__]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
     kubeControllerManager:
       enabled: true
@@ -115,10 +145,21 @@ spec:
       enabled: false
     kubeStateMetrics:
       enabled: true
-      # config specified in configmap
+      # config specified in kube-state-metrics.yaml configmap
 
     nodeExporter:
-      enabled: false
+      enabled: true
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: [__meta_kubernetes_pod_node_name]
+              targetLabel: kubernetes_node
 
     prometheusOperator:
       resources:
@@ -146,20 +187,25 @@ spec:
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
-          - &host "prometheus.${SECRET_DOMAIN}"
-        tls:
-          - hosts:
-              - *host
+          - &host prometheus.${SECRET_DOMAIN}
+        pathType: Prefix
+        # tls:
+        #   - hosts:
+        #       - *host
       prometheusSpec:
         image:
           registry: quay.io
           repository: prometheus/prometheus
           tag: v2.51.0-dedupelabels
-        # podMetadata:
-        #   annotations:
-        #     secret.reloader.stakater.com/reload: ...
-        replicas: 1
+        podMetadata:
+          annotations:
+            secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+        podAntiAffinity: soft
+        podAntiAffinityTopologyKey: kubernetes.io/hostname
+        replicas: 3
         replicaExternalLabelName: __replica__
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+
         enableAdminAPI: true
         externalLabels:
           cluster: home-kubernetes
@@ -175,39 +221,52 @@ spec:
         scrapeConfigSelectorNilUsesHelmValues: false
 
         enableFeatures:
+          - auto-gomemlimit
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
 
         resources:
           requests:
             cpu: 763m
-            memory: 7Gi
           limits:
-            memory: 7Gi
+            memory: 1500Mi
 
-        retention: 3d
+        retention: 2d
         retentionSize: 8GiB
         walCompression: true
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: ceph-block
+              storageClassName: local-path
               resources:
                 requests:
                   storage: 10Gi
-
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              version: v1
-              kind: ConfigMap
-              labelSelector: grafana_dashboard in (1)
-            patch: |-
-              apiVersion: v1
-              kind: ConfigMap
-              metadata:
-                name: not-used
-                namespace: not-used
-                annotations:
-                  grafana_folder: Kubernetes
+        thanos:
+          image: quay.io/thanos/thanos:${THANOS_VERSION}
+          version: ${THANOS_VERSION#v}
+          objectStorageConfig:
+            # # renders new secret
+            # secret:
+            #   type: S3
+            #   # config:
+            #   #   bucket: thanos
+            #   #   endpoint: rook-ceph-rgw-ceph-objectstore.rook-ceph.svc.cluster.local
+            #   #   region:
+            #   #   access_key:
+            #   #     valueFrom:
+            #   #       secretKeyRef:
+            #   #         name: *secret
+            #   #         key: AWS_ACCESS_KEY_ID
+            #   #   secret_key:
+            #   #     valueFrom:
+            #   #       secretKeyRef:
+            #   #         name: *secret
+            #   #         key: AWS_SECRET_ACCESS_KEY
+            # use existing secret
+            existingSecret:
+              name: *secret
+              key: config
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true

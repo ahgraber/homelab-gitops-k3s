@@ -5,17 +5,12 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  # Flux-Kustomizations | Databases
-  # - ./elasticsearch/ks.yaml # WIP
-  - ./postgres/
-  - ./redis/
   # Flux-Kustomizations | Apps
   - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
-  # - ./logseq/ks.yaml # WIP
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
   - ./miniflux/ks.yaml

@@ -6,7 +6,6 @@ metadata:
   name: snapshot-controller
   namespace: kube-system
 spec:
-  interval: 30m
   chart:
     spec:
       chart: snapshot-controller
@@ -15,6 +14,7 @@ spec:
         kind: HelmRepository
         name: piraeus
         namespace: flux-system
+  interval: 15m
   install:
     crds: CreateReplace
     remediation:
@@ -23,9 +23,15 @@ spec:
     cleanupOnFail: true
     crds: CreateReplace
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     controller:
       enabled: true

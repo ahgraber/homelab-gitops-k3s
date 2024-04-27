@@ -1,0 +1,238 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
+  PROMETHEUS_OPERATOR_VERSION: v0.73.0
+  CLUSTER_SECRET_SOPS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/cluster-secrets.sops.yaml"
+  CUSTOM_SECRET_SOPS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/custom-secrets.sops.yaml"
+  CLUSTER_SETTINGS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/cluster-settings.yaml"
+  AGE_KEY_SOPS_FILE: "{{ .KUBERNETES_DIR }}/bootstrap/age-key.sops.yaml"
+  GITHUB_DEPLOY_KEY_FILE: "{{ .KUBERNETES_DIR }}/bootstrap/github-deploy-key.sops.yaml"
+
+tasks:
+
+  verify:
+    desc: Verify flux meets the prerequisites
+    cmd: flux check --pre
+
+  bootstrap:
+    desc: Bootstrap Flux into a Kubernetes cluster
+    cmds:
+      # Install prometheus CRDs
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{ .PROMETHEUS_OPERATOR_VERSION }}/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{ .PROMETHEUS_OPERATOR_VERSION }}/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{ .PROMETHEUS_OPERATOR_VERSION }}/example/prometheus-operator-crd/monitoring.coreos.com_scrapeconfigs.yaml
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/{{ .PROMETHEUS_OPERATOR_VERSION }}/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+      # Install Flux
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/bootstrap  # /flux
+      # Install secrets & configs
+      - kubectl delete secret sops-age -n flux-system --ignore-not-found
+      - cat {{ .SOPS_AGE_KEY_FILE }} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
+      - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
+      - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename {{ .CLUSTER_SETTINGS_FILE }}
+      # Install Flux Kustomization resources
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/flux/config
+    preconditions:
+      - { msg: "Missing kubeconfig", sh: "test -f {{ .KUBECONFIG_FILE }}" }
+      - { msg: "Missing Sops Age key file", sh: "test -f {{ .AGE_FILE }}" }
+      # check that encrypted files exist
+      - test -f {{ .GITHUB_DEPLOY_KEY_FILE }}
+      - test -f {{ .CLUSTER_SECRET_SOPS_FILE }}
+      - test -f {{ .CUSTOM_SECRET_SOPS_FILE }}
+      - test -f {{ .CLUSTER_SETTINGS_FILE }}
+      # check that encrypted files can be successfully decrypted
+      - sops --decrypt {{ .AGE_KEY_SOPS_FILE }}
+      - sops --decrypt {{ .GITHUB_DEPLOY_KEY_FILE }}
+      - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }}
+      - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }}
+
+  reconcile:
+    desc: Force update Flux to pull in changes from your Git repository
+    cmds:
+      - flux reconcile kustomization cluster -n flux-system --with-source
+      - flux reconcile kustomization apps -n flux-system
+
+  apply:
+    desc: Apply a Flux Kustomization resource for a cluster
+    summary: |
+      Args:
+        path: Path to the Flux Kustomization resource (required)
+        ks: Name of Flux Kustomization resource (required); must match the metadata.name
+        ns: Namespace the Flux Kustomization exists in (default: flux-system)
+    cmd: |
+      # flux build ks $(basename {{ .path }}) \
+      flux build ks {{ .ks }} \
+          --namespace {{ .ns }} \
+          --kustomization-file {{ .KUBERNETES_DIR }}/apps/{{ .path }}/ks.yaml \
+          --path {{ .KUBERNETES_DIR }}/apps/{{ .path }} \
+          {{- if contains "not found" .existing }}--dry-run \{{ end }}
+      | \
+      kubectl apply --server-side \
+          --field-manager=kustomize-controller -f -
+    requires:
+      vars: ["path", 'ks']
+    vars:
+      ns: '{{ .ns | default "flux-system" }}'
+      # ks:
+      #   sh: flux --namespace {{ .ns }} get kustomizations $(basename {{ .path }}) 2>&1
+      existing:
+        sh: flux --namespace {{ .ns }} get kustomizations {{ .ks }} 2>&1
+    preconditions:
+      - test -f {{ .KUBERNETES_DIR }}/apps/{{ .path }}/ks.yaml
+
+# ----------------------------------------------------------------------------
+  suspend_app:
+    internal: true
+    cmds:
+      - flux -n flux-system suspend kustomization {{ .ks }}
+      - flux -n {{ .ns }} suspend helmrelease {{ .app }}
+      - kubectl -n {{ .ns }} scale {{ .controller }} --replicas 0
+      - kubectl -n {{ .ns }} wait pod --for delete --selector="app.kubernetes.io/name={{ .app }}" --timeout=2m
+    vars:
+      app: '{{ or .app (fail "Variable `app` is required") }}'
+      ns: '{{ .ns | default "default" }}'
+      ks:
+        sh: |
+          kubectl -n {{ .ns }} get replicationsource {{ .app }} \
+            -o jsonpath="{.metadata.labels.kustomize\.toolkit\.fluxcd\.io/name}"
+      hr:
+        sh: |
+          ...
+      controller:
+        sh: |
+          kubectl get deployment,statefulset -A \
+            --selector app.kubernetes.io/name="${app}" \
+            -o jsonpath='{range .items[*]}{.kind}{" "}{.metadata.name}{end}'
+
+  resume_app:
+    cmds:
+      - flux -n {{ .ns }} resume helmrelease {{ .app }}
+      - flux -n flux-system resume kustomization {{ .ks }}
+
+  # --------------------------------------------------------------------------
+  suspend_ks:
+    desc: Suspend all flux kustomizations
+    cmd: flux suspend kustomization --all
+
+  suspend_hr:
+    desc: Suspend all flux helmreleases
+    cmds:
+      - for: {var: helmreleases, split: "\n"}
+        cmd: flux suspend helmrelease {{ .ITEM }}
+    vars:
+      helmreleases:
+        sh: |
+          kubectl get helmreleases -A \
+            -o jsonpath='{range .items[*]}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}'
+
+  resume_ks:
+    desc: Resume all flux kustomizations
+    cmds:
+      - flux resume kustomization --all
+
+  resume_hr:
+    desc: Resume all flux helmreleases
+    cmds:
+      - for: {var: helmreleases, split: "\n"}
+        cmd: flux resume helmrelease {{ .ITEM }}
+    vars:
+      helmreleases:
+        sh: |
+          kubectl get helmreleases -A \
+            -o jsonpath='{range .items[*]}{.metadata.name}{" -n "}{.metadata.namespace}{"\n"}{end}'
+
+  # bounce-hr:
+  #   desc: Suspend and resume helmrelease
+  #   aliases: ["hr-bounce"]
+  #   cmds:
+  #     - flux suspend hr '{{ .hr }}' -n '{{ .ns }}'
+  #     - sleep 5
+  #     - flux resume hr '{{ .hr }}'  -n '{{ .ns }}' --force
+  #   vars:
+  #     hr: '{{ or .hr (fail "HelmRelease `hr` is required") }}'
+  #     ns: '{{ .ns | default "default" }}'
+
+  # bounce-ks:
+  #   desc: Suspend and resume kustomization
+  #   aliases: ["ks-bounce"]
+  #   cmds:
+  #     - flux suspend kustomization '{{ .ks }}' -n '{{ .ns }}'
+  #     - sleep 5
+  #     - flux resume kustomization '{{ .ks }}' -n '{{ .ns }}'
+  #   vars:
+  #     ks: '{{ or .ks (fail "Kustomization `ks` is required") }}'
+  #     ns: '{{ .ns | default "flux-system" }}'
+
+  # bounce-failed-hr:
+  #   desc: Restart all failed helmreleases
+  #   aliases: ["hr-bounce-failed"]
+  #   cmds:
+  #     - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend hr $0 -n $1'
+  #     - kubectl get hr --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume hr $0 -n $1'
+
+  # bounce-failed-ks:
+  #   desc: Restart all failed kustomizations
+  #   aliases: ["ks-bounce-failed"]
+  #   cmds:
+  #     - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux suspend kustomization $0 -n $1'
+  #     - kubectl get kustomization --all-namespaces | grep False | awk '{print $2, $1}' | xargs -L1 bash -c 'flux resume kustomization $0 -n $1'
+
+  # resume-all-hr:
+  #   desc: Resume suspended helmreleases
+  #   cmds:
+  #     - for: { var: suspended_hr, as: HR, split: "\n" }
+  #       cmd: |
+  #         echo '{{ .HR }}' |
+  #         xargs -L1 bash -c 'flux resume hr "$0" -n "$1"'
+  #   vars:
+  #     suspended_hr:
+  #       sh: |
+  #         kubectl get helmreleases --all-namespaces -o json |
+  #         jq -rc '.items[] |
+  #           select(.spec.suspend) |
+  #           [.metadata.name, .metadata.namespace] |
+  #         @tsv'
+  #   status:
+  #     - 'test -z "{{ .suspended_hr }}"'
+
+  # resume-all-ks:
+  #   desc: Resume suspended kustomizations
+  #   cmds:
+  #     - for: { var: suspended_ks, as: KS, split: "\n" }
+  #       cmd: |
+  #         echo '{{ .KS }}' |
+  #         xargs -L1 bash -c 'flux resume kustomization "$0" -n flux-system'
+  #   vars:
+  #     suspended_ks:
+  #       sh: |
+  #         kubectl get kustomization -n flux-system -o json |
+  #         jq -rc '.items[] |
+  #           select(.spec.suspend) |
+  #           .metadata.name
+  #         '
+  #   status:
+  #     - 'test -z "{{ .suspended_ks }}"'
+
+  # # TODO: specify status for delete
+  # # delete-jobs:
+  # #   desc: Delete all jobs
+  # #   cmd: kubectl delete job --all-namespaces --all
+
+  # ns-cleanup:
+  #   desc: Force terminate all namespaces stuck with finalizers
+  #   cmds:
+  #     - for: { var: terminating, as: NS, split: "\n" }
+  #       cmd: |
+  #         kubectl patch ns '{{ .NS }}' --type merge --patch='{"spec":{"finalizers": []}}'
+  #   vars:
+  #     terminating:
+  #       sh: |
+  #         kubectl get namespaces -o json |
+  #         jq -r '.items[] | select(.status.phase=="Terminating") |
+  #         .metadata.name
+  #         '
+  #   status:
+  #     - 'test -z "{{ .terminating }}"'

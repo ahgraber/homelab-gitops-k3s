@@ -36,6 +36,7 @@ resources:
   - ./rook-ceph.yaml
   - ./runix.yaml                  # pgadmin
   - ./stakater.yaml               # reloader
+  - ./stevehipwell.yaml           # thanos
   # - ./valheim.yaml
   - ./weave-gitops.yaml
   - ./windmill.yaml

@@ -22,8 +22,6 @@ spec:
         name: cluster-settings
       - kind: Secret
         name: cluster-secrets
-      - kind: ConfigMap
-        name: custom-settings
       - kind: Secret
         name: custom-secrets
   patches:
@@ -44,8 +42,6 @@ spec:
                 name: cluster-settings
               - kind: Secret
                 name: cluster-secrets
-              - kind: ConfigMap
-                name: custom-settings
               - kind: Secret
                 name: custom-secrets
       target:

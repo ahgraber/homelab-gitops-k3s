@@ -3,11 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: monitoring-karma
+  name: &app karma
   namespace: flux-system
 spec:
+  targetNamespace: monitoring
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
-    - name: monitoring-kube-prometheus-stack
+    - name: kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/karma/app
   prune: true
   sourceRef:

@@ -1,0 +1,99 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: scrutiny-collector
+  namespace: monitoring
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: scrutiny
+      namespace: monitoring
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    controllers:
+      scrutiny-collector:
+        type: daemonset
+        # strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: ghcr.io/analogj/scrutiny
+              tag: master-collector
+            env:
+              - name: COLLECTOR_API_ENDPOINT
+                value: http://scrutiny.monitoring.svc.cluster.local:8080
+              - name: COLLECTOR_HOST_ID
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              privileged: true
+              # readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"], add: ["SYS_RAWIO"] } # allow access to smartctl
+
+    defaultPodOptions:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+
+    service:
+      app:
+        controller: scrutiny-collector
+        enabled: false
+
+    persistence:
+      config:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /opt/scrutiny/config
+      udev:
+        enabled: true
+        type: hostPath
+        hostPath: /run/udev
+        globalMounts:
+          - path: /run/udev
+      nvme0n1:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/nvme0n1
+        globalMounts:
+          - path: /dev/nvme0n1
+      sda:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/sda
+        globalMounts:
+          - path: /dev/sda

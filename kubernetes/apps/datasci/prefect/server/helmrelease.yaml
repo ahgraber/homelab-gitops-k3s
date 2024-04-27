@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app prefect-server
-  namespace: &app-namespace datasci
 spec:
-  interval: 15m
   chart:
     spec:
       chart: prefect-server
@@ -15,16 +13,39 @@ spec:
         kind: HelmRepository
         name: prefect
         namespace: flux-system
+  interval: 15m
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  valuesFrom:
+    - kind: Secret
+      name: &db_secret database-prefect
+      valuesKey: DATABASE_NAME
+      targetPath: postgresql.auth.database
+    - kind: Secret
+      name: *db_secret
+      valuesKey: LOGIN
+      targetPath: postgresql.auth.username
+    - kind: Secret
+      name: *db_secret
+      valuesKey: PASSWORD
+      targetPath: postgresql.auth.password
+    - kind: Secret
+      name: *db_secret
+      valuesKey: HOST
+      targetPath: postgresql.externalHostname
   values:
     server:
       image:
@@ -34,7 +55,7 @@ spec:
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
-      prefectApiUrl: "http://prefect-server.datasci.svc.cluster.local:4200/api"
+      prefectApiUrl: http://prefect-server.datasci.svc.cluster.local:4200/api
 
       # https://docs.prefect.io/latest/concepts/settings/
       env:
@@ -92,7 +113,7 @@ spec:
       enabled: true
       className: internal
       host:
-        hostname: &host "prefect.${SECRET_DOMAIN}"
+        hostname: &host prefect.${SECRET_DOMAIN}
         path: /
         pathType: Prefix
       annotations:
@@ -104,21 +125,3 @@ spec:
     postgresql:
       enabled: true
       useSubChart: false
-
-  valuesFrom:
-    - kind: Secret
-      name: &db_secret database-prefect
-      valuesKey: DATABASE_NAME
-      targetPath: postgresql.auth.database
-    - kind: Secret
-      name: *db_secret
-      valuesKey: LOGIN
-      targetPath: postgresql.auth.username
-    - kind: Secret
-      name: *db_secret
-      valuesKey: PASSWORD
-      targetPath: postgresql.auth.password
-    - kind: Secret
-      name: *db_secret
-      valuesKey: HOST
-      targetPath: postgresql.externalHostname

@@ -4,9 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: descheduler
-  namespace: kube-system
 spec:
-  interval: 30m
   chart:
     spec:
       chart: descheduler
@@ -15,15 +13,22 @@ spec:
         kind: HelmRepository
         name: descheduler
         namespace: flux-system
+  interval: 15m
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     kind: Deployment
     replicas: 3
@@ -44,7 +49,7 @@ spec:
         RemovePodsViolatingNodeAffinity:
           enabled: true
           params:
-            nodeAffinityType: ["requiredDuringSchedulingIgnoredDuringExecution"]
+            nodeAffinityType: [requiredDuringSchedulingIgnoredDuringExecution]
         RemovePodsViolatingTopologySpreadConstraint:
           enabled: true
           params:
@@ -60,7 +65,7 @@ spec:
           params:
             failedPods:
               includingInitContainers: true
-              excludeOwnerKinds: ["Job"]
+              excludeOwnerKinds: [Job]
               minPodLifetimeSeconds: 3600
         RemovePodsHavingTooManyRestarts:
           enabled: true
@@ -83,7 +88,7 @@ spec:
     annotations:
       reloader.stakater.com/search: "true"
     podAnnotations:
-      configmap.reloader.stakater.com/reload: "descheduler"
+      configmap.reloader.stakater.com/reload: descheduler
     affinity:
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
@@ -93,11 +98,10 @@ spec:
                 matchExpressions:
                   - key: app.kubernetes.io/name
                     operator: In
-                    values: ["descheduler"]
+                    values: [descheduler]
               topologyKey: kubernetes.io/hostname
     nodeSelector:
       node-role.kubernetes.io/control-plane: "true"
     tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
+      - key: node-role.kubernetes.io/control-plane
         operator: Exists

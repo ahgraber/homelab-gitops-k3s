@@ -12,10 +12,11 @@ resources:
   - ./grafana/ks.yaml
   - ./karma/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
-  - ./kubernetes-dashboard/ks.yaml    # NOTE: do not upgrade; versions>6.* have breaking & unresolved changes
-  - ./loki-stack/ks.yaml
+  # - ./kubernetes-dashboard/ks.yaml    # NOTE: do not upgrade; versions>6.* have breaking & unresolved changes
+  - ./loki/ks.yaml
   - ./nut-exporter/ks.yaml
-  - ./node-exporter/ks.yaml
   - ./node-problem-detector/ks.yaml
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
+  - ./thanos/ks.yaml
+  - ./vector/ks.yaml

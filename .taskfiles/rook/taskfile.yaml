@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+includes:
+  ansible:
+    taskfile: ../ansible/taskfile.yaml
+    internal: true
+  flux:
+    taskfile: ../flux/taskfile.yaml
+    internal: true
+  volsync:
+    taskfile: ../volsync/taskfile.yaml
+    internal: true
+
+vars:
+  ROOK_TASK_DIR: "{{ .ROOT_DIR }}/.taskfiles/Rook"
+  ROOK_SCRIPTS_DIR: "{{ .ROOK_TASK_DIR }}/scripts"
+  ROOK_TEMPLATES_DIR: "{{ .ROOK_TASK_DIR }}/templates"
+
+  # cephnodes: ['optiplex3','optiplex4','optiplex5']
+  # cephdisk: '/dev/sda'
+
+tasks:
+
+  toolbox:
+    desc: Open a shell to debug ceph via the toolbox
+    interactive: true
+    cmd: kubectl exec -it {{ .pod }} -n rook-ceph -- bash
+    vars:
+      pod:
+        sh: kubectl get pod -l "app=rook-ceph-tools" -n rook-ceph -o json | jq '.items[] | .metadata.name'
+
+  dash-pass:
+    desc: Retrieve the rook-ceph dashboard password
+    cmds:
+      - |
+        kubectl get secret rook-ceph-dashboard-password -n rook-ceph -o json |
+        jq '.data.password' |
+        base64 --decode |
+        pbcopy
+      - echo "Token is in clipboard ready to paste!"
+
+  decommission:
+    desc: Decommision by scaling dependants down
+    cmds:
+      # - task: _snapshot-all
+      - task: flux:suspend_ks
+      - task: flux:suspend_hr
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/scaledown-consumers.sh
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/remove-rook-ceph.sh
+      - task: _zap
+      # - task: flux:resume_ks
+      # - task: flux:resume_hr
+
+  _snapshot-all:
+    desc: Trigger a Restic ReplicationSource snapshot for all ReplicationSources
+    internal: true
+    cmds:
+      - for: { var: sources, split: "\n"}
+        task: volsync:snapshot
+        vars:
+          app: "{{ ( split \"\t\" .ITEM )._0 }}"
+          ns: "{{ ( split \"\t\" .ITEM )._1 }}"
+    vars:
+      sources:
+        sh: |
+          kubectl get replicationsources -A \
+          -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\n"}{end}'
+
+  _zap:
+    desc: Run ansible playbook to clean and zap disks
+    interactive: true
+    cmds:
+      - task: ansible:playbook
+        vars:
+          playbook: 'ceph-cleanup'
