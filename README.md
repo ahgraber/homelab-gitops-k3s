@@ -162,7 +162,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    task ansible:ping
    ```
 
-3. Install k3s
+3. Install k3s (may need to run this twice to pass the k3s systemd restart)
 
    ```sh
    task k3s:install
