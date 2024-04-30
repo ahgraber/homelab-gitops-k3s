@@ -25,30 +25,16 @@ repos:
         entry: YAML file extension must be .yaml
         language: fail
         files: \.yml$
-      # - id: env-substitute
-      #   name: envvar-substitute
-      #   entry: .precommit/substitute.sh
-      #   language: script
-      #   pass_filenames: false
-      # - id: sops
-      #   name: sops-encrypt
-      #   entry: .precommit/sops.sh
-      #   language: script
-      #   pass_filenames: false
-  ## shellcheck requires docker to run
-  # - repo: https://github.com/koalaman/shellcheck-precommit
-  #   rev: v0.8.0
-  #   hooks:
-  #     - id: shellcheck
-  #       args:
-  #         - --severity=warning
-  #         - -e
-  #         - SC1071
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+  - repo: local
+    # repo: https://github.com/pre-commit/mirrors-prettier
+    # rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
+        name: ""
+        entry: prettier
+        language: system
         args:
+          - --write
           - --ignore-unknown
           - --no-error-on-unmatched-pattern
           # - "--ignore-path '**/*.md'"
@@ -69,7 +55,6 @@ repos:
           - --format=parsable
           - --strict
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    # Ruff version.
     rev: "v0.4.2"
     hooks:
       - id: ruff
@@ -86,8 +71,17 @@ repos:
       - id: dockerlint
         stages: [commit]
         # args: [--ignore, DL3025, --ignore, DL3018]
+  ## shellcheck requires docker to run
+  # - repo: https://github.com/koalaman/shellcheck-precommit
+  #   rev: v0.8.0
+  #   hooks:
+  #     - id: shellcheck
+  #       args:
+  #         - --severity=warning
+  #         - -e
+  #         - SC1071
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.6
+    rev: v0.10.0.1
     hooks:
       - id: shellcheck
         args: ["-x"]
@@ -101,8 +95,7 @@ repos:
   #         - --config-file=.ansible-lint
   #         - --project-dir=ansible/
   #         - --parseable
-
-  - repo: https://github.com/k8s-at-home/sops-pre-commit
+  - repo: https://github.com/onedr0p/sops-pre-commit
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
