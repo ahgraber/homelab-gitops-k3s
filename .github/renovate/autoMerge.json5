@@ -18,12 +18,12 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      "description": ["Auto-merge all container digests updates for trusted containers"],
+      "description": ["Auto-merge container updates for hugo blog"],
       "matchDatasources": ["docker"],
       "automerge": true,
       "automergeType": "branch",
-      "matchUpdateTypes": ["*"],
-      "matchPackagePatterns": ["ghcr.io/ahgraber/aimlbling-about"]
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchPackageNames": ["aimlbling-about"]
     }
   ]
 }
