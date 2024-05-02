@@ -67,11 +67,11 @@ spec:
             port: 8080
     ingress:
       app:
-        className: internal
+        className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+          # nginx.ingress.kubernetes.io/whitelist-source-range: |
+          #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
           - host: &host "aimlbling-about.${SECRET_DOMAIN}"
             paths:
