@@ -16,6 +16,14 @@
       "automerge": true,
       "automergeType": "branch",
       "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": ["Auto-merge all container digests updates for trusted containers"],
+      "matchDatasources": ["docker"],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": ["*"],
+      "matchPackagePatterns": ["ghcr.io/ahgraber/aimlbling-about"]
     }
   ]
 }

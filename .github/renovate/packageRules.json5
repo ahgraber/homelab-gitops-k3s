@@ -24,6 +24,12 @@
       "matchDatasources": ["docker"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>)$",
       "matchPackagePatterns": ["miniflux"]
+    },
+    {
+      "description": ["Custom versioning for hugo blog"],
+      "matchDatasources": ["docker"],
+      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))-(?<compatibility>)$",
+      "matchPackagePatterns": ["aimlbling-about"]
     }
   ]
 }
