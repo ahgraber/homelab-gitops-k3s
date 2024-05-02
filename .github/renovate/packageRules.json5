@@ -29,7 +29,7 @@
       "description": ["Custom versioning for hugo blog"],
       "matchDatasources": ["docker"],
       "matchPackageNames": ["aimlbling-about"],
-      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))-(?<build>\\d+)$"
+      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$"
     }
   ]
 }
