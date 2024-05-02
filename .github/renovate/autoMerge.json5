@@ -22,7 +22,7 @@
       "matchDatasources": ["docker"],
       "automerge": true,
       "automergeType": "branch",
-      "matchUpdateTypes": ["*"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "matchPackagePatterns": ["ghcr.io/ahgraber/aimlbling-about"]
     }
   ]
