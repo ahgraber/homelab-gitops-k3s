@@ -18,6 +18,14 @@
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
+      "description": ["Auto-merge rapid patch releases"],
+      "matchDatasources": ["docker", "helm"],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": ["kube-prometheus-stack", "prefect", "reloader", "windmill"]
+    },
+    {
       "description": ["Auto-merge container updates for hugo blog"],
       "matchDatasources": ["docker"],
       "automerge": true,
