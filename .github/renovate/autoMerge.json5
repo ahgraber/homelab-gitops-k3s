@@ -30,7 +30,7 @@
       "matchDatasources": ["docker"],
       "automerge": true,
       "automergeType": "branch",
-      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "matchPackageNames": ["aimlbling-about"]
     }
   ]
