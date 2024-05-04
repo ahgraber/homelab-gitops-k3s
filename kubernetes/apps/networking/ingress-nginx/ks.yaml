@@ -10,6 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: nginx-external
   dependsOn:
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/ingress-nginx/external
@@ -33,6 +34,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: nginx-internal
   dependsOn:
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/ingress-nginx/internal

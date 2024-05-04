@@ -63,7 +63,9 @@ spec:
         client-body-timeout: 120
         client-header-timeout: 120
         enable-brotli: "true"
+        enable-ocsp: "true"
         enable-real-ip: "true"
+        hide-headers: Server,X-Powered-By
         hsts-max-age: 31449600
         keep-alive-requests: 10000
         keep-alive: 120
@@ -83,6 +85,16 @@ spec:
         proxy-buffer-size: 16k
         ssl-protocols: TLSv1.3 TLSv1.2
         use-geoip2: true
+        use-forwarded-headers: "true"
+      ## -- adds headers before sending traffic to backends
+      # proxySetHeaders: proxy-headers
+      ## -- adds headers before sending response traffic to the client
+      addHeaders:
+        X-Content-Type-Options: nosniff
+        X-Frame-Options: SAMEORIGIN
+        X-XSS-Protection: 1; mode=block
+        Permissions-Policy: accelerometer=(),autoplay=(),camera=(),display-capture=(),document-domain=(),encrypted-media=(),fullscreen=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),midi=(),payment=(),picture-in-picture=(),publickey-credentials-get=(),screen-wake-lock=(),sync-xhr=(self),usb=(),web-share=(),xr-spatial-tracking=()
+        Referrer-Policy: strict-origin-when-cross-origin
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
         # default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
@@ -94,7 +106,7 @@ spec:
           namespaceSelector:
             any: true
       podAnnotations:
-        configmap.reloader.stakater.com/reload: nginx-external-controller, cloudflare-networks
+        configmap.reloader.stakater.com/reload: nginx-external-controller, cloudflare-networks, custom-headers
       resources:
         requests:
           cpu: 10m
