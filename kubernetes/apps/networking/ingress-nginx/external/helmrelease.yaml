@@ -32,11 +32,11 @@ spec:
           - /spec/containers/resources/limits
         target:
           kind: Pod
-  valuesFrom:
-    - targetPath: controller.maxmindLicenseKey
-      kind: Secret
-      name: maxmind
-      valuesKey: MAXMIND_LICENSE_KEY
+  # valuesFrom:
+  #   - targetPath: controller.maxmindLicenseKey
+  #     kind: Secret
+  #     name: maxmind
+  #     valuesKey: MAXMIND_LICENSE_KEY
   values:
     fullnameOverride: nginx-external
     controller:
