@@ -72,19 +72,19 @@ spec:
                 memory: 52M
               limits:
                 memory: 256M
-            securityContext:
-              allowPrivilegeEscalation: false
-              # readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+    #         securityContext:
+    #           allowPrivilegeEscalation: false
+    #           # readOnlyRootFilesystem: true
+    #           capabilities: { drop: ["ALL"] }
 
-    defaultPodOptions:
-      securityContext:
-        # runAsGroup: 101 # from nginx dockerfile
-        # runAsUser: 101
-        # runAsNonRoot: true
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
+    # defaultPodOptions:
+    #   securityContext:
+    #     # runAsGroup: 101 # from nginx dockerfile
+    #     # runAsUser: 101
+    #     # runAsNonRoot: true
+    #     fsGroupChangePolicy: OnRootMismatch
+    #     seccompProfile:
+    #       type: RuntimeDefault
 
     service:
       app:
