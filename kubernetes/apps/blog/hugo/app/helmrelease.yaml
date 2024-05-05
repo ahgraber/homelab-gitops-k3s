@@ -34,12 +34,38 @@ spec:
       hugo:
         annotations:
           reloader.stakater.com/search: "true"
-        strategy: Recreate
+        replicas: 2
+        strategy: RollingUpdate
         containers:
           app:
             image:
               repository: ghcr.io/ahgraber/aimlbling-about
-              tag: 2024.05.032149@sha256:e0e5b0c7ccd5f65681848e9cfa0c6372f1bb00885f4dbdb12c5277299dd7dcbe
+              tag: debug
+              pullPolicy: Always
+            # probes:
+            #   liveness: &probe
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /health
+            #         port: &port 80
+            #       initialDelaySeconds: 15
+            #       periodSeconds: 20
+            #       timeoutSeconds: 1
+            #       failureThreshold: 3
+            #   readiness: *probe
+            #   startup:
+            #     enabled: true
+            #     custom: true
+            #     spec:
+            #       httpGet:
+            #         path: /health
+            #         port: *port
+            #       initialDelaySeconds: 0
+            #       timeoutSeconds: 1
+            #       periodSeconds: 5
+            #       failureThreshold: 30
             resources:
               requests:
                 cpu: 100m
@@ -53,9 +79,10 @@ spec:
 
     defaultPodOptions:
       securityContext:
-        # runAsGroup: 65534
-        # runAsUser: 65534
+        # runAsGroup: 101 # from nginx dockerfile
+        # runAsUser: 101
         # runAsNonRoot: true
+        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
 
@@ -64,12 +91,14 @@ spec:
         controller: *app
         ports:
           http:
-            port: 8080
+            port: 80
     ingress:
       app:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            more_set_headers "Content-Security-Policy: default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self';img-src *;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'";
           # nginx.ingress.kubernetes.io/whitelist-source-range: |
           #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
@@ -79,6 +108,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
