@@ -30,16 +30,31 @@ spec:
         target:
           kind: Pod
   values:
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 101
+        runAsUser: 101
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
     controllers:
       hugo:
         annotations:
           reloader.stakater.com/search: "true"
-        strategy: Recreate
+        replicas: 2
+        strategy: RollingUpdate
         containers:
           app:
             image:
               repository: ghcr.io/ahgraber/aimlbling-about
               tag: 2024.05.032149@sha256:e0e5b0c7ccd5f65681848e9cfa0c6372f1bb00885f4dbdb12c5277299dd7dcbe
+              pullPolicy: Always
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             resources:
               requests:
                 cpu: 100m
@@ -48,28 +63,22 @@ spec:
                 memory: 256M
             securityContext:
               allowPrivilegeEscalation: false
-              # readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-
-    defaultPodOptions:
-      securityContext:
-        # runAsGroup: 65534
-        # runAsUser: 65534
-        # runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
 
     service:
       app:
         controller: *app
         ports:
           http:
-            port: 8080
+            port: 80
     ingress:
       app:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            more_set_headers "Content-Security-Policy: default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self';img-src *;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'";
           # nginx.ingress.kubernetes.io/whitelist-source-range: |
           #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
@@ -79,6 +88,13 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
+    persistence:
+      tmp:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
