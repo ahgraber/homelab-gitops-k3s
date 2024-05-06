@@ -45,7 +45,7 @@ spec:
           app:
             image:
               repository: ghcr.io/gethomepage/homepage
-              tag: v0.8.12
+              tag: v0.8.13@sha256:43a3ee88abe3b37c64bc52ea93da01c3dcb4a332a953bcd7f438c8d7328d3947
             env:
               TZ: ${TIMEZONE}
               LOG_LEVEL: debug
