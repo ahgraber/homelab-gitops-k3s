@@ -31,7 +31,7 @@
       "automerge": true,
       "automergeType": "branch",
       "matchUpdateTypes": ["major", "minor", "patch", "digest"],
-      "matchPackageNames": ["aimlbling-about"]
+      "matchPackageNames": ["ghcr.io/ahgraber/aimlbling-about"]
     }
   ]
 }
