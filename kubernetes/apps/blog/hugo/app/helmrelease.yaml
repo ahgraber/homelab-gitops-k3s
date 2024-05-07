@@ -78,7 +78,7 @@ spec:
         annotations:
           external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
           nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Content-Security-Policy: default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self';img-src *;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline'";
+            more_set_headers "Content-Security-Policy: default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self' ninerealmlabs.com *.ninerealmlabs.com;img-src *;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' ninerealmlabs.com *.ninerealmlabs.com;style-src 'self' 'unsafe-inline'";
           # nginx.ingress.kubernetes.io/whitelist-source-range: |
           #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         hosts:
