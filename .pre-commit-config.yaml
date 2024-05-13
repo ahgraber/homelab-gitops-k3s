@@ -1,118 +1,158 @@
 ---
-fail_fast: false
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+exclude: |
+  (?x)^(
+    ^.*(copier-answers\.ya?ml)$
+  )$
+
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
-    hooks:
-      - id: end-of-file-fixer
-      - id: mixed-line-ending
-      - id: trailing-whitespace
-        args: [--markdown-linebreak-ext=md]
-  - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
-    hooks:
-      - id: remove-crlf
-      - id: remove-tabs
-  - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.6
-    hooks:
-      - id: fix-smartquotes
-      - id: fix-ligatures
   - repo: local
     hooks:
       - id: forbid-yml
         name: Forbid .yml file extensions (use .yaml)
-        entry: YAML file extension must be .yaml
+        entry: YAML file extensions must be .yaml
         language: fail
         files: \.yml$
-  - repo: local
-    # repo: https://github.com/pre-commit/mirrors-prettier
-    # rev: v4.0.0-alpha.8
+        exclude: |
+          (?x)^(
+            ^.*(copier-answers\.ya?ml)$
+          )$
+      - id: forbid-rej
+        name: Forbid .rej file extensions from `copier update`
+        entry: Forbid .rej file extensions from `copier update`
+        language: fail
+        files: \.rej$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v4.6.0"
     hooks:
-      - id: prettier
-        name: ""
-        entry: prettier
-        language: system
-        args:
-          - --write
-          - --ignore-unknown
-          - --no-error-on-unmatched-pattern
-          # - "--ignore-path '**/*.md'"
-          # - "--ignore-path '**/*.y*ml'"
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.40.0
-    hooks:
-      - id: markdownlint
-        args:
-          - --config=.markdownlint.yaml
-          - --fix
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.35.1
-    hooks:
-      - id: yamllint
-        args:
-          - --config-file=.yamllint.yaml
-          - --format=parsable
-          - --strict
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.4.4"
-    hooks:
-      - id: ruff
-        args: [--fix]
-        stages: [commit, manual]
-  # - repo: https://github.com/hadolint/hadolint.git
-  #   rev: v2.12.1-beta
-  #   hooks:
-  #     - id: hadolint-docker
-  #       entry: hadolint/hadolint hadolint
-  - repo: https://github.com/petalmd/dockerfile-pre-commit
-    rev: v1.0
-    hooks:
-      - id: dockerlint
+      - id: check-added-large-files
+        args: [--maxkb=500000]
         stages: [commit]
-        # args: [--ignore, DL3025, --ignore, DL3018]
-  ## shellcheck requires docker to run
-  # - repo: https://github.com/koalaman/shellcheck-precommit
-  #   rev: v0.8.0
-  #   hooks:
-  #     - id: shellcheck
-  #       args:
-  #         - --severity=warning
-  #         - -e
-  #         - SC1071
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.10.0.1
+      - id: check-case-conflict
+        stages: [commit]
+      - id: check-merge-conflict
+        stages: [commit]
+      - id: check-ast
+        stages: [commit]
+      - id: check-json
+        stages: [commit]
+      - id: check-toml
+        stages: [commit]
+      # - id: check-yaml
+      #   stages: [commit]
+      - id: end-of-file-fixer
+        stages: [commit]
+      - id: mixed-line-ending
+        stages: [commit]
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        stages: [commit]
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: "v1.5.5"
     hooks:
-      - id: shellcheck
-        args: ["-x"]
-        # ignore '*.zsh" scripts'
-        exclude: "^.*zsh$"
-  # - repo: https://github.com/ansible/ansible-lint.git
-  #   rev: v6.16.1
-  #   hooks:
-  #     - id: ansible-lint
-  #       args:
-  #         - --config-file=.ansible-lint
-  #         - --project-dir=ansible/
-  #         - --parseable
+      - id: remove-crlf
+        stages: [commit]
+      # - id: remove-tabs
+      #   stages: [commit]
+  - repo: https://github.com/sirosen/texthooks
+    rev: "0.6.6"
+    hooks:
+      - id: fix-smartquotes
+        stages: [commit]
+      - id: fix-ligatures
+        stages: [commit]
+  - repo: https://github.com/zricethezav/gitleaks
+    rev: "v8.18.2"
+    hooks:
+      - id: gitleaks
   - repo: https://github.com/onedr0p/sops-pre-commit
     rev: v2.1.1
     hooks:
       - id: forbid-secrets
         args: [-h, "**/*.sops.yaml"]
         # note: this only checks specific files for secrets!
-  - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.18.2
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: "2.7.3"
     hooks:
-      - id: gitleaks
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.21.0
-    hooks:
-      - id: typos
-        args: [--config, .typos.toml]
-        # exclude: "sops.yaml$"
+      - id: editorconfig-checker
+        name: Check editorconfig compliance
         exclude: |
           (?x)^(
-            ^.*(typos\.toml)$ |
+            # these file types may have nonstandard indents
+            ^(LICENSE)$ |
+            ^.*(\.md)$ |
+            ^.*(\.rst)$
+          )$
+        stages: [commit]
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: "v0.40.0"
+    hooks:
+      - id: markdownlint
+        name: Lint markdown files
+        args:
+          - --config=.markdownlint.yaml
+          - --fix
+        stages: [commit]
+  - repo: local
+    hooks:
+      - id: prettier
+        name: Format with Prettier
+        language: system
+        entry: prettier
+        args:
+          - --write
+          - --ignore-unknown
+          - --no-error-on-unmatched-pattern
+          # - "--ignore-path '**/*.md'"
+          # - "--ignore-path '**/*.y*ml'"
+        stages: [commit]
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.4.4"
+    hooks:
+      - id: ruff
+        name: Lint and Format with Ruff
+        args: [--fix]
+        stages: [commit]
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: Lint shell scripts
+        language: system
+        entry: shellcheck
+        types: ["shell"]
+        exclude: "^.*zsh$" # ignore '*.zsh" scripts'
+        stages: [commit]
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: "v3.8.0-1"
+    hooks:
+      - id: shfmt
+        name: Format shell scripts
+        args:
+          - -i
+          - "2"
+          - -ci
+          - -bn
+        stages: [commit]
+  ### NOTE: ".typos.toml" may be required to have _already been committed_
+  ### in order for typos pre-commit hook to read it.
+  ### In this case, comment out this block until ".typos.toml" has been committed successfully
+  - repo: https://github.com/crate-ci/typos
+    rev: "v1.21.0"
+    hooks:
+      - id: typos
+        name: Spellcheck with Typos
+        args: ["--config", ".typos.toml"]
+        exclude: |
+          (?x)^(
+            ^.*(\.typos\.toml)$ |
             ^.*(\.sops\.yaml)$
           )$
+        stages: [commit]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: "v1.35.1"
+    hooks:
+      - id: yamllint
+        name: Lint yaml files
+        args: [-c=.yamllint.yaml]
+        stages: [commit]

@@ -1,4 +1,6 @@
 * text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
 *.yaml.j2 linguist-language=YAML
 *.sops.* diff=sopsdiffer
 *.sops.toml linguist-language=JSON

@@ -1,0 +1,146 @@
+# --- ruff -------------------------------------------------------------------
+preview = false  # do not use unstable rules/fixes
+# # Assumed Python version
+# target-version = "py39" # managed in [project]requires-python above
+
+# file selection
+extend-exclude = [
+  '.ci',
+  '.pytest_cache',
+  'docs',
+  '*.egg-info',
+  '.ipynb_checkpoints',
+  '.env',
+  '.envrc',
+  '.git',
+  '.nox',
+  '.tox',
+]
+extend-include = ["*.ipynb"]
+
+# Autofix behavior
+fix = true
+
+# Line options
+indent-width = 4
+line-length = 119
+
+# Directories with source code; allow relative imports
+src = ["src", "notebooks", "tests"]
+
+# Group output violations by file
+output-format = "grouped"
+
+
+[format]
+indent-style = "space"
+line-ending = "auto"
+quote-style = "double"
+skip-magic-trailing-comma = false
+docstring-code-format = true
+
+
+[lint]
+exclude = ["*.pyi"]
+
+select = [
+  'A', # flake8 builtins
+  'B', # flake8 bugbear
+  'C4', # flake8 comprehensions
+  'C90', # mccabe
+  'D', # pydocstyle
+  'E', # pycodestyle
+  'F', # pyflakes
+  'I', # isort
+  'N', # pep8-naming
+  # 'PTH', # flake8-use-pathlib
+  'Q',  # flake8-quotes
+  'S',  # bandit
+  'SIM',  # flake8-simplify
+  'TRY',  # tryceratops
+  'W', # pycodestyle
+  # 'T20', # flake8 print
+]
+
+ignore = [
+  "B905",  # zip strict=True; remove once python <3.10 support is dropped.
+  "D100",  # do not require module-level docstrings
+  "D104",  # do not require package docstrings
+  "D107",  # do not require docstrings in __init__ files
+  # "D205",  # don't require linebreak after docstring (ruff vs black conflict)
+  "D206",  # redundant w formatter
+  "D300",  # redundant w formatter
+  "E111",  # redundant w formatter
+  "E114",  # redundant w formatter
+  "E117",  # redundant w formatter
+  "E501",  # line too long
+  "F401",  # unused import
+  "F403",  # import *
+  "F405",  # defined from import *
+  # "F541",  # f-string missing placeholders
+  "N999",  # allow "invalid" module names due to jinja templates
+  "Q000",  # redundant w formatter
+  "Q001",  # redundant w formatter
+  "Q002",  # redundant w formatter
+  "Q003",  # redundant w formatter
+  # "S101",  # assert
+  "S311",  # allow psuedorandom generators (we use for stats)
+  "SIM105",  # allow except: pass
+  "TRY003",  # Avoid specifying messages outside exception class; overly strict, especially for ValueError
+  "TRY201",  # Allow raise without exception name (align with Sonarlint)
+  "W191",  # redundant w formatter
+  # "W503",  # not in ruff
+  "COM812",  # redundant w formatter
+  "COM819",  # redundant w formatter
+  "ISC001",  # redundant w formatter
+  "ISC002",  # redundant w formatter
+]
+
+# Avoid trying to fix extension types:
+unfixable = ["B"]
+
+[lint.per-file-ignores]
+# # Ignore `E402` (import violations) in all `__init__.py` files,
+# # and in `path/to/file.py`.
+# "__init__.py" = ["E402"]
+# "path/to/file.py" = ["E402"]
+".ci/*" = ["D"]
+"docs/*" = ["D"]
+"notebooks/*" = ["B018", "D", "S"]
+"tests/*" = ["D", "S101", "S301"]
+
+
+# --- ruff plugins --------------------
+[lint.flake8-bugbear]
+extend-immutable-calls = [
+    "chr",
+    "typer.Argument",
+    "typer.Option",
+]
+
+[lint.isort]
+combine-as-imports = true
+detect-same-package = true
+extra-standard-library = ["yaml"]
+force-sort-within-sections = true
+force-to-top = ["src", "torch"]
+# forced-separate = ["scipy", "sklearn", "statsmodels", "torch"]
+relative-imports-order = "closest-to-furthest"
+
+known-local-folder = ["src"] # for relative imports
+section-order = ["future", "standard-library", "third-party", "sci", "torch", "plot", "first-party", "local-folder"]
+
+[lint.isort.sections]
+"sci" = ["numpy", "pandas", "scipy", "sklearn", "statsmodels"]
+"torch" = ["datasets", "lightning", "torch", "torch*", "tokenizers", "transformers", "sentence-transformers"]
+"llm" = ["langchain*", "llama-index*", "semantic_kernel"]
+"plot" = ["cmcrameri", "matplotlib", "plotly", "plotnine", "seaborn"]
+
+[lint.mccabe]
+max-complexity = 18
+
+[lint.pep8-naming]
+ignore-names = []
+
+[lint.pydocstyle]
+convention = "numpy"

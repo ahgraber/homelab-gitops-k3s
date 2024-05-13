@@ -1,41 +1,40 @@
-# editorconfig.org
+# see https://editorconfig.org/
 root = true
 
 [*]
+# Use Unix-style newlines for most files (except Windows files, see below).
 charset = utf-8
 end_of_line = lf
+insert_final_newline = true
 indent_size = 2
 indent_style = space
-max_line_length = 120
+# max_line_length = 120
 trim_trailing_whitespace = true
-insert_final_newline = true
 
 [*.{bat,cmd,ps1}]
 end_of_line = crlf
 
 [*.{bash,sh}]
-indent_style = space
 indent_size = 4
+indent_style = space
 
 [*.csv]
 insert_final_newline = false
 
 [*.md]
+max_line_length = 119
 trim_trailing_whitespace = false
-max_line_length = 240
 
-[*.py]
-indent_style = space
+[*.{py, ipynb}]
 indent_size = 4
+indent_style = space
 
 [*.tsv]
 indent_style = tab
 
 [*.{yml,yaml}]
-indent_style = space
 indent_size = 2
-
-# Tab indentation (no size specified)
-[Makefile]
 indent_style = space
-indent_size = 4
+
+[Makefile]
+indent_style = tab

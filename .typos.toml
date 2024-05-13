@@ -1,22 +1,78 @@
-# Docs: https://github.com/crate-ci/typos
-# Config: https://github.com/crate-ci/typos/blob/master/docs/reference.md
-
-[default]
-check-filename = false
-
-extend-ignore-re = [
-  "ot-charts",
-  "ot-container-kit",
-  "ot-operators",
-]
-
-# # Identifiers vs. Words: https://github.com/crate-ci/typos/blob/master/docs/design.md#identifiers-and-words
-[default.extend-words]
-# Don't correct "iterm" or "iTerm"
-iterm = "iterm"
-
+### Configuration for typos pre-commit
+# https://github.com/crate-ci/typos/blob/master/docs/reference.md
 [files]
+# glob/gitignore-style file exclusions
 extend-exclude = [
   ".typos.toml",
-  "*.sops.yaml"
+  "_typos.toml",
+  "typos.toml",
+  "*.sops.yaml",
 ]
+ignore-hidden = false   # ignore hidden files/dirs
+ignore-files = true     # respect ignore files
+ignore-dot = true       # respect ignore files
+ignore-vcs = true       # ignore version-control directories
+ignore-global = true    # respect global ignore files
+
+[default]
+binary = false
+check-filename = true
+check-file = true
+unicode = true
+ignore-hex = true
+identifier-leading-digits = false
+locale = "en"
+
+## Custom uncorrectable sections (e.g. markdown code fences, PGP signatures, etc)
+## list of regexes
+extend-ignore-re = [
+  # Line ignore with trailing "typos:disable-line"
+  "(?Rm)^.*#\\s*typos:disable-line$"
+]
+
+## Pattern-match always-valid identifiers
+## list of regexes
+extend-ignore-identifiers-re = []
+
+## Corrections for identifiers (https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers).
+## When the correction is blank, the identifier is *never* valid.
+## When the correction is the key, the identifier is *always* valid.
+[default.extend-identifiers]
+# capwords are identifiers
+AKS = "AKS"
+
+
+## Corrections for words.
+## When the correction is blank, the word is *never* valid.
+## When the correction is the key, the word is *always* valid.
+[default.extend-words]
+"arange" = "arange"  # e.g. `numpy.arange`
+keypair = "keypair"
+iterm = "iterm" # Don't correct "iterm" or "iTerm"
+
+## Specific rules for lockfiles
+[type.lock]
+extend-glob = []
+binary = false
+check-filename = true
+check-file = false
+unicode = true
+ignore-hex = true
+identifier-leading-digits = false
+extend-ignore-identifiers-re = []
+extend-ignore-re = []
+
+[type.lock.extend-identifiers]
+
+[type.lock.extend-words]
+
+## Specific rules for python
+[type.py]
+extend-glob = []
+extend-ignore-identifiers-re = []
+extend-ignore-re = []
+
+[type.py.extend-identifiers]
+NDArray = "NDArray"
+
+[type.py.extend-words]

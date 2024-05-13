@@ -1,14 +1,13 @@
-# prettier should ignore
-# .azureml
-# .eggs
-# .ipynb_checkpoints
-# .obsidian
-# .pytest_cache
-# .tox
-.vscode/
+# in addition to files in .gitignore, prettier should ignore
 .**/
+.*
 dist/
 *.sops.*
-gotk-components.y*ml
 *.md
 # *.y*ml
+gotk-components.y*ml
+node_modules
+**/node_modules
+**/lib
+**/package.json
+!/package.json

@@ -1,0 +1,13 @@
+# Changes here will be overwritten by Copier
+_commit: 2024.5.2
+_src_path: gh:ninerealmlabs/precommit.template
+editorconfig: true
+hadolint: false
+markdownlint: true
+prettier: true
+ruff: true
+shellcheck: true
+shfmt: true
+typos: true
+yamllint: true
+
