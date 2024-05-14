@@ -9,7 +9,7 @@ spec:
   interval: 10m
   url: oci://ghcr.io/fluxcd/flux-manifests
   ref:
-    tag: v2.3.0@sha256:5870003e3c4fe4b946759f3fbf5a4a684b1bcc44ee8872f6764745cdde838e69
+    tag: v2.3.0
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -49,7 +49,6 @@ spec:
                 - name: manager
                   resources:
                     limits:
-                      cpu: 2000m
                       memory: 2Gi
               nodeSelector:
                 node-role.kubernetes.io/control-plane: "true"
@@ -58,13 +57,13 @@ spec:
                   operator: Exists
       target:
         kind: Deployment
-        name: "(kustomize-controller|helm-controller|notification-controller|source-controller)"
+        name: (kustomize-controller|helm-controller|source-controller)
     # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
-    # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
+    # Ref: https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
     - patch: |
         - op: add
           path: /spec/template/spec/containers/0/args/-
-          value: --concurrent=8
+          value: --concurrent=12
         - op: add
           path: /spec/template/spec/containers/0/args/-
           value: --kube-api-qps=500
@@ -78,7 +77,7 @@ spec:
         kind: Deployment
         name: (kustomize-controller|helm-controller|source-controller)
     # Enable drift detection for HelmReleases and set the log level to debug
-    # https://fluxcd.io/flux/components/helm/helmreleases/#drift-detection
+    # Ref: https://fluxcd.io/flux/components/helm/helmreleases/#drift-detection
     - patch: |
         - op: add
           path: /spec/template/spec/containers/0/args/-
@@ -89,8 +88,20 @@ spec:
       target:
         kind: Deployment
         name: helm-controller
+    # Enable in-memory-kustomize builds
+    # Ref: https://fluxcd.io/flux/installation/configuration/vertical-scaling/#enable-in-memory-kustomize-builds
+    - patch: |
+        - op: replace
+          path: /spec/template/spec/volumes/0
+          value:
+            name: temp
+            emptyDir:
+              medium: Memory
+      target:
+        kind: Deployment
+        name: kustomize-controller
     # Enable Helm near OOM detection
-    # https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-helm-near-oom-detection
+    # Ref: https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-helm-near-oom-detection
     - patch: |
         - op: add
           path: /spec/template/spec/containers/0/args/-
