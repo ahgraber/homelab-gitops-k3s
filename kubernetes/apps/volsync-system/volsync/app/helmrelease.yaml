@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -36,21 +36,26 @@ spec:
 
   postRenderers:
     - kustomize:
-        patchesStrategicMerge:
-          - apiVersion: apps/v1
-            kind: Deployment
-            metadata:
+        patches:
+          - target:
+              version: v1
+              kind: Deployment
               name: volsync
-            spec:
-              template:
-                spec:
-                  containers:
-                    - name: manager
-                      volumeMounts:
-                        - name: tz-config
-                          mountPath: /etc/localtime
-                  volumes:
-                    - name: tz-config
-                      hostPath:
-                        path: /usr/share/zoneinfo/America/New_York
-                        type: File
+            patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: volsync
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: manager
+                        volumeMounts:
+                          - name: tz-config
+                            mountPath: /etc/localtime
+                    volumes:
+                      - name: tz-config
+                        hostPath:
+                          path: /usr/share/zoneinfo/America/New_York
+                          type: File
