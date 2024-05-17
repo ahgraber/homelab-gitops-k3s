@@ -19,7 +19,10 @@ Scrutiny is deployed as 3 distinct components:
 
 ## [TrueNAS setup](https://github.com/AnalogJ/scrutiny/blob/master/docs/INSTALL_HUB_SPOKE.md)
 
-> Add'l references: [docker-compose](https://github.com/AnalogJ/scrutiny/blob/master/docker/example.hubspoke.docker-compose.yml)
+> Add'l references:
+>
+> - [docker-compose](https://github.com/AnalogJ/scrutiny/blob/master/docker/example.hubspoke.docker-compose.yml)
+> - [Monitor the Health of Multiple SMART Disks with Scrutiny | Stefandroid Blog](https://blog.stefandroid.com/2022/01/14/smart-scrutiny.html)
 > NOTE: Scrutiny collector may need to be installed after every TrueNAS update!
 
 1. Scrutiny needs Smartmontools version 7+. Check on the TrueNAS terminal that version 7 is installed.
@@ -49,8 +52,8 @@ Scrutiny is deployed as 3 distinct components:
 
 4. Edit the configuration and change the following parameters:
 
-   * `host.id` should be an identifier for your TrueNAS server
-   * `api.endpoint` should be the HTTP endpoint of the Scrutiny Web server that we deployed
+   - `host.id` should be an identifier for your TrueNAS server
+   - `api.endpoint` should be the HTTP endpoint of the Scrutiny Web server that we deployed
 
    ```yaml
    version: 1
