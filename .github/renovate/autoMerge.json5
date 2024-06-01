@@ -10,6 +10,21 @@
       "matchPackagePatterns": ["ghcr.io/bjw-s", "ghcr.io/onedr0p"]
     },
     {
+      "description": ["Auto-merge updates for trusted pre-commit packages"],
+      "matchDatasources": ["github-tags"],
+      "automerge": true,
+      "automergeType": "branch",
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": [
+        "adrienverge/yamllint",
+        "charliermarsh/ruff-pre-commit",
+        "crate-ci/typos",
+        "igorshubovych/markdownlint-cli",
+        "sirosen/texthooks",
+        "zricethezav/gitleaks"
+      ]
+    },
+    {
       "description": ["Auto-merge GitHub Actions for minor and patch"],
       "matchManagers": ["github-actions"],
       "matchDatasources": ["github-tags"],
