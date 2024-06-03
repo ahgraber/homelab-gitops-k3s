@@ -44,7 +44,7 @@ spec:
           app:
             image:
               repository: ghcr.io/thomiceli/opengist
-              tag: 1.7.2@sha256:80f203852ead85cbcef6fa372a6f779903304898f4baba602ceca43a35f41558
+              tag: 1.7.3@sha256:85b0b8a6792db1e2fb12684dfb08bd45b738f41b835e39cf7794768e7e7cc219
             command: # double "$$" escape flux substitutions
               - ./opengist
             args:
