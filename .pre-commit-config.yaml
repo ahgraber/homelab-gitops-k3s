@@ -146,7 +146,8 @@ repos:
         exclude: |
           (?x)^(
             ^.*(\.typos\.toml)$ |
-            ^.*(\.sops\.yaml)$
+            ^.*(\.sops\.yaml)$ |
+            ^.*(\.git.*)$
           )$
         stages: [commit]
   - repo: https://github.com/adrienverge/yamllint.git
