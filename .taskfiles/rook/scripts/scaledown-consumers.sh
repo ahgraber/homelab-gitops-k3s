@@ -37,7 +37,7 @@ scaledown_app () {
         # 'controller' --> '<type> <name> -n <namespace>'
         kubectl scale "${_controller[@]}" --replicas 0
     done;
-    kubectl wait pod -A --for delete --selector="app.kubernetes.io/name='${app}'" --timeout=2m
+    kubectl wait pod -A --for delete --selector="app.kubernetes.io/name=${app}" --timeout=2m
     echo "Scaled ${app} to 0."
 }
 
