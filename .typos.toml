@@ -7,6 +7,7 @@ extend-exclude = [
   "_typos.toml",
   "typos.toml",
   "*.sops.yaml",
+  "*.git*",
 ]
 ignore-hidden = false   # ignore hidden files/dirs
 ignore-files = true     # respect ignore files
