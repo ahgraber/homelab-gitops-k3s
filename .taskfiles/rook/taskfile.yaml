@@ -39,14 +39,34 @@ tasks:
           -o jsonpath="{.data.password}" | base64 --decode | pbcopy
       - echo "Token is in clipboard ready to paste!"
 
-  decommission:
-    desc: Decommision by scaling dependants down
+  resume:
+    desc: Resume rook ceph after halting
+    cmds:
+      - task: flux:resume_ks
+      - flux resume helmrelease rook-ceph-operator -n rook-ceph
+      - flux resume helmrelease rook-ceph-cluster -n rook-ceph
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/resume-rook-ceph.sh
+      - sleep 120
+      - task: flux:reconcile
+      - sleep 30
+      - task: flux:resume_hr
+  down:
+    desc: Scale down rook ceph and its dependents
     cmds:
       # - task: _snapshot-all
       - task: flux:suspend_ks
       - task: flux:suspend_hr
       - |
         bash {{ .ROOK_SCRIPTS_DIR }}/scaledown-consumers.sh
+      - |
+        bash {{ .ROOK_SCRIPTS_DIR }}/scaledown-rook-ceph.sh
+
+  decommission:
+    desc: Decommision rook-ceph by scaling dependents down
+    cmds:
+      # - task: _snapshot-all
+      - task: down
       - |
         bash {{ .ROOK_SCRIPTS_DIR }}/remove-rook-ceph.sh
       - task: _zap

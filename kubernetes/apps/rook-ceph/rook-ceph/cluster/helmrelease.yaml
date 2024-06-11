@@ -72,8 +72,8 @@ spec:
     # https://rook.io/docs/rook/v1.10/Storage-Configuration/Advanced/ceph-configuration/#custom-cephconf-settings
     configOverride: |
       [global]
-      bdev_enable_discard = true
       bdev_async_discard = true
+      bdev_enable_discard = true
 
       [mon]
       mon_compact_on_start = true
