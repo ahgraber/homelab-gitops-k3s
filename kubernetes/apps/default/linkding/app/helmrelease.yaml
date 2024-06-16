@@ -43,7 +43,7 @@ spec:
             image:
               # https://hub.docker.com/r/sissbruecker/linkding
               repository: docker.io/sissbruecker/linkding
-              tag: 1.30.0
+              tag: 1.31.0@sha256:328c06bcb76128b653828c681d7d648baef7e8453d2d6e25f90bb31d72f997af
             # https://github.com/sissbruecker/linkding/blob/master/docs/Options.md
             env:
               TZ: ${TIMEZONE}
