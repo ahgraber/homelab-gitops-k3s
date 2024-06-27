@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/main/apps/monitoring/kube-prometheus-stack/crds
+  path: ./kubernetes/apps/monitoring/kube-prometheus-stack/crds
   prune: false # never should be deleted
   sourceRef:
     kind: GitRepository
