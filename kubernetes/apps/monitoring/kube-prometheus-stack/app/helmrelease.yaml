@@ -19,23 +19,27 @@ spec:
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: prometheus-operator-crds
+      namespace: monitoring
     - name: thanos
       namespace: monitoring
   install:
+    crds: Skip
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    crds: Skip
     remediation:
       strategy: rollback
       retries: 3
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
+  # driftDetection:
+  #   mode: enabled
+  #   ignore:
+  #     - paths:
+  #         - /spec/containers/resources/limits
+  #       target:
+  #         kind: Pod
   valuesFrom:
     - kind: ConfigMap
       name: kube-state-metrics-config
