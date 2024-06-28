@@ -15,6 +15,7 @@
       - [Identify what is taking up all of the space](#identify-what-is-taking-up-all-of-the-space)
       - [Clean up logs](#clean-up-logs)
       - [Clean up unused images](#clean-up-unused-images)
+      - [Restart pods](#restart-pods)
   - [Remove orphan rbd images](#remove-orphan-rbd-images)
 
 ## Intro
@@ -85,7 +86,8 @@ ceph mgr module enable dashboard
 ceph
 dashboard set-alertmanager-api-host 'http://kps-alertmanager.monitoring.svc.cluster.local:9093'
 dashboard set-alertmanager-api-ssl-verify False
-dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc.cluster.local:9090'
+# dashboard set-prometheus-api-host 'http://kps-prometheus.monitoring.svc.cluster.local:9090'
+dashboard set-prometheus-api-host 'http://thanos-query-frontend.monitoring.svc.cluster.local:10902'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
@@ -250,6 +252,10 @@ sudo journalctl --vacuum-size=50M
 ssh ...
 sudo k3s crictl rmi --prune
 ```
+
+#### Restart pods
+
+Restart `mon`, `mds`, `rgw`, and `osd` pods
 
 ## Remove orphan rbd images
 
