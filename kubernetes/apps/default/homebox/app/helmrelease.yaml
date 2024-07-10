@@ -43,9 +43,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/hay-kot/homebox
-              tag: v0.10.3
-              # tag: frontend-v1.0.0beta-5
+              repository: ghcr.io/sysadminsmedia/homebox
+              tag: 0.12.1@sha256:b08dcf2fff4b6bb3fa5189000406ee60e376beaa5f7bdef573b63ae15a78b769
             env:
               TZ: ${TIMEZONE}
               HBOX_WEB_MAX_UPLOAD_SIZE: 10 # in MB
