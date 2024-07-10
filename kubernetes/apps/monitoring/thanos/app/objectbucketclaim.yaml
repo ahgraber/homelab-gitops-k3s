@@ -7,3 +7,5 @@ metadata:
 spec:
   bucketName: thanos
   storageClassName: ceph-bucket
+  additionalConfig:
+    maxSize: 16G
