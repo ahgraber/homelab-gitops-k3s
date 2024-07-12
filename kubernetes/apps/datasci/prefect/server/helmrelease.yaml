@@ -51,7 +51,7 @@ spec:
       image:
         repository: prefecthq/prefect
         # prefectTag: 2-latest
-        prefectTag: 2-python3.11-kubernetes
+        prefectTag: 2-python3.12-kubernetes
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
@@ -123,5 +123,5 @@ spec:
 
     # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
-      enabled: true
-      useSubChart: false
+      enabled: false
+      # auth: {} # filled with valuesFrom above
