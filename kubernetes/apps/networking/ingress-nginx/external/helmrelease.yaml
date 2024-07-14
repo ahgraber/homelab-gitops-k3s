@@ -57,6 +57,9 @@ spec:
               values: [external]
       allowSnippetAnnotations: true
       config:
+        # tarampampam/error-pages
+        custom-http-errors: >-
+          400,401,403,404,405,407,408,412,418,429,500,501,502,503,504,505
         # taken from https://github.com/superseriousbusiness/gotosocial/blob/main/internal/web/robots.go
         block-user-agents: GPTBot,~*GPTBot*,ChatGPT-User,~*ChatGPT-User*,Google-Extended,~*Google-Extended*,CCBot,~*CCBot*,Omgilibot,~*Omgilibot*,FacebookBot,~*FacebookBot*
         client-body-buffer-size: 100M
@@ -125,11 +128,11 @@ spec:
       enabled: true
       image:
         repository: ghcr.io/tarampampam/error-pages
-        tag: 2.27.0
+        tag: 3.2.0@sha256:d09f15b6d7c80d535b3dc7f719f655f293d8c5f80121c5eb88843bfb8a603a4a
       replicaCount: 1
       extraEnvs:
         # https://github.com/tarampampam/error-pages#-templates
         - name: TEMPLATE_NAME
-          value: shuffle
+          value: connection
         - name: SHOW_DETAILS
-          value: "false"
+          value: "true"
