@@ -101,8 +101,8 @@ spec:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
               capabilities:
-                - drop: ["ALL"]
-                - add: ["CHOWN"]
+                drop: ["ALL"]
+                add: ["CHOWN"]
     defaultPodOptions:
       securityContext:
         # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
