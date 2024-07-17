@@ -1,21 +1,21 @@
 # --- ruff -------------------------------------------------------------------
 [tool.ruff]
 select = [
-  'A', # flake8 builtins
-  'B', # flake8 bugbear
-  'C4', # flake8 comprehensions
+  'A',   # flake8 builtins
+  'B',   # flake8 bugbear
+  'C4',  # flake8 comprehensions
   'C90', # mccabe
-  'D', # pydocstyle
-  'E', # pycodestyle
-  'F', # pyflakes
-  'I', # isort
-  'N', # pep8-naming
+  'D',   # pydocstyle
+  'E',   # pycodestyle
+  'F',   # pyflakes
+  'I',   # isort
+  'N',   # pep8-naming
   # 'PTH', # flake8-use-pathlib
-  'Q',  # flake8-quotes
-  'S',  # bandit
-  'SIM',  # flake8-simplify
-  'TRY',  # tryceratops
-  'W', # pycodestyle
+  'Q',   # flake8-quotes
+  'S',   # bandit
+  'SIM', # flake8-simplify
+  'TRY', # tryceratops
+  'W',   # pycodestyle
   # 'T20', # flake8 print
 ]
 
@@ -23,25 +23,25 @@ select = [
 unfixable = ["B"]
 
 ignore = [
-  "B905",  # zip strict=True; remove once python <3.10 support is dropped.
-  "D100",  # do not require module-level docstrings
-  "D104",  # do not require package docstrings
-  "D107",  # do not require docstrings in __init__ files
-  "D205",  # don't require linebreak after docstring (ruff vs black conflict)
+  "B905", # zip strict=True; remove once python <3.10 support is dropped.
+  "D100", # do not require module-level docstrings
+  "D104", # do not require package docstrings
+  "D107", # do not require docstrings in __init__ files
+  "D205", # don't require linebreak after docstring (ruff vs black conflict)
   # "E203",  # not in ruff
   # "E265",  # not in ruff
   # "E266",  # not in ruff
-  "E501",  # line too long
-  "F401",  # unused import
-  "F403",  # import *
-  "F405",  # defined from import *
+  "E501", # line too long
+  "F401", # unused import
+  "F403", # import *
+  "F405", # defined from import *
   # "F541",  # f-string missing placeholders
-  "N999",  # allow "invalid" module names due to jinja templates
+  "N999", # allow "invalid" module names due to jinja templates
   # "S101",  # assert
-  "S311",  # allow psuedorandom generators (we use for stats)
-  "SIM105",  # allow except: pass
-  "TRY003",  # Avoid specifying messages outside exception class; overly strict, especially for ValueError
-  "TRY201",  # Allow raise without exception name (align with Sonarlint)
+  "S311",   # allow psuedorandom generators (we use for stats)
+  "SIM105", # allow except: pass
+  "TRY003", # Avoid specifying messages outside exception class; overly strict, especially for ValueError
+  "TRY201", # Allow raise without exception name (align with Sonarlint)
   # "W503",  # not in ruff
 ]
 
@@ -91,11 +91,7 @@ target-version = "py39"
 
 # --- ruff plugins --------------------
 [tool.ruff.flake8-bugbear]
-extend-immutable-calls = [
-    "chr",
-    "typer.Argument",
-    "typer.Option",
-]
+extend-immutable-calls = ["chr", "typer.Argument", "typer.Option"]
 
 [tool.ruff.isort]
 combine-as-imports = true
@@ -104,7 +100,7 @@ extra-standard-library = ["yaml"]
 force-sort-within-sections = true
 force-wrap-aliases = true
 # known-first-party = ["ds_utils"]
-known-local-folder = ["src"] # for relative imports
+known-local-folder = ["src"]                                                                                      # for relative imports
 section-order = ["standard-library", "third-party", "sci", "torch", "plot", "pmi", "first-party", "local-folder"]
 
 [tool.ruff.isort.sections]
@@ -135,33 +131,26 @@ addopts = '''
     --import-mode=importlib
     --tb=short
 '''
-    # --doctest-modules
-    # --doctest-glob=\*.rst
+# --doctest-modules
+# --doctest-glob=\*.rst
 norecursedirs = [
-    ".env",
-    ".git",
-    ".nox",
-    ".pytest_cache",
-    ".tox",
-    "__pycache__",
-    "dist",
-    "docs",
-    "build",
-    "migrations",
-    "notebooks",
-    "writeup",
+  ".env",
+  ".git",
+  ".nox",
+  ".pytest_cache",
+  ".tox",
+  "__pycache__",
+  "dist",
+  "docs",
+  "build",
+  "migrations",
+  "notebooks",
+  "writeup",
 ]
-python_files = [
-    "test_*.py",
-    "*_test.py",
-    "tests.py",
-]
+python_files = ["test_*.py", "*_test.py", "tests.py"]
 pythonpath = "src"
-testpaths = [
-    "tests",
-]
+testpaths = ["tests"]
 # log_cli = true
-
 
 # --- coverage ---------------------------------------------------------------
 [tool.coverage.paths]
