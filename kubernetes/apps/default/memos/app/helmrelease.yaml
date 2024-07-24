@@ -44,7 +44,7 @@ spec:
           app:
             image:
               repository: ghcr.io/usememos/memos
-              tag: 0.22.3@sha256:87efa7fc67b216c9506ffa46bc3c77d86bf1284bfb99af3819712026e4a06279
+              tag: 0.22.4@sha256:5bb99140961add335e308eb9a4f5618a523adfcd6c33d4aa694e1d167da60900
             env:
               TZ: ${TIMEZONE}
               MEMOS_PORT: "5230" # https://github.com/usememos/memos/issues/1782
