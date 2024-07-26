@@ -18,6 +18,6 @@ kind: CiliumLoadBalancerIPPool
 metadata:
   name: pool
 spec:
-  allowFirstLastIPs: "no"
+  allowFirstLastIPs: "No"
   blocks:
     - cidr: "${NODE_CIDR}"
