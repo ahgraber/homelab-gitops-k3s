@@ -12,7 +12,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: unlock
-          image: docker.io/restic/restic:0.17.0@sha256:da2bd7f56bc940bd14166d4802370d49b2232ee1d28898a3295fbf3d73606d80
+          image: docker.io/restic/restic:latest
           args: ["unlock", "--remove-all"]
           envFrom:
             - secretRef:
