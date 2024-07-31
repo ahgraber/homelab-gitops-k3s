@@ -138,7 +138,7 @@ repos:
   ### in order for typos pre-commit hook to read it.
   ### In this case, comment out this block until ".typos.toml" has been committed successfully
   - repo: https://github.com/crate-ci/typos
-    rev: "v1.23.5"
+    rev: "v1.23.6"
     hooks:
       - id: typos
         name: Spellcheck with Typos
