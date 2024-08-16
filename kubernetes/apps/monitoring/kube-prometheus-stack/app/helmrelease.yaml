@@ -197,10 +197,10 @@ spec:
         #   - hosts:
         #       - *host
       prometheusSpec:
-        image:
-          registry: quay.io
-          repository: prometheus/prometheus
-          tag: v2.54.0-dedupelabels@sha256:6a6d95e3957a84e87967fe815c67f5410f7f8309567dc04a6e2a133aa2cccee2
+        # image:
+        #   registry: quay.io
+        #   repository: prometheus/prometheus
+        #   tag: v2.54.0-dedupelabels@sha256:6a6d95e3957a84e87967fe815c67f5410f7f8309567dc04a6e2a133aa2cccee2
         podMetadata:
           annotations:
             secret.reloader.stakater.com/reload: &secret thanos-objstore-config
