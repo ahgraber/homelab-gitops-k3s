@@ -127,3 +127,4 @@ spec:
     secret:
       create: true
       # ... filled with valuesFrom above
+      port: 5432
