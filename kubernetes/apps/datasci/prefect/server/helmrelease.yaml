@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: prefect-server
-      version: 2024.7.25191224
+      version: 2024.8.15182057
       sourceRef:
         kind: HelmRepository
         name: prefect
@@ -33,19 +33,19 @@ spec:
     - kind: Secret
       name: &db_secret database-prefect
       valuesKey: DATABASE_NAME
-      targetPath: postgresql.auth.database
+      targetPath: secret.database
     - kind: Secret
       name: *db_secret
       valuesKey: LOGIN
-      targetPath: postgresql.auth.username
+      targetPath: secret.username
     - kind: Secret
       name: *db_secret
       valuesKey: PASSWORD
-      targetPath: postgresql.auth.password
+      targetPath: secret.password
     - kind: Secret
       name: *db_secret
       valuesKey: HOST
-      targetPath: postgresql.externalHostname
+      targetPath: secret.host
   values:
     server:
       image:
@@ -124,4 +124,7 @@ spec:
     # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
       enabled: false
-      # auth: {} # filled with valuesFrom above
+    secret:
+      create: true
+      # ... filled with valuesFrom above
+      port: 5432
