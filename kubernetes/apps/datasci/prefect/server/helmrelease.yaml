@@ -33,19 +33,19 @@ spec:
     - kind: Secret
       name: &db_secret database-prefect
       valuesKey: DATABASE_NAME
-      targetPath: postgresql.secret.database
+      targetPath: secret.database
     - kind: Secret
       name: *db_secret
       valuesKey: LOGIN
-      targetPath: postgresql.secret.username
+      targetPath: secret.username
     - kind: Secret
       name: *db_secret
       valuesKey: PASSWORD
-      targetPath: postgresql.secret.password
+      targetPath: secret.password
     - kind: Secret
       name: *db_secret
       valuesKey: HOST
-      targetPath: postgresql.secret.host
+      targetPath: secret.host
   values:
     server:
       image:
@@ -124,6 +124,6 @@ spec:
     # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
       enabled: false
-      secret:
-        create: true
-        # ... filled with valuesFrom above
+    secret:
+      create: true
+      # ... filled with valuesFrom above
