@@ -76,6 +76,13 @@ spec:
         proxy-body-size: 0
         proxy-buffer-size: 16k
         ssl-protocols: TLSv1.3 TLSv1.2
+      ## -- adds headers before sending traffic to backends
+      # proxySetHeaders: proxy-headers
+      ## -- adds headers before sending response traffic to the client
+      addHeaders:
+        X-Content-Type-Options: nosniff
+        X-Frame-Options: SAMEORIGIN
+        X-XSS-Protection: 1; mode=block
       extraArgs:
         default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
         # default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
