@@ -44,7 +44,9 @@ spec:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
+      GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
+      GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
 
     grafana.ini:
@@ -304,6 +306,7 @@ spec:
       annotations:
         nginx.ingress.kubernetes.io/whitelist-source-range: |
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      pathType: Prefix
       hosts:
         - &host grafana.${SECRET_DOMAIN}
       tls:
