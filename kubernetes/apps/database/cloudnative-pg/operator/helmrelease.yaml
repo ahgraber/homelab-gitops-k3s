@@ -42,11 +42,11 @@ spec:
         create: true
 
     resources:
-      limits:
-        memory: 200Mi
       requests:
         cpu: 25m
-        memory: 100Mi
+        memory: 128Mi
+      limits:
+        memory: 256Mi
 
     podAnnotations:
       reloader.stakater.com/search: "true"
