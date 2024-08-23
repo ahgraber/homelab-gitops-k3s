@@ -20,6 +20,7 @@ spec:
     - --lock_on_hashtags
   resources:
     requests:
-      cpu: 100m
+      cpu: 32m
+      memory: 128Mi
     limits:
-      memory: 512Mi
+      memory: 128Mi

@@ -41,10 +41,10 @@ spec:
     existingSecret: *app
 
     resources:
-      limits:
-        memory: 128Mi
       requests:
         cpu: 100m
+        memory: 128Mi
+      limits:
         memory: 128Mi
 
     # Which namespace to watch in kubernetes, empty string means all namespaces
