@@ -45,7 +45,7 @@ spec:
         cpu: 100m
         memory: 128Mi
       limits:
-        memory: 128Mi
+        memory: 512Mi
 
     # Which namespace to watch in kubernetes, empty string means all namespaces
     watchNamespace: default,blog,monitoring
