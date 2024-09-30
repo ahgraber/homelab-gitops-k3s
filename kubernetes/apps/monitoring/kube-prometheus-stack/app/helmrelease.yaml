@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 62.7.0
+      version: 63.0.0
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -218,11 +218,16 @@ spec:
           name: prometheus-additional-scrape-configs
           key: additionalScrapeConfigs
 
-        podMonitorSelectorNilUsesHelmValues: false
-        probeSelectorNilUsesHelmValues: false
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        scrapeConfigSelectorNilUsesHelmValues: false
+        podMonitorSelector:
+          matchLabels: null
+        probeSelector:
+          matchLabels: null
+        ruleSelector:
+          matchLabels: null
+        scrapeConfigSelector:
+          matchLabels: null
+        serviceMonitorSelector:
+          matchLabels: null
 
         enableFeatures:
           - auto-gomemlimit
