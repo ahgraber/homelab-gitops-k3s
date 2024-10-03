@@ -40,7 +40,7 @@ jobs:
               --output results.md \
               --exclude-all-private \
               --exclude-mail \
-              ./**/*.md || true
+              '**/*.md' || true
 
       - name: Print Output
         run: cat results.md
