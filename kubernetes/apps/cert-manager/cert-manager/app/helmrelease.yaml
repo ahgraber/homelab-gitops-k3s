@@ -68,7 +68,6 @@ spec:
       reloader.stakater.com/search: "true"
 
     webhook:
-      enabled: true
       resources:
         requests:
           cpu: 23m
