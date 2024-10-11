@@ -42,7 +42,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dgtlmoon/changedetection.io
-              tag: 0.46.04@sha256:cfe4379f448e71ed7c0030b00562c678f5349d0b209b8d4985df20826af38e93
+              tag: 0.47.03@sha256:1e8135d8fcf27af1991732b72c72dceaf870012c3b355f7b7c3f3a37c2a232aa
             env:
               TZ: ${TIMEZONE}
               # PUID: "${SECURITY_CONTEXT_RUN_AS_USER}"
