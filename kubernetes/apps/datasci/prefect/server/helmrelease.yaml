@@ -50,8 +50,7 @@ spec:
     server:
       image:
         repository: prefecthq/prefect
-        # prefectTag: 2-latest
-        prefectTag: 2-python3.12-kubernetes
+        prefectTag: 3-python3.12-kubernetes
         debug: true
 
       # publicApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
