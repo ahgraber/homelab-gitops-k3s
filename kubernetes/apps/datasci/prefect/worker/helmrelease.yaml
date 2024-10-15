@@ -36,7 +36,7 @@ spec:
 
       image:
         repository: prefecthq/prefect
-        prefectTag: 2-python3.12-kubernetes
+        prefectTag: 3-python3.12-kubernetes
         debug: false
 
       ## general configuration of the agent

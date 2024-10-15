@@ -7,3 +7,7 @@ Scheduling, executing and visualizing your data workflows has never been easier!
 * Design and test your workflow
 * Execute code and keep data secure in your existing infrastructure
 * Gain complete confidence with total oversight of your workflows
+
+## CLI
+
+Install with `pipx install prefect`
