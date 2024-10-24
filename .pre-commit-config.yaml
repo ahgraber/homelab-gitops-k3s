@@ -108,7 +108,7 @@ repos:
           # - "--ignore-path '**/*.y*ml'"
         stages: [commit]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.7.0"
+    rev: "v0.7.1"
     hooks:
       - id: ruff
         name: Lint and Format with Ruff
