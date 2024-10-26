@@ -53,7 +53,7 @@ spec:
           db-upgrade:
             image:
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 2.17.0@sha256:37ea0b12fd5d06adad1e865475b49b68c081d9f2f9c0679b077b15b5ce1432a8
+              tag: 2.17.1@sha256:88a1cddf80f0bbade9a22b07e01882959e651fff608fde27a34e4cbef35822cf
             env:
               MLFLOW_BACKEND_STORE_URI:
                 valueFrom:
@@ -68,7 +68,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/...
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 2.17.0@sha256:37ea0b12fd5d06adad1e865475b49b68c081d9f2f9c0679b077b15b5ce1432a8
+              tag: 2.17.1@sha256:88a1cddf80f0bbade9a22b07e01882959e651fff608fde27a34e4cbef35822cf
             # -- Override the command(s) for the default container
             command: [/bin/bash, -c, mlflow server]
             # -- Override the args for the default container
@@ -134,7 +134,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/...
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 2.17.0@sha256:37ea0b12fd5d06adad1e865475b49b68c081d9f2f9c0679b077b15b5ce1432a8
+              tag: 2.17.1@sha256:88a1cddf80f0bbade9a22b07e01882959e651fff608fde27a34e4cbef35822cf
             command: ["mlflow", "gateway", "start"]
             args:
               - "--config-path=/config/config.yaml"
