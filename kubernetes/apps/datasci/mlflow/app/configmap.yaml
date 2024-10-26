@@ -1,0 +1,68 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: &app mlflow-gateway-config
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  config.yaml: |
+    ---
+    endpoints:
+
+      ### Anthropic
+      - name: claude-3-5-sonnet-20241022
+        endpoint_type: llm/v1/chat
+        model:
+          provider: anthropic
+          name: claude-3-5-sonnet-20241022
+          config:
+            anthropic_api_key: $ANTHROPIC_API_KEY
+
+      ### OpenAI
+      - name: gpt-4o-mini
+        endpoint_type: llm/v1/chat
+        model:
+          provider: openai
+          name: gpt-4o-mini
+          config:
+            openai_api_key: $OPENAI_API_KEY
+        limit:
+          renewal_period: minute
+          calls: 10
+      - name: text-embedding-3-small
+        endpoint_type: llm/v1/embeddings
+        model:
+          provider: openai
+          name: text-embedding-3-small
+          config:
+            openai_api_key: $OPENAI_API_KEY
+
+      ### OpenAILike - LMStudio
+      - name: mistral-nemo-instruct-2407
+        endpoint_type: llm/v1/chat
+        model:
+          provider: openai
+          name: mistral-nemo-instruct-2407
+          config:
+            openai_api_base: http://10.1.0.101:1234/v1
+            openai_api_key: $LOCAL_API_KEY
+        limit:
+          renewal_period: minute
+          calls: 20
+
+      ### TogetherAI
+      - name: Meta-Llama-3_1-70B-Instruct-Turbo
+        endpoint_type: llm/v1/chat
+        model:
+          provider: togetherai
+          name: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+          config:
+            togetherai_api_key: $TOGETHER_API_KEY
+      - name: m2-bert-80M-8k-retrieval
+        endpoint_type: llm/v1/embeddings
+        model:
+          provider: togetherai
+          name: togethercomputer/m2-bert-80M-8k-retrieval
+          config:
+            togetherai_api_key: $TOGETHER_API_KEY
