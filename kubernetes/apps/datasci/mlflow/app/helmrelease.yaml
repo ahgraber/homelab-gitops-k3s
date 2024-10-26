@@ -90,6 +90,8 @@ spec:
               MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
+              # To connect the MLflow AI Gateway with the MLflow Tracking Server
+              MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
             # envFrom:
             #   - secretRef:
             #       name: database-mlflow
@@ -123,12 +125,67 @@ spec:
                 memory: 105M
               # limits:
               #   memory: 105M
+      gateway:
+        annotations:
+          reloader.stakater.com/search: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              # renovate: datasource=docker image=ghcr.io/...
+              repository: ghcr.io/ninerealmlabs/mlflow-server
+              tag: 2.17.0@sha256:37ea0b12fd5d06adad1e865475b49b68c081d9f2f9c0679b077b15b5ce1432a8
+            command: ["mlflow", "gateway", "start"]
+            args:
+              - "--config-path=/config/config.yaml"
+              - "--host=0.0.0.0"
+              - "--port=5001"
+            env:
+              TZ: ${TIMEZONE}
+              MLFLOW_GATEWAY_CONFIG: "/config/config.yaml"
+            envFrom:
+              - secretRef:
+                  name: mlflow-gateway
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 30
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+                  httpGet:
+                    path: /health
+                    port: &gport 5001
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  initialDelaySeconds: 0
+                  timeoutSeconds: 1
+                  periodSeconds: 5
+                  failureThreshold: 30
+                  httpGet:
+                    path: /health
+                    port: *gport
+            resources:
+              requests:
+                cpu: 25m
+                memory: 105M
+              # limits:
     service:
-      app:
-        controller: *app
+      mlflow:
+        controller: mlflow
         ports:
           http:
             port: *port
+      gateway:
+        controller: gateway
+        ports:
+          http:
+            port: *gport
     ingress:
       main:
         className: internal
@@ -141,14 +198,44 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: app
+                  identifier: mlflow
                   port: http
         tls:
           - hosts:
               - *host
+      gateway:
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &gateway mlflow-gateway.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: gateway
+                  port: http
+        tls:
+          - hosts:
+              - *gateway
     persistence:
       data:
         enabled: true
+        type: persistentVolumeClaim
         existingClaim: *app
-        globalMounts:
-          - path: /data # defaults to persistence.key
+        # globalMounts:
+        #   - path: /data # defaults to persistence.key
+        advancedMounts:
+          mlflow:
+            app:
+              - path: /data
+      config:
+        type: configMap
+        name: mlflow-gateway-config
+        advancedMounts: # only attach to gateway container
+          gateway:
+            app:
+              - path: /config/config.yaml
+                readOnly: false
+                subPath: config.yaml
