@@ -57,9 +57,9 @@ spec:
                   secretKeyRef:
                     name: &db_secret database-readeck
                     key: POSTGRES_URL
-            envFrom:
-              - secretRef:
-                  name: *app
+            # envFrom:
+            #   - secretRef:
+            #       name: *app
             probes:
               liveness:
                 enabled: true
@@ -118,7 +118,7 @@ spec:
               - *host
 
     persistence:
-      config: # favicons only; no need to back up
+      data: # favicons only; no need to back up
         existingClaim: *app
         globalMounts:
-          - path: /config
+          - path: /readeck
