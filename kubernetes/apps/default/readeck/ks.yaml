@@ -35,7 +35,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: readeck-db
+    # - name: readeck-db
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/readeck/app
   prune: true
