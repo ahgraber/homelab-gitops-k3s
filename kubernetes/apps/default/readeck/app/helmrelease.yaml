@@ -52,7 +52,7 @@ spec:
               READECK_SERVER_PREFIX: /
               READECK_USE_X_FORWARDED: "true"
               READECK_ALLOWED_HOSTS: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-              READECK_DATABASE_SOURCE: "sqlite3:/var/lib/readeck.sqlite"
+              # READECK_DATABASE_SOURCE: "sqlite3:/readeck/_config/data/readeck.sqlite"
               #   valueFrom:
               #     secretKeyRef:
               #       name: &db_secret database-readeck
