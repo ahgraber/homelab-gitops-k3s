@@ -76,20 +76,20 @@ spec:
                 memory: 128M
               limits:
                 memory: 1000M
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop: ["ALL"]
-                # add: ["CHOWN"]
-    defaultPodOptions:
-      securityContext:
-        # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
-        runAsGroup: 33
-        runAsUser: 33
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: true
+            #   capabilities:
+            #     drop: ["ALL"]
+            #     # add: ["CHOWN"]
+    # defaultPodOptions:
+    #   securityContext:
+    #     # persist permissions issues? https://github.com/sissbruecker/linkding/issues/145
+    #     runAsGroup: 33
+    #     runAsUser: 33
+    #     runAsNonRoot: true
+    #     seccompProfile:
+    #       type: RuntimeDefault
 
     service:
       app:
