@@ -19,7 +19,7 @@ data:
     opengist-home: /mnt/opengist/
 
     # Name of the SQLite database file. Default: opengist.db
-    db-filename: opengist.db
+    db-uri: opengist.db
 
     # Set the journal mode for SQLite. Default: WAL
     # See https://www.sqlite.org/pragma.html#pragma_journal_mode
