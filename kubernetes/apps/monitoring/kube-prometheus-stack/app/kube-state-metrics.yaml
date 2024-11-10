@@ -103,7 +103,7 @@ kube-state-metrics:
                   url: [spec, url]
           - groupVersionKind:
               group: source.toolkit.fluxcd.io
-              version: v1beta2
+              version: v1
               kind: Bucket
             metricNamePrefix: gotk
             metrics:
