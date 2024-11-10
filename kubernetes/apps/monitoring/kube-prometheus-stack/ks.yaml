@@ -33,7 +33,6 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: local-path-provisioner
-    - name: rook-ceph-cluster
     - name: prometheus-operator-crds
   path: ./kubernetes/apps/monitoring/kube-prometheus-stack/app
   prune: true
