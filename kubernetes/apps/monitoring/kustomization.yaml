@@ -19,4 +19,3 @@ resources:
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
   - ./thanos/ks.yaml
-  - ./vector/ks.yaml
