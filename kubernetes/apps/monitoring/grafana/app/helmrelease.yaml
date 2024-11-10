@@ -15,8 +15,6 @@ spec:
         namespace: flux-system
   interval: 15m
   dependsOn:
-    # - name: local-path-provisioner
-    #   namespace: kube-system
     - name: kube-prometheus-stack
       namespace: monitoring
     - name: loki
@@ -54,6 +52,43 @@ spec:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
+      auth.anonymous:
+        enabled: true
+        org_id: 1
+        org_name: Main Org.
+        org_role: Viewer
+      news:
+        news_feed_enabled: false
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        deleteDatasources:
+          - { name: Alertmanager, orgId: 1 }
+          - { name: Loki, orgId: 1 }
+          - { name: Prometheus, orgId: 1 }
+        datasources:
+          - name: Prometheus
+            type: prometheus
+            uid: prometheus
+            access: proxy
+            url: http://kps-prometheus.monitoring.svc.cluster.local:9090
+            jsonData:
+              prometheusType: Prometheus
+            isDefault: true
+          - name: Loki
+            type: loki
+            uid: loki
+            access: proxy
+            url: http://loki-headless.monitoring.svc.cluster.local:3100
+            jsonData:
+              maxLines: 250
+          - name: Alertmanager
+            type: alertmanager
+            uid: alertmanager
+            access: proxy
+            url: http://alertmanager-operated.monitoring.svc.cluster.local:9093
+            jsonData:
+              implementation: prometheus
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
@@ -114,45 +149,6 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/thanos
-    datasources:
-      datasources.yaml:
-        apiVersion: 1
-        deleteDatasources:
-          - { name: Alertmanager, orgId: 1 }
-          - { name: Loki, orgId: 1 }
-          - { name: Prometheus, orgId: 1 }
-        datasources:
-          # - name: Prometheus
-          #   type: prometheus
-          #   uid: prometheus
-          #   access: proxy
-          #   url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
-          #   jsonData:
-          #     prometheusType: Prometheus
-          #   isDefault: true
-          - name: Prometheus
-            type: prometheus
-            uid: prometheus
-            access: proxy
-            url: http://thanos-query-frontend.monitoring.svc.cluster.local:10902
-            jsonData:
-              prometheusType: Thanos
-              timeInterval: 1m
-            isDefault: true
-          - name: Loki
-            type: loki
-            uid: loki
-            access: proxy
-            url: http://loki-gateway.monitoring.svc.cluster.local
-            jsonData:
-              maxLines: 250
-          - name: Alertmanager
-            type: alertmanager
-            uid: alertmanager
-            access: proxy
-            url: http://alertmanager-operated.monitoring.svc.cluster.local:9093
-            jsonData:
-              implementation: prometheus
     dashboards:
       default:
         cert-manager:
@@ -314,7 +310,6 @@ spec:
             - *host
     persistence:
       enabled: false
-      # storageClassName: local-path
     testFramework:
       enabled: false
     topologySpreadConstraints:
