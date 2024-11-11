@@ -251,6 +251,8 @@ spec:
         retention: 2d
         retentionSize: 8GiB
         walCompression: true
+        persistentVolumeClaimRetentionPolicy:
+          whenDeleted: Delete
         storageSpec:
           volumeClaimTemplate:
             spec:
