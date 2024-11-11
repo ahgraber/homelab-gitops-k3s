@@ -50,7 +50,7 @@ spec:
               tag: v0.120
             env:
               - name: ALERTMANAGER_URI
-                value: http://kps-alertmanager.monitoring.svc.cluster.local:9093
+                value: http://alertmanager-operated.monitoring.svc.cluster.local:9093
             resources:
               requests:
                 cpu: 15m
