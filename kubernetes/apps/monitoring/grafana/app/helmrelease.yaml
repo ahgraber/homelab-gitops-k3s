@@ -71,7 +71,7 @@ spec:
             type: prometheus
             uid: prometheus
             access: proxy
-            url: http://kps-prometheus.monitoring.svc.cluster.local:9090
+            url: http://prometheus-operated.monitoring.svc.cluster.local:9090
             jsonData:
               prometheusType: Prometheus
             isDefault: true
