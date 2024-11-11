@@ -245,8 +245,9 @@ spec:
         resources:
           requests:
             cpu: 512m
+            memory: 1Gi
           limits:
-            memory: 1500Mi
+            memory: 2Gi
         retention: 2d
         retentionSize: 8GiB
         walCompression: true
