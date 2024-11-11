@@ -119,8 +119,8 @@ spec:
           - action: drop
             sourceLabels: [__name__]
             regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket
-        selector:
-          k8s-app: kube-apiserver
+        # selector:
+        #   k8s-app: kube-apiserver
     kubeControllerManager: &kubeControllerManager
       enabled: true
       endpoints:
@@ -128,17 +128,14 @@ spec:
         - 10.2.118.24
         - 10.2.118.25
       service:
-        selector:
-          k8s-app: kube-controller-manager
+        # selector:
+        #   k8s-app: kube-controller-manager
     kubeEtcd:
       <<: *kubeControllerManager # etcd runs on control plane nodes
     kubeProxy:
       enabled: false
     kubeScheduler:
-      enabled: true
-      service:
-        selector:
-          k8s-app: kube-scheduler
+      enabled: false
     kubeStateMetrics:
       enabled: true
       # config specified in kube-state-metrics.yaml configmap
