@@ -50,7 +50,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux Kustomization resource."
                 each:
                   type: Info
                   info:
@@ -69,7 +69,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux HelmRelease resource."
                 each:
                   type: Info
                   info:
@@ -89,7 +89,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux GitRepository resource."
                 each:
                   type: Info
                   info:
@@ -103,12 +103,12 @@ kube-state-metrics:
                   url: [spec, url]
           - groupVersionKind:
               group: source.toolkit.fluxcd.io
-              version: v1
+              version: v1beta2
               kind: Bucket
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux Bucket resource."
                 each:
                   type: Info
                   info:
@@ -128,7 +128,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux HelmRepository resource."
                 each:
                   type: Info
                   info:
@@ -147,7 +147,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux HelmChart resource."
                 each:
                   type: Info
                   info:
@@ -167,7 +167,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux OCIRepository resource."
                 each:
                   type: Info
                   info:
@@ -186,7 +186,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux Alert resource."
                 each:
                   type: Info
                   info:
@@ -202,7 +202,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux Provider resource."
                 each:
                   type: Info
                   info:
@@ -218,7 +218,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux Receiver resource."
                 each:
                   type: Info
                   info:
@@ -236,7 +236,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux ImageRepository resource."
                 each:
                   type: Info
                   info:
@@ -254,7 +254,7 @@ kube-state-metrics:
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux ImagePolicy resource."
                 each:
                   type: Info
                   info:
@@ -267,12 +267,12 @@ kube-state-metrics:
                   source_name: [spec, imageRepositoryRef, name]
           - groupVersionKind:
               group: image.toolkit.fluxcd.io
-              version: v1beta1
+              version: v1beta2
               kind: ImageUpdateAutomation
             metricNamePrefix: gotk
             metrics:
               - name: "resource_info"
-                help: "The current state of a GitOps Toolkit resource."
+                help: "The current state of a Flux ImageUpdateAutomation resource."
                 each:
                   type: Info
                   info:
