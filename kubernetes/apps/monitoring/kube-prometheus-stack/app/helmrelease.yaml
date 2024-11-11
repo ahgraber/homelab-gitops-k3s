@@ -127,9 +127,9 @@ spec:
         - 10.2.118.23
         - 10.2.118.24
         - 10.2.118.25
-      service:
-        # selector:
-        #   k8s-app: kube-controller-manager
+      # service:
+      #   selector:
+      #     k8s-app: kube-controller-manager
     kubeEtcd:
       <<: *kubeControllerManager # etcd runs on control plane nodes
     kubeProxy:
