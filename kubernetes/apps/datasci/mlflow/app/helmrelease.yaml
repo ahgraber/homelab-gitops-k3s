@@ -86,7 +86,7 @@ spec:
                   secretKeyRef:
                     name: *db_secret
                     key: POSTGRES_URL
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: /data
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: /mnt/data
               MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
@@ -175,6 +175,11 @@ spec:
                 cpu: 25m
                 memory: 105M
               # limits:
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
     service:
       mlflow:
         controller: mlflow
@@ -229,7 +234,7 @@ spec:
         advancedMounts:
           mlflow:
             app:
-              - path: /data
+              - path: /mnt/data
       config:
         type: configMap
         name: mlflow-gateway-config
