@@ -35,13 +35,13 @@ spec:
         target:
           kind: Pod
   values:
-    defaultPodOptions:
-      securityContext:
-        runAsGroup: 65534
-        runAsUser: 65534
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsGroup: 65534
+    #     runAsUser: 65534
+    #     runAsNonRoot: true
+    #     seccompProfile:
+    #       type: RuntimeDefault
 
     controllers:
       mlflow:
@@ -134,7 +134,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/...
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 2.17.2@sha256:2a9b2df429f963d7049aba5940d815493c080eae49e355fdb8dad71f8ddd55cd
+              tag: 2.17.2@sha256:ef7856fe3e7e6018859bcb44d9511acdd47589ee6df834428ae8e4e8d5ec9ce9
             command: ["mlflow", "gateway", "start"]
             args:
               - "--config-path=/config/config.yaml"
