@@ -95,16 +95,28 @@ data:
             description: A self-hosted rss feed reader
         - OpenGist:
             href: https://opengist.${SECRET_DOMAIN}
-            icon: mdi-xml
+            icon: opengist.png
             description: A self-hosted, open-source alternative to Github Gist
         - PairDrop:
             href: https://pairdrop.${SECRET_DOMAIN}
-            icon: mdi-broadcast
+            icon: pairdrop.png
             description: Local file sharing in your browser, inspired by Apple's AirDrop.
         - PicoShare:
             href: https://share.${SECRET_DOMAIN}
             icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
             description: A minimalist service for sharing images and other files
+        - Readeck:
+            href: https://readeck.${SECRET_DOMAIN}
+            icon: readeck.png
+            description: A read-it-later bookmark manager and archiver
+        - Stirling-PDF:
+            href: https://pdf.${SECRET_DOMAIN}
+            icon: stirling-pdf.png
+            description: A self-hosted PDF editing webapp
+        - Syncthing:
+            href: https://sync.${SECRET_DOMAIN}
+            icon: syncthing.png
+            description: Continuous P2P (peer to peer) file synchronization between devices
 
     - Infrastructure:
         - OPNsense:
@@ -120,11 +132,11 @@ data:
             href: https://opnsense.${SECRET_INT_DOMAIN}:44353
             icon: adguard-home.png
             description: DNS Adblocking
-            widget:
-              type: adguard
-              url: https://opnsense.${SECRET_INT_DOMAIN}:44353
-              username: {{HOMEPAGE_VAR_ADMIN_USER}}
-              password: {{HOMEPAGE_VAR_DEFAULT_PWD}}
+            # widget:
+            #   type: adguard
+            #   url: https://opnsense.${SECRET_INT_DOMAIN}:44353
+            #   username: {{HOMEPAGE_VAR_ADMIN_USER}}
+            #   password: {{HOMEPAGE_VAR_DEFAULT_PWD}}
         - Cloudflared:
             href: https://dash.cloudflare.com/
             icon: cloudflare-zero-trust.png
