@@ -37,17 +37,17 @@ Scrutiny is deployed as 3 distinct components:
 
    <!-- markdownlint-disable MD013-->
    ```sh
-   mkdir -p /usr/local/tools/scrutiny/bin
-   wget "https://github.com/AnalogJ/scrutiny/releases/latest/download/scrutiny-collector-metrics-$(uname | tr "[:upper:]" "[:lower:]")-amd64" -P /usr/local/tools/scrutiny/bin
-   chmod +x /usr/local/tools/scrutiny/bin/scrutiny-collector-metrics-$(uname | tr "[:upper:]" "[:lower:]")-amd64
+   mkdir -p /mnt/ssdpool/Users/admin/scrutiny
+   wget "https://github.com/AnalogJ/scrutiny/releases/latest/download/scrutiny-collector-metrics-$(uname | tr "[:upper:]" "[:lower:]")-amd64" -P /mnt/ssdpool/Users/admin/scrutiny/bin
+   chmod +x /mnt/ssdpool/Users/admin/scrutiny/bin/scrutiny-collector-metrics-$(uname | tr "[:upper:]" "[:lower:]")-amd64
    ```
    <!-- markdownlint-enable -->
 
 3. Create the configuration file by downloading the sample collector.yaml from the GitHub repo.
 
    ```sh
-   mkdir -p /usr/local/tools/scrutiny/config
-   wget https://raw.githubusercontent.com/AnalogJ/scrutiny/master/example.collector.yaml -O /usr/local/tools/scrutiny/config/collector.yaml
+   mkdir -p /mnt/ssdpool/Users/admin/scrutiny/config
+   wget https://raw.githubusercontent.com/AnalogJ/scrutiny/master/example.collector.yaml -O /mnt/ssdpool/Users/admin/scrutiny/config/collector.yaml
    ```
 
 4. Edit the configuration and change the following parameters:
@@ -68,6 +68,6 @@ Scrutiny is deployed as 3 distinct components:
    | Key | Value |
    |-------------|----------|
    | Description | Scrutiny |
-   | Command     | . /etc/profile; /usr/local/tools/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --config /usr/local/tools/scrutiny/config/collector.yaml |
+   | Command     | . /etc/profile; /mnt/ssdpool/Users/admin/scrutiny/bin/scrutiny-collector-metrics-linux-amd64 run --config /mnt/ssdpool/Users/admin/scrutiny/config/collector.yaml |
    | Run As User | root |
    | Schedule | Hourly |
