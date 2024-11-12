@@ -3,24 +3,69 @@
 MLflow is a platform to streamline machine learning development,
 including tracking experiments, packaging code into reproducible runs, and sharing and deploying models.
 
-## Use
+## First Start
 
-MLflow posits 6 scenarios for use, but only the latter 3 apply to a k8s deployment:
+`InitContainer` is not needed on first start; it will cause the deployment to fail because it cannot find tables to update!
 
-1. ~MLflow on localhost~
-2. ~MLflow on localhost with SQLite~
-3. ~MLflow on localhost with Tracking Server~
-4. MLflow with remote Tracking Server, backend and artifact stores
-5. MLflow Tracking Server enabled with proxied artifact storage access
-6. MLflow Tracking Server used exclusively as proxied access host for artifact storage access
+## Tracking Server
+
+[MLflow](https://mlflow.org) provides for diverse [tracking server configurations](https://mlflow.org/docs/latest/tracking.html#common-setups);
+among them are:
+
+- MLflow as remote Tracking Server, providing tracking backend and proxied access to artifact stores
+- MLflow as Artifact Server only, providing proxied access to artifacts but no tracking
+- MLflow Tracking Server only, and requiring direct access to the artifact store.
+  In this configuration, the user must manage their direct connection to the artifact store
 
 MLflow uses two components for storage: backend store and artifact store.
-The backend store persists MLflow entities (runs, parameters, metrics, tags, notes, metadata, etc),
-and these data can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server
-
-The artifact store persists artifacts (files, models, images, in-memory objects, or model summary, etc)
+The **backend store** persists MLflow entities (_runs_, parameters, metrics, tags, notes, metadata, etc), and
+these data can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server
+The **artifact store** persists _artifacts_ (files, models, images, in-memory objects, or model summary, etc)
 to local files or a variety of remote file storage solutions.
 
 > IMPORTANT
 > See notes in MLFlow docs regarding the differences between options 4 and 5
 > with respect to user authorization / access permissions
+
+### Cleaning up deleted experiments
+
+- Run `mlflow gc` in the mlflow container to clean up deleted runs and artifacts (this retains the experiment)
+- Run the following SQL commands to fully delete experiments from the database
+
+```sql
+USE <dbname>;
+
+DELETE FROM experiment_tags WHERE experiment_id=ANY(
+    SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+);
+DELETE FROM latest_metrics WHERE run_uuid=ANY(
+    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
+        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+    )
+);
+DELETE FROM metrics WHERE run_uuid=ANY(
+    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
+        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+    )
+);
+DELETE FROM tags WHERE run_uuid=ANY(
+    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
+        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+    )
+);
+DELETE FROM params WHERE run_uuid=ANY(
+    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
+        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+    )
+);
+DELETE FROM runs WHERE experiment_id=ANY(
+    SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
+);
+DELETE FROM experiments where lifecycle_stage="deleted";
+```
+
+## Gateway Server
+
+This container can also be used to deploy the [MLflow AI Gateway](https://mlflow.org/docs/latest/llms/deployments/index.html)
+Follow the instructions in the MLflow documentation to create a `config.yaml` file
+with the specifications for the AI API services that will be routed through the AI Gateway.
