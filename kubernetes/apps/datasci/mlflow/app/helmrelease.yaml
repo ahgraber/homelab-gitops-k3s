@@ -68,7 +68,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/...
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 2.17.2@sha256:2a9b2df429f963d7049aba5940d815493c080eae49e355fdb8dad71f8ddd55cd
+              tag: 2.17.2@sha256:ef7856fe3e7e6018859bcb44d9511acdd47589ee6df834428ae8e4e8d5ec9ce9
             # -- Override the command(s) for the default container
             command: [/bin/bash, -c, mlflow server]
             # -- Override the args for the default container
@@ -86,7 +86,7 @@ spec:
                   secretKeyRef:
                     name: *db_secret
                     key: POSTGRES_URL
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: /mnt/data
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow
               MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
@@ -175,10 +175,6 @@ spec:
                 cpu: 25m
                 memory: 105M
               # limits:
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
 
     service:
       mlflow:
@@ -230,11 +226,11 @@ spec:
         type: persistentVolumeClaim
         existingClaim: *app
         # globalMounts:
-        #   - path: /data # defaults to persistence.key
+        #   - path: /mlflow # defaults to persistence.key
         advancedMounts:
           mlflow:
             app:
-              - path: /mnt/data
+              - path: /mlflow
       config:
         type: configMap
         name: mlflow-gateway-config
