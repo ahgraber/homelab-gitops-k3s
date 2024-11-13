@@ -96,16 +96,18 @@ spec:
                     key: POSTGRES_URL
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
               MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/mlruns
-              # MLFLOW_AWS_ACCESS_KEY_ID:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: mlflow-bucket
-              #       key: AWS_ACCESS_KEY_ID
-              # MLFLOW_AWS_SECRET_ACCESS_KEY:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: mlflow-bucket
-              #       key: AWS_SECRET_ACCESS_KEY
+              AWS_ACCESS_KEY_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-s3
+                    # name: mlflow-bucket
+                    key: AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-s3
+                    # name: mlflow-bucket
+                    key: AWS_SECRET_ACCESS_KEY
               # # MLFLOW_DEFAULT_AWS_REGION: ""
               # MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
               # MLFLOW_S3_IGNORE_TLS: true
@@ -113,10 +115,10 @@ spec:
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: ${TIMEZONE}
-            envFrom:
-              - secretRef:
-                  name: mlflow-s3
-                  # contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+            # envFrom:
+            #   - secretRef:
+            #       name: mlflow-s3
+            #       # contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
             probes:
               liveness: &probes
                 enabled: true
