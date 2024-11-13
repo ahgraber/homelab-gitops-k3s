@@ -86,7 +86,17 @@ spec:
                     key: POSTGRES_URL
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
-              MLFLOW_DEFAULT_AWS_REGION: ""
+              MLFLOW_AWS_ACCESS_KEY_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-bucket
+                    key: AWS_ACCESS_KEY_ID
+              MLFLOW_AWS_ACCESS_SECRET_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-bucket
+                    key: AWS_ACCESS_SECRET_KEY
+              # MLFLOW_DEFAULT_AWS_REGION: ""
               MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
               MLFLOW_S3_IGNORE_TLS: true
               MLFLOW_SERVE_ARTIFACTS: true
