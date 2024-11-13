@@ -80,8 +80,10 @@ spec:
             command:
               - mlflow
               - server
-              - --artifacts-destination="s3://mlflow"
-              - --gunicorn-opts="--log-level debug"
+              - --artifacts-destination
+              - s3://mlflow
+              - --gunicorn-opts
+              - "--log-level debug"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
