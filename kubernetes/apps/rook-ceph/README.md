@@ -84,9 +84,9 @@ ceph mgr module enable dashboard
 
 ```sh
 ceph
-dashboard set-alertmanager-api-host 'http://alertmanager-operated.monitoring.svc.cluster.local:9093'
+dashboard set-alertmanager-api-host 'http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093'
 dashboard set-alertmanager-api-ssl-verify False
-dashboard set-prometheus-api-host 'http://prometheus-operated.monitoring.svc.cluster.local:9090'
+dashboard set-prometheus-api-host 'http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
