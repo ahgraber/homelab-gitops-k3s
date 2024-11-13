@@ -86,15 +86,19 @@ spec:
                   secretKeyRef:
                     name: *db_secret
                     key: POSTGRES_URL
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow
+              # MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow
+              MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
+              MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/mlflow
+              MLFLOW_S3_IGNORE_TLS: true
               MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
-            # envFrom:
-            #   - secretRef:
-            #       name: database-mlflow
+            envFrom:
+              - secretRef:
+                  name: mlflow-bucket
+                  # contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
             probes:
               liveness: &probes
                 enabled: true
@@ -221,16 +225,16 @@ spec:
           - hosts:
               - *gateway
     persistence:
-      data:
-        enabled: true
-        type: persistentVolumeClaim
-        existingClaim: *app
-        # globalMounts:
-        #   - path: /mlflow # defaults to persistence.key
-        advancedMounts:
-          mlflow:
-            app:
-              - path: /mlflow
+      # data:
+      #   enabled: true
+      #   type: persistentVolumeClaim
+      #   existingClaim: *app
+      #   # globalMounts:
+      #   #   - path: /mlflow # defaults to persistence.key
+      #   advancedMounts:
+      #     mlflow:
+      #       app:
+      #         - path: /mlflow
       config:
         type: configMap
         name: mlflow-gateway-config
