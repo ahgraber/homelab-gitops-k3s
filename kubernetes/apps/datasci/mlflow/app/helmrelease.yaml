@@ -167,11 +167,11 @@ spec:
               MLFLOW_PORT: &gport 5001
               MLFLOW_GATEWAY_CONFIG: "/config/config.yaml"
               TZ: ${TIMEZONE}
-            envFrom:
-              - secretRef:
-                  name: mlflow-gateway
+            # envFrom:
+            #   - secretRef:
+            #       name: mlflow-gateway
             probes:
-              liveness: &probes
+              liveness: &gprobes
                 enabled: true
                 custom: true
                 spec:
@@ -182,7 +182,7 @@ spec:
                   httpGet:
                     path: /health
                     port: *gport
-              readiness: *probes
+              readiness: *gprobes
               startup:
                 enabled: true
                 custom: true
@@ -256,8 +256,16 @@ spec:
       #       app:
       #         - path: /mlflow
       config:
-        type: configMap
-        name: mlflow-gateway-config
+        # type: configMap
+        # name: mlflow-gateway-config
+        # advancedMounts: # only attach to gateway container
+        #   gateway:
+        #     app:
+        #       - path: /config/config.yaml
+        #         readOnly: false
+        #         subPath: config.yaml
+        type: secret
+        name: mlflow-gateway
         advancedMounts: # only attach to gateway container
           gateway:
             app:

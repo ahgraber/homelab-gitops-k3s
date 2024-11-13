@@ -4,8 +4,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./helmrelease.yaml
-  - ./configmap.yaml
+  # - ./configmap.yaml
   # - ./objectbucketclaim.yaml
+  - ./secret-gateway.sops.yaml
   - ./secret-s3.sops.yaml
   - ./secret.sops.yaml
   - ../../../../templates/volsync/init
