@@ -80,10 +80,8 @@ spec:
             command:
               - mlflow
               - server
-              - --artifacts-destination
-              - s3://mlflow
-              - --gunicorn-opts
-              - "--log-level debug"
+              - --artifacts-destination=s3://mlflow
+              - --gunicorn-opts="--log-level debug"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
@@ -92,7 +90,7 @@ spec:
                     name: *db_secret
                     key: POSTGRES_URL
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
               MLFLOW_AWS_ACCESS_KEY_ID:
                 valueFrom:
                   secretKeyRef:
