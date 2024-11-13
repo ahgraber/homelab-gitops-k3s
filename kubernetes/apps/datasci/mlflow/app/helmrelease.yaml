@@ -80,8 +80,12 @@ spec:
             command:
               - mlflow
               - server
-              - --artifacts-destination=s3://mlflow
-              - --gunicorn-opts="--log-level debug"
+              - --artifacts-destination
+              - s3://mlflow
+              - --default-artifact-root
+              - s3://mlflow/mlruns
+              - --gunicorn-opts
+              - "--log-level debug"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
@@ -90,7 +94,7 @@ spec:
                     name: *db_secret
                     key: POSTGRES_URL
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/mlruns
               MLFLOW_AWS_ACCESS_KEY_ID:
                 valueFrom:
                   secretKeyRef:
@@ -104,7 +108,7 @@ spec:
               # MLFLOW_DEFAULT_AWS_REGION: ""
               MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
               MLFLOW_S3_IGNORE_TLS: true
-              MLFLOW_SERVE_ARTIFACTS: true
+              # MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
