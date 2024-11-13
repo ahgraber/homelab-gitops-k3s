@@ -80,8 +80,8 @@ spec:
             command:
               - mlflow
               - server
-              # - --artifacts-destination
-              # - s3://mlflow
+              - --artifacts-destination
+              - s3://mlflow
               # - --default-artifact-root
               # - s3://mlflow/mlruns
               # - --gunicorn-opts
