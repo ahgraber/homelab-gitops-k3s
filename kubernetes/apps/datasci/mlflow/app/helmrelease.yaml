@@ -70,17 +70,25 @@ spec:
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             # -- Override the command(s) for the default container
             command:
-              - mlflow
-              - server
-              # --serve-artifacts --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"]
-            # -- Override the args for the default container
-            args:
-              - "--backend-store-uri=$$MLFLOW_BACKEND_STORE_URI"
-              - "--artifacts-destination=$$MLFLOW_ARTIFACTS_DESTINATION"
-              # - "--default-artifact-root"
-              # - "/data"
-              # - "--host"
-              # - "0.0.0.0"
+              - /bin/bash
+              - -c
+              - >-
+                mlflow server
+                --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI"
+                --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+                --gunicorn-opts="--log-level debug"
+            # command:
+            #   - mlflow
+            #   - server
+            #   # --serve-artifacts --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"]
+            # # -- Override the args for the default container
+            # args:
+            #   - "--backend-store-uri=$$MLFLOW_BACKEND_STORE_URI"
+            #   - "--artifacts-destination=$$MLFLOW_ARTIFACTS_DESTINATION"
+            #   # - "--default-artifact-root"
+            #   # - "/data"
+            #   # - "--host"
+            #   # - "0.0.0.0"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
