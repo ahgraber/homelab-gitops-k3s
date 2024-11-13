@@ -80,12 +80,9 @@ spec:
             command:
               - mlflow
               - server
-              - --backend-store-uri
-              - "$$MLFLOW_BACKEND_STORE_URI"
-              - --artifacts-destination
-              - "$$MLFLOW_ARTIFACTS_DESTINATION"
-              - --gunicorn-opts
-              - "--log-level debug"
+              - --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI"
+              - --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+              - --gunicorn-opts "--log-level debug"
             # -- Override the args for the default container
             # args:
             #   - --backend-store-uri
