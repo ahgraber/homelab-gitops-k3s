@@ -78,20 +78,26 @@ spec:
             #     --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
             #     --gunicorn-opts="--log-level debug"
             command:
-              [mlflow, server]
-              # --serve-artifacts --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"]
-            # -- Override the args for the default container
-            args:
+              - mlflow
+              - server
               - --backend-store-uri
               - "$$MLFLOW_BACKEND_STORE_URI"
               - --artifacts-destination
               - "$$MLFLOW_ARTIFACTS_DESTINATION"
               - --gunicorn-opts
               - "--log-level debug"
-              # - "--default-artifact-root"
-              # - "/data"
-              # - "--host"
-              # - "0.0.0.0"
+            # -- Override the args for the default container
+            # args:
+            #   - --backend-store-uri
+            #   - "$$MLFLOW_BACKEND_STORE_URI"
+            #   - --artifacts-destination
+            #   - "$$MLFLOW_ARTIFACTS_DESTINATION"
+            #   - --gunicorn-opts
+            #   - "--log-level debug"
+            #   # - "--default-artifact-root"
+            #   # - "/data"
+            #   # - "--host"
+            #   # - "0.0.0.0"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
