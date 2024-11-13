@@ -74,8 +74,9 @@ spec:
               - -c
               - >-
                 mlflow server
-                --artifacts-destination "s3://mlflow"
-                --gunicorn-opts="--log-level debug"
+            #     --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI"
+            #     --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+            #     --gunicorn-opts "--log-level=debug"
             # command:
             #   - mlflow
             #   - server
@@ -111,22 +112,21 @@ spec:
                     name: mlflow-s3
                     # name: mlflow-bucket
                     key: AWS_SECRET_ACCESS_KEY
-              MLFLOW_AWS_ACCESS_KEY_ID:
-                valueFrom:
-                  secretKeyRef:
-                    name: mlflow-s3
-                    # name: mlflow-bucket
-                    key: AWS_ACCESS_KEY_ID
-              MLFLOW_AWS_SECRET_ACCESS_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: mlflow-s3
-                    # name: mlflow-bucket
-                    key: AWS_SECRET_ACCESS_KEY
+              # MLFLOW_AWS_ACCESS_KEY_ID:
+              #   valueFrom:
+              #     secretKeyRef:
+              #       name: mlflow-s3
+              #       # name: mlflow-bucket
+              #       key: AWS_ACCESS_KEY_ID
+              # MLFLOW_AWS_SECRET_ACCESS_KEY:
+              #   valueFrom:
+              #     secretKeyRef:
+              #       name: mlflow-s3
+              #       # name: mlflow-bucket
+              #       key: AWS_SECRET_ACCESS_KEY
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/mlruns
-              # # MLFLOW_DEFAULT_AWS_REGION: ""
-              # MLFLOW_SERVE_ARTIFACTS: true
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: mlflow-artifacts:/
+              MLFLOW_SERVE_ARTIFACTS: true
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: ${TIMEZONE}
