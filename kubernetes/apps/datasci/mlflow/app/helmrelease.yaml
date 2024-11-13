@@ -62,7 +62,6 @@ spec:
                     key: POSTGRES_URL
             # double "$$" escape flux substitutions
             command: [/bin/bash, -c, mlflow db upgrade "$$MLFLOW_BACKEND_STORE_URI"]
-
         containers:
           app:
             image:
@@ -70,15 +69,18 @@ spec:
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             # -- Override the command(s) for the default container
-            command: [/bin/bash, -c, mlflow server]
+            command:
+              - mlflow
+              - server
+              # --serve-artifacts --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"]
             # -- Override the args for the default container
-            # args:
-            #   - "--backend-store-uri"
-            #   - "$(POSTGRES_URL)"
-            #   - "--default-artifact-root"
-            #   - "/data"
-            #   - "--host"
-            #   - "0.0.0.0"
+            args:
+              - --backend-store-uri="$$POSTGRES_URL"
+              - --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+              # - "--default-artifact-root"
+              # - "/data"
+              # - "--host"
+              # - "0.0.0.0"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
@@ -86,9 +88,10 @@ spec:
                   secretKeyRef:
                     name: *db_secret
                     key: POSTGRES_URL
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/mlflow
+              # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
+              MLFLOW_DEFAULT_AWS_REGION: ""
+              MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
               MLFLOW_S3_IGNORE_TLS: true
               MLFLOW_SERVE_ARTIFACTS: true
               MLFLOW_HOST: 0.0.0.0
@@ -104,7 +107,7 @@ spec:
                 enabled: true
                 custom: true
                 spec:
-                  initialDelaySeconds: 30
+                  initialDelaySeconds: 15
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
