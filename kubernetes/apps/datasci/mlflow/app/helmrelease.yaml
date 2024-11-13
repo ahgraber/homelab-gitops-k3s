@@ -158,10 +158,10 @@ spec:
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             command: [mlflow, gateway, start]
-            # args:
-            #   - "--config-path=/config/config.yaml"
-            #   - "--host=0.0.0.0"
-            #   - "--port=5001"
+            args:
+              - "--host=0.0.0.0"
+              - "--port=5001"
+              # - "--config-path=/config/config.yaml"
             env:
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &gport 5001
