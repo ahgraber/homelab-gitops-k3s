@@ -75,8 +75,8 @@ spec:
               # --serve-artifacts --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"]
             # -- Override the args for the default container
             args:
-              - --backend-store-uri="$$POSTGRES_URL"
-              - --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+              - "--backend-store-uri=$$POSTGRES_URL"
+              - "--artifacts-destination=$$MLFLOW_ARTIFACTS_DESTINATION"
               # - "--default-artifact-root"
               # - "/data"
               # - "--host"
