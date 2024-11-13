@@ -69,14 +69,19 @@ spec:
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             # -- Override the command(s) for the default container
+            # command:
+            #   - /bin/bash
+            #   - -c
+            #   - >-
+            #     mlflow server
+            #     --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI"
+            #     --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
+            #     --gunicorn-opts="--log-level debug"
             command:
-              - /bin/bash
-              - -c
-              - >-
-                mlflow server
-                --backend-store-uri "$$MLFLOW_BACKEND_STORE_URI"
-                --artifacts-destination "$$MLFLOW_ARTIFACTS_DESTINATION"
-                --gunicorn-opts="--log-level debug"
+              - mlflow
+              - server
+              - --artifacts-destination="s3://mlflow"
+              - --gunicorn-opts="--log-level debug"
             env:
               TZ: ${TIMEZONE}
               MLFLOW_BACKEND_STORE_URI:
@@ -91,11 +96,11 @@ spec:
                   secretKeyRef:
                     name: mlflow-bucket
                     key: AWS_ACCESS_KEY_ID
-              MLFLOW_AWS_ACCESS_SECRET_KEY:
+              MLFLOW_AWS_SECRET_ACCESS_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: mlflow-bucket
-                    key: AWS_ACCESS_SECRET_KEY
+                    key: AWS_SECRET_ACCESS_KEY
               # MLFLOW_DEFAULT_AWS_REGION: ""
               MLFLOW_S3_ENDPOINT_URL: http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
               MLFLOW_S3_IGNORE_TLS: true
