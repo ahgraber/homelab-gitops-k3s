@@ -8,6 +8,6 @@ resources:
   # - ./objectbucketclaim.yaml
   - ./secret-gateway.sops.yaml
   - ./secret-s3.sops.yaml
-  - ./secret.sops.yaml
+  # - ./secret.sops.yaml
   - ../../../../templates/volsync/init
   # - ../../../../templates/volsync/restore
