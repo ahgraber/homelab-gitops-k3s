@@ -69,17 +69,19 @@ spec:
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             # -- Override the command(s) for the default container
-            command: [mlflow, server]
-            #   - /bin/bash
-            #   - -c
-            #   - >-
-            #     mlflow server
-            #     --artifacts-destination=s3://mlflow/artifacts
-            #     --serve-artifacts
-            #     --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI"
-            #     --gunicorn-opts "--log-level=debug"
+            command: # [mlflow, server]
+              - /bin/bash
+              - -c
+              - >-
+                mlflow server
+                --host 0.0.0.0
+                --port 5000
+                --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI"
+                --artifacts-destination="$$MLFLOW_ARTIFACTS_DESTINATION"
+                --serve-artifacts
+                --gunicorn-opts "--log-level=debug"
             # args:
-            #   - --artifacts-destination=s3://mlflow/artifacts
+            #   - --artifacts-destination=s3://mlflow
             #   - --serve-artifacts
             env:
               MLFLOW_HOST: 0.0.0.0
@@ -109,8 +111,7 @@ spec:
                     key: AWS_SECRET_ACCESS_KEY
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/artifacts
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: https://mlflow.${SECRET_DOMAIN}/api/2.0/mlflow-artifacts/artifacts/
-              MLFLOW_SERVE_ARTIFACTS: true
+              # MLFLOW_SERVE_ARTIFACTS: true
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: ${TIMEZONE}
