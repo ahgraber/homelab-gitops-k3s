@@ -107,8 +107,8 @@ spec:
                     key: AWS_SECRET_ACCESS_KEY
               MLFLOW_S3_IGNORE_TLS: true
               # MLFLOW_SERVE_ARTIFACTS: true
-              # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
+              # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow/
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3:https://${SECRET_S3_ENDPOINT}/mlflow # s3://mlflow/
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: ${TIMEZONE}
