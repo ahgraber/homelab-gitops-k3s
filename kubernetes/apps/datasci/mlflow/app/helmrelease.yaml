@@ -69,17 +69,14 @@ spec:
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.17.2@sha256:cac47441828ddeb7ae1a3d39036f8665e417fdf640429067c1a8085e9b8abb39
             # -- Override the command(s) for the default container
-            command: # [mlflow, server]
-              - /bin/bash
-              - -c
-              - >-
-                mlflow server
-                --host=0.0.0.0
-                --port=5000
-                --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI"
-                --default-artifact-root="$$MLFLOW_DEFAULT_ARTIFACT_ROOT"
-                --serve-artifacts
-                --gunicorn-opts "--log-level=debug"
+            command: [mlflow, server]
+            # - /bin/bash
+            # - -c
+            # - mlflow server
+            # #  --serve-artifacts
+            # #   --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI"
+            # #   --default-artifact-root="$$MLFLOW_DEFAULT_ARTIFACT_ROOT"
+            # #   --gunicorn-opts "--log-level=debug"
             # args:
             #   - --artifacts-destination=s3://mlflow
             #   - --serve-artifacts
