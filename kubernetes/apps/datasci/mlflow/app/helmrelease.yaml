@@ -74,10 +74,10 @@ spec:
               - -c
               - >-
                 mlflow server
-                --host 0.0.0.0
-                --port 5000
+                --host=0.0.0.0
+                --port=5000
                 --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI"
-                --artifacts-destination="$$MLFLOW_ARTIFACTS_DESTINATION"
+                --default-artifact-root="$$MLFLOW_DEFAULT_ARTIFACT_ROOT"
                 --serve-artifacts
                 --gunicorn-opts "--log-level=debug"
             # args:
@@ -109,8 +109,8 @@ spec:
                     name: mlflow-s3
                     # name: mlflow-bucket
                     key: AWS_SECRET_ACCESS_KEY
-              MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/artifacts
+              # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
+              MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow
               # MLFLOW_SERVE_ARTIFACTS: true
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
