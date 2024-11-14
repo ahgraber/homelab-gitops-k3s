@@ -167,9 +167,6 @@ spec:
               MLFLOW_PORT: &gport 5001
               MLFLOW_GATEWAY_CONFIG: "/config/config.yaml"
               TZ: ${TIMEZONE}
-            # envFrom:
-            #   - secretRef:
-            #       name: mlflow-gateway
             probes:
               liveness: &gprobes
                 enabled: true
