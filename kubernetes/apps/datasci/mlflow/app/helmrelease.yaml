@@ -89,27 +89,27 @@ spec:
                   secretKeyRef:
                     name: *db_secret
                     key: POSTGRES_URL
-              MLFLOW_S3_ENDPOINT_URL: ${S3_ENDPOINT} # http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: mlflow-s3
-              #     key: MLFLOW_S3_ENDPOINT_URL
+              MLFLOW_S3_ENDPOINT_URL: # http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-s3
+                    key: MLFLOW_S3_ENDPOINT_URL
               # MLFLOW_S3_IGNORE_TLS: true
-              AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: mlflow-s3
-              #     # name: mlflow-bucket
-              #     key: AWS_ACCESS_KEY_ID
-              AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
-              # valueFrom:
-              #   secretKeyRef:
-              #     name: mlflow-s3
-              #     # name: mlflow-bucket
-              #     key: AWS_SECRET_ACCESS_KEY
+              AWS_ACCESS_KEY_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-s3
+                    # name: mlflow-bucket
+                    key: AWS_ACCESS_KEY_ID
+              AWS_SECRET_ACCESS_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: mlflow-s3
+                    # name: mlflow-bucket
+                    key: AWS_SECRET_ACCESS_KEY
               MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3://mlflow/artifacts
-              MLFLOW_DEFAULT_ARTIFACT_ROOT: https://mlflow.${SECRET_DOMAIN}/api/2.0/mlflow-artifacts/artifacts/
+              # MLFLOW_DEFAULT_ARTIFACT_ROOT: https://mlflow.${SECRET_DOMAIN}/api/2.0/mlflow-artifacts/artifacts/
               MLFLOW_SERVE_ARTIFACTS: true
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
