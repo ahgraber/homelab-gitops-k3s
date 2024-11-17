@@ -35,7 +35,7 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/stirling-tools/s-pdf
+              repository: ghcr.io/stirling-tools/stirling-pdf
               tag: 0.33.1@sha256:d30bf0b2826f0e71cf6fe1b806d918db6d90121ac70b3384569e3b49edf51b3f
             env:
               TZ: ${TIMEZONE}
