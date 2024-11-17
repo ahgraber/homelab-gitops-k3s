@@ -29,40 +29,10 @@ to local files or a variety of remote file storage solutions.
 
 ### Cleaning up deleted experiments
 
-- Run `mlflow gc` in the mlflow container to clean up deleted runs and artifacts (this retains the experiment)
-- Run the following SQL commands to fully delete experiments from the database
-
-```sql
-USE <dbname>;
-
-DELETE FROM experiment_tags WHERE experiment_id=ANY(
-    SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-);
-DELETE FROM latest_metrics WHERE run_uuid=ANY(
-    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
-        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-    )
-);
-DELETE FROM metrics WHERE run_uuid=ANY(
-    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
-        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-    )
-);
-DELETE FROM tags WHERE run_uuid=ANY(
-    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
-        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-    )
-);
-DELETE FROM params WHERE run_uuid=ANY(
-    SELECT run_uuid FROM runs WHERE experiment_id=ANY(
-        SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-    )
-);
-DELETE FROM runs WHERE experiment_id=ANY(
-    SELECT experiment_id FROM experiments where lifecycle_stage="deleted"
-);
-DELETE FROM experiments where lifecycle_stage="deleted";
-```
+- Run `mlflow gc` in the mlflow container to clean up deleted runs and artifacts (this retains the experiment).
+  The python script `cleanup-runs.py` may also be used to clean up runs from the database (this may orphan the artifacts).
+  See more: [[BUG] gc fails with postgres backend, violates foreign key constraint · Issue #13254 · mlflow/mlflow](https://github.com/mlflow/mlflow/issues/13254)
+- Run the python script `cleanup-experiments.py` to fully delete experiments from the database
 
 ## Gateway Server
 
