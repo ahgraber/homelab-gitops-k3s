@@ -1,0 +1,116 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app archivebox
+spec:
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    # fullnameOverride: *app
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
+
+    controllers:
+      archivebox:
+        annotations:
+          reloader.stakater.com/search: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/archivebox/archivebox
+              tag: 0.7.2
+            args: ["server"]
+            env:
+              ADMIN_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: *app
+                    key: ADMIN_USERNAME
+              ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: *app
+                    key: ADMIN_PASSWORD
+              PUID: 1000
+              PGID: 1000
+              ONLY_NEW: False # When False, attempts to fix previous pages have missing archive extractor outputs
+              CHROME_USER_DATA_DIR: "/data/chrome-profile"
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 300Mi
+              limits:
+                cpu: 200m
+                memory: 600Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              #capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 8000
+    ingress:
+      app:
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      data:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /data
