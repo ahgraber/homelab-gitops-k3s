@@ -12,6 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-cluster
+    - name: volsync
   path: ./kubernetes/apps/default/homebox/app
   prune: true
   sourceRef:

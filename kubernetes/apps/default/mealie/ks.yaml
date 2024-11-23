@@ -37,6 +37,7 @@ spec:
   dependsOn:
     - name: mealie-db
     - name: rook-ceph-cluster
+    - name: volsync
   path: ./kubernetes/apps/default/mealie/app
   prune: true
   sourceRef:
