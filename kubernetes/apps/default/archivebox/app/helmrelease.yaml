@@ -36,20 +36,25 @@ spec:
   values:
     # fullnameOverride: *app
 
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: "OnRootMismatch"
-        runAsNonRoot: false
-        seccompProfile:
-          type: RuntimeDefault
-
     controllers:
       archivebox:
         annotations:
           reloader.stakater.com/search: "true"
+        initContainers:
+          init:
+            image:
+              repository: ghcr.io/archivebox/archivebox
+              tag: 0.7.2
+            args: ["init"]
+            env:
+              DEBUG: True
+              PUID: &uid 911
+              PGID: &gid 911
+              TZ: ${TIMEZONE}
+            envFrom:
+              - secretRef:
+                  name: *app
+
         containers:
           app:
             image:
@@ -57,21 +62,31 @@ spec:
               tag: 0.7.2
             args: ["server"]
             env:
-              ADMIN_USERNAME:
-                valueFrom:
-                  secretKeyRef:
-                    name: *app
-                    key: ADMIN_USERNAME
-              ADMIN_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *app
-                    key: ADMIN_PASSWORD
-              PUID: 1000
-              PGID: 1000
+              DEBUG: True
               ONLY_NEW: False # When False, attempts to fix previous pages have missing archive extractor outputs
-              CHROME_USER_DATA_DIR: "/data/chrome-profile"
+              SEARCH_BACKEND_ENGINE: sonic
+              PUID: *uid
+              PGID: *gid
               TZ: ${TIMEZONE}
+            envFrom:
+              - secretRef:
+                  name: *app
+            resources:
+              requests:
+                cpu: 10m
+                memory: 300Mi
+              limits:
+                memory: 600Mi
+
+          sonic:
+            image:
+              repository: archivebox/sonic
+              tag: 1.4.9
+            env:
+              TZ: ${TIMEZONE}
+            envFrom:
+              - secretRef:
+                  name: *app
             resources:
               requests:
                 cpu: 10m
@@ -79,10 +94,6 @@ spec:
               limits:
                 cpu: 200m
                 memory: 600Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              #capabilities: { drop: ["ALL"] }
 
     service:
       app:
@@ -90,6 +101,11 @@ spec:
         ports:
           http:
             port: 8000
+      sonic:
+        controller: *app
+        ports:
+          http:
+            port: 1491
     ingress:
       app:
         className: internal
@@ -109,8 +125,17 @@ spec:
               - *host
 
     persistence:
-      data:
+      data: # volume name
         enabled: true
-        existingClaim: *app
-        globalMounts:
-          - path: /data
+        existingClaim: *app # mounted at /<volume name> by default
+        advancedMounts:
+          archivebox: # controller
+            init: # container
+              - path: /data
+                subPath: ./data
+            app: # container
+              - path: /data
+                subPath: ./data
+            sonic: # container
+              - path: /var/lib/sonic/store
+                subPath: ./data/sonic
