@@ -60,7 +60,7 @@ spec:
             image:
               repository: ghcr.io/archivebox/archivebox
               tag: 0.7.3
-            args: ["server"]
+            args: ["server", "--quick-init", "0.0.0.0:8000"]
             env:
               DEBUG: True
               ONLY_NEW: False # When False, attempts to fix previous pages have missing archive extractor outputs
@@ -73,10 +73,23 @@ spec:
                   name: *app
             resources:
               requests:
-                cpu: 10m
-                memory: 300Mi
+                cpu: 250m
+                memory: 512Mi
               limits:
-                memory: 600Mi
+                memory: 1024Mi
+
+          ### Add xvfb+noVNC to watch the ArchiveBox browser as it archives things
+          ### or remote control it to set up a chrome profile w/ login credentials
+          # https://github.com/ArchiveBox/ArchiveBox/wiki/Chromium-Install#setting-up-a-chromium-user-profile
+          # https://github.com/ArchiveBox/ArchiveBox/wiki/Chromium-Install#docker-vnc-setup
+          novnc:
+            image:
+              repository: theasp/novnc
+              tag: latest
+            env:
+              DISPLAY_WIDTH: 1920
+              DISPLAY_HEIGHT: 1080
+              RUN_XTERM: "no"
 
           sonic:
             image:
@@ -101,6 +114,11 @@ spec:
         ports:
           http:
             port: 8000
+      novnc: # this is not exposed; use portforward to access in k8s
+        controller: *app
+        ports:
+          vnc:
+            port: 8080
       sonic:
         controller: *app
         ports:
