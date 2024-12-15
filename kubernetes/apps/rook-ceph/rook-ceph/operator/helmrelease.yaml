@@ -64,7 +64,7 @@ spec:
 
       kubeletDirPath: /var/lib/kubelet
 
-      # Set provisonerTolerations and provisionerNodeAffinity for provisioner pod.
+      # Set provisionerTolerations and provisionerNodeAffinity for provisioner pod.
       # The CSI provisioner would be best to start on the same nodes as other ceph daemons.
       provisionerTolerations:
         - key: node-role.kubernetes.io/control-plane
@@ -81,6 +81,7 @@ spec:
           operator: Exists
       # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
+    enableDiscoveryDaemon: true
     discover:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
