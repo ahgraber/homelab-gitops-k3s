@@ -157,11 +157,11 @@ spec:
             sonic: # container
               - path: /var/lib/sonic/store
                 subPath: ./data/sonic
-      config:
-        type: secret
-        name: archivebox-config
-        advancedMounts:
-          archivebox: # controller
-            app: # container
-              - path: /data/ArchiveBox.conf
-                subPath: ArchiveBox.conf
+      # config:
+      #   type: secret
+      #   name: archivebox-config
+      #   advancedMounts:
+      #     archivebox: # controller
+      #       app: # container
+      #         - path: /data/ArchiveBox.conf
+      #           subPath: ArchiveBox.conf
