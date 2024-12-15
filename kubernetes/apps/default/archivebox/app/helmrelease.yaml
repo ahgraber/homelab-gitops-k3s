@@ -119,7 +119,7 @@ spec:
       novnc: # this is not exposed; use portforward to access in k8s
         controller: *app
         ports:
-          vnc:
+          novnc:
             port: 8080
       sonic:
         controller: *app

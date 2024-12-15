@@ -25,6 +25,7 @@ This may also be useful in reducing captcha checks.
    ```
 
 2. Port Forward into NoVNC container in archivebox pod, and use Chrome to access / log into sites
+   _Hint: use `localhost:<forward-port>/vnc.html`_
 
 ## References
 
