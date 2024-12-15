@@ -159,6 +159,14 @@ spec:
             sonic: # container
               - path: /var/lib/sonic/store
                 subPath: ./data/sonic
+      profile: # volume name
+        enabled: true
+        existingClaim: *app # mounted at /<volume name> by default
+        advancedMounts:
+          archivebox: # controller
+            app: # container
+              - path: /data/personas/Default
+                subPath: ./data/personas/Default
       # config:
       #   type: secret
       #   name: archivebox-config
