@@ -44,7 +44,7 @@ spec:
           init:
             image:
               repository: ghcr.io/archivebox/archivebox
-              tag: 0.7.2
+              tag: 0.7.3
             args: ["init"]
             env:
               DEBUG: True
@@ -59,7 +59,7 @@ spec:
           app:
             image:
               repository: ghcr.io/archivebox/archivebox
-              tag: 0.7.2
+              tag: 0.7.3
             args: ["server"]
             env:
               DEBUG: True
