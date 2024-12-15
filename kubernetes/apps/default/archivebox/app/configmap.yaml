@@ -1,9 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: archivebox
-  namespace: default
-  annotations:
-    reloader.stakater.com/match: "true"
-data: {}
