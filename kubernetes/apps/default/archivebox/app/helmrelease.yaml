@@ -161,7 +161,9 @@ spec:
                 subPath: ./data/sonic
       profile: # volume name
         enabled: true
-        existingClaim: *app # mounted at /<volume name> by default
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 1Gi
         advancedMounts:
           archivebox: # controller
             app: # container
