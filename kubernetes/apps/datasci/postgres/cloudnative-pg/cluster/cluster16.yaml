@@ -4,7 +4,7 @@ kind: Cluster
 metadata:
   name: &app datasci16
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.6-15
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.6-17
   instances: 3
   primaryUpdateStrategy: unsupervised
 
