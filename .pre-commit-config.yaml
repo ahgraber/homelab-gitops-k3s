@@ -63,7 +63,7 @@ repos:
       - id: fix-ligatures
         stages: [commit]
   - repo: https://github.com/zricethezav/gitleaks
-    rev: "v8.21.2"
+    rev: "v8.21.3"
     hooks:
       - id: gitleaks
   - repo: https://github.com/onedr0p/sops-pre-commit
