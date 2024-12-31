@@ -8,6 +8,7 @@ resources:
   # - ./actions-runner-controller.yaml
   - ./backube.yaml                # volsync
   - ./bitnami.yaml
+  - ./bitwarden.yaml
   - ./bjw-s.yaml                  # common app-template
   - ./cilium.yaml
   - ./cloudnativepg.yaml
