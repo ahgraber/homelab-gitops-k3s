@@ -42,7 +42,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sysadminsmedia/homebox
-              tag: 0.16.0@sha256:bf809673798d1c643ef51280dd73ba41745bb416458210cfe1aa02310a8c3d1e
+              tag: 0.17.1@sha256:82bfc025caeefb7c9fa1f638fbbbdc0b01d9539a3ec846b8f37c00e4534db436
             env:
               TZ: ${TIMEZONE}
               HBOX_WEB_MAX_UPLOAD_SIZE: 10 # in MB
