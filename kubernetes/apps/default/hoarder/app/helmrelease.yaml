@@ -41,18 +41,8 @@ spec:
               CRAWLER_STORE_SCREENSHOT: true
               CRAWLER_FULL_PAGE_SCREENSHOT: true
               DATA_DIR: /data
-              DISABLE_SIGNUPS: false
+              DISABLE_SIGNUPS: true
               MEILI_ADDR: http://hoarder-meilisearch.default.svc.cluster.local:7700
-              # MEILI_MASTER_KEY:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: *app
-              #       key: MEILI_MASTER_KEY
-              # NEXTAUTH_SECRET:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: *app
-              #       key: NEXTAUTH_SECRET
               NEXTAUTH_URL: https://hoarder.${SECRET_DOMAIN}
               DISABLE_NEW_RELEASE_CHECK: true
             envFrom:
@@ -110,8 +100,8 @@ spec:
               MEILI_MASTER_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: hoarder-secret
-                    key: meilisearch_master_key
+                    name: *app
+                    key: MEILI_MASTER_KEY
             resources:
               requests:
                 cpu: 10m
