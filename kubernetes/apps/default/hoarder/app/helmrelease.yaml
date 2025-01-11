@@ -41,7 +41,7 @@ spec:
               CRAWLER_STORE_SCREENSHOT: true
               CRAWLER_FULL_PAGE_SCREENSHOT: true
               DATA_DIR: /data
-              DISABLE_SIGNUPS: true
+              DISABLE_SIGNUPS: false
               MEILI_ADDR: http://hoarder-meilisearch.default.svc.cluster.local:7700
               # MEILI_MASTER_KEY:
               #   valueFrom:
