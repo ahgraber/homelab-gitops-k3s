@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app archivebox
+  name: &app hoarder
   namespace: flux-system
 spec:
   targetNamespace: default
@@ -12,7 +12,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-cluster
-  path: ./kubernetes/apps/default/archivebox/app
+    - name: volsync
+  path: ./kubernetes/apps/default/hoarder/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -24,7 +25,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_CAPACITY: 20Gi
       VOLSYNC_STORAGECLASS: ceph-block # default
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
       VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
