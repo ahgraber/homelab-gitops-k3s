@@ -15,12 +15,12 @@
             inherit system;
             overlays = [
               devshell.overlays.default
-              (final: prev: {
-                ansible = prev.python311.pkgs.ansible;
-                ansible-lint = (prev.ansible-lint.override {
-                  python3 = prev.python311;
-                });
-              })
+              # (final: prev: {
+              #   ansible = prev.python311.pkgs.ansible;
+              #   ansible-lint = (prev.ansible-lint.override {
+              #     python3 = prev.python311;
+              #   });
+              # })
             ];
 
             config = {
@@ -33,8 +33,8 @@
           # imports = [];
           # a list of packages to add to the shell environment
           packages = with pkgs; [
-            ansible # Radically simple IT automation
-            ansible-lint # Best practices checker for Ansible
+            # ansible       # Radically simple IT automation
+            # ansible-lint  # Best practices checker for Ansible
             bws # Bitwarden Secrets Manager
             docker # Pack, ship and run any application as a lightweight container
             fluxcd # flux CLI for gitops
