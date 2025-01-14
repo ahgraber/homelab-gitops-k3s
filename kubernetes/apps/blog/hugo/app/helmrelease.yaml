@@ -48,7 +48,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ahgraber/aimlbling-about
-              tag: 2025.01.132321@sha256:2fa06b59a389521a4a40dceca86cfe82fb6126db009737cd9da97a098f653c7b
+              tag: 2025.01.140216@sha256:c9c57f75adf9a71ebc6158849b0775aedd909c61ef6b7aacbcf0135ea10c49fd
               pullPolicy: Always
             probes:
               liveness:
