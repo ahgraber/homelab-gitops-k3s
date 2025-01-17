@@ -17,23 +17,18 @@ data:
       Apps & Services:
         style: row
         columns: 3
-        # icon: home-assistant.png
       Infrastructure:
         style: row
         columns: 3
-        # icon: home-assistant.png
       Monitoring:
         style: row
         columns: 3
-        # icon: home-assistant.png
       Storage:
         style: row
         columns: 3
-        # icon: home-assistant.png
       Databases:
         style: row
         columns: 3
-        # icon: home-assistant.png
 
   widgets.yaml: |
     ---
@@ -69,18 +64,14 @@ data:
             href: https://homeassistant.${SECRET_DOMAIN}
             icon: home-assistant.png
             description: Smart Home Automation
-        - ChangeDetection:
-            href: https://changedetection.${SECRET_DOMAIN}
-            icon: changedetection-io.png
-            description: Monitor which websites had a text change (for free)
+        - Hoarder:
+            href: https://hoarder.${SECRET_DOMAIN}
+            icon: hoarder.png
+            description: Bookmark and link archiving
         - Homebox:
             href: https://homebox.${SECRET_DOMAIN}
             icon: homebox.png
             description: A simple home inventory system
-        - Linkding:
-            href: https://linkding.${SECRET_DOMAIN}
-            icon: linkding.png
-            description: A bookmark manager with read-it-later and archiving functionality
         - Mealie:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
@@ -105,10 +96,6 @@ data:
             href: https://share.${SECRET_DOMAIN}
             icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
             description: A minimalist service for sharing images and other files
-        - Readeck:
-            href: https://readeck.${SECRET_DOMAIN}
-            icon: readeck.png
-            description: A read-it-later bookmark manager and archiver
         - Stirling-PDF:
             href: https://pdf.${SECRET_DOMAIN}
             icon: stirling-pdf.png
