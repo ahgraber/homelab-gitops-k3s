@@ -9,7 +9,7 @@ resources:
   # - ./archivebox/ks.yaml
   # - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
-  # - ./hoarder/ks.yaml
+  - ./hoarder/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./linkding/ks.yaml
