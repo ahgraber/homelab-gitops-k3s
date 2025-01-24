@@ -118,7 +118,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 1Gi
+                memory: 1.5Gi
 
     service:
       app:
