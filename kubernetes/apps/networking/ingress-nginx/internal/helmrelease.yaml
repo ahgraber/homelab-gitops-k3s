@@ -49,6 +49,7 @@ spec:
               values: [internal]
       allowSnippetAnnotations: true
       config:
+        annotations-risk-level: Critical
         # tarampampam/error-pages
         custom-http-errors: >-
           400,401,403,404,405,407,408,412,418,429,500,501,502,503,504,505
