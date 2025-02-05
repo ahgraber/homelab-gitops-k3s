@@ -41,6 +41,25 @@ spec:
       pullPolicy: IfNotPresent
       # -- docker image tag
 
+    config:
+      # -- General configuration (https://docs.crowdsec.net/docs/configuration/crowdsec_configuration/#configuration-example)
+      config.yaml.local: |
+        api:
+          server:
+            auto_registration: # Activate if not using TLS for authentication
+              enabled: true
+              token: "${REGISTRATION_TOKEN}" # /!\ Do not modify this variable (auto-generated and handled by the chart)
+              allowed_ranges: # /!\ Make sure to adapt to the pod IP ranges used by your cluster
+                - "127.0.0.1/32"
+                - "192.168.0.0/16"
+                - "10.0.0.0/8"
+                - "172.16.0.0/12"
+        db_config:
+          flush:
+            agents_autodelete:
+              cert: 60m # This is TLS client authentication
+              login_password: 60m # This includes the auto registration token as well
+            ## Flush both login types if the machine has not logged in for 60 minutes or more
     # # If you want to specify secrets that will be used for all your crowdsec-agents
     # # secrets can be provided be env variables
     # secrets:
@@ -67,27 +86,21 @@ spec:
               key: ENROLL_KEY
         - name: ENROLL_INSTANCE_NAME
           value: k8s_cluster
-        # - name: ENROLL_TAGS
-        #   value: "k8s linux test"
+        - name: ENROLL_TAGS
+          value: "k8s linux"
         - name: BOUNCER_KEY_INGRESS
           valueFrom:
             secretKeyRef:
               name: *app
               key: BOUNCER_KEY_INGRESS
+      # secrets:
+      #   # -- Shared LAPI secret. Will be generated randomly if not specified. Size must be > 64 characters
+      #   csLapiSecret: ""
+      #   # -- Registration Token for Appsec. Will be generated randomly if not specified. Size must be > 48 characters
+      #   registrationToken: ""
 
       dashboard:
-        # -- Enable Metabase Dashboard (by default disabled)
         enabled: false
-        # image:
-        #   repository: metabase/metabase
-        # assetURL: https://crowdsec-statics-assets.s3-eu-west-1.amazonaws.com/metabase_sqlite.zip
-        # ingress:
-        #   enabled: true
-        #   annotations:
-        #     # metabase only supports http
-        #     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        #   ingressClassName: internal
-        #   host: "crowdsec.${SECRET_DOMAIN}"
 
       resources:
         requests:
@@ -127,10 +140,18 @@ spec:
 
     # agent will deploy pod on every node as daemonSet to read wanted pods logs
     agent:
+      lapiURL: ""
+      # -- lapiHost for agent to connect to (default is the lapi service)
+      lapiHost: ""
+      # -- lapiPort for agent to connect to (default is the lapi service port)
+      lapiPort: 8080
       acquisition:
         # -- Specify each pod you want to process it logs (namespace, podName and program)
         - namespace: networking
-          podName: ingress-nginx-controller-*
+          podName: nginx-internal-controller-*
+          program: nginx
+        - namespace: networking
+          podName: nginx-external-controller-*
           program: nginx
         # - namespace: cluster-system
         #   podName: keycloak-postgresql-*
@@ -194,3 +215,7 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
+
+    # -- Enable AppSec (https://docs.crowdsec.net/docs/next/appsec/intro)
+    appsec:
+      enabled: false
