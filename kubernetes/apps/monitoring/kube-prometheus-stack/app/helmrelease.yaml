@@ -37,10 +37,10 @@ spec:
   #         - /spec/containers/resources/limits
   #       target:
   #         kind: Pod
-  valuesFrom:
-    - kind: ConfigMap
-      name: kube-state-metrics-config
-      valuesKey: kube-state-metrics.yaml
+  # valuesFrom:
+  #   - kind: ConfigMap
+  #     name: kube-state-metrics-config
+  #     valuesKey: kube-state-metrics.yaml
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     # fullnameOverride: kps
@@ -183,6 +183,20 @@ spec:
     kubeStateMetrics:
       enabled: true
       # config specified in kube-state-metrics.yaml configmap
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
     nodeExporter:
       enabled: true
     prometheus-node-exporter:
