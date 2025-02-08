@@ -41,3 +41,22 @@ Refs:
 
 - [The Current State of Major PostgreSQL Upgrades with CloudNativePG | EDB](https://www.enterprisedb.com/blog/current-state-major-postgresql-upgrades-cloudnativepg-kubernetes)
 - [k8s-at-home ref](https://github.com/onedr0p/home-ops/issues/4448#issuecomment-1430440044)
+
+## Archiving failed for
+
+1. Enter postgres shell
+
+   ```sh
+   psql
+   ```
+
+2. Reset archiver warning
+
+   ```sql
+   SELECT pg_stat_reset_shared('archiver');
+   ```
+
+Refs:
+
+- [How to "reset" Last Failed WAL? · cloudnative-pg/cloudnative-pg · Discussion #1402](https://github.com/cloudnative-pg/cloudnative-pg/discussions/1402)
+- [How monitoring of WAL archiving improves with PostgreSQL 9.4 and pg_stat_archiver | EDB](https://www.enterprisedb.com/blog/how-monitoring-wal-archiving-improves-postgresql-94-and-pgstatarchiver)
