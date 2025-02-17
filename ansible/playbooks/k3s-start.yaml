@@ -1,0 +1,29 @@
+---
+- name: Start k3s service
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+
+  tasks:
+    - name: Start Kubernetes # noqa: ignore-errors
+      ignore_errors: true
+      block:
+        - name: Start Kubernetes
+          ansible.builtin.include_role:
+            name: xanmanning.k3s
+            public: true
+          vars:
+            k3s_state: started
+
+        - name: Uncordon
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: uncordon
+          delegate_to: "{{ groups['controller'][0] }}"

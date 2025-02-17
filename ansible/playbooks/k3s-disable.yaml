@@ -1,0 +1,29 @@
+---
+- name: Disable k3s service
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  vars_prompt:
+    - name: stop
+      prompt: |-
+        /!\  This will disable k3s from starting on boot!          /!\
+        Type CONFIRM to proceed
+      default: "n"
+      private: false
+
+  pre_tasks:
+    - name: Check for confirmation
+      ansible.builtin.fail:
+        msg: Cluster halt aborted
+      when: stop != 'CONFIRM'
+
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+
+  tasks:
+    - name: Disable k3s service from starting on boot
+      systemd:
+        name: k3s
+        enabled: false

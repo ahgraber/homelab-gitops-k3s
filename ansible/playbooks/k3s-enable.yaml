@@ -1,0 +1,17 @@
+---
+- name: Enable k3s service
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+
+  tasks:
+    - name: Allow k3s service to start on boot
+      systemd:
+        name: k3s
+        enabled: true

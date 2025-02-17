@@ -12,6 +12,7 @@
         Type CONFIRM to proceed
       default: "n"
       private: false
+
   pre_tasks:
     - name: Check for confirmation
       ansible.builtin.fail:
@@ -21,6 +22,7 @@
     - name: Pausing for 5 seconds...
       ansible.builtin.pause:
         seconds: 5
+
   tasks:
     - name: Stop Kubernetes # noqa: ignore-errors
       ignore_errors: true

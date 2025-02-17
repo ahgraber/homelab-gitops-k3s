@@ -59,9 +59,17 @@ tasks:
     desc: Drain a node
     summary: |
       Args:
-        cluster: Cluster to run command against (required)
         node: Node to drain (required)
-    cmd: kubectl drain {{ .node }} --ignore-daemonsets --delete-local-data --force
+    cmd: kubectl drain {{ .node }} --delete-emptydir-data --ignore-daemonsets --force
+    requires:
+      vars: ["node"]
+
+  uncordon:
+    desc: Uncordon a node
+    summary: |
+      Args:
+        node: Node to uncordon (required)
+    cmd: kubectl uncordon {{ .node }}
     requires:
       vars: ["node"]
 
