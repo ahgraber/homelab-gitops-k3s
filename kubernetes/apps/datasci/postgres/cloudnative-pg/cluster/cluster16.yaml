@@ -63,7 +63,7 @@ spec:
   # prettier-ignore
   bootstrap:
     recovery:                           # s3 blob folder to recover from
-      source: &prior_db datasci16-init  # next time it will be datasci16-v1
+      source: &prior_db datasci16-v1  # next time it will be datasci16-v2
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
     - name: *prior_db
@@ -87,7 +87,7 @@ spec:
   backup:
     retentionPolicy: 30d
     barmanObjectStore:                        # name of s3 folder to save to
-      serverName: &current_db datasci16-v1    # next time it will be datasci16-v2
+      serverName: &current_db datasci16-v2    # next time it will be datasci16-v3
       endpointURL: https://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:
