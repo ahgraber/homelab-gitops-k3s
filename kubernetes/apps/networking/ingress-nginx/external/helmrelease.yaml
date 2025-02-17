@@ -70,7 +70,9 @@ spec:
         enable-ocsp: "true"
         enable-real-ip: "true"
         hide-headers: Server,X-Powered-By
-        hsts-max-age: 31449600
+        hsts-include-subdomains: true
+        hsts-max-age: 31536000 # 1 year
+        hsts-preload: true
         keep-alive-requests: 10000
         keep-alive: 120
         log-format-escape-json: "true"
