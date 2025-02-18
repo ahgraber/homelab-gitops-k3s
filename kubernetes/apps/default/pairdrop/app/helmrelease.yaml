@@ -48,7 +48,7 @@ spec:
           app:
             image:
               repository: ghcr.io/schlagmichdoch/pairdrop
-              tag: v1.10.11@sha256:0454601b923534b8670445036be7619799911ec6637108b78509a3d61812f6aa
+              tag: v1.11.0@sha256:bf1c27dd93a4acd25eeabe89e77ca723615dda892b3ce6189e7983df4df949c2
             env:
               TZ: ${TIMEZONE}
             resources:
