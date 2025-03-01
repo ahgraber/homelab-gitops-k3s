@@ -20,23 +20,18 @@ metadata:
 spec:
   interval: 10m
   path: ./
-  prune: true
+  prune: false
   wait: true
   sourceRef:
     kind: OCIRepository
     name: flux-manifests
   patches:
-    # Remove image automation and image reflector controllers
+    # target all controllers
     - patch: |
-        $patch: delete
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: all
+        # strategic merge or JSON patch
       target:
         kind: Deployment
-        name: (image-automation-controller|image-reflector-controller)
-    # Remove the network policies that does not work with k3s
+        labelSelector: "app.kubernetes.io/part-of=flux"
     - patch: |
         $patch: delete
         apiVersion: networking.k8s.io/v1
