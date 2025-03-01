@@ -50,6 +50,18 @@ spec:
                 evictLocalStoragePods: true
                 evictSystemCriticalPods: true
                 nodeFit: true
+            # - name: RemoveFailedPods
+            #   args:
+            #     reasons:
+            #       - ContainerStatusUnknown
+            #       - NodeAffinity
+            #       - NodeShutdown
+            #       - Terminated
+            #       - UnexpectedAdmissionError
+            #     includingInitContainers: true
+            #     excludeOwnerKinds:
+            #       - Job
+            #     minPodLifetimeSeconds: 1800
             - name: RemovePodsViolatingInterPodAntiAffinity
             - name: RemovePodsViolatingNodeAffinity
               args:
@@ -61,15 +73,6 @@ spec:
                 constraints:
                   - DoNotSchedule
                   - ScheduleAnyway
-            # - name: "RemoveFailedPods"
-            #   args:
-            #     includingInitContainers: true
-            #     excludeOwnerKinds: ["Job"]
-            #     minPodLifetimeSeconds: 3600
-            # - name: RemovePodsHavingTooManyRestarts
-            #   args:
-            #     podRestartThreshold: 100
-            #     includingInitContainers: true
           plugins:
             balance:
               enabled:
