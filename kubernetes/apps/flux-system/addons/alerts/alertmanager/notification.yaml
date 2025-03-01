@@ -3,21 +3,20 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
-  name: alert-manager
+  name: alertmanager
   namespace: flux-system
 spec:
   type: alertmanager
-  address: http://alertmanager-operated.monitoring:9093/api/v2/alerts/
+  address: http://alertmanager-operated.monitoring.svc.cluster.local:9093/api/v2/alerts/
 ---
-# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/blob/main/alert-notification-v1beta3.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/alert_v1beta3.json
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
-  name: alert-manager
-  namespace: flux-system
+  name: alertmanager
 spec:
   providerRef:
-    name: alert-manager
+    name: alertmanager
   eventSeverity: error
   eventSources:
     - kind: GitRepository
