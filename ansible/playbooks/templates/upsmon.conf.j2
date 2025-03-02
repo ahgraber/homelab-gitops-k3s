@@ -1,0 +1,18 @@
+# upsmon configuration for shutdown on battery
+#
+# Monitor UPS - adjust UPS name, login, and password if necessary.
+MONITOR PR1500RT2U@10.2.0.1:3493 1 {{ nut_user | default('nutuser') }} {{ nut_password | default('nutpassword') }} SLAVE
+
+HOSTSYNC 15 # sync every 15 seconds
+NOCOMMWARNTIME 120 # Disables repeated communication warnings for 120 seconds after a communication loss
+
+# Notify when UPS goes on battery (and optionally on return)
+NOTIFYFLAG ONLINE   SYSLOG+EXEC
+NOTIFYFLAG ONBATT   SYSLOG+EXEC
+NOTIFYFLAG LOWBATT SYSLOG+EXEC
+
+# Time (in seconds) to wait before forcing a shutdown
+FINALDELAY {{ ups_finaldelay | default(300) }}
+
+# Command to shut down the system
+SHUTDOWNCMD "{{ shutdown_cmd | default('/sbin/shutdown -P +1') }}"

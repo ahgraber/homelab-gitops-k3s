@@ -1,0 +1,37 @@
+---
+- name: Configure NUT client for shutdown on battery
+  hosts: all
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+  tasks:
+    - name: Install nut-client package
+      ansible.builtin.apt:
+        name: nut-client
+        state: present
+        update_cache: yes
+
+    - name: Configure upsmon for battery shutdown using template
+      ansible.builtin.template:
+        src: templates/upsmon.conf.j2
+        dest: /etc/nut/upsmon.conf
+        mode: "0644"
+      notify:
+        - Restart nut service
+
+    - name: Configure nut.conf to set MODE=netclient
+      ansible.builtin.lineinfile:
+        path: /etc/nut/nut.conf
+        regexp: "^MODE="
+        line: "MODE=netclient"
+        create: yes
+
+  handlers:
+    - name: Restart nut service
+      ansible.builtin.systemd:
+        name: nut-client
+        state: restarted
