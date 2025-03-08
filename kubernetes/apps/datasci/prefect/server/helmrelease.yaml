@@ -39,11 +39,9 @@ spec:
     server:
       debug: true
 
-      # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
-      prefectApiUrl: http://localhost:4200/api
-
       uiConfig:
         enabled: true
+        # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
         prefectUiApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
 
       env:
