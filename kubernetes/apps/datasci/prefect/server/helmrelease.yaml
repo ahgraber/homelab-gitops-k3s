@@ -30,12 +30,16 @@ spec:
         target:
           kind: Pod
   values:
-    server:
-      image:
-        repository: prefecthq/prefect
-        prefectTag: 3-python3.12-kubernetes
-        debug: true
+    global:
+      prefect:
+        image:
+          repository: prefecthq/prefect
+          prefectTag: 3-python3.12-kubernetes
 
+    server:
+      debug: true
+
+      # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
       prefectApiUrl: http://localhost:4200/api
 
       uiConfig:
