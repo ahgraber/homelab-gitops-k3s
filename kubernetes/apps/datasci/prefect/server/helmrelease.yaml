@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: prefect-server
-      version: 2025.2.21193831
+      version: 2025.3.7033449
       sourceRef:
         kind: HelmRepository
         name: prefect
@@ -30,16 +30,18 @@ spec:
         target:
           kind: Pod
   values:
-    server:
-      image:
-        repository: prefecthq/prefect
-        prefectTag: 3-python3.12-kubernetes
-        debug: true
+    global:
+      prefect:
+        image:
+          repository: prefecthq/prefect
+          prefectTag: 3-python3.12-kubernetes
 
-      prefectApiUrl: http://localhost:4200/api
+    server:
+      debug: true
 
       uiConfig:
         enabled: true
+        # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
         prefectUiApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
 
       env:

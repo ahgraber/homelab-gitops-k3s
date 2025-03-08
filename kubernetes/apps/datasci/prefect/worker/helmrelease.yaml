@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: prefect-worker
-      version: 2025.2.21193831
+      version: 2025.3.7033449
       sourceRef:
         kind: HelmRepository
         name: prefect
@@ -65,7 +65,7 @@ spec:
 
       ## connection settings
       # -- one of 'cloud' or 'server'
-      apiConfig: server
+      apiConfig: selfHostedServer
       # selfHostedCloudApiConfig:
       #   accountId: ""
       #   workspaceId: ""
@@ -81,7 +81,7 @@ spec:
       #     # -- prefect API secret name
       #     key: key
       #   uiUrl: ""
-      serverApiConfig:
+      selfHostedServerApiConfig:
         # -- prefect API url (PREFECT_API_URL); should be in-cluster URL if the worker is deployed in the same cluster as the API
         apiUrl: http://prefect-server.datasci.svc.cluster.local:4200/api
         # uiUrl: http://localhost:4200
