@@ -64,6 +64,7 @@ spec:
   bootstrap:
     recovery:                           # s3 blob folder to recover from
       source: &prior_db postgres16-v1 # next time it will be postgres16-v2
+      targetTime: "2025-03-07T00:00:00Z"
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
     - name: *prior_db
