@@ -26,12 +26,6 @@ spec:
     kind: OCIRepository
     name: flux-manifests
   patches:
-    # target all controllers
-    - patch: |
-        # strategic merge or JSON patch
-      target:
-        kind: Deployment
-        labelSelector: "app.kubernetes.io/part-of=flux"
     - patch: |
         $patch: delete
         apiVersion: networking.k8s.io/v1
