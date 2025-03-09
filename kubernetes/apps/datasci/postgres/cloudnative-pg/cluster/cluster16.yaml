@@ -65,7 +65,7 @@ spec:
     recovery:                           # s3 blob folder to recover from
       source: &prior_db datasci16-v2  # next time it will be datasci16-v3
       recoveryTarget:
-        targetTime: "2025-03-07T00:00:00Z"
+        targetTime: "2025-03-07 00:00:00+00" # RFC3339 format
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
     - name: *prior_db
