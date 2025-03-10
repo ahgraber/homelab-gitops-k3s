@@ -119,14 +119,6 @@ spec:
     enablePodAntiAffinity: true
     podAntiAffinityType: preferred
     topologyKey: kubernetes.io/hostname
-    # additionalPodAntiAffinity:
-    #   requiredDuringSchedulingIgnoredDuringExecution:
-    #     - labelSelector:
-    #         matchExpressions:
-    #           - key: postgresql
-    #             operator: Exists
-    #             values: []
-    #       topologyKey: "kubernetes.io/hostname"
 
   monitoring:
     enablePodMonitor: true
