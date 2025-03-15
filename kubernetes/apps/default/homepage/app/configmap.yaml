@@ -200,3 +200,4 @@ data:
   kubernetes.yaml: |
     ---
     mode: cluster
+    ingress: false # manually configure services (above)
