@@ -33,6 +33,13 @@ spec:
     fullnameOverride: nginx-internal
     controller:
       replicaCount: 1
+      image:
+        image: ingress-nginx/controller
+        ## for backwards compatibility consider setting the full image url via the repository value below
+        ## use *either* current default registry/image or repository format or installing chart by providing the values.yaml will fail
+        ## repository:
+        tag: "v1.12.1"
+        # digest: sha256:e6b8de175acda6ca913891f0f727bca4527e797d52688cbe9fec9040d6f6b6fa
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}
