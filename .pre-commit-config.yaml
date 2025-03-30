@@ -73,7 +73,7 @@ repos:
         args: [-h, "**/*.sops.yaml"]
         # note: this only checks specific files for secrets!
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: "3.2.0"
+    rev: "3.2.1"
     hooks:
       - id: editorconfig-checker
         name: Check editorconfig compliance
