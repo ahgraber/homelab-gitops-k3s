@@ -16,7 +16,7 @@ jobs:
     if: github.event.pull_request.head.repo.fork == false
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"

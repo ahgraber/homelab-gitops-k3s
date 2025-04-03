@@ -14,7 +14,7 @@ jobs:
       issues: write # required for peter-evans/create-issue-from-file
     steps:
       - name: Generate Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: "${{ secrets.BOT_APP_ID }}"
