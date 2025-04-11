@@ -12,6 +12,7 @@ resources:
   - ./hoarder/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
+  - ./karakeep/ks.yaml
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
   - ./miniflux/ks.yaml
