@@ -17,12 +17,13 @@ spec:
         namespace: flux-system
 
   values:
+    # NOTE: if db migrations fail, disable for the migration, then reenable
     defaultPodOptions:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: 568
+        runAsGroup: 568
         runAsNonRoot: true
-        fsGroup: 1000
+        fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
 
     controllers:
@@ -33,7 +34,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: latest #0.22.0
+              tag: 0.23.2
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
