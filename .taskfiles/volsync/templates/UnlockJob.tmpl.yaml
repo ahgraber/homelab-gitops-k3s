@@ -16,4 +16,4 @@ spec:
           args: ["unlock", "--remove-all"]
           envFrom:
             - secretRef:
-                name: "${app}-restic"
+                name: "${app}-volsync-backup"
