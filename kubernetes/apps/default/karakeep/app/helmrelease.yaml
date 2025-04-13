@@ -25,7 +25,7 @@ spec:
         runAsNonRoot: true
         fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
-
+        seccompProfile: { type: RuntimeDefault }
     controllers:
       karakeep:
         annotations:
@@ -107,7 +107,10 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.12.8
+              tag: v1.13.3
+            args:
+              - /bin/meilisearch
+              - --experimental-dumpless-upgrade
             env:
               MEILI_NO_ANALYTICS: true
               MEILI_MASTER_KEY:
@@ -119,7 +122,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 2Gi
+                memory: 3Gi
 
     service:
       app:
@@ -168,3 +171,16 @@ spec:
             app:
               - path: /meili_data
                 subPath: meilisearch
+      # This is a workaround to create cache dirs (nonroot cannot mkdir)
+      cache:
+        type: emptyDir
+        advancedMounts:
+          karakeep:
+            cache:
+              - path: /.cache
+      appcache:
+        type: emptyDir
+        advancedMounts:
+          karakeep:
+            appcache:
+              - path: /app/apps/web/.next/cache

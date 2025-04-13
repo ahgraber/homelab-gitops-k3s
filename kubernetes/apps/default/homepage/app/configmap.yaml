@@ -64,9 +64,9 @@ data:
             href: https://homeassistant.${SECRET_DOMAIN}
             icon: home-assistant.png
             description: Smart Home Automation
-        - Hoarder:
-            href: https://hoarder.${SECRET_DOMAIN}
-            icon: hoarder.png
+        - Karakeep:
+            href: https://karakeep.${SECRET_DOMAIN}
+            icon: karakeep.png
             description: Bookmark and link archiving
         - Homebox:
             href: https://homebox.${SECRET_DOMAIN}
