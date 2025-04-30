@@ -1,6 +1,18 @@
 {
   description = "A flake to install k8s-homelab environment";
 
+  # Add nixConfig to control what gets used in the flake
+  nixConfig = {
+    # Only allow these paths to be accessed by the builder
+    allowed-uris = [
+      "github:NixOS/nixpkgs"
+      "github:numtide/devshell"
+      "github:numtide/flake-utils"
+    ];
+    # Exclude everything but the flake.nix file from the build inputs
+    flake-registry = "";
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     devshell.url = "github:numtide/devshell";
