@@ -60,7 +60,7 @@
             kustomize # Customization of kubernetes YAML configurations
             minio-client # CLI for minio, An S3-compatible object storage server
             # nerdctl        # A Docker-compatible CLI for containerd
-            # openlens # Kubernetes IDE  # NOTE: currently broken
+            # freelens # Kubernetes IDE
             restic # A backup program that is fast, efficient and secure
             # velero         # Kubernetes disaster recovery
             #--- containers ---
