@@ -84,16 +84,7 @@ spec:
 
     # Ingress configuration
     ingress:
-      enabled: true
-      className: internal
-      host:
-        hostname: &host prefect.${SECRET_DOMAIN}
-        path: /
-        pathType: Prefix
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      tls: true
+      enabled: false
 
     # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
@@ -119,3 +110,20 @@ spec:
       name: *db_secret
       valuesKey: HOST
       targetPath: secret.host
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: prefect
+  namespace: datasci
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "prefect.${SECRET_DOMAIN}"
+  rules:
+    - backendRefs:
+        - name: prefect-server
+          port: 4200
