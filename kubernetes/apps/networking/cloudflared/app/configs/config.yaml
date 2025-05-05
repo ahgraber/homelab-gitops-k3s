@@ -6,8 +6,8 @@ originRequest:
 ingress:
   ### Traffic coming in thru cloudflare should go to `external` nginx
   - hostname: "${SECRET_DOMAIN}"
-    service: https://nginx-external-controller.networking.svc.cluster.local:443
+    service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${SECRET_DOMAIN}"
-    service: https://nginx-external-controller.networking.svc.cluster.local:443
+    service: *svc
   ### "Else" rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
   - service: http_status:404

@@ -24,6 +24,6 @@ certificates from `networking` to `security`.
      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "ns1,ns2,..." # "" (empty) == all namespaces
      # automatically create mirrored resources
      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "ns1, ns2"
+     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "ns1,ns2"
      #
  ```
