@@ -47,7 +47,20 @@ spec:
     endpointRoutes:
       enabled: true
     envoy:
-      enabled: false
+      rollOutPods: true
+      securityContext:
+        capabilities:
+          keepCapNetBindService: true
+      prometheus:
+        serviceMonitor:
+          enabled: true
+    # ingressController:
+    #   enabled: true
+    #   defaultSecretName: "${SECRET_DOMAIN/./-}-production-tls"
+    #   defaultSecretNamespace: kube-system
+    gatewayAPI:
+      enabled: true
+      enableAlpn: true
     hubble:
       enabled: true
       metrics:
@@ -75,13 +88,7 @@ spec:
         enabled: true
         rollOutPods: true
         ingress:
-          enabled: true
-          className: internal
-          hosts:
-            - &host hubble.${SECRET_DOMAIN}
-          tls:
-            - hosts:
-                - *host
+          enabled: false
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: ${CLUSTER_CIDR}
@@ -131,6 +138,8 @@ spec:
           - IPC_LOCK
           - SYS_ADMIN
           - SYS_RESOURCE
+          - PERFMON
+          - BPF
           - DAC_OVERRIDE
           - FOWNER
           - SETGID
@@ -139,3 +148,20 @@ spec:
           - NET_ADMIN
           - SYS_ADMIN
           - SYS_RESOURCE
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: hubble
+  namespace: monitoring
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "hubble.${SECRET_DOMAIN}"
+  rules:
+    - backendRefs:
+        - name: hubble-ui
+          port: 80
