@@ -1,0 +1,22 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: internal-gateway-rfc1918
+spec:
+  description: Only allow RFC1918 private IP ranges for internal gateway
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: gateway
+      gateway.networking.k8s.io/gateway-name: internal
+  ingress:
+    - fromCIDRSet:
+        - cidr: "10.0.0.0/8"
+        - cidr: "172.16.0.0/12"
+        - cidr: "192.168.0.0/16"
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP
