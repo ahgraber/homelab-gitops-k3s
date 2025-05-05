@@ -201,39 +201,28 @@ spec:
         ports:
           http:
             port: *gport
-    ingress:
+    route:
       main:
-        className: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - host: &host mlflow.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: mlflow
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames: ["mlflow.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
       gateway:
-        className: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - host: &gateway mlflow-gateway.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: gateway
-                  port: http
-        tls:
-          - hosts:
-              - *gateway
+        hostnames: ["mlflow-gateway.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *gport
+
     persistence:
       # data:
       #   enabled: true

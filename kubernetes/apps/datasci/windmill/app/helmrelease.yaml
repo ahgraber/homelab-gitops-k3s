@@ -126,20 +126,42 @@ spec:
           # -- target CPU utilization
           targetCPUUtilizationPercentage: 80
 
-    ingress:
-      # -- enable/disable included ingress resource
-      enabled: true
-      className: internal
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      tls:
-        - hosts:
-            - windmill.${SECRET_DOMAIN}
-          # secretName: ${SECRET_DOMAIN/./-}-production-tls
-
     enterprise:
       enabled: false
 
     serviceAccount:
       create: true
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: windmill
+  namespace: datasci
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "windmill.${SECRET_DOMAIN}"
+  rules:
+    # LSP Websocket endpoints
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/ws/"
+      backendRefs:
+        - name: windmill-lsp
+          port: 3001
+    # MCP endpoints
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/api/mcp/"
+      backendRefs:
+        - name: windmill-mcp
+          port: 8000
+    # Main app (catch-all)
+    - backendRefs:
+        - name: windmill-app
+          port: 8000

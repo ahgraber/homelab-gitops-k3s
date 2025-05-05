@@ -41,13 +41,16 @@ spec:
             key: *token
     extraArgs:
       - --ingress-class=external
+      - --gateway-name=external
       - --cloudflare-dns-records-per-page=1000
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
     triggerLoopOnEvent: true
+      - --gateway-name=external
+    triggerLoopOnEvent: true
     policy: sync
-    sources: [crd, ingress]
+    sources: ["crd", "gateway-httproute"]
     txtOwnerId: default
     txtPrefix: k8s.
     domainFilters: ["${SECRET_DOMAIN}"]

@@ -51,14 +51,14 @@ spec:
                 requests:
                   storage: 1Gi
       # config:  # see alertmanager.yaml configmap
-      ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - alertmanager.${SECRET_DOMAIN}
+      route:
+        main:
+          enabled: true
+          hostnames: ["alertmanager.${SECRET_DOMAIN}"]
+          parentRefs:
+            - name: internal
+              namespace: kube-system
+              sectionName: https
 
     grafana:
       enabled: false # manage by itself
@@ -197,15 +197,14 @@ spec:
     prometheus:
       enabled: true
       fullNameOverride: prometheus
-      ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - &host prometheus.${SECRET_DOMAIN}
-        pathType: Prefix
+      route:
+        main:
+          enabled: true
+          hostnames: ["prometheus.${SECRET_DOMAIN}"]
+          parentRefs:
+            - name: internal
+              namespace: kube-system
+              sectionName: https
       prometheusSpec:
         additionalScrapeConfigsSecret:
           enabled: true

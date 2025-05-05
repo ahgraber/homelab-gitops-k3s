@@ -38,19 +38,6 @@ spec:
       # https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
       createPrometheusRules: true
 
-    ingress:
-      dashboard:
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        host:
-          name: &host ceph.${SECRET_DOMAIN}
-          path: /
-        tls:
-          - hosts:
-              - *host
-
     toolbox:
       enabled: true
       nodeSelector:
@@ -316,47 +303,20 @@ spec:
             region: us-east-1
             pg_num: "128" # create the pool with a pre-configured placement group number
             pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
-        # ingress:
-        #   enabled: true
-        #   ingressClassName: internal
-        #   host:
-        #     name: rgw.${SECRET_DOMAIN}
-        #     path: /
-
-  # # TODO: update CephCluster CR with prometheus and alertmanager endpoints?
-  # # prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
-  # # prometheusEndpointSSLVerify: false
-  # postRenderers:
-  #   - kustomize:
-  #       patches:
-  #         - target:
-  #             version: v1
-  #             kind: ConfigMap
-  #             labelSelector: grafana_dashboard in (1)
-  #           patch: |-
-  #             apiVersion: v1
-  #             kind: ConfigMap
-  #             metadata:
-  #               name: not-used
-  #               namespace: not-used
-  #               annotations:
-  #                 grafana_folder: Kubernetes
-  #   - kustomize:
-  #       patchesStrategicMerge:
-  #         - apiVersion: apps/v1
-  #           kind: Deployment
-  #           metadata:
-  #             name: volsync
-  #           spec:
-  #             template:
-  #               spec:
-  #                 containers:
-  #                   - name: manager
-  #                     volumeMounts:
-  #                       - name: tz-config
-  #                         mountPath: /etc/localtime
-  #                 volumes:
-  #                   - name: tz-config
-  #                     hostPath:
-  #                       path: /usr/share/zoneinfo/America/New_York
-  #                       type: File
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rook-ceph
+  namespace: monitoring
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "ceph.${SECRET_DOMAIN}"
+  rules:
+    - backendRefs:
+        - name: rook-ceph-mgr-dashboard
+          port: 7000

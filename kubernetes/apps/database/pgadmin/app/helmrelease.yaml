@@ -49,21 +49,6 @@ spec:
     strategy:
       type: Recreate
 
-    ingress:
-      enabled: true
-      ingressClassName: internal
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      hosts:
-        - host: &host pgadmin.${SECRET_DOMAIN}
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - hosts:
-            - *host
-
     persistentVolume:
       enabled: true
       existingClaim: *app
@@ -79,3 +64,20 @@ spec:
     annotations:
       reloader.stakater.com/search: "true"
       # secret.reloader.stakater.com/reload: "pgadmin"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: pgadmin
+  namespace: database
+spec:
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
+  hostnames:
+    - "pgadmin.${SECRET_DOMAIN}"
+  rules:
+    - backendRefs:
+        - name: pgadmin-pgadmin4
+          port: 80
