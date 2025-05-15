@@ -129,10 +129,11 @@ repos:
       - id: shfmt
         name: Format shell scripts
         args:
-          - -i
+          - "--binary-next-line"
+          - "--case-indent"
+          - "--space-redirects"
+          - "--indent"
           - "2"
-          - -ci
-          - -bn
         stages: [pre-commit]
   ### NOTE: ".typos.toml" may be required to have _already been committed_
   ### in order for typos pre-commit hook to read it.
