@@ -1,6 +1,6 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
     "config:recommended",
     "docker:enableMajor",
     ":automergeBranch",
@@ -21,27 +21,19 @@
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/packageRules.json5",
     "github>ahgraber/homelab-gitops-k3s//.github/renovate/semanticCommits.json5",
   ],
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
-  "ignorePaths": [
-    "**/*.sops.*",
-    "**/.archive/**",
-    "**/resources/**"
-  ],
-  "flux": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
+  dependencyDashboardTitle: "Renovate Dashboard 🤖",
+  suppressNotifications: ["prEditedNotification", "prIgnoreNotification"],
+  ignorePaths: ["**/*.sops.*", "**/.archive/**", "**/resources/**"],
+  flux: {
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"],
   },
   "helm-values": {
-    "fileMatch": [
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
+    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"],
   },
-  "kubernetes": {
-    "fileMatch": [
-      "(^|/)\\.taskfiles/.+\\.ya?ml(\\.j2)?$",
-      "(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$"
-    ]
-  }
+  kubernetes: {
+    managerFilePatterns: [
+      "/(^|/)\\.taskfiles/.+\\.ya?ml(\\.j2)?$/",
+      "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/",
+    ],
+  },
 }
