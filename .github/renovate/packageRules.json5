@@ -1,35 +1,35 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
     {
-      "description": "Use custom versioning for k3s",
-      "matchDatasources": ["github-releases"],
-      "matchPackagePatterns": ["k3s"],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>\\+k3s)(?<build>\\d+)$"
+      description: "Use custom versioning for k3s",
+      matchDatasources: ["github-releases"],
+      matchPackagePatterns: ["k3s"],
+      versioning: "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>\\+k3s)(?<build>\\d+)$"
     },
     {
-      "description": "Loose versioning for non-semver docker images",
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["changedetection"],
-      "versioning": "loose"
+      description: "Loose versioning for non-semver docker images",
+      matchDatasources: ["docker"],
+      matchPackagePatterns: ["changedetection"],
+      versioning: "loose"
     },
     {
-      "description": "Custom versioning for Prefect",
-      "matchDatasources": ["helm"],
-      "matchPackagePatterns": ["prefect"],
-      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$"
+      description: "Custom versioning for Prefect",
+      matchDatasources: ["helm"],
+      matchPackagePatterns: ["prefect"],
+      versioning: "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$"
     },
     {
-      "description": ["Custom versioning for miniflux"],
-      "matchDatasources": ["docker"],
-      "matchPackagePatterns": ["miniflux"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>)$"
+      description: ["Custom versioning for miniflux"],
+      matchDatasources: ["docker"],
+      matchPackagePatterns: ["miniflux"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>)$"
     },
     {
-      "description": ["Custom versioning for hugo blog"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["aimlbling-about"],
-      "versioning": "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$"
+      description: ["Custom versioning for hugo blog"],
+      matchDatasources: ["docker"],
+      matchPackageNames: ["aimlbling-about"],
+      versioning: "regex:^(?<major>\\d+)\\.((?<minor>\\d+))\\.((?<patch>\\d+))$"
     }
   ]
 }

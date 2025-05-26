@@ -1,52 +1,78 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
     {
-      "description": ["Auto-merge container digests updates for trusted containers"],
-      "matchDatasources": ["docker"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["digest"],
-      "matchPackagePatterns": ["ghcr.io/bjw-s", "ghcr.io/onedr0p"]
+      description: ["Auto-merge container digests updates for trusted containers"],
+      matchDatasources: ["docker"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["digest"],
+      matchPackagePatterns: ["ghcr.io/ahgraber", "ghcr.io/ninerealmlabs", "ghcr.io/bjw-s", "ghcr.io/onedr0p", "ghcr.io/home-operations"]
     },
     {
-      "description": ["Auto-merge updates for trusted pre-commit packages"],
-      "matchDatasources": ["github-tags"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["patch"],
-      "matchPackagePatterns": [
-        "adrienverge/yamllint",
-        "charliermarsh/ruff-pre-commit",
-        "crate-ci/typos",
-        "igorshubovych/markdownlint-cli",
+      description: ["Auto-merge updates for trusted pre-commit packages"],
+      matchDatasources: ["github-tags"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["patch"],
+      matchPackagePatterns: [
+        "pre-commit/pre-commit-hooks",
+        "Lucas-C/pre-commit-hooks",
         "sirosen/texthooks",
-        "zricethezav/gitleaks"
+        "zricethezav/gitleaks",
+        "stefmolin/exif-stripper",
+        "charliermarsh/ruff-pre-commit",
+        "igorshubovych/markdownlint-cli",
+        "adrienverge/yamllint",
+        "crate-ci/typos",
       ]
     },
     {
-      "description": ["Auto-merge GitHub Actions for minor and patch"],
-      "matchManagers": ["github-actions"],
-      "matchDatasources": ["github-tags"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch"]
+      description: "Auto-merge GitHub Actions",
+      matchManagers: ["github-actions"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      minimumReleaseAge: "3 days",
+      ignoreTests: true,
     },
     {
-      "description": ["Auto-merge rapid patch releases"],
-      "matchDatasources": ["docker", "helm"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["patch"],
-      "matchPackagePatterns": ["kube-prometheus-stack", "grafana", "prefect", "reloader", "windmill"]
+      description: "Auto-merge trusted GitHub Actions",
+      matchManagers: ["github-actions"],
+      matchPackageNames: [
+        "/^actions\//",
+        "/^renovatebot\//",
+      ],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      minimumReleaseAge: "1 minute",
+      ignoreTests: true,
     },
     {
-      "description": ["Auto-merge container updates for hugo blog"],
-      "matchDatasources": ["docker"],
-      "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
-      "matchPackageNames": ["ghcr.io/ahgraber/aimlbling-about"]
+      description: "Auto-merge GitHub Releases",
+      matchDatasources: ["github-releases"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch"],
+      matchPackageNames: ["/external-dns/", "/gateway-api/", "/prometheus-operator/"],
+      ignoreTests: true,
+    },
+    {
+      description: ["Auto-merge rapid patch releases"],
+      matchDatasources: ["docker", "helm"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["patch"],
+      matchPackagePatterns: ["kube-prometheus-stack", "grafana", "prefect", "reloader", "windmill"]
+    },
+    {
+      description: ["Auto-merge container updates for hugo blog"],
+      matchDatasources: ["docker"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["major", "minor", "patch", "digest"],
+      matchPackageNames: ["ghcr.io/ahgraber/aimlbling-about"]
     }
   ]
 }
