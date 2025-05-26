@@ -5,16 +5,16 @@ preview = false  # do not use unstable rules/fixes
 
 # file selection
 extend-exclude = [
-  '.ci',
-  '.pytest_cache',
-  'docs',
-  '*.egg-info',
-  '.ipynb_checkpoints',
-  '.env',
-  '.envrc',
-  '.git',
-  '.nox',
-  '.tox',
+  ".ci",
+  ".pytest_cache",
+  "docs",
+  "*.egg-info",
+  ".ipynb_checkpoints",
+  ".env",
+  ".envrc",
+  ".git",
+  ".nox",
+  ".tox",
 ]
 extend-include = ["*.ipynb"]
 
@@ -44,28 +44,31 @@ docstring-code-format = true
 exclude = ["*.pyi"]
 
 select = [
-  'A', # flake8 builtins
-  'B', # flake8 bugbear
-  'C4', # flake8 comprehensions
-  'C90', # mccabe
-  'D', # pydocstyle
-  'E', # pycodestyle
-  'F', # pyflakes
-  'I', # isort
-  'N', # pep8-naming
-  # 'PTH', # flake8-use-pathlib
-  'Q',  # flake8-quotes
-  'S',  # bandit
-  'SIM',  # flake8-simplify
-  'TRY',  # tryceratops
-  'W', # pycodestyle
-  # 'T20', # flake8 print
+  "A", # flake8 builtins
+  "B", # flake8 bugbear
+  "C4", # flake8 comprehensions
+  "C90", # mccabe
+  "D", # pydocstyle
+  "E", # pycodestyle
+  "F", # pyflakes
+  "I", # isort
+  "N", # pep8-naming
+  "NPY201", # numpy2.0 migration
+  # "PTH", # flake8-use-pathlib
+  "Q",  # flake8-quotes
+  "S",  # bandit
+  "SIM",  # flake8-simplify
+  "TRY",  # tryceratops
+  "W", # pycodestyle
+  # "T20", # flake8 print
 ]
 
 ignore = [
   "B905",  # zip strict=True; remove once python <3.10 support is dropped.
   "D100",  # do not require module-level docstrings
+  "D101",  # do not require docstrings in public classes
   "D104",  # do not require package docstrings
+  "D105",  # do not require docstrings in magic (dunder) methods
   "D107",  # do not require docstrings in __init__ files
   # "D205",  # don't require linebreak after docstring (ruff vs black conflict)
   "D206",  # redundant w formatter
@@ -99,7 +102,7 @@ ignore = [
 # Avoid trying to fix extension types:
 unfixable = ["B"]
 
-[lint.per-file-ignores]
+[lint.extend-per-file-ignores]
 # # Ignore `E402` (import violations) in all `__init__.py` files,
 # # and in `path/to/file.py`.
 # "__init__.py" = ["E402"]
@@ -107,8 +110,7 @@ unfixable = ["B"]
 ".ci/*" = ["D"]
 "docs/*" = ["D"]
 "notebooks/*" = ["B018", "D", "S"]
-"tests/*" = ["D", "S101", "S301"]
-
+"**/tests/*" = ["D", "S101", "S301"]
 
 # --- ruff plugins --------------------
 [lint.flake8-bugbear]
@@ -127,15 +129,17 @@ force-to-top = ["src", "torch"]
 # forced-separate = ["scipy", "sklearn", "statsmodels", "torch"]
 relative-imports-order = "closest-to-furthest"
 
+# known-first-party = [""]
 known-local-folder = ["src"] # for relative imports
-section-order = ["future", "standard-library", "third-party", "sci", "torch", "plot", "first-party", "local-folder"]
+section-order = ["future", "standard-library", "third-party", "torch", "llm", "web", "sci","plot", "first-party", "local-folder"]
 
 [lint.isort.sections]
 "sci" = ["numpy", "pandas", "scipy", "sklearn", "statsmodels"]
-"torch" = ["datasets", "lightning", "torch", "torch*", "tokenizers", "transformers", "sentence-transformers"]
-"llm" = ["langchain*", "llama-index*", "semantic_kernel"]
-"plot" = ["cmcrameri", "matplotlib", "plotly", "plotnine", "seaborn"]
-
+"nlp" = ["nltk", "spacy", "langcodes"]
+"torch" = ["datasets", "lightning", "torch", "torch*", "tokenizers", "transformers", "sentence_transformers"]
+"llm" = ["aisuite", "langchain*", "llama_index*", "openai", "semantic_kernel", "ragas", "tiktoken"]
+"plot" = ["cmcrameri", "matplotlib", "mizani", "plotly", "plotnine", "seaborn"]
+"web" = ["fastapi", "reflex*", "requests", "responses", "tenacity"]
 [lint.mccabe]
 max-complexity = 18
 

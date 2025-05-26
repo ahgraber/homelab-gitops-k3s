@@ -1,0 +1,23 @@
+
+# .mdformat.toml
+#
+# This file shows the default values and is equivalent to having
+# no configuration file at all. Change the values for non-default
+# behavior.
+#
+wrap = "keep"         # options: {"keep", "no", INTEGER}
+number = true        # options: {false, true}
+end_of_line = "lf"    # options: {"lf", "crlf", "keep"}
+validate = true       # options: {false, true}
+# extensions = [      # options: a list of enabled extensions (default: all installed are enabled)
+#     "footnote",
+#     "gfm",
+#     "gfm_alerts",
+#     "tables",
+#     "toc",
+# ]
+# options: a list of enabled code formatter languages (default: all installed are enabled)
+# codeformatters = []
+
+# # Python 3.13+ only:
+# exclude = []          # options: a list of file path pattern strings

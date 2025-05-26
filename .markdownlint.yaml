@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json
 ---
 default: true
 
@@ -9,24 +10,27 @@ MD007:
 #     ul_multi: 3
 
 # MD013/line-length - Line length
-MD013:
-  # Number of characters
-  line_length: 240
-  # Number of characters for headings
-  heading_line_length: 119
-  # Number of characters for code blocks
-  code_block_line_length: 119
-  # Include code blocks
-  code_blocks: true
-  # Ignore table length violations
-  tables: false
-  # Include headings
-  headings: true
-  # Strict length checking
-  strict: false
-  # Stern length checking
-  stern: false
+MD013: false
+  # # Number of characters
+  # line_length: 239
+  # # Number of characters for headings
+  # heading_line_length: 119
+  # # Number of characters for code blocks
+  # code_block_line_length: 119
+  # # Include code blocks
+  # code_blocks: true
+  # # Include tables
+  # tables: false
+  # # Include headings
+  # headings: true
+  # # Strict length checking
+  # strict: false
+  # # Stern length checking
+  # stern: false
 
 MD024:
   # Allow heading duplication if under different parent headings
   siblings_only: true
+
+MD033: false
+MD034: false # no bare URLs
