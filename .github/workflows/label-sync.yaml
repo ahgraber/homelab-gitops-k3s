@@ -25,7 +25,7 @@ jobs:
           token: "${{ steps.app-token.outputs.token }}"
 
       - name: Sync Labels
-        uses: EndBug/label-sync@52074158190acb45f3077f9099fea818aa43f97a # v2
+        uses: EndBug/label-sync@d682578e83bb20820aef1d1cda75aaa795f217ae # v2.1.0
         with:
           token: "${{ steps.app-token.outputs.token }}"
           config-file: .github/labels.yaml
