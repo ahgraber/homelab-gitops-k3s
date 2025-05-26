@@ -46,7 +46,7 @@ jobs:
           path: default
 
       - name: Diff Resources
-        uses: docker://ghcr.io/allenporter/flux-local:v7.5.0@sha256:2111f5e96e65bfdb7cee71f3384cdfae0de1a6a2ce5b95d0fa6de8142c3314d1
+        uses: docker://ghcr.io/allenporter/flux-local:v7.5.2@sha256:cdb652d9557d1f65c3fa72e5d1ea785508ffbc11223d64ae8f01cd06074fbce7
         with:
           args: >-
             --log-level=DEBUG
