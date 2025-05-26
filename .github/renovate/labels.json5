@@ -18,6 +18,10 @@
       labels: ["type/digest"],
     },
     {
+      matchDatasources: ["copier"],
+      addLabels: ["renovate/copier"],
+    },
+    {
       matchDatasources: ["galaxy", "galaxy-collection"],
       addLabels: ["renovate/ansible"],
     },
@@ -26,16 +30,16 @@
       addLabels: ["renovate/container"],
     },
     {
-      matchDatasources: ["helm"],
-      addLabels: ["renovate/helm"],
-    },
-    {
       matchManagers: ["github-actions"],
       addLabels: ["renovate/github-action"],
     },
     {
       matchDatasources: ["github-releases"],
       addLabels: ["renovate/github-release"],
+    },
+    {
+      matchDatasources: ["helm"],
+      addLabels: ["renovate/helm"],
     },
     {
       matchDatasources: ["pypi"],

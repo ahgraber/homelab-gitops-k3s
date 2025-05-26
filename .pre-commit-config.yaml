@@ -1,9 +1,24 @@
 ---
+# renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
+#
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+
+default_install_hook_types:
+  - pre-commit
+  - post-checkout
+  - post-merge
+  - post-rewrite
+  - pre-push
+  - commit-msg
+
+default_stages:
+  - pre-commit
+
 exclude: |
   (?x)^(
     ^.*(copier-answers\.ya?ml)$
+    ^.*\.rej$
   )$
 
 repos:
@@ -23,15 +38,18 @@ repos:
         entry: Forbid .rej file extensions from `copier update`
         language: fail
         files: \.rej$
+  # renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
       - id: check-added-large-files
         args: [--maxkb=500000]
         stages: [pre-commit]
-      - id: check-case-conflict
-        stages: [pre-commit]
       - id: check-merge-conflict
+        stages: [pre-commit]
+      - id: detect-private-key
+        stages: [pre-commit]
+      - id: check-case-conflict
         stages: [pre-commit]
       - id: check-ast
         stages: [pre-commit]
@@ -39,8 +57,8 @@ repos:
         stages: [pre-commit]
       - id: check-toml
         stages: [pre-commit]
-      # - id: check-yaml
-      #   stages: [pre-commit]
+      - id: check-yaml
+        stages: [pre-commit]
       - id: end-of-file-fixer
         stages: [pre-commit]
       - id: mixed-line-ending
@@ -48,6 +66,7 @@ repos:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
         stages: [pre-commit]
+  # renovate: datasource=github-tags depName=Lucas-C/pre-commit-hooks
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: "v1.5.5"
     hooks:
@@ -55,6 +74,7 @@ repos:
         stages: [pre-commit]
       # - id: remove-tabs
       #   stages: [pre-commit]
+  # renovate: datasource=github-tags depName=sirosen/texthooks
   - repo: https://github.com/sirosen/texthooks
     rev: "0.6.8"
     hooks:
@@ -62,16 +82,27 @@ repos:
         stages: [pre-commit]
       - id: fix-ligatures
         stages: [pre-commit]
+  # renovate: datasource=github-tags depName=zricethezav/gitleaks
   - repo: https://github.com/zricethezav/gitleaks
     rev: "v8.26.0"
     hooks:
       - id: gitleaks
-  - repo: https://github.com/onedr0p/sops-pre-commit
-    rev: v2.1.1
+  # renovate: datasource=github-tags depName=stefmolin/exif-stripper
+  - repo: https://github.com/stefmolin/exif-stripper
+    rev: 0.6.2
     hooks:
-      - id: forbid-secrets
-        args: [-h, "**/*.sops.yaml"]
-        # note: this only checks specific files for secrets!
+      - id: strip-exif
+        name: Strip exif metadata from images
+        stages: [pre-commit]
+  # renovate: datasource=github-tags depName=commitizen-tools/commitizen
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.8.2
+    hooks:
+      - id: commitizen
+        language: python
+        stages:
+          - commit-msg
+  # renovate: datasource=github-tags depName=editorconfig-checker/editorconfig-checker.python
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
     rev: "3.2.1"
     hooks:
@@ -85,6 +116,22 @@ repos:
             ^.*(\.rst)$
           )$
         stages: [pre-commit]
+  # renovate: datasource=github-tags depName=hukkin/mdformat
+  - repo: https://github.com/hukkin/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-frontmatter
+          - mdformat-footnote
+          - mdformat-gfm-alerts
+          - mdformat-tables
+          - mdformat-toc
+          - mdformat-config
+          - mdformat-ruff
+          # - mdformat-shfmt # disable until can pass args (ref: https://github.com/hukkin/mdformat-shfmt/issues/7)
+  # renovate: datasource=github-tags depName=igorshubovych/markdownlint-cli
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: "v0.45.0"
     hooks:
@@ -93,6 +140,43 @@ repos:
         args:
           - --config=.markdownlint.yaml
           - --fix
+        stages: [pre-commit]
+  # renovate: datasource=github-tags depName=charliermarsh/ruff-pre-commit
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.11.10"
+    hooks:
+      - id: ruff
+        name: Lint and Format with Ruff
+        args: [--fix]
+        stages: [pre-commit]
+  # renovate: datasource=github-tags depName=kynan/nbstripout
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
+        name: Strip metadata and outputs from ipynb files
+        stages: [pre-commit]
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: Lint shell scripts
+        language: system
+        entry: shellcheck
+        types: ["shell"]
+        exclude: "^.*zsh$" # ignore '*.zsh" scripts'
+        stages: [pre-commit]
+  # renovate: datasource=github-tags depName=scop/pre-commit-shfmt versioning=loose
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: "v3.8.0-1"
+    hooks:
+      - id: shfmt
+        name: Format shell scripts
+        args:
+          - "--binary-next-line"
+          - "--case-indent"
+          - "--space-redirects"
+          - "--indent"
+          - "2"
         stages: [pre-commit]
   - repo: local
     hooks:
@@ -107,37 +191,18 @@ repos:
           # - "--ignore-path '**/*.md'"
           # - "--ignore-path '**/*.y*ml'"
         stages: [pre-commit]
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.11.11"
+  # renovate: datasource=github-tags depName=adrienverge/yamllint
+  - repo: https://github.com/adrienverge/yamllint
+    rev: "v1.37.1"
     hooks:
-      - id: ruff
-        name: Lint and Format with Ruff
-        args: [--fix]
-        stages: [pre-commit]
-  - repo: local
-    hooks:
-      - id: shellcheck
-        name: Lint shell scripts
-        language: system
-        entry: shellcheck
-        types: ["shell"]
-        exclude: "^.*zsh$" # ignore '*.zsh" scripts'
-        stages: [pre-commit]
-  - repo: https://github.com/scop/pre-commit-shfmt
-    rev: "v3.8.0-1"
-    hooks:
-      - id: shfmt
-        name: Format shell scripts
-        args:
-          - "--binary-next-line"
-          - "--case-indent"
-          - "--space-redirects"
-          - "--indent"
-          - "2"
+      - id: yamllint
+        name: Lint yaml files
+        args: [-c=.yamllint.yaml]
         stages: [pre-commit]
   ### NOTE: ".typos.toml" may be required to have _already been committed_
   ### in order for typos pre-commit hook to read it.
   ### In this case, comment out this block until ".typos.toml" has been committed successfully
+  # renovate: datasource=github-tags depName=crate-ci/typos
   - repo: https://github.com/crate-ci/typos
     rev: "v1.32.0"
     hooks:
@@ -147,14 +212,6 @@ repos:
         exclude: |
           (?x)^(
             ^.*(\.typos\.toml)$ |
-            ^.*(\.sops\.yaml)$ |
             ^.*(\.git.*)$
           )$
-        stages: [pre-commit]
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: "v1.37.1"
-    hooks:
-      - id: yamllint
-        name: Lint yaml files
-        args: [-c=.yamllint.yaml]
         stages: [pre-commit]

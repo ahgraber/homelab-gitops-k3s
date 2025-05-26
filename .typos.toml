@@ -6,10 +6,11 @@ extend-exclude = [
   ".typos.toml",
   "_typos.toml",
   "typos.toml",
-  "*.sops.yaml",
+  "*.csv",
   "*.git*",
+  "*.sops.yaml",
 ]
-ignore-hidden = false   # ignore hidden files/dirs
+ignore-hidden = true   # ignore hidden files/dirs
 ignore-files = true     # respect ignore files
 ignore-dot = true       # respect ignore files
 ignore-vcs = true       # ignore version-control directories
@@ -27,8 +28,10 @@ locale = "en"
 ## Custom uncorrectable sections (e.g. markdown code fences, PGP signatures, etc)
 ## list of regexes
 extend-ignore-re = [
-  # Line ignore with trailing "typos:disable-line"
-  "(?Rm)^.*#\\s*typos:disable-line$"
+  # Line ignore with trailing "typos:disable"
+  "(?Rm)^.*(#|//)\\s*typos:disable$",
+  # Block ignore with "typos:off"||"typos:on"
+  "(?s)(#|//)\\s*typos:off.*?\\n\\s*(#|//)\\s*typos:on",
 ]
 
 ## Pattern-match always-valid identifiers
