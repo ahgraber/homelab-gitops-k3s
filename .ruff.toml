@@ -140,6 +140,7 @@ section-order = ["future", "standard-library", "third-party", "torch", "llm", "w
 "llm" = ["aisuite", "langchain*", "llama_index*", "openai", "semantic_kernel", "ragas", "tiktoken"]
 "plot" = ["cmcrameri", "matplotlib", "mizani", "plotly", "plotnine", "seaborn"]
 "web" = ["fastapi", "reflex*", "requests", "responses", "tenacity"]
+
 [lint.mccabe]
 max-complexity = 18
 

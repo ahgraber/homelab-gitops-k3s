@@ -15,7 +15,7 @@ trim_trailing_whitespace = true
 end_of_line = crlf
 
 [*.{bash,sh}]
-indent_size = 4
+indent_size = 2
 indent_style = space
 
 [*.csv]
