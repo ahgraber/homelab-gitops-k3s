@@ -3,14 +3,14 @@
 name: "Renovate"
 
 on: # yamllint disable-line rule:truthy
-  schedule:
-    - cron: "0 * * * *"
   push:
     branches: ["main"]
     paths:
       - .github/renovate-bot.json5
       - .github/renovate.json5
       - .github/renovate/**.json5
+  schedule:
+    - cron: "0 * * * *"
   workflow_dispatch:
     inputs:
       dryRun:
@@ -31,10 +31,19 @@ on: # yamllint disable-line rule:truthy
         default: latest
         required: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   renovate:
     name: Renovate
     runs-on: ubuntu-latest
+    permissions:
+      packages: read
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
@@ -50,6 +59,14 @@ jobs:
 
       - name: Renovate
         uses: renovatebot/github-action@8058cfe11252651a837a58e2e3370fbc0e72c658 # v42.0.4
+        env:
+          LOG_LEVEL: "${{ inputs.logLevel || 'debug' }}"
+          RENOVATE_AUTODISCOVER: true
+          RENOVATE_AUTODISCOVER_FILTER: "${{ github.repository }}"
+          RENOVATE_DRY_RUN: "${{ inputs.dryRun }}"
+          RENOVATE_INTERNAL_CHECKS_FILTER: strict
+          RENOVATE_PLATFORM: github
+          RENOVATE_PLATFORM_COMMIT: true
         with:
           configurationFile: .github/renovate.json5
           token: "${{ steps.app-token.outputs.token }}"
