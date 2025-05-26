@@ -70,7 +70,7 @@ jobs:
 
       - if: ${{ steps.diff.outputs.diff != '' }}
         name: Add comment
-        uses: mshick/add-pr-comment@ef723874d423153e83e6ee3f6c4060ca80adce01 # v2.5.1
+        uses: mshick/add-pr-comment@a624db19fc8c3598f5850d5d7aea647ee9045fee # v2.6.1
         with:
           repo-token: "${{ steps.app-token.outputs.token }}"
           message-id: "${{ github.event.pull_request.number }}/${{ matrix.paths }}/${{ matrix.resources }}"
