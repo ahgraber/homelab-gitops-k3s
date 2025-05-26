@@ -3,7 +3,7 @@
 .*
 dist/
 *.sops.*
-# *.md
+*.md
 # *.y*ml
 node_modules
 **/node_modules
