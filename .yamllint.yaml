@@ -1,9 +1,9 @@
 ---
 ignore: |
   .vscode/
-  *.sops.*
   .copier-answers.yml
   .copier-answers.yaml
+  *.sops.*
 extends: default
 rules:
   braces:
