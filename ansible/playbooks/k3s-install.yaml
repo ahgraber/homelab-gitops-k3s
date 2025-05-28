@@ -53,14 +53,16 @@
         # - { name: policy, kind: CiliumL2AnnouncementPolicy }
         # - { name: pool, kind: CiliumLoadBalancerIPPool }
         - { name: kube-vip, kind: DaemonSet, namespace: kube-system }
-        # - { name: coredns, kind: HelmChart, namespace: kube-system }
+        - { name: coredns, kind: HelmChart, namespace: kube-system }
 
-    # - name: Coredns
-    #   when: k3s_primary_control_node
-    #   ansible.builtin.include_tasks: tasks/coredns.yaml
+    - name: Coredns
+      when: k3s_primary_control_node
+      ansible.builtin.include_tasks: tasks/coredns.yaml
+
     - name: Cilium
       when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/cilium.yaml
+
     # - name: kube-vip
     #   when: k3s_primary_control_node
     #   ansible.builtin.include_tasks: tasks/kube-vip.yaml
