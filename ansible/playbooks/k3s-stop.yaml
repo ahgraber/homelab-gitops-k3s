@@ -42,10 +42,12 @@
             delete_options:
               delete_emptydir_data: true
               ignore_daemonsets: true
+              force: true
               terminate_grace_period: 60
               wait_timeout: 90
             pod_selectors:
               - app!=rook-ceph-osd # Rook Ceph
+              # - app!=rook-ceph-mon # Rook Ceph
           delegate_to: "{{ groups['controller'][0] }}"
 
         - name: Stop Kubernetes
