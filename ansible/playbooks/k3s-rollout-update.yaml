@@ -39,16 +39,21 @@
             delete_options:
               delete_emptydir_data: true
               ignore_daemonsets: true
+              force: true
               terminate_grace_period: 300
-              wait_timeout: 600
+              wait_timeout: 420
             pod_selectors:
               - app!=rook-ceph-osd # Rook Ceph
+              - app!=rook-ceph-mon # Rook Ceph
           delegate_to: "{{ groups['controller'][0] }}"
 
         - name: Update
           ansible.builtin.apt:
             upgrade: dist
             update_cache: true
+            cache_valid_time: 3600
+            autoclean: true
+            autoremove: true
 
         - name: Check if reboot is required
           ansible.builtin.stat:
@@ -56,11 +61,11 @@
           register: reboot_required
 
         - name: Reboot
-          when: reboot_required.stat.exists
+          # when: reboot_required.stat.exists
           ansible.builtin.reboot:
             msg: Rebooting node
             post_reboot_delay: 60
-            reboot_timeout: 3600
+            reboot_timeout: 300
 
         - name: Uncordon
           kubernetes.core.k8s_drain:
