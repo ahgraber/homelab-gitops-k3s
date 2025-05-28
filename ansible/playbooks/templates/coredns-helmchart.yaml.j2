@@ -14,7 +14,7 @@ spec:
   bootstrap: true
   valuesContent: |-
     fullnameOverride: coredns
-    replicaCount: 1
+    replicaCount: 2
     k8sAppLabelOverride: kube-dns
     service:
       name: kube-dns
@@ -46,6 +46,8 @@ spec:
             configBlock: |-
               pods insecure
               fallthrough in-addr.arpa ip6.arpa
+          - name: autopath
+            parameters: "@kubernetes"
           - name: forward
             parameters: . /etc/resolv.conf
           - name: cache
@@ -68,10 +70,8 @@ spec:
         operator: Exists
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
-        effect: NoSchedule
       - key: node-role.kubernetes.io/master
         operator: Exists
-        effect: NoSchedule
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
