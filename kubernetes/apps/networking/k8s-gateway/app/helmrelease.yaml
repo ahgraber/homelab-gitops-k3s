@@ -7,8 +7,9 @@ metadata:
 spec:
   chart:
     spec:
-      chart: k8s-gateway
-      version: 2.4.0
+      chart: k8s_gateway
+      version: 1.2.1 # k8s-gateway/k8s_gateway helm chart
+      # version: 2.4.0 # ori-edge/k8s-gateway helm chart
       sourceRef:
         kind: HelmRepository
         name: k8s-gateway
@@ -38,3 +39,5 @@ spec:
       port: 53
       annotations:
         io.cilium/lb-ipam-ips: 10.2.118.2
+      externalTrafficPolicy: Local
+    watchedResources: ["GRPCRoute", "Ingress", "Service"]
