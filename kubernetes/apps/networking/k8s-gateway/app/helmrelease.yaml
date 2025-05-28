@@ -7,7 +7,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: k8s_gateway
+      chart: k8s-gateway
       version: 1.2.1 # k8s-gateway/k8s_gateway helm chart
       # version: 2.4.0 # ori-edge/k8s-gateway helm chart
       sourceRef:
