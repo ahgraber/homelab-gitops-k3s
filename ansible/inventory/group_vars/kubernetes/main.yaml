@@ -26,7 +26,7 @@ k3s_use_unsupported_config: true
 k3s_server_manifests_templates: # pushed to /var/lib/rancher/k3s/server/manifests
   - cilium-helmchart.yaml.j2
   # - cilium-l2.yaml.j2
-  - coredns-helmchart.yaml.j2
+  # - coredns-helmchart.yaml.j2
   - kube-vip-daemonset.yaml.j2
   - kube-vip-rbac.yaml.j2
 # k3s_server_pod_manifests_templates: # pushed to /var/lib/rancher/k3s/agent/pod-manifests

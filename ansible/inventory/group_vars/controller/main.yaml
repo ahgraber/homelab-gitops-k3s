@@ -10,7 +10,7 @@ k3s_server:
   cluster-cidr: "{{ cluster_cidr }}"
   service-cidr: "{{ service_cidr }}"
   disable:
-    - coredns # Disable coredns                 - replaced with Coredns Helm Chart
+    # - coredns # Disable coredns                 - replaced with Coredns Helm Chart
     - flannel # Disable flannel                 - replaced with Cilium Helm Chart
     - local-storage # Disable local-path-provisioner  - installed with Flux
     - metrics-server # Disable metrics-server          - installed with Flux
