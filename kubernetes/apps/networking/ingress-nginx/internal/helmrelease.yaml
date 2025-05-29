@@ -35,6 +35,8 @@ spec:
       replicaCount: 1
       image:
         image: ingress-nginx/controller
+      annotations:
+        reloader.stakater.com/auto: "true"
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}
@@ -89,8 +91,8 @@ spec:
         X-Frame-Options: SAMEORIGIN
         X-XSS-Protection: 1; mode=block
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
-        # default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
+        default-ssl-certificate: "cert-manager/${SECRET_DOMAIN/./-}-production-tls"
+        # default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-staging-tls
       metrics:
         enabled: true
         serviceMonitor:
