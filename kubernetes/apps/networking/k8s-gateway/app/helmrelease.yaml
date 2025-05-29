@@ -39,5 +39,5 @@ spec:
       port: 53
       annotations:
         io.cilium/lb-ipam-ips: 10.2.118.2
-      externalTrafficPolicy: Local
+      externalTrafficPolicy: Cluster # don't change!
     watchedResources: ["GRPCRoute", "Ingress", "Service"]
