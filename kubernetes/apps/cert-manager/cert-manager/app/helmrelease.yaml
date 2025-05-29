@@ -65,7 +65,7 @@ spec:
         memory: 128Mi
 
     deploymentAnnotations:
-      reloader.stakater.com/search: "true"
+      reloader.stakater.com/search: "true" # only reload if annotated secret changes
 
     webhook:
       resources:

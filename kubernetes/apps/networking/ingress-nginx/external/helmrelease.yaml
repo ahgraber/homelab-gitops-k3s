@@ -43,6 +43,8 @@ spec:
       replicaCount: 1
       image:
         image: ingress-nginx/controller
+      annotations:
+        reloader.stakater.com/auto: "true"
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: external.${SECRET_DOMAIN}
@@ -104,8 +106,8 @@ spec:
         Permissions-Policy: accelerometer=(),autoplay=(),camera=(),display-capture=(),document-domain=(),encrypted-media=(),fullscreen=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),midi=(),payment=(),picture-in-picture=(),publickey-credentials-get=(),screen-wake-lock=(),sync-xhr=(self),usb=(),web-share=(),xr-spatial-tracking=()
         Referrer-Policy: strict-origin-when-cross-origin
       extraArgs:
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
-        # default-ssl-certificate: networking/${SECRET_DOMAIN/./-}-staging-tls
+        default-ssl-certificate: "cert-manager/${SECRET_DOMAIN/./-}-production-tls"
+        # default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-staging-tls
       metrics:
         enabled: true
         serviceMonitor:
@@ -113,8 +115,6 @@ spec:
           namespace: networking
           namespaceSelector:
             any: true
-      podAnnotations:
-        configmap.reloader.stakater.com/reload: nginx-external-controller, cloudflare-networks, custom-headers
       resources:
         requests:
           cpu: 10m

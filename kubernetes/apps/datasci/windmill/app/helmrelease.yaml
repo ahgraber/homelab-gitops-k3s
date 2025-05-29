@@ -136,7 +136,7 @@ spec:
       tls:
         - hosts:
             - windmill.${SECRET_DOMAIN}
-          secretName: ${SECRET_DOMAIN/./-}-production-tls
+          # secretName: ${SECRET_DOMAIN/./-}-production-tls
 
     enterprise:
       enabled: false
