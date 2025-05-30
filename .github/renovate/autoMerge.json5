@@ -5,7 +5,7 @@
       description: ["Auto-merge container digests updates for trusted containers"],
       matchDatasources: ["docker"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["digest"],
       matchPackagePatterns: ["ghcr.io/ahgraber", "ghcr.io/ninerealmlabs", "ghcr.io/bjw-s", "ghcr.io/onedr0p", "ghcr.io/home-operations"]
     },
@@ -13,7 +13,7 @@
       description: ["Auto-merge updates for trusted pre-commit packages"],
       matchDatasources: ["github-tags"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["patch"],
       matchPackagePatterns: [
         "pre-commit/pre-commit-hooks",
@@ -31,7 +31,7 @@
       description: "Auto-merge GitHub Actions",
       matchManagers: ["github-actions"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch", "digest"],
       minimumReleaseAge: "3 days",
       ignoreTests: true,
@@ -44,7 +44,7 @@
         "/^renovatebot\//",
       ],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch", "digest"],
       minimumReleaseAge: "1 minute",
       ignoreTests: true,
@@ -53,7 +53,7 @@
       description: "Auto-merge GitHub Releases",
       matchDatasources: ["github-releases"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch"],
       matchPackageNames: ["/external-dns/", "/gateway-api/", "/prometheus-operator/"],
       ignoreTests: true,
@@ -62,7 +62,7 @@
       description: ["Auto-merge rapid patch releases"],
       matchDatasources: ["docker", "helm"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["patch"],
       matchPackagePatterns: ["kube-prometheus-stack", "grafana", "prefect", "reloader", "windmill"]
     },
@@ -70,7 +70,7 @@
       description: ["Auto-merge container updates for hugo blog"],
       matchDatasources: ["docker"],
       automerge: true,
-      automergeType: "branch",
+      // automergeType: "branch",
       matchUpdateTypes: ["major", "minor", "patch", "digest"],
       matchPackageNames: ["ghcr.io/ahgraber/aimlbling-about"]
     }
