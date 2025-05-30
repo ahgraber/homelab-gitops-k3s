@@ -10,7 +10,7 @@
     ":disableRateLimiting",
     ":docker",
     ":enablePreCommit",
-    ":rebaseStalePrs",
+    // ":rebaseStalePrs",
     ":renovatePrefix",
     ":semanticCommits",
     ":separateMultipleMajorReleases",
