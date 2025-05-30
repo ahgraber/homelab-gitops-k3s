@@ -63,7 +63,7 @@ spec:
         containers:
           app:
             image:
-              # renovate: datasource=docker image=ghcr.io/...
+              # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.22.0@sha256:135fc8b71053865881d4598c0191e6a8a75e13c645ffd15557f991c367182981
             # -- Override the command(s) for the default container
@@ -151,7 +151,7 @@ spec:
         containers:
           app:
             image:
-              # renovate: datasource=docker image=ghcr.io/...
+              # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-serverninerealmlabs/mlflow-server
               repository: ghcr.io/ninerealmlabs/mlflow-server
               tag: 2.22.0@sha256:135fc8b71053865881d4598c0191e6a8a75e13c645ffd15557f991c367182981
             command: [mlflow, gateway, start]

@@ -39,7 +39,7 @@ spec:
         containers:
           app:
             image:
-              # renovate: datasource=docker image=ghcr.io/...
+              # renovate: datasource=docker image=ghcr.io/docat-org/docat
               repository: ghcr.io/docat-org/docat
               tag: 47cc0cc96bf20886ec0a260e03fa0ee097e46810
             env:
