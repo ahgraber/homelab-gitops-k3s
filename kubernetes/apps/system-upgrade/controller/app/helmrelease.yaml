@@ -28,8 +28,8 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
         runAsNonRoot: true
+        runAsGroup: 65534
         runAsUser: 65534
         seccompProfile:
           type: RuntimeDefault
@@ -77,9 +77,21 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
+        serviceAccount:
+          identifier: system-upgrade-controller
+
+    rbac:
+      bindings:
+        system-upgrade-controller:
+          type: ClusterRoleBinding
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+            - identifier: system-upgrade-controller
     serviceAccount:
-      create: true
-      name: system-upgrade
+      system-upgrade-controller: {}
+
     persistence:
       tmp:
         type: emptyDir
