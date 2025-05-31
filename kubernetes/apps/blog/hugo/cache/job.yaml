@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cloudflare-cache-purge
+spec:
+  template:
+    spec:
+      containers:
+        - name: purge
+          image: curlimages/curl:latest
+          command: ["curl"]
+          args:
+            - -X
+            - POST
+            - "https://api.cloudflare.com/client/v4/zones/CF_ZONE_ID/purge_cache"
+            - -H
+            - "Authorization: Bearer CF_API_TOKEN"
+            - -H
+            - "Content-Type: application/json"
+            - --data
+            - '{"purge_everything":true}'
+          envFrom:
+            - secretRef:
+                name: cloudflare-secrets
+      restartPolicy: Never
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 1800

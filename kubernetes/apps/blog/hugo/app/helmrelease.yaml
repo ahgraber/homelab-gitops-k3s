@@ -91,7 +91,6 @@ spec:
                       value: "default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self' ninerealmlabs.com *.ninerealmlabs.com;img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ninerealmlabs.com *.ninerealmlabs.com https://cdn.plot.ly;style-src 'self' 'unsafe-inline'"
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
