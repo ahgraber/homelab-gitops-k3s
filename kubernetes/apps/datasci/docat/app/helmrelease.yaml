@@ -107,7 +107,6 @@ spec:
               - *host
     persistence:
       data:
-        enabled: true
         existingClaim: *app
         globalMounts:
           - path: /var/docat

@@ -71,24 +71,20 @@ spec:
 
     persistence:
       config:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /opt/scrutiny/config
       udev:
-        enabled: true
         type: hostPath
         hostPath: /run/udev
         globalMounts:
           - path: /run/udev
       nvme0n1:
-        enabled: true
         type: hostPath
         hostPath: /dev/nvme0n1
         globalMounts:
           - path: /dev/nvme0n1
       sda:
-        enabled: true
         type: hostPath
         hostPath: /dev/sda
         globalMounts:

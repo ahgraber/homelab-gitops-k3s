@@ -81,7 +81,6 @@ spec:
 
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
