@@ -5,14 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app redisinsight
 spec:
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   interval: 15m
   install:
     remediation:
@@ -60,19 +56,22 @@ spec:
               allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: true
               capabilities: { drop: [ALL] }
+        serviceAccount:
+          identifier: *app
+
+    serviceAccount:
+      redisinsight: {}
     service:
       app:
         # name should not be 'redisinsight'  since the service creates environment variables
         # that conflicts with redisinsight application's environment variables:
         # `REDISINSIGHT_HOST` and `REDISINSIGHT_PORT`
-        nameOverride: redisinsight-svc
+        suffix: svc
         controller: *app
         ports:
           http:
             port: 5540
 
-    serviceAccount:
-      create: true
     ingress:
       app:
         enabled: true
