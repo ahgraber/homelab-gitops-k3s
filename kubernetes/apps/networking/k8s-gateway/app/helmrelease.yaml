@@ -5,15 +5,9 @@ kind: HelmRelease
 metadata:
   name: k8s-gateway
 spec:
-  chart:
-    spec:
-      chart: k8s-gateway
-      version: 3.2.0 # k8s-gateway/k8s_gateway helm chart
-      # version: 2.4.0 # ori-edge/k8s-gateway helm chart
-      sourceRef:
-        kind: HelmRepository
-        name: k8s-gateway
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: k8s-gateway
   interval: 15m
   install:
     remediation:
@@ -32,6 +26,13 @@ spec:
           kind: Pod
   values:
     fullnameOverride: k8s-gateway
+
+    image:
+      registry: ghcr.io
+      repository: k8s-gateway/k8s_gateway
+      tag: 1.2.0
+      pullPolicy: IfNotPresent
+
     domain: ${SECRET_DOMAIN}
     ttl: 1
     service:
@@ -40,4 +41,8 @@ spec:
       annotations:
         io.cilium/lb-ipam-ips: 10.2.118.2
       externalTrafficPolicy: Cluster # don't change!
+
+    # filters:
+    #   ingressClasses: ["internal"]
+
     watchedResources: ["GRPCRoute", "Ingress", "Service"]
