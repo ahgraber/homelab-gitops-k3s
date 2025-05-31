@@ -5,15 +5,11 @@ kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
 spec:
-  chart:
-    spec:
-      chart: rook-ceph-cluster
-      version: v1.17.2
-      sourceRef:
-        kind: HelmRepository
-        name: rook-ceph
-        namespace: flux-system
-  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: rook-ceph-cluster
+  interval: 1h
+  timeout: 15m
   dependsOn:
     - name: rook-ceph-operator
       namespace: rook-ceph
