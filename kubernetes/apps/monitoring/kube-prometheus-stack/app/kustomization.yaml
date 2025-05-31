@@ -6,6 +6,7 @@ namespace: monitoring
 resources:
   - ./helmrelease.yaml
   - ./secret-additionalScrapeConfigs.sops.yaml
+  - ./source.yaml
 
 configMapGenerator:
   - name: alertmanager-config
