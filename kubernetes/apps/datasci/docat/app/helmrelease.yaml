@@ -101,7 +101,6 @@ spec:
                 port: *port
     persistence:
       data:
-        enabled: true
         existingClaim: *app
         globalMounts:
           - path: /var/docat
