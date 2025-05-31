@@ -6,14 +6,9 @@ metadata:
   name: snapshot-controller
   namespace: kube-system
 spec:
-  chart:
-    spec:
-      chart: snapshot-controller
-      version: 4.0.2
-      sourceRef:
-        kind: HelmRepository
-        name: piraeus
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: snapshot-controller
   interval: 15m
   install:
     crds: CreateReplace
