@@ -6,3 +6,4 @@ namespace: monitoring
 resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
+  - ./source.yaml
