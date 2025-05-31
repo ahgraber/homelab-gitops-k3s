@@ -23,7 +23,7 @@ resources:
   - ./fairwinds.yaml              # goldilocks (and others)
   - ./grafana.yaml
   - ./ingress-nginx.yaml
-  - ./jetstack.yaml               # cert-manager
+  # - ./jetstack.yaml               # cert-manager
   # - ./jupyterhub.yaml
   - ./k8s-gateway.yaml
   - ./kubernetes-dashboard.yaml
