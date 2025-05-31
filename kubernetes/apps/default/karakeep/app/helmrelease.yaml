@@ -5,11 +5,26 @@ kind: HelmRelease
 metadata:
   name: &app karakeep
 spec:
-  interval: 30m
   chartRef:
     kind: OCIRepository
     name: app-template
-
+    namespace: flux-system
+  interval: 15m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     # NOTE: if db migrations fail, disable for the migration, then reenable
     defaultPodOptions:
