@@ -5,18 +5,14 @@ kind: HelmRelease
 metadata:
   name: &app umami
 spec:
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: flux-system
   interval: 15m
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
@@ -112,7 +108,6 @@ spec:
               - *host
     persistence:
       tmp:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /tmp
