@@ -7,12 +7,12 @@ kind: Kustomization
 resources:
   # - ./actions-runner-controller.yaml
   - ./backube.yaml                # volsync
-  - ./bitnami.yaml
+  # - ./bitnami.yaml
   - ./bitwarden.yaml
-  - ./bjw-s.yaml                  # common app-template
+  # - ./bjw-s.yaml                  # common app-template
   - ./cilium.yaml
   - ./cloudnativepg.yaml
-  - ./coredns.yaml
+  # - ./coredns.yaml
   - ./crowdsec.yaml
   - ./csi-driver-nfs.yaml
   - ./deliveryhero.yaml           # node-problem-detector (and others)
@@ -21,22 +21,22 @@ resources:
   - ./emberstack.yaml             # reflector
   - ./external-dns.yaml
   - ./fairwinds.yaml              # goldilocks (and others)
-  - ./grafana.yaml
+  # - ./grafana.yaml
   - ./ingress-nginx.yaml
   # - ./jetstack.yaml               # cert-manager
   # - ./jupyterhub.yaml
-  - ./k8s-gateway.yaml
+  # - ./k8s-gateway.yaml
   - ./kubernetes-dashboard.yaml
   - ./lwolf.yaml                  # kube-cleanup-operator
   - ./metrics-server.yaml
   - ./movetokube.yaml             # ext-postgres-operator
   - ./opstree.yaml                # redis-operator
-  - ./piraeus.yaml                # snapshot-controller
+  # - ./piraeus.yaml                # snapshot-controller
   - ./prefect.yaml
-  - ./prometheus-community.yaml
+  # - ./prometheus-community.yaml   # kube-prometheus-stack
   - ./rook-ceph.yaml
   - ./runix.yaml                  # pgadmin
-  - ./stakater.yaml               # reloader
+  # - ./stakater.yaml               # reloader
   - ./stevehipwell.yaml           # thanos
   # - ./valheim.yaml
   - ./weave-gitops.yaml
