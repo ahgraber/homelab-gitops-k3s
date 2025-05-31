@@ -19,7 +19,7 @@ spec:
       namespace: networking
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
