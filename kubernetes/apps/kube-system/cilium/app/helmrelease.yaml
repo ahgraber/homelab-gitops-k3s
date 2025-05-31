@@ -5,14 +5,9 @@ kind: HelmRelease
 metadata:
   name: cilium
 spec:
-  chart:
-    spec:
-      chart: cilium
-      version: 1.17.4
-      sourceRef:
-        kind: HelmRepository
-        name: cilium
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: cilium
   interval: 15m
   install:
     remediation:
