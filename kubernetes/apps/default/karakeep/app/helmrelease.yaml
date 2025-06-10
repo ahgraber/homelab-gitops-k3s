@@ -51,7 +51,7 @@ spec:
               CRAWLER_FULL_PAGE_SCREENSHOT: true
               DATA_DIR: /data
               DISABLE_SIGNUPS: true
-              MAX_ASSET_SIZE_MB: 50
+              MAX_ASSET_SIZE_MB: 128
               MEILI_ADDR: http://karakeep-meilisearch.default.svc.cluster.local:7700
               NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
               DISABLE_NEW_RELEASE_CHECK: true
