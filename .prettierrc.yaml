@@ -9,7 +9,7 @@ proseWrap: "always"
 plugins:
   # for global plugins, use full path; dots get to $HOME
   - "../../.nix-profile/lib/node_modules/prettier-plugin-go-template/lib/index.js"
-  - "../../.nix-profile/lib/node_modules/prettier-plugin-toml/lib/index.js"
+  # - "../../.nix-profile/lib/node_modules/prettier-plugin-toml/lib/index.js"
 overrides:
   - files: ["*.html", "*.css"]
     options:
