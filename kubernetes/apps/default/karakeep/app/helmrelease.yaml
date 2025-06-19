@@ -65,9 +65,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 10m
+                cpu: 100m
+                memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 3Gi
 
       chrome:
         annotations:
@@ -132,9 +133,10 @@ spec:
                     key: MEILI_MASTER_KEY
             resources:
               requests:
-                cpu: 10m
-              limits:
+                cpu: 100m
                 memory: 3Gi
+              limits:
+                memory: 6Gi
 
     service:
       app:
