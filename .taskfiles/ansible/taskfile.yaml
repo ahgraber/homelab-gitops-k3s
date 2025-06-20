@@ -170,3 +170,16 @@ tasks:
       group: '{{ .group | default "kubernetes" }}'
     preconditions:
       - {msg: "Ansible not found", sh: "type ansible"}
+
+  shutdown:
+    desc: Shut down the cluster
+    prompt: This will shut down the cluster ... continue?
+    dir: "{{ .ANSIBLE_DIR }}"
+    cmds:
+      - task: _k3s_stop
+      - ansible -i {{ .ANSIBLE_DIR }}/inventory {{ .group }} -m ansible.builtin.shell -a "shutdown now" --become
+    vars:
+      group: '{{ .group | default "kubernetes" }}'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
