@@ -1,6 +1,6 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1beta2.json
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: flux-manifests
@@ -99,6 +99,14 @@ spec:
       target:
         kind: Deployment
         name: source-controller
+    - # Disable chart digest tracking
+      patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --feature-gates=DisableChartDigestTracking=true
+      target:
+        kind: Deployment
+        name: helm-controller
     # Flux near OOM detection for Helm
     # Ref: https://fluxcd.io/flux/installation/configuration/helm-oom-detection/
     - patch: |
