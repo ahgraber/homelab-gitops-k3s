@@ -45,7 +45,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/ahgraber/aimlbling-about
               repository: ghcr.io/ahgraber/aimlbling-about
-              tag: "2025.06.271148"
+              tag: "2025.06.271318"
               pullPolicy: Always
             probes:
               liveness:
