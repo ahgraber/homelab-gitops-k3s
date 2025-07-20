@@ -84,7 +84,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=zricethezav/gitleaks
   - repo: https://github.com/zricethezav/gitleaks
-    rev: "v8.27.2"
+    rev: "v8.28.0"
     hooks:
       - id: gitleaks
   # renovate: datasource=github-tags depName=stefmolin/exif-stripper
