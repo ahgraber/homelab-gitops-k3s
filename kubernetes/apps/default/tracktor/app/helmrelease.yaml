@@ -109,7 +109,6 @@ spec:
 
     persistence:
       data:
-        enabled: true
         existingClaim: *app
         globalMounts:
-          - path: /data
+          - path: /app/data
