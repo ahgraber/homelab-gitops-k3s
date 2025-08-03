@@ -20,3 +20,4 @@ resources:
   - ./picoshare/ks.yaml
   - ./stirling-pdf/ks.yaml
   - ./syncthing/ks.yaml
+  - ./tracktor/ks.yaml
