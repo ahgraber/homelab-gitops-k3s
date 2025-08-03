@@ -30,15 +30,15 @@ spec:
           kind: Pod
   values:
     controllers:
-      __APPNAME__:
+      tracktor:
         annotations:
           reloader.stakater.com/search: "true"
         strategy: Recreate
         containers:
           app:
             image:
-              repository: ghcr.io/...
-              tag: latest
+              repository: ghcr.io/javedh-dev/tracktor
+              tag: 0.0.1
             env:
               TZ: ${TIMEZONE}
               NODE_ENV: production
@@ -79,17 +79,33 @@ spec:
         ports:
           http:
             port: &port 3000
-    route:
-      app:
-        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: internal
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
+    ingress:
+      main:
+        className: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    # route:
+    #   app:
+    #     hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+    #     parentRefs:
+    #       - name: internal
+    #         namespace: kube-system
+    #         sectionName: https
+    #     rules:
+    #       - backendRefs:
+    #           - name: *app
+    #             port: *port
 
     persistence:
       data:
