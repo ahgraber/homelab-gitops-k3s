@@ -36,6 +36,8 @@ spec:
             env:
               TZ: ${TIMEZONE}
               DOCKER_ENABLE_SECURITY: "false"
+              SYSTEM_ENABLEANALYTICS: "false"
+              INSTALL_BOOK_AND_ADVANCED_HTML_OPS: "true"
             probes:
               liveness: &probe
                 enabled: true
@@ -93,20 +95,20 @@ spec:
               - *host
 
     persistence:
-      configs:
-        enabled: true
-        type: emptyDir
-      logs:
-        enabled: true
-        type: emptyDir
-      pipeline:
-        enabled: true
-        type: emptyDir
-      tmp:
-        enabled: true
-        type: emptyDir
-      tessdata:
-        enabled: true
-        type: emptyDir
+      config:
+        existingClaim: *app
         globalMounts:
-          - path: /usr/share/tessdata
+          - path: /configs
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          stirling-pdf:
+            app:
+              - path: /logs
+                subPath: logs
+              - path: /pipeline
+                subPath: pipeline
+              - path: /usr/share/tessdata
+                subPath: tessdata
+              - path: /tmp
+                subPath: tmp
