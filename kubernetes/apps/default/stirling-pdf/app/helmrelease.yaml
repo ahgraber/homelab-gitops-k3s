@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app pdf
+  name: &app stirling-pdf
 spec:
   chartRef:
     kind: OCIRepository
@@ -101,14 +101,12 @@ spec:
           - path: /configs
       tmpfs:
         type: emptyDir
-        advancedMounts:
-          stirling-pdf:
-            app:
-              - path: /logs
-                subPath: logs
-              - path: /pipeline
-                subPath: pipeline
-              - path: /usr/share/tessdata
-                subPath: tessdata
-              - path: /tmp
-                subPath: tmp
+        globalMounts:
+          - path: /logs
+            subPath: logs
+          - path: /pipeline
+            subPath: pipeline
+          - path: /usr/share/tessdata
+            subPath: tessdata
+          - path: /tmp
+            subPath: tmp
