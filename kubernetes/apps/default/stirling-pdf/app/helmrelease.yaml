@@ -27,7 +27,7 @@ spec:
           kind: Pod
   values:
     controllers:
-      pdf:
+      stirling-pdf:
         containers:
           main:
             image:
