@@ -40,7 +40,7 @@ repos:
         files: \.rej$
   # renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v5.0.0"
+    rev: "v6.0.0"
     hooks:
       - id: check-added-large-files
         args: [--maxkb=500000]
