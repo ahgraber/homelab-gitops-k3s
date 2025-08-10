@@ -32,11 +32,11 @@ spec:
           - /spec/containers/resources/limits
         target:
           kind: Pod
-  # valuesFrom:
-  #   - targetPath: controller.maxmindLicenseKey
-  #     kind: Secret
-  #     name: maxmind
-  #     valuesKey: MAXMIND_LICENSE_KEY
+  valuesFrom:
+    - targetPath: controller.maxmindLicenseKey
+      kind: Secret
+      name: maxmind
+      valuesKey: MAXMIND_LICENSE_KEY
   values:
     fullnameOverride: nginx-external
     controller:
@@ -89,9 +89,8 @@ spec:
           "path": "$uri", "request_query": "$args",
           "request_length": $request_length, "duration": $request_time, "method":
           "$request_method",
-          "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent"}
-        #  ,
-        #  "country_code": "$geoip2_city_country_code", "country_name": "$geoip2_city_country_name"}
+          "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent",
+          "country_code": "$geoip2_city_country_code", "country_name": "$geoip2_city_country_name"}
         proxy-body-size: 0
         proxy-buffer-size: 16k
         proxy-busy-buffers-size: 16k
