@@ -40,6 +40,8 @@ spec:
               - matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: Exists
+      labels:
+        upgrade.cattle.io/controller: system-upgrade-controller # necessary to avoid drain
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
@@ -76,17 +78,25 @@ spec:
         serviceAccount:
           name: system-upgrade
 
-    rbac:
-      bindings:
-        system-upgrade-controller:
-          type: ClusterRoleBinding
-          roleRef:
-            kind: ClusterRole
-            name: cluster-admin
-          subjects:
-            - kind: ServiceAccount
-              name: system-upgrade
-              namespace: system-upgrade
+    # rawResources:
+    #   serviceAccount:
+    #     apiVersion: v1
+    #     kind: ServiceAccount
+    #     spec:
+    #       metadata:
+    #         name: system-upgrade
+
+    # rbac:
+    #   bindings:
+    #     system-upgrade-controller:
+    #       type: ClusterRoleBinding
+    #       roleRef:
+    #         kind: ClusterRole
+    #         name: cluster-admin
+    #       subjects:
+    #         - kind: ServiceAccount
+    #           name: system-upgrade
+    #           namespace: system-upgrade
     serviceAccount:
       system-upgrade: {}
 

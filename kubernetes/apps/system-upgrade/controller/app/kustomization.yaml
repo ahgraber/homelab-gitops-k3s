@@ -6,4 +6,4 @@ resources:
   # # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
   # - https://github.com/rancher/system-upgrade-controller/releases/download/v0.16.0/crd.yaml
   - helmrelease.yaml
-  # - rbac.yaml
+  - rbac.yaml
