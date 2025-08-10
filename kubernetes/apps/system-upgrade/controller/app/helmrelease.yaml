@@ -59,24 +59,20 @@ spec:
               repository: docker.io/rancher/system-upgrade-controller
               tag: v0.16.0@sha256:1d874e5034a565d29086db8f936c968afcbed1123c83fa880d62de382b89b501
             env:
-              SYSTEM_UPGRADE_CONTROLLER_DEBUG: false
-              SYSTEM_UPGRADE_CONTROLLER_THREADS: 2
-              SYSTEM_UPGRADE_JOB_ACTIVE_DEADLINE_SECONDS: 900
-              SYSTEM_UPGRADE_JOB_BACKOFF_LIMIT: 99
-              SYSTEM_UPGRADE_JOB_IMAGE_PULL_POLICY: IfNotPresent
-              SYSTEM_UPGRADE_JOB_KUBECTL_IMAGE: registry.k8s.io/kubectl:v1.33.3@sha256:aee0d617a26c05f79f566f710fee7afa9f72336fb4499f6f5f7b9ca00c6cde0c
-              SYSTEM_UPGRADE_JOB_PRIVILEGED: true
-              SYSTEM_UPGRADE_JOB_TTL_SECONDS_AFTER_FINISH: 900
-              SYSTEM_UPGRADE_PLAN_POLLING_INTERVAL: 15m
-              SYSTEM_UPGRADE_CONTROLLER_NAME: *app
-              SYSTEM_UPGRADE_CONTROLLER_NAMESPACE:
+              SYSTEM_UPGRADE_CONTROLLER_LEADER_ELECT: true
+              SYSTEM_UPGRADE_CONTROLLER_NAME: "{{ .Release.Name }}"
+              SYSTEM_UPGRADE_CONTROLLER_NAMESPACE: "{{ .Release.Namespace }}"
+              SYSTEM_UPGRADE_CONTROLLER_NODE_NAME:
                 valueFrom:
                   fieldRef:
-                    fieldPath: metadata.namespace
+                    fieldPath: spec.nodeName
+              SYSTEM_UPGRADE_JOB_BACKOFF_LIMIT: "99"
+              SYSTEM_UPGRADE_JOB_PRIVILEGED: false
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: [ALL] }
+              capabilities: { drop: ["ALL"] }
+
         serviceAccount:
           identifier: system-upgrade-controller
 
@@ -91,6 +87,7 @@ spec:
             - identifier: system-upgrade-controller
     serviceAccount:
       system-upgrade-controller: {}
+      system-upgrade: {}
 
     persistence:
       tmp:
