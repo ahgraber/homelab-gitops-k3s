@@ -84,10 +84,9 @@ spec:
             kind: ClusterRole
             name: cluster-admin
           subjects:
-            - identifier: system-upgrade-controller
+            - identifier: *app
     serviceAccount:
-      name: *app
-      create: true
+      system-upgrade-controller: {}
 
     persistence:
       tmp:
