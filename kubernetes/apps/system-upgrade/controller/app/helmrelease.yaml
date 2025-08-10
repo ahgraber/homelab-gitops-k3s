@@ -87,7 +87,6 @@ spec:
             - identifier: system-upgrade-controller
     serviceAccount:
       system-upgrade-controller: {}
-      system-upgrade: {}
 
     persistence:
       tmp:
