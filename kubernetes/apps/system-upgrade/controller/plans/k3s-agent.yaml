@@ -2,7 +2,7 @@
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
-  name: agent
+  name: k3s-agent
 spec:
   # renovate: datasource=github-releases depName=k3s-io/k3s
   version: "v1.31.11+k3s1"
