@@ -59,6 +59,7 @@ repos:
         stages: [pre-commit]
       - id: check-yaml
         stages: [pre-commit]
+        args: [--allow-multiple-documents]
       - id: end-of-file-fixer
         stages: [pre-commit]
       - id: mixed-line-ending
