@@ -69,7 +69,7 @@ spec:
                   fieldRef:
                     fieldPath: spec.nodeName
               SYSTEM_UPGRADE_JOB_BACKOFF_LIMIT: "99"
-              SYSTEM_UPGRADE_JOB_PRIVILEGED: false
+              SYSTEM_UPGRADE_JOB_PRIVILEGED: true
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -77,28 +77,6 @@ spec:
 
         serviceAccount:
           name: system-upgrade
-
-    # rawResources:
-    #   serviceAccount:
-    #     apiVersion: v1
-    #     kind: ServiceAccount
-    #     spec:
-    #       metadata:
-    #         name: system-upgrade
-
-    # rbac:
-    #   bindings:
-    #     system-upgrade-controller:
-    #       type: ClusterRoleBinding
-    #       roleRef:
-    #         kind: ClusterRole
-    #         name: cluster-admin
-    #       subjects:
-    #         - kind: ServiceAccount
-    #           name: system-upgrade
-    #           namespace: system-upgrade
-    serviceAccount:
-      system-upgrade: {}
 
     persistence:
       tmp:

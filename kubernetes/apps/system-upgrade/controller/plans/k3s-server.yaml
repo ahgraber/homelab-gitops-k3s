@@ -8,7 +8,6 @@ spec:
   version: "v1.31.11+k3s1"
   serviceAccountName: system-upgrade
   concurrency: 1
-  cordon: true
   nodeSelector:
     matchExpressions:
       - { key: node-role.kubernetes.io/control-plane, operator: Exists }
@@ -19,5 +18,8 @@ spec:
     - { key: node-role.kubernetes.io/master, operator: Exists }
     - { key: node-role.kubernetes.io/etcd, operator: Exists }
     - { key: CriticalAddonsOnly, operator: Exists }
+  drain:
+    force: true
+    skipWaitForDeleteTimeout: 60 # 1.18+ (honor pod disruption budgets up to 60 seconds per pod then moves on)
   upgrade:
     image: rancher/k3s-upgrade
