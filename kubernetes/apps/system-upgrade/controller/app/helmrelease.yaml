@@ -74,7 +74,7 @@ spec:
               capabilities: { drop: ["ALL"] }
 
         serviceAccount:
-          name: *app
+          name: system-upgrade
 
     rbac:
       bindings:
@@ -84,9 +84,11 @@ spec:
             kind: ClusterRole
             name: cluster-admin
           subjects:
-            - identifier: *app
+            - kind: ServiceAccount
+              name: system-upgrade
+              namespace: system-upgrade
     serviceAccount:
-      system-upgrade-controller: {}
+      system-upgrade: {}
 
     persistence:
       tmp:

@@ -4,6 +4,7 @@ kind: Namespace
 metadata:
   name: system-upgrade
   labels:
+    pod-security.kubernetes.io/enforce: privileged # from SUC manifests
     kustomize.toolkit.fluxcd.io/prune: disabled
   annotations:
     volsync.backube/privileged-movers: "true"
