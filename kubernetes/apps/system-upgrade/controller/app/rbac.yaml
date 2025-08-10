@@ -9,5 +9,5 @@ roleRef:
   name: cluster-admin
 subjects:
   - kind: ServiceAccount
-    name: system-upgrade-controller
+    name: system-upgrade
     namespace: system-upgrade

@@ -74,7 +74,7 @@ spec:
               capabilities: { drop: ["ALL"] }
 
         serviceAccount:
-          identifier: system-upgrade-controller
+          name: *app
 
     rbac:
       bindings:
@@ -86,7 +86,8 @@ spec:
           subjects:
             - identifier: system-upgrade-controller
     serviceAccount:
-      system-upgrade-controller: {}
+      name: *app
+      create: true
 
     persistence:
       tmp:
