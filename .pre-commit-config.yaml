@@ -105,7 +105,7 @@ repos:
           - commit-msg
   # renovate: datasource=github-tags depName=editorconfig-checker/editorconfig-checker.python
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: "3.2.1"
+    rev: "3.3.0"
     hooks:
       - id: editorconfig-checker
         name: Check editorconfig compliance
