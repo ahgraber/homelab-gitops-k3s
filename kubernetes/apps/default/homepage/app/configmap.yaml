@@ -160,7 +160,7 @@ data:
             description: Crowd-based cyber security threat detection & mitigation
     - Storage:
         - TrueNAS:
-            href: https://truenas.${SECRET_DOMAIN}
+            href: https://truenas.${SECRET_INT_DOMAIN}
             icon: truenas-scale.png
             # description: This is my service
             widget:
@@ -170,7 +170,7 @@ data:
                 # password:
                 key: {{HOMEPAGE_VAR_TRUENAS_KEY}}
         - MinIO:
-            href: https://truenas.${SECRET_DOMAIN}:9001
+            href: https://truenas.${SECRET_INT_DOMAIN}:9001
             icon: minio.png
             # description: This is my service
         - Rook-Ceph:
