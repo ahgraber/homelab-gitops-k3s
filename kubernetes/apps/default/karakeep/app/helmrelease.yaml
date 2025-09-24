@@ -120,7 +120,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.21.0
+              tag: v1.22.0
             args:
               - /bin/meilisearch
               - --experimental-dumpless-upgrade
