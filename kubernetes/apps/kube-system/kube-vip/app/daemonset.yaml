@@ -29,10 +29,10 @@ spec:
               value: "true"
             - name: lb_class_legacy_handling
               value: "true"
-            - name: port
+            - name: lb_port
               value: "6443"
             - name: vip_subnet
-              value: "32"
+              value: "32,128"
             - name: cp_enable
               value: "true"
             - name: cp_namespace
@@ -41,6 +41,8 @@ spec:
               value: "false"
             - name: svc_enable
               value: "false"
+            - name: enable_node_labeling
+              value: "true"
             - name: enable_service_security
               value: "false"
             - name: vip_leaderelection

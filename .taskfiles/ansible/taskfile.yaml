@@ -17,16 +17,47 @@ env:
 tasks:
 
   install:
-    desc: Install Ansible with pipx
+    desc: Install Ansible with uv
     cmds:
-      - pipx install --force --include-deps ansible
-      - pipx runpip ansible install --force -r "{{ .ANSIBLE_PIP_REQUIREMENTS_FILE }}"
+      - |
+        bash -eu -o pipefail <<'EOF'
+        # Reinstall the ansible tool including any extra Python libs from requirements.txt
+        # This replaces the previous pipx runpip invocation.
+        reqs_file="{{ .ANSIBLE_PIP_REQUIREMENTS_FILE }}"
+        extra_args=()
+        while IFS= read -r line; do
+          # Skip blank lines and comments
+          [ -z "${line}" ] && continue
+          case "${line}" in \#*) continue ;; esac
+          extra_args+=(--with "${line}")
+        done < "${reqs_file}"
+
+        # Log what we parsed (pairs of --with <requirement>)
+        if [ ${#extra_args[@]} -gt 0 ]; then
+          echo "[ansible:install] Parsed extra requirements (shown as --with <req>):" >&2
+          echo "[ansible:install] ${extra_args[*]}" >&2
+          # Also list just the requirement strings for readability
+          echo "[ansible:install] Requirement list:" >&2
+          for ((i=1; i<${#extra_args[@]}; i+=2)); do
+            echo "  - ${extra_args[i]}" >&2
+          done
+        else
+          echo "[ansible:install] No extra requirements found in ${reqs_file}" >&2
+        fi
+
+        # Perform a forced install so changes in requirements are applied.
+        if [ ${#extra_args[@]} -gt 0 ]; then
+          uv tool install --force --with-executables-from ansible-core,ansible-lint "${extra_args[@]}" ansible
+        else
+          uv tool install --force --with-executables-from ansible-core,ansible-lint ansible
+        fi
+        EOF
       - ansible-galaxy install --force --role-file "{{ .ANSIBLE_REQUIREMENTS_FILE }}"
     preconditions:
-      - sh: command -v pipx
+      - sh: command -v uv
         msg: |
-          pipx is not installed.
-          Head over to https://pypa.github.io/pipx/installation/ to get up and running.
+          uv is not installed.
+          Head over to https://docs.astral.sh/uv/getting-started/installation/ to get up and running.
 
   # deps:
   #   desc: Set up Ansible dependencies
