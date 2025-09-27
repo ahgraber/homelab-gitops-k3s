@@ -24,13 +24,16 @@ spec:
     cluster:
       id: 1
       name: home-kubernetes
-    containerRuntime:
-      integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
+    # NOTE: containerRuntime.integration was removed in Cilium >=1.16.
+    # Runtime autodetection works for k3s (containerd).
+    # If an explicit socket path is ever required use "agent.containerd.socket"
+    # or relevant CRI-specific value per current docs.
     # NOTE: devices might need to be set if you have more than one active NIC on your hosts
     # devices: eno+ eth+
     endpointRoutes:
       enabled: true
+    envoy:
+      enabled: false
     hubble:
       enabled: false
     ipam:
