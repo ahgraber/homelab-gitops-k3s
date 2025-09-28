@@ -75,11 +75,13 @@ spec:
       emailConfigs:
         - to: "${SECRET_DEFAULT_EMAIL}"
           from: "${SECRET_SMTP_ADDRESS}"
-          smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
+          hello: "alertmanager.${SECRET_DOMAIN}"
+          authIdentity: "${SECRET_SMTP_USER}"
           authUsername: "${SECRET_SMTP_USER}"
           authPassword:
             name: alertmanager-notifiers
             key: SMTP_PASSWORD
+          smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
           requireTLS: true
           # prettier-ignore
           text: >-
