@@ -11,7 +11,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: ingress-nginx-internal
+    - name: cilium-gateway
+      namespace: flux-system
   path: ./kubernetes/apps/networking/external-services/services
   prune: true
   sourceRef:

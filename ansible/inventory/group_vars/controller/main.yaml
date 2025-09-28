@@ -15,7 +15,7 @@ k3s_server:
     - local-storage # Disable local-path-provisioner  - installed with Flux
     - metrics-server # Disable metrics-server          - installed with Flux
     - servicelb # Disable servicelb               - replaced with Cilium Helm Chart
-    - traefik # Disable traefik                 - replaced with ingress-nginx and installed with Flux
+    - traefik # Disable traefik                 - replaced with Cilium Gateway and installed with Flux
   disable-cloud-controller: true
   disable-kube-proxy: true # Cilium uses eBPF
   disable-network-policy: true
