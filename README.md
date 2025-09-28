@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD013 -->
+
 # Homelab cluster with k3s and Flux
 
 This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [Ansible](https://www.ansible.com) and uses the GitOps tool [Flux](https://toolkit.fluxcd.io) to manage its state.
@@ -27,7 +28,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 ### 📍 Set up your local environment
 
 1. Install [task](https://taskfile.dev/).
+
 2. Install [direnv](https://direnv.net/).
+
 3. Install [pipx](https://pipx.pypa.io/stable/), then ensure hooks are set with:
 
    ```sh
@@ -35,7 +38,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    pipx completions
    ```
 
-4. Finish configuring the workstation.  
+4. Finish configuring the workstation.\
    Conveniently, we can use a `task` that has been defined for this!
 
    ```sh
@@ -54,27 +57,27 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
    a. Create an Age private / public key (this file is gitignored)
 
-      ```sh
-      age-keygen -o age.key
-      ```
+   ```sh
+   age-keygen -o age.key
+   ```
 
-   b. Ensure that this key is available as an environment variable.  
+   b. Ensure that this key is available as an environment variable.
 
-      Add the following to the `.envrc`:
+   Add the following to the `.envrc`:
 
-      ```sh
-      # export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/Library/Application Support/sops/age/keys.txt")"
-      export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/.config/sops/age/keys.txt")"
-      export AGE_PUBLIC_KEY="$(grep "public key" "$SOPS_AGE_KEY_FILE" | awk '{ print $4 }')"
-      ```
+   ```sh
+   # export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/Library/Application Support/sops/age/keys.txt")"
+   export SOPS_AGE_KEY_FILE="$(expand_path "${HOME}/.config/sops/age/keys.txt")"
+   export AGE_PUBLIC_KEY="$(grep "public key" "$SOPS_AGE_KEY_FILE" | awk '{ print $4 }')"
+   ```
 
-      Then run `direnv allow .` to refresh the environment.
+   Then run `direnv allow .` to refresh the environment.
 
 2. Create Cloudflare API Token
 
    📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create a API Token._
 
-   a. Create a Cloudflare API Token by going [here](https://dash.cloudflare.com/profile/api-tokens).
+   a. [Create a Cloudflare API Token here](https://dash.cloudflare.com/profile/api-tokens).
 
    b. Under the `API Tokens` section click the blue `Create Token` button.
 
@@ -84,22 +87,22 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
    e. Under `Permissions`, click `+ Add More` and add each permission below:
 
-      ```text
-      Zone - DNS - Edit
-      Account - Cloudflare Tunnel - Read
-      ```
+   ```text
+   Zone - DNS - Edit
+   Account - Cloudflare Tunnel - Read
+   ```
 
    f. Limit the permissions to a specific account and zone resources.
 
    g. Fill out the appropriate vars in `.env` file:
 
-      ```sh
-      CLOUDFLARE_EMAIL=''
-      CLOUDFLARE_TOKEN=''
-      CLOUDFLARE_ACCOUNT=''
-      CLOUDFLARE_TUNNELID=''
-      CLOUDFLARE_TUNNEL_SECRET=''
-      ```
+   ```sh
+   CLOUDFLARE_EMAIL=''
+   CLOUDFLARE_TOKEN=''
+   CLOUDFLARE_ACCOUNT=''
+   CLOUDFLARE_TUNNELID=''
+   CLOUDFLARE_TUNNEL_SECRET=''
+   ```
 
 3. Create Cloudflare Tunnel
 
@@ -107,20 +110,20 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
    a. Authenticate cloudflared to your domain
 
-      ```sh
-      cloudflared tunnel login
-      ```
+   ```sh
+   cloudflared tunnel login
+   ```
 
    b. Create the tunnel
 
-      ```sh
-      cloudflared tunnel create k8s
-      ```
+   ```sh
+   cloudflared tunnel create k8s
+   ```
 
    c. Fill out the appropriate Cloudflare Tunnel vars in `.env` file:
-      CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
+   CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
 
-      > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`
+   > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`
 
 ### ⚡ Prepare your nodes for k3s
 
@@ -237,7 +240,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    task k8s:resources
    ```
 
-2. ⚠️ It might take `cert-manager` awhile to generate certificates, this is normal so be patient.
+2. ⚠️ It might take `cert-manager` a while to generate certificates, this is normal so be patient.
 
 ## 📣 Post installation
 
@@ -264,6 +267,7 @@ This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding)
 >    ```
 >
 > 2. Restart dnsmasq on the server.
+>
 > 3. Query an internal-only subdomain from your workstation (any `internal` class ingresses): `dig @${home-dns-server-ip} hubble.${bootstrap_cloudflare_domain}`. It should resolve to `${bootstrap_internal_ingress_addr}`.
 
 If you're having trouble with DNS be sure to check out these two GitHub discussions: [Internal DNS](https://github.com/onedr0p/flux-cluster-template/discussions/719) and [Pod DNS resolution broken](https://github.com/onedr0p/flux-cluster-template/discussions/635).
@@ -276,11 +280,12 @@ By default this template will deploy a wildcard certificate using the Let's Encr
 
 📍 _You will need a production certificate to reach internet-exposed applications through `cloudflared`._
 
-#### 🪝 Github Webhook
+#### 🪝 GitHub Webhook
 
-By default Flux will periodically check your git repository for changes. In order to have Flux reconcile on `git push` you must configure Github to send `push` events.
+By default Flux will periodically check your git repository for changes. In order to have Flux reconcile on `git push` you must configure GitHub to send `push` events.
 
 1. Follow [FluxCD instructions](https://fluxcd.io/flux/guides/webhook-receivers/#define-a-git-repository-receiver) to generate a token.
+
 2. Obtain the webhook path
 
    📍 _Hook id and path should look like `/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123`_
@@ -295,13 +300,13 @@ By default Flux will periodically check your git repository for changes. In orde
    https://flux-webhook.${bootstrap_cloudflare_domain}/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123
    ```
 
-4. Navigate to the settings of your repository on Github, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
+4. Navigate to the settings of your repository on GitHub, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
 
 ### 🤖 Renovate
 
 [Renovate](https://www.mend.io/renovate) is a tool that automates dependency management. It is designed to scan your repository around the clock and open PRs for out-of-date dependencies it finds. Common dependencies it can discover are Helm charts, container images, GitHub Actions, Ansible roles... even Flux itself! Merging a PR will cause Flux to apply the update to your cluster.
 
-To enable Renovate, click the 'Configure' button over at their [Github app page](https://github.com/apps/renovate) and select your repository. Renovate creates a "Dependency Dashboard" as an issue in your repository, giving an overview of the status of all updates. The dashboard has interactive checkboxes that let you do things like advance scheduling or reattempt update PRs you closed without merging.
+To enable Renovate, click the 'Configure' button over at their [GitHub app page](https://github.com/apps/renovate) and select your repository. Renovate creates a "Dependency Dashboard" as an issue in your repository, giving an overview of the status of all updates. The dashboard has interactive checkboxes that let you do things like advance scheduling or reattempt update PRs you closed without merging.
 
 The base Renovate configuration in your repository can be viewed at [.github/renovate.json5](https://github.com/onedr0p/flux-cluster-template/blob/main/.github/renovate.json5). By default it is scheduled to be active with PRs every weekend, but you can [change the schedule to anything you want](https://docs.renovatebot.com/presets-schedule), or remove it if you want Renovate to open PRs right away.
 
@@ -355,7 +360,7 @@ Resolving problems that you have could take some tweaking of your YAML manifests
 
 Authenticating Flux to your git repository has a couple benefits like using a private git repository and/or using the Flux [Image Automation Controllers](https://fluxcd.io/docs/components/image/).
 
-By default this template only works on a public Github repository, it is advised to keep your repository public.
+By default this template only works on a public GitHub repository, it is advised to keep your repository public.
 
 The benefits of a public repository include:
 
@@ -363,85 +368,88 @@ The benefits of a public repository include:
 - Adding a topic to your repository of `k8s-at-home` to be included in the [k8s-at-home-search](https://nanne.dev/k8s-at-home-search/). This search helps people discover different configurations of Helm charts across others Flux based repositories.
 
 <!-- markdownlint-disable MD033 -->
+
 <details>
   <summary>Expand to read guide on adding Flux SSH authentication</summary>
 <!-- markdownlint-enable MD033 -->
 
-1. Generate new SSH key:
+01. Generate new SSH key:
 
-   ```sh
-   ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./kubernetes/bootstrap/github-deploy.key -q -P ""
-   ```
+    ```sh
+    ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./kubernetes/bootstrap/github-deploy.key -q -P ""
+    ```
 
-2. Paste public key in the deploy keys section of your repository settings
+02. Paste public key in the deploy keys section of your repository settings
 
-3. Create sops secret in `./kubernetes/bootstrap/github-deploy-key.sops.yaml` with the contents of:
+03. Create sops secret in `./kubernetes/bootstrap/github-deploy-key.sops.yaml` with the contents of:
 
-   ```yaml
-   apiVersion: v1
-   kind: Secret
-   metadata:
-     name: github-deploy-key
-     namespace: flux-system
-   stringData:
-     # 3a. Contents of github-deploy-key
-     identity: |
-       -----BEGIN OPENSSH ... -----
-           ...
-       -----END OPENSSH ... -----
-     # 3b. Output of curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]'
-     known_hosts: |
-       github.com ssh-ed25519 ...
-       github.com ecdsa-sha2-nistp256 ...
-       github.com ssh-rsa ...
-   ```
+    ```yaml
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: github-deploy-key
+      namespace: flux-system
+    stringData:
+      # 3a. Contents of github-deploy-key
+      identity: |
+        -----BEGIN OPENSSH ... -----
+            ...
+        -----END OPENSSH ... -----
+      # 3b. Output of curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]'
+      known_hosts: |
+        github.com ssh-ed25519 ...
+        github.com ecdsa-sha2-nistp256 ...
+        github.com ssh-rsa ...
+    ```
 
-4. Encrypt secret:
+04. Encrypt secret:
 
-   ```sh
-   sops --encrypt --in-place ./kubernetes/bootstrap/github-deploy-key.sops.yaml
-   ```
+    ```sh
+    sops --encrypt --in-place ./kubernetes/bootstrap/github-deploy-key.sops.yaml
+    ```
 
-5. Apply secret to cluster:
+05. Apply secret to cluster:
 
-   ```sh
-   sops --decrypt ./kubernetes/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
-   ```
+    ```sh
+    sops --decrypt ./kubernetes/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
+    ```
 
-6. Update `./kubernetes/flux/config/cluster.yaml`:
+06. Update `./kubernetes/flux/config/cluster.yaml`:
 
-   ```yaml
-   apiVersion: source.toolkit.fluxcd.io/v1beta2
-   kind: GitRepository
-   metadata:
-   name: home-kubernetes
-   namespace: flux-system
-   spec:
-   interval: 10m
-   # 6a: Change this to your user and repo names
-   url: ssh://git@github.com/$user/$repo
-   ref:
-     branch: main
-   secretRef:
-     name: github-deploy-key
-   ```
+    ```yaml
+    apiVersion: source.toolkit.fluxcd.io/v1beta2
+    kind: GitRepository
+    metadata:
+    name: home-kubernetes
+    namespace: flux-system
+    spec:
+    interval: 10m
+    # 6a: Change this to your user and repo names
+    url: ssh://git@github.com/$user/$repo
+    ref:
+      branch: main
+    secretRef:
+      name: github-deploy-key
+    ```
 
-7. Commit and push changes
-8. Force flux to reconcile your changes
+07. Commit and push changes
 
-   ```sh
-   flux reconcile -n flux-system kustomization cluster --with-source
-   ```
+08. Force flux to reconcile your changes
 
-9. Verify git repository is now using SSH:
+    ```sh
+    flux reconcile -n flux-system kustomization cluster --with-source
+    ```
 
-   ```sh
-   flux get sources git -A
-   ```
+09. Verify git repository is now using SSH:
+
+    ```sh
+    flux get sources git -A
+    ```
 
 10. Optionally set your repository to Private in your repository settings.
 
 <!-- markdownlint-disable MD033 -->
+
 </details>
 <!-- markdownlint-enable MD033 -->
 
