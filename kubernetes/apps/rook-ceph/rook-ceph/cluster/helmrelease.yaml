@@ -42,8 +42,6 @@ spec:
       dashboard:
         ingressClassName: internal
         annotations:
-          nginx.ingress.kubernetes.io/proxy-intercept-errors: "false"
-          nginx.ingress.kubernetes.io/custom-http-errors: ""
           nginx.ingress.kubernetes.io/whitelist-source-range: |
             10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         host:
