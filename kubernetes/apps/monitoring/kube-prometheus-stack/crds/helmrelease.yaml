@@ -5,15 +5,11 @@ kind: HelmRelease
 metadata:
   name: prometheus-operator-crds
 spec:
-  chart:
-    spec:
-      chart: prometheus-operator-crds
-      version: 23.0.0
-      sourceRef:
-        kind: HelmRepository
-        name: prometheus-community
-        namespace: flux-system
-  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: kube-prometheus-stack
+  interval: 30m
+  timeout: 15m
   install:
     remediation:
       retries: -1
