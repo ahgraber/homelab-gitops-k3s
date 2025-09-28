@@ -36,7 +36,7 @@ spec:
     monitoring:
       enabled: true
       # https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
-      createPrometheusRules: false # deploy manually with kube-prom-stack to patch
+      createPrometheusRules: true
 
     ingress:
       dashboard:
@@ -77,6 +77,8 @@ spec:
           mgr/crash/warn_recent_interval: "7200" # 2h
         mon:
           mon_compact_on_start: "true" # quote
+      cleanupPolicy:
+        wipeDevicesFromOtherClusters: true
       crashCollector:
         disable: false
         daysToRetain: 14
@@ -89,9 +91,8 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
-        # prometheusEndpoint: http://prometheus-operated.monitoring.svc.cluster.local:9090
-        # prometheusEndpoint: http://thanos-query-frontend.monitoring.svc.cluster.local:10902
+        # prometheusEndpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+        prometheusEndpoint: http://prometheus-operated.monitoring.svc.cluster.local:9090
         prometheusEndpointSSLVerify: false
       mgr:
         modules:
@@ -202,15 +203,20 @@ spec:
           isDefault: true
           reclaimPolicy: Delete
           allowVolumeExpansion: true
+          volumeBindingMode: Immediate
+          mountOptions:
+            - discard
           parameters:
+            compression_mode: aggressive
+            compression_algorithm: zstd
             imageFormat: "2"
-            imageFeatures: layering
+            imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+            csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/fstype: ext4
             pg_num: "128" # create the pool with a pre-configured placement group number
             pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
@@ -258,13 +264,14 @@ spec:
           pool: data0
           reclaimPolicy: Delete
           allowVolumeExpansion: true
+          volumeBindingMode: Immediate
           parameters:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-            csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+            csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-            csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+            csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-            csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+            csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
             csi.storage.k8s.io/fstype: ext4
             pg_num: "128" # create the pool with a pre-configured placement group number
             pgp_num: "128" # this should at least match `pg_num` so that all PGs are used
