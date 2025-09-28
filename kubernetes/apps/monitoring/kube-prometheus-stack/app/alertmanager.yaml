@@ -27,11 +27,11 @@ spec:
           - name: alertname
             value: InfoInhibitor
             matchType: "="
-      - receiver: "email"
-        matchers:
-          - name: severity
-            value: critical
-            matchType: "="
+      # - receiver: "email"
+      #   matchers:
+      #     - name: severity
+      #       value: critical
+      #       matchType: "="
 
   # Inhibition rules allow to mute a set of alerts given that another alert is firing.
   # We use this to mute any warning-level notifications if the same alert is already critical.
@@ -71,26 +71,27 @@ spec:
 
   receivers:
     - name: "null"
-    - name: "email"
-      emailConfigs:
-        - to: "${SECRET_DEFAULT_EMAIL}"
-          from: "${SECRET_SMTP_ADDRESS}"
-          hello: "alertmanager.${SECRET_DOMAIN}"
-          authIdentity: "${SECRET_SMTP_USER}"
-          authUsername: "${SECRET_SMTP_USER}"
-          authPassword:
-            name: alertmanager-notifiers
-            key: SMTP_PASSWORD
-          smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
-          requireTLS: true
-          # prettier-ignore
-          text: >-
-            [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+    # - name: "email"
+    #   emailConfigs:
+    #     - to: "${SECRET_DEFAULT_EMAIL}"
+    #       from: "${SECRET_SMTP_ADDRESS}"
+    #       # hello: "alertmanager.${SECRET_DOMAIN}"
+    #       authUsername: "${SECRET_SMTP_USER}"
+    #       authPassword:
+    #         name: alertmanager-notifiers
+    #         key: SMTP_PASSWORD
+    #       smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
+    #       requireTLS: true
+    #       # tlsConfig:
+    #       #   insecureSkipVerify: true
+    #       # prettier-ignore
+    #       text: >-
+    #         [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
 
-            {{ range .Alerts -}}
-              *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-            {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
-            *Details:*
-              {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
-              {{ end }}
-            {{ end }}
+    #         {{ range .Alerts -}}
+    #           *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+    #         {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
+    #         *Details:*
+    #           {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+    #           {{ end }}
+    #         {{ end }}

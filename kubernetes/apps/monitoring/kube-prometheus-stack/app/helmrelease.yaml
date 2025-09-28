@@ -88,13 +88,6 @@ spec:
     #   enabled: false
     kubelet:
       serviceMonitor:
-        relabelings:
-          - action: keep
-            sourceLabels: ["__meta_kubernetes_service_name"]
-            regex: kube-prometheus-stack-kubelet
-          - action: keep
-            sourceLabels: ["__meta_kubernetes_endpoints_name"]
-            regex: kube-prometheus-stack-kubelet
         metricRelabelings:
           # Drop high-cardinality labels
           - action: labeldrop
