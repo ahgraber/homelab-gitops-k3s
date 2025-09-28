@@ -43,9 +43,9 @@ Services create Endpoints that are like the "magic bridge" connecting traffic fr
 
 BGP Control Plane, as of 27 May 2023, will advertise BGP routes to nodes that don't have Endpoints since a workload's Pods don't run on those nodes. This creates an additional issue with `externalTrafficPolicy: Local`
 
-e.g. node1 is scheduled with 1 ingress-nginx Pod, thus has Endpoint, thus Service can route to Node.
+e.g. node1 is scheduled with 1 gateway Pod, thus has Endpoint, thus Service can route to Node.
 
-e.g. node2 doesn't have any ingress-nginx Pods, thus no Endpoints, thus Service can't route to Node.
+e.g. node2 doesn't have any gateway Pods, thus no Endpoints, thus Service can't route to Node.
 
 With `externalTrafficPolicy: Local`, since traffic that hits a node must use that local node's Endpoint, if the traffic hits a node that isn't running the workload's pods, **it errors out**, usually with a timeout.
 
@@ -61,6 +61,6 @@ Switch the service to `externalTrafficPolicy: Cluster`, and **use DSR (Direct Se
 
 Refine CiliumBGPPeeringPolicy and the workload's scheduling policies to select the same service and node.
 
-###### NOT RECOMMENDED (unless your workload supports it, like ingress-nginx)
+###### NOT RECOMMENDED (unless your workload supports it, like a gateway or ingress controller)
 
 Scale the workload onto all nodes that are advertising BGP (in my homelab, currently all nodes advertise).

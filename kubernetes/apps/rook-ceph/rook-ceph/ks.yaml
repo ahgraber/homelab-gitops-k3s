@@ -34,7 +34,7 @@ spec:
   dependsOn:
     - name: rook-ceph-operator
     - name: snapshot-controller
-    # - name: networking-ingress-nginx-internal
+    # - name: cilium-gateway
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: true
   sourceRef:

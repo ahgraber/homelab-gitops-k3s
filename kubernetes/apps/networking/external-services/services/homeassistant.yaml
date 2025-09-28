@@ -1,32 +1,27 @@
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: &app homeassistant
   namespace: networking
-  annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: |
-      10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
   labels:
     app.kubernetes.io/name: *app
     app.kubernetes.io/instance: *app
 spec:
-  ingressClassName: internal
+  hostnames:
+    - "homeassistant.${SECRET_DOMAIN}"
+  parentRefs:
+    - name: internal
+      namespace: kube-system
+      sectionName: https
   rules:
-    - host: &host "homeassistant.${SECRET_DOMAIN}"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: *app
-                port:
-                  number: 8123
-  tls:
-    - hosts:
-        - *host
-      # secretName: "${SECRET_DOMAIN/./-}-tls"
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: *app
+          port: 8123
 ---
 # ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
 apiVersion: v1

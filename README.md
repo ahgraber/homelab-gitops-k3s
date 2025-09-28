@@ -246,7 +246,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 The `external-dns` application created in the `networking` namespace will handle creating public DNS records.
 By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
-In order to make additional applications public you must set set the correct ingress class name and ingress annotations like in the HelmRelease for `echo-server`.
+In order to make additional applications public you must configure the HTTPRoute parent references and annotations like in the HelmRelease for `echo-server`.
 
 ### 🏠 Home DNS
 
@@ -266,7 +266,7 @@ This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding)
 >
 > 2. Restart dnsmasq on the server.
 >
-> 3. Query an internal-only subdomain from your workstation (any `internal` class ingresses): `dig @${home-dns-server-ip} hubble.${bootstrap_cloudflare_domain}`. It should resolve to `${bootstrap_internal_ingress_addr}`.
+> 3. Query an internal-only subdomain from your workstation (any HTTPRoute attached to the internal gateway): `dig @${home-dns-server-ip} hubble.${bootstrap_cloudflare_domain}`. It should resolve to `${bootstrap_internal_ingress_addr}`.
 
 If you're having trouble with DNS be sure to check out these two GitHub discussions: [Internal DNS](https://github.com/onedr0p/flux-cluster-template/discussions/719) and [Pod DNS resolution broken](https://github.com/onedr0p/flux-cluster-template/discussions/635).
 

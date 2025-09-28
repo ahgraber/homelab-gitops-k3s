@@ -58,7 +58,7 @@ spec:
 
       uiConfig:
         enabled: true
-        # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
+        # to connect to the UI from somewhere external to the cluster, set this value to the gateway-exposed URL
         prefectUiApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
 
       env:
