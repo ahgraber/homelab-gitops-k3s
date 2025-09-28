@@ -11,17 +11,15 @@ spec:
     kind: OCIRepository
     name: kube-prometheus-stack
   dependsOn:
-    - name: prometheus-operator-crds
-      namespace: monitoring
+    # - name: prometheus-operator-crds
+    #   namespace: monitoring
     - name: local-path-provisioner
       namespace: kube-system
   install:
-    crds: Skip
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
-    crds: Skip
     remediation:
       strategy: rollback
       retries: 3
@@ -41,8 +39,8 @@ spec:
     # fullnameOverride: kps
     cleanPrometheusOperatorObjectNames: true
 
-    crds:
-      enabled: false
+    # crds:
+    #   enabled: false
 
     alertmanager:
       enabled: true
