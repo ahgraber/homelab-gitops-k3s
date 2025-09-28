@@ -92,10 +92,16 @@ spec:
           - action: keep
             sourceLabels: ["__meta_kubernetes_service_name"]
             regex: kube-prometheus-stack-kubelet
+          - action: keep
+            sourceLabels: ["__meta_kubernetes_endpoints_name"]
+            regex: kube-prometheus-stack-kubelet
         metricRelabelings:
           # Drop high-cardinality labels
           - action: labeldrop
             regex: (uid|id|name|pod_uid|interface)
+          # Remove service label to ensure RHS sums collapse duplicates
+          - action: labeldrop
+            regex: ^service$
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)

@@ -32,6 +32,8 @@ k3s_server:
     - "anonymous-auth=true" # Required for HAProxy health-checks
   kube-controller-manager-arg:
     - "bind-address=0.0.0.0" # Required to monitor kube-controller-manager with kube-prometheus-stack
+  kube-proxy-arg:
+    - "metrics-bind-address=0.0.0.0" # Required to monitor kube-proxy with kube-prometheus-stack
   kube-scheduler-arg:
     - "bind-address=0.0.0.0" # Required to monitor kube-scheduler with kube-prometheus-stack
   # kubelet-arg:
