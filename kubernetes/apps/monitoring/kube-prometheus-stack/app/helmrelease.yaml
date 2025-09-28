@@ -30,22 +30,19 @@ spec:
   #         - /spec/containers/resources/limits
   #       target:
   #         kind: Pod
-  # valuesFrom:
-  #   - kind: ConfigMap
-  #     name: kube-state-metrics-config
-  #     valuesKey: kube-state-metrics.yaml
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     # fullnameOverride: kps
     cleanPrometheusOperatorObjectNames: true
 
-    # crds:
-    #   enabled: false
-
     alertmanager:
       enabled: true
       fullnameOverride: alertmanager
       alertmanagerSpec:
+        alertmanagerConfiguration:
+          name: alertmanager
+          global:
+            resolveTimeout: 5m
         storage:
           volumeClaimTemplate:
             spec:
@@ -130,8 +127,11 @@ spec:
       #   selector:
       #     k8s-app: kube-controller-manager
     kubeEtcd:
-      enabled: false
+      enabled: true
       endpoints: *cm
+      service:
+        selector:
+          component: kube-apiserver # etcd runs on control plane nodes
     kubeProxy:
       enabled: false
     kubeScheduler:

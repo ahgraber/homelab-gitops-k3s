@@ -1,65 +1,94 @@
 ---
-## ref: https://prometheus.io/docs/alerting/alertmanager/
-## ref: https://prometheus.io/docs/alerting/latest/configuration/#configuration-file
-global:
-  resolve_timeout: 5m
-# Inhibition rules allow to mute a set of alerts given that another alert is firing.
-# We use this to mute any warning-level notifications if the same alert is already critical.
-inhibit_rules:
-  - source_matchers:
-      - "severity = critical"
-    target_matchers:
-      - "severity =~ warning|info"
-    equal:
-      - "namespace"
-      - "alertname"
-  - source_matchers:
-      - "severity = warning"
-    target_matchers:
-      - "severity = info"
-    equal:
-      - "namespace"
-      - "alertname"
-  - source_matchers:
-      - "alertname = InfoInhibitor"
-    target_matchers:
-      - "severity = info"
-    equal:
-      - "namespace"
-receivers:
-  - name: "null"
-  - name: "email"
-    email_configs:
-      - to: "${SECRET_DEFAULT_EMAIL}"
-        from: "${SECRET_SMTP_ADDRESS}"
-        smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
-        auth_username: "${SECRET_SMTP_USER}"
-        auth_password: "${SECRET_SMTP_PWD}"
-        require_tls: true
-        # prettier-ignore
-        text: >-
-          [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/alertmanagerconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager
+spec:
+  ## ref: https://prometheus.io/docs/alerting/alertmanager/
+  ## ref: https://prometheus.io/docs/alerting/latest/configuration/#configuration-file
+  route:
+    # root route with all parameters are inherited by the child routes if they are not overwritten
+    receiver: "null"
+    groupBy:
+      - alertname
+      - job
+    groupInterval: 10m
+    groupWait: 1m
+    repeatInterval: 12h
+    routes:
+      - receiver: "null"
+        matchers:
+          - name: alertname
+            value: Watchdog
+            matchType: "="
+      - receiver: "null"
+        matchers:
+          - name: alertname
+            value: InfoInhibitor
+            matchType: "="
+      - receiver: "email"
+        matchers:
+          - name: severity
+            value: critical
+            matchType: "="
 
-          {{ range .Alerts -}}
-            *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
-          {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
-          *Details:*
-            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+  # Inhibition rules allow to mute a set of alerts given that another alert is firing.
+  # We use this to mute any warning-level notifications if the same alert is already critical.
+  inhibitRules:
+    - equal:
+        - alertname
+        - namespace
+      sourceMatch:
+        - name: severity
+          value: critical
+          matchType: "="
+      targetMatch:
+        - name: severity
+          value: warning
+          matchType: "="
+    - equal:
+        - alertname
+        - namespace
+      sourceMatch:
+        - name: severity
+          value: warning
+          matchType: "="
+      targetMatch:
+        - name: severity
+          value: info
+          matchType: "="
+    - equal:
+        - namespace
+      sourceMatch:
+        - name: alertname
+          value: InfoInhibitor
+          matchType: "="
+      targetMatch:
+        - name: severity
+          value: info
+          matchType: "="
+
+  receivers:
+    - name: "null"
+    - name: "email"
+      emailConfigs:
+        - to: "${SECRET_DEFAULT_EMAIL}"
+          from: "${SECRET_SMTP_ADDRESS}"
+          smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
+          authUsername: "${SECRET_SMTP_USER}"
+          authPassword:
+            name: alertmanager-notifiers
+            key: SMTP_PASSWORD
+          requireTLS: true
+          # prettier-ignore
+          text: >-
+            [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ if ne .CommonAnnotations.summary ""}}{{ .CommonAnnotations.summary }} {{ else if ne .CommonAnnotations.message ""}}{{ .CommonAnnotations.message }} {{ else if ne .CommonAnnotations.description ""}}{{ .CommonAnnotations.description }} {{ else }}{{ .CommonLabels.alertname }}{{ end }}
+
+            {{ range .Alerts -}}
+              *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+            {{ if ne .Annotations.summary ""}}*Summary:* {{ .Annotations.summary }} {{ else if ne .Annotations.message ""}}*Message:* {{ .Annotations.message }} {{ else if ne .Annotations.description ""}}*Description:* {{ .Annotations.description }}{{ end }}
+            *Details:*
+              {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+              {{ end }}
             {{ end }}
-          {{ end }}
-route:
-  # root route with all parameters are inherited by the child routes if they are not overwritten
-  receiver: "null"
-  group_by: ["alertname"]
-  group_wait: 60s
-  group_interval: 15m
-  repeat_interval: 6h
-  routes:
-    - receiver: "null"
-      matchers:
-        - alertname =~ "InfoInhibitor|Watchdog"
-      continue: false
-    - receiver: "email"
-      matchers:
-        - severity = "critical"
-      continue: true
