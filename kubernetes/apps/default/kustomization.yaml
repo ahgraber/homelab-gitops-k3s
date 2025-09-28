@@ -6,8 +6,6 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations | Apps
-  # - ./archivebox/ks.yaml
-  # - ./changedetection/ks.yaml
   - ./cyberchef/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
