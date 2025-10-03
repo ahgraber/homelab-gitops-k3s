@@ -55,6 +55,11 @@ spec:
               MEILI_ADDR: http://karakeep-meilisearch.default.svc.cluster.local:7700
               NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
               DISABLE_NEW_RELEASE_CHECK: true
+              # OpenAI Config
+              INFERENCE_TEXT_MODEL: gpt-5-mini
+              INFERENCE_IMAGE_MODEL: gpt-5-mini
+              EMBEDDING_TEXT_MODEL: text-embedding-3-small
+              INFERENCE_CONTEXT_LENGTH: "8192"
             envFrom:
               - secretRef:
                   name: *app
