@@ -54,7 +54,7 @@ spec:
           cpu: 23m
           memory: 105Mi
         limits:
-          memory: 105Mi
+          memory: 192Mi
 
     # checks which of the managed pods have correct resources set and, if required,
     # kills them so that they can be recreated by their controllers with the updated requests
