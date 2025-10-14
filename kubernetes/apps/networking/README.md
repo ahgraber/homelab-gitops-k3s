@@ -49,8 +49,15 @@ The `external-dns` application will create public DNS records.
 External-facing application access relies on a `cloudflared` tunnel to access the external Cilium Gateway,
 which terminates TLS for HTTPRoutes attached to it before proxying traffic to the application.
 
-By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
-In order to make additional applications public you must configure HTTPRoute parent references and annotations (see the `echo-server` HelmRelease).
+Any HTTPRoute that attaches to the `external` gateway becomes reachable over the internet through the Cloudflare tunnel.
+At the moment, the following workloads target that listener:
+
+* `echo-server` (debug namespace)
+* `flux-webhook` (Flux reconciliation webhook)
+* `miniflux`, `mealie`, `picoshare`, and `opengist` (default namespace applications)
+
+All other HTTPRoutes in this repository reference the `internal` gateway and remain private to the homelab network.
+If you need to expose an additional service publicly, configure its parent references and (optionally) DNS annotations in the same pattern used by the `echo-server` HelmRelease.
 
 ## ⚠️ Cilium Gateway migration notes
 

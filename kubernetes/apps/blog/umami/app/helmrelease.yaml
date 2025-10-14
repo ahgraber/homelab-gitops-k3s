@@ -97,8 +97,6 @@ spec:
           - backendRefs:
               - name: *app
                 port: *port
-        annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
 
     persistence:
       tmp:
