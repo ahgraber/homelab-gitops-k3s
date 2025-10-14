@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # yamllint disable rule:comments
@@ -10,25 +10,19 @@ resources:
   # - ./bitnami.yaml
   - ./bitwarden.yaml
   # - ./bjw-s.yaml                  # common app-template
-  - ./cilium.yaml
-  - ./cloudnativepg.yaml
   # - ./coredns.yaml
   - ./crowdsec.yaml
   - ./csi-driver-nfs.yaml
   - ./deliveryhero.yaml           # node-problem-detector (and others)
   - ./democratic-csi.yaml
-  - ./descheduler.yaml
   - ./emberstack.yaml             # reflector
-  - ./external-dns.yaml
   - ./fairwinds.yaml              # goldilocks (and others)
   # - ./grafana.yaml
-  - ./ingress-nginx.yaml
   # - ./jetstack.yaml               # cert-manager
   # - ./jupyterhub.yaml
   # - ./k8s-gateway.yaml
   - ./kubernetes-dashboard.yaml
   - ./lwolf.yaml                  # kube-cleanup-operator
-  - ./metrics-server.yaml
   - ./movetokube.yaml             # ext-postgres-operator
   - ./opstree.yaml                # redis-operator
   # - ./piraeus.yaml                # snapshot-controller

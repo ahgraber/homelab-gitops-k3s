@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,8 +8,8 @@ spec:
   chartRef:
     kind: OCIRepository
     name: rook-ceph
+    namespace: flux-system
   interval: 1h
-  timeout: 15m
   install:
     remediation:
       retries: -1
@@ -25,6 +25,7 @@ spec:
   #         - /spec/containers/resources/limits
   #       target:
   #         kind: Pod
+  timeout: 15m
   values:
     crds:
       enabled: true

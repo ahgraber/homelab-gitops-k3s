@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -41,7 +41,8 @@ spec:
             image:
               # https://hub.docker.com/r/mpepping/cyberchef
               repository: docker.io/mpepping/cyberchef
-              tag: v10.19.4@sha256:91e04eaaa1ba1eac6b8e410d6f7b340e1ea0450d48ccbb52ec67ce6faa3672c5
+              tag: 
+                v10.19.4@sha256:91e04eaaa1ba1eac6b8e410d6f7b340e1ea0450d48ccbb52ec67ce6faa3672c5
             env:
               TZ: ${TIMEZONE}
             resources:

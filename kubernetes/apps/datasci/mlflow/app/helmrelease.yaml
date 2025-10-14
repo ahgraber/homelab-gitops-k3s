@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -55,7 +55,8 @@ spec:
                     name: &db_secret database-mlflow
                     key: POSTGRES_URL
             # double "$$" escape flux substitutions
-            command: [/bin/bash, -c, mlflow db upgrade "$$MLFLOW_BACKEND_STORE_URI"]
+            command: [/bin/bash, -c, mlflow db upgrade 
+                  "$$MLFLOW_BACKEND_STORE_URI"]
         containers:
           app:
             image:
@@ -104,7 +105,8 @@ spec:
               # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow/
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3:https://${SECRET_S3_ENDPOINT}/mlflow # s3://mlflow/
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
-              MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
+              MLFLOW_DEPLOYMENTS_TARGET: 
+                http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: ${TIMEZONE}
             envFrom:
               - secretRef:

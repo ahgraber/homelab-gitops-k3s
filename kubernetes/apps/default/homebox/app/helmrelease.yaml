@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -38,7 +38,8 @@ spec:
           app:
             image:
               repository: ghcr.io/sysadminsmedia/homebox
-              tag: 0.21.0@sha256:cd5ab1669c37625b55be7758bd54dc2d2d6146db61c510322d0378312783a9b7
+              tag: 
+                0.21.0@sha256:cd5ab1669c37625b55be7758bd54dc2d2d6146db61c510322d0378312783a9b7
             env:
               TZ: ${TIMEZONE}
               HBOX_WEB_MAX_UPLOAD_SIZE: 10 # in MB

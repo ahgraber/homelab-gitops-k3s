@@ -3,22 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ingress-nginx-external
+  name: ingress-nginx-source
   namespace: flux-system
 spec:
-  targetNamespace: networking
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-      app.kubernetes.io/instance: nginx-external
-  dependsOn:
-    - name: cert-manager-certificates
-  path: ./kubernetes/apps/networking/ingress-nginx/external
+  targetNamespace: flux-system
+  path: ./kubernetes/apps/networking/ingress-nginx/source
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  wait: false
+  wait: true
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -27,22 +21,48 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ingress-nginx-internal
+  name: &external ingress-nginx-external
   namespace: flux-system
 spec:
   targetNamespace: networking
   commonMetadata:
     labels:
-      app.kubernetes.io/name: *app
+      app.kubernetes.io/name: *external
+      app.kubernetes.io/instance: nginx-external
+  dependsOn:
+    - name: cert-manager-certificates
+    - name: ingress-nginx-source
+  path: ./kubernetes/apps/networking/ingress-nginx/external
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &internal ingress-nginx-internal
+  namespace: flux-system
+spec:
+  targetNamespace: networking
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *internal
       app.kubernetes.io/instance: nginx-internal
   dependsOn:
     - name: cert-manager-certificates
+    - name: ingress-nginx-source
   path: ./kubernetes/apps/networking/ingress-nginx/internal
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  wait: false
+  wait: true
   interval: 30m
   retryInterval: 1m
   timeout: 5m

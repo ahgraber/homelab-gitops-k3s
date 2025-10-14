@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -38,7 +38,8 @@ spec:
           app:
             image:
               repository: ghcr.io/usememos/memos
-              tag: 0.25.1@sha256:f1faf27fb60aff4df13fc2c6017baa7b6f8ea684dc9a9bff6f212a01d2efe108
+              tag: 
+                0.25.1@sha256:f1faf27fb60aff4df13fc2c6017baa7b6f8ea684dc9a9bff6f212a01d2efe108
             env:
               TZ: ${TIMEZONE}
               MEMOS_PORT: "5230" # https://github.com/usememos/memos/issues/1782

@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -29,6 +29,23 @@ spec:
           - /spec/containers/resources/limits
         target:
           kind: Pod
+  valuesFrom:
+    - kind: Secret
+      name: &db_secret database-prefect
+      valuesKey: DATABASE_NAME
+      targetPath: secret.database
+    - kind: Secret
+      name: *db_secret
+      valuesKey: LOGIN
+      targetPath: secret.username
+    - kind: Secret
+      name: *db_secret
+      valuesKey: PASSWORD
+      targetPath: secret.password
+    - kind: Secret
+      name: *db_secret
+      valuesKey: HOST
+      targetPath: secret.host
   values:
     global:
       prefect:
@@ -102,20 +119,3 @@ spec:
       create: true
       # ... filled with valuesFrom below
       port: 5432
-  valuesFrom:
-    - kind: Secret
-      name: &db_secret database-prefect
-      valuesKey: DATABASE_NAME
-      targetPath: secret.database
-    - kind: Secret
-      name: *db_secret
-      valuesKey: LOGIN
-      targetPath: secret.username
-    - kind: Secret
-      name: *db_secret
-      valuesKey: PASSWORD
-      targetPath: secret.password
-    - kind: Secret
-      name: *db_secret
-      valuesKey: HOST
-      targetPath: secret.host

@@ -1,4 +1,3 @@
----
 creation_rules:
   - path_regex: kubernetes/.*\.sops\.ya?ml
     encrypted_regex: "^(data|stringData)$"

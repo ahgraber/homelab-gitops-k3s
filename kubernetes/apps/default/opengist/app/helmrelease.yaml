@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -38,7 +38,8 @@ spec:
           app:
             image:
               repository: ghcr.io/thomiceli/opengist
-              tag: 1.11.1@sha256:86e7eb1f9fb2aa7b5d620fe452406de331c6e4d1c47b4d23d46b4b01e1ebf69d
+              tag: 
+                1.11.1@sha256:86e7eb1f9fb2aa7b5d620fe452406de331c6e4d1c47b4d23d46b4b01e1ebf69d
             command: # double "$$" escape flux substitutions
               - ./opengist
             args:

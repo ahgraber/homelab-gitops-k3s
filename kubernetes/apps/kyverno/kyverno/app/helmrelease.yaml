@@ -1,14 +1,15 @@
----
 # yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/helm.toolkit.fluxcd.io/helmrelease_v2.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kyverno
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: kyverno
+    namespace: flux-system
+  interval: 1h
   install:
     crds: CreateReplace
     remediation:
@@ -17,7 +18,15 @@ spec:
     cleanupOnFail: true
     crds: CreateReplace
     remediation:
+      strategy: rollback
       retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
   values:
     crds:
       install: true

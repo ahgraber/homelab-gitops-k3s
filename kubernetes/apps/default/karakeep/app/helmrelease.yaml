@@ -1,5 +1,5 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -44,7 +44,8 @@ spec:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.27.1
             env:
-              BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
+              BROWSER_WEB_URL: 
+                http://karakeep-chrome.default.svc.cluster.local:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
               CRAWLER_ENABLE_ADBLOCKER: true
               CRAWLER_STORE_SCREENSHOT: true
@@ -52,7 +53,8 @@ spec:
               DATA_DIR: /data
               DISABLE_SIGNUPS: true
               MAX_ASSET_SIZE_MB: 128
-              MEILI_ADDR: http://karakeep-meilisearch.default.svc.cluster.local:7700
+              MEILI_ADDR: 
+                http://karakeep-meilisearch.default.svc.cluster.local:7700
               NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
               DISABLE_NEW_RELEASE_CHECK: true
               # OpenAI Config
