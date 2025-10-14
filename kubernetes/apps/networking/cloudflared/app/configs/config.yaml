@@ -4,7 +4,7 @@ originRequest:
   originServerName: "external.${SECRET_DOMAIN}"
 
 ingress:
-  ### Traffic coming in thru cloudflare should go to `external` nginx
+  ### Traffic coming in thru cloudflare should go to the `external` Cilium Gateway
   - hostname: "${SECRET_DOMAIN}"
     service: &svc https://cilium-gateway-external.kube-system.svc.cluster.local
   - hostname: "*.${SECRET_DOMAIN}"
