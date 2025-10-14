@@ -245,8 +245,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 ### 🌐 Public DNS
 
 The `external-dns` application created in the `networking` namespace will handle creating public DNS records.
-By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
-In order to make additional applications public you must configure the HTTPRoute parent references and annotations like in the HelmRelease for `echo-server`.
+Any HTTPRoute that attaches to the `external` gateway is reachable from the public internet through the Cloudflare tunnel.
+At present, that includes the `echo-server` debug service, the Flux GitHub webhook receiver, and the `miniflux`, `mealie`, `picoshare`, and `opengist` applications in the `default` namespace.
+To expose an additional application you must update its HTTPRoute parent references and (optionally) DNS annotations in the same pattern used by the `echo-server` HelmRelease.
 
 ### 🏠 Home DNS
 
