@@ -9,8 +9,8 @@ metadata:
   annotations:
     volsync.backube/privileged-movers: "true"
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/provider_v1beta3.json
-apiVersion: notification.toolkit.fluxcd.io/v1beta3
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/provider_v1.json
+apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Provider
 metadata:
   name: alert-manager
@@ -19,8 +19,8 @@ spec:
   type: alertmanager
   address: http://alertmanager-operated.monitoring.svc.cluster.local:9093/api/v2/alerts/
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/alert_v1beta3.json
-apiVersion: notification.toolkit.fluxcd.io/v1beta3
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/notification.toolkit.fluxcd.io/alert_v1.json
+apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Alert
 metadata:
   name: alert-manager
