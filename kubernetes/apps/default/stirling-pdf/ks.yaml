@@ -15,10 +15,10 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m
+  wait: true
   postBuild:
     substitute:
       APP: *app
