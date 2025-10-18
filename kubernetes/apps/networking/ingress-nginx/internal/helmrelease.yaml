@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/charts/ingress-nginx/values.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -22,6 +22,7 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  timeout: 5m
   driftDetection:
     mode: enabled
     ignore:

@@ -1,15 +1,14 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prometheus-community/helm-charts/main/charts/kube-prometheus-stack/values.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
 spec:
-  interval: 30m
-  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: kube-prometheus-stack
+  interval: 15m
   dependsOn:
     # - name: prometheus-operator-crds
     #   namespace: monitoring
@@ -23,6 +22,7 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  timeout: 5m
   # driftDetection:
   #   mode: enabled
   #   ignore:
