@@ -119,7 +119,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=hukkin/mdformat
   - repo: https://github.com/hukkin/mdformat
-    rev: 1.0.0
+    rev: 0.7.22
     hooks:
       - id: mdformat
         additional_dependencies:
