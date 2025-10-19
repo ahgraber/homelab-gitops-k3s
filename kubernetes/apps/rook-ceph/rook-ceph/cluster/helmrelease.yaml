@@ -10,7 +10,6 @@ spec:
     name: rook-ceph-cluster
     namespace: rook-ceph
   interval: 1h
-  timeout: 15m
   dependsOn:
     - name: rook-ceph-operator
       namespace: rook-ceph
@@ -22,7 +21,7 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  timeout: 5m
+  timeout: 15m
   # driftDetection:
   #   mode: warn
   #   ignore:
