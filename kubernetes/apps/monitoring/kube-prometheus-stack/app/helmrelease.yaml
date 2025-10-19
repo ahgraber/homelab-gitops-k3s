@@ -8,12 +8,13 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kube-prometheus-stack
-  interval: 15m
+    namespace: monitoring
   dependsOn:
     # - name: prometheus-operator-crds
     #   namespace: monitoring
     - name: local-path-provisioner
       namespace: kube-system
+  interval: 15m
   install:
     remediation:
       retries: -1

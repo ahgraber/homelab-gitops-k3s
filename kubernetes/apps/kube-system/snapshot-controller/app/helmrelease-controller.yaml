@@ -9,6 +9,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: snapshot-controller
+    namespace: kube-system
   interval: 15m
   install:
     crds: CreateReplace

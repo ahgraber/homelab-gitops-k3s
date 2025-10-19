@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: GitRepository
         name: local-path-provisioner
-        namespace: flux-system
+        namespace: kube-system
   interval: 15m
   install:
     remediation:

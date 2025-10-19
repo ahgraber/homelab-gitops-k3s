@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/prefect/db
@@ -35,6 +36,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/server
   prune: true
@@ -57,6 +59,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: prefect-server
     - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/worker

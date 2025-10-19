@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: default
     - name: cnpg-cluster-default
     - name: ext-postgres-operator
   path: ./kubernetes/apps/default/memos/db
@@ -35,6 +36,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: default
     - name: memos-db
     - name: rook-ceph-cluster
     - name: volsync

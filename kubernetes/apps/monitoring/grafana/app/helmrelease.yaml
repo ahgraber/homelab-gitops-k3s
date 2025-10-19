@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: grafana
+    namespace: monitoring
   interval: 15m
   dependsOn:
     - name: kube-prometheus-stack

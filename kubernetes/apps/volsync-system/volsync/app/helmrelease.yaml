@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: backube
-        namespace: flux-system
+        namespace: volsync-system
   interval: 15m
   install:
     remediation:

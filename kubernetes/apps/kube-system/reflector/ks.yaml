@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kube-system
   path: ./kubernetes/apps/kube-system/reflector/app
   prune: true
   sourceRef:

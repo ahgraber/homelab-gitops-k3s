@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/mlflow/db
@@ -35,6 +36,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: mlflow-db
     - name: rook-ceph-cluster
     - name: volsync

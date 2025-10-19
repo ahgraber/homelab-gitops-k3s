@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: blog
     - name: cnpg-cluster-default
     - name: ext-postgres-operator
   path: ./kubernetes/apps/blog/umami/db
@@ -35,6 +36,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: blog
     - name: umami-db
   path: ./kubernetes/apps/blog/umami/app
   prune: true

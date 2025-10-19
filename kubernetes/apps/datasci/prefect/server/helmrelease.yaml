@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: prefect
-        namespace: flux-system
+        namespace: datasci
   interval: 15m
   install:
     remediation:

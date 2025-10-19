@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: volsync-system
     - name: snapshot-controller
   path: ./kubernetes/apps/volsync-system/volsync/app
   prune: true

@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kyverno
+    namespace: kyverno
   interval: 15m
   install:
     crds: CreateReplace

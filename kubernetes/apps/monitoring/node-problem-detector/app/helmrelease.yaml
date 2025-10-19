@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: deliveryhero
-        namespace: flux-system
+        namespace: monitoring
   interval: 15m
   install:
     remediation:

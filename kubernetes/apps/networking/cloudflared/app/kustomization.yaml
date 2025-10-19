@@ -6,6 +6,7 @@ namespace: networking
 resources:
   - ./dnsendpoint.yaml
   - ./secret.sops.yaml
+  - ./source.yaml
   - ./helmrelease.yaml
 configMapGenerator:
   - name: cloudflared

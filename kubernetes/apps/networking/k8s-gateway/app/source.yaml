@@ -4,6 +4,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: k8s-gateway
+  namespace: networking
 spec:
   interval: 1h
   layerSelector:
