@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: k8s-gateway
+    namespace: networking
   interval: 15m
   install:
     remediation:

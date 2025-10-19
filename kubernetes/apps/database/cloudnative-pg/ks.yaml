@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: database
   path: ./kubernetes/apps/database/cloudnative-pg/operator
   prune: true
   sourceRef:
@@ -32,6 +34,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: database
     - name: cnpg-operator
     - name: local-path-provisioner
     - name: kube-prometheus-stack
@@ -57,6 +60,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: database
     - name: cnpg-operator
     - name: kube-prometheus-stack
     # - name: grafana

@@ -8,8 +8,8 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: app-template
-    namespace: flux-system
+    name: scrutiny
+    namespace: monitoring
   interval: 15m
   install:
     remediation:

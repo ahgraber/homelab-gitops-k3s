@@ -8,7 +8,9 @@ spec:
   chartRef:
     kind: OCIRepository
     name: rook-ceph
-  interval: 15m
+    namespace: rook-ceph
+  interval: 1h
+  timeout: 15m
   install:
     remediation:
       retries: -1
@@ -17,7 +19,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  timeout: 5m
   # driftDetection:
   #   mode: enabled
   #   ignore:

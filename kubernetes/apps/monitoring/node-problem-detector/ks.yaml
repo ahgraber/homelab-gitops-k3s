@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: monitoring
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/node-problem-detector/app
   prune: true

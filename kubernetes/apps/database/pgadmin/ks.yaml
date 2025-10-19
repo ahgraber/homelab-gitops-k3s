@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: database
     - name: cnpg-cluster-default
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/database/pgadmin/app

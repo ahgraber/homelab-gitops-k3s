@@ -8,6 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: loki
+    namespace: monitoring
   interval: 15m
   dependsOn:
     - name: local-path-provisioner

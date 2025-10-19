@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: cnpg-cluster-datasci
   path: ./kubernetes/apps/datasci/postgres/ext-postgres-operator/app
   prune: true

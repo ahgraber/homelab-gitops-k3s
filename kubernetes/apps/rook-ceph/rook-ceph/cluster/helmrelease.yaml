@@ -8,7 +8,9 @@ spec:
   chartRef:
     kind: OCIRepository
     name: rook-ceph-cluster
-  interval: 15m
+    namespace: rook-ceph
+  interval: 1h
+  timeout: 15m
   dependsOn:
     - name: rook-ceph-operator
       namespace: rook-ceph

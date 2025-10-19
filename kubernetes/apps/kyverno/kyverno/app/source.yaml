@@ -4,6 +4,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: kyverno
+  namespace: kyverno
 spec:
   interval: 1h
   layerSelector:

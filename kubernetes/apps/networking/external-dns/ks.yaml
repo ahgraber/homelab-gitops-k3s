@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: networking
   path: ./kubernetes/apps/networking/external-dns/app
   prune: true
   sourceRef:
