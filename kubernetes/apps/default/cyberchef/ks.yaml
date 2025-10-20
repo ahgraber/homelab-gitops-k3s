@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: default
   path: ./kubernetes/apps/default/cyberchef/app
   prune: true
   sourceRef:

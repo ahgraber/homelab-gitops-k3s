@@ -10,9 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: rook-ceph
-    # - name: cert-manager # for rook-ceph admission controller
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
   prune: true
   sourceRef:
@@ -35,7 +32,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph
     - name: rook-ceph-operator
     - name: snapshot-controller
     # - name: networking-ingress-nginx-internal
@@ -61,7 +57,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: rook-ceph
     - name: rook-ceph-cluster
     - name: kube-prometheus-stack
     # - name: grafana

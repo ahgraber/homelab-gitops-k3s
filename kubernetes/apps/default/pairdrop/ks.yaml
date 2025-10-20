@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: default
   path: ./kubernetes/apps/default/pairdrop/app
   prune: true
   sourceRef:

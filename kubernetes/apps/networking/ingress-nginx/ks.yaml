@@ -12,7 +12,6 @@ spec:
       app.kubernetes.io/name: *app
       app.kubernetes.io/instance: nginx-external
   dependsOn:
-    - name: networking
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/ingress-nginx/external
   prune: true
@@ -37,7 +36,6 @@ spec:
       app.kubernetes.io/name: *app
       app.kubernetes.io/instance: nginx-internal
   dependsOn:
-    - name: networking
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/ingress-nginx/internal
   prune: true

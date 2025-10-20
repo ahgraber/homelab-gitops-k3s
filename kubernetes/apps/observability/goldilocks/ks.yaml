@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: monitoring
   path: ./kubernetes/apps/monitoring/goldilocks/app
   prune: true
   sourceRef:

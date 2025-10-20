@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: debug
   path: ./kubernetes/apps/debug/dnsutils/app
   prune: true
   sourceRef:
