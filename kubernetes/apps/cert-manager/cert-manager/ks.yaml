@@ -35,7 +35,6 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager
-    - name: cert-manager
   path: ./kubernetes/apps/cert-manager/cert-manager/issuers
   prune: true
   sourceRef:
@@ -58,8 +57,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cert-manager
-    - name: cert-manager
     - name: cert-manager-issuers
     # - name: kube-system-reflector
   path: ./kubernetes/apps/cert-manager/cert-manager/certificates
@@ -84,7 +81,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cert-manager
     - name: cert-manager
     # - name: grafana
   path: ./kubernetes/apps/cert-manager/addons
