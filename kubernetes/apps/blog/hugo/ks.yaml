@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: blog
   path: ./kubernetes/apps/blog/hugo/app
   prune: true
   sourceRef:
@@ -40,8 +38,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: blog
   path: ./kubernetes/apps/blog/hugo/cache
   prune: true
   sourceRef:

@@ -9,8 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: system-upgrade
   path: ./kubernetes/apps/system-upgrade/controller/app
   prune: true
   sourceRef:
@@ -32,7 +30,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: system-upgrade
     - name: system-upgrade-controller
   path: ./kubernetes/apps/system-upgrade/controller/plans
   prune: true

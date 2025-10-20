@@ -11,7 +11,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: monitoring
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/karma/app
   prune: true

@@ -11,7 +11,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: default
     - name: cnpg-cluster-default
     - name: ext-postgres-operator
   path: ./kubernetes/apps/default/miniflux/db
@@ -36,7 +35,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: default
     - name: miniflux-db
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/miniflux/app

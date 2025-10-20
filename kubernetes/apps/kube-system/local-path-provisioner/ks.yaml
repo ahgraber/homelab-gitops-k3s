@@ -12,8 +12,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: kube-system
   path: ./kubernetes/apps/kube-system/local-path-provisioner/app
   prune: true
   sourceRef:

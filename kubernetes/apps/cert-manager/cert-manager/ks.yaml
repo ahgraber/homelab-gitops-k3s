@@ -10,8 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cert-manager-system
   path: ./kubernetes/apps/cert-manager/cert-manager/app
   prune: true
   sourceRef:
