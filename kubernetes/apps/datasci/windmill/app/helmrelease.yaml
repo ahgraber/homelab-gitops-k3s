@@ -7,8 +7,8 @@ metadata:
 spec:
   chart:
     spec:
-      chart: *app
-      version: 3.0.12
+      chart: windmill
+      version: 3.0.13
       sourceRef:
         kind: HelmRepository
         name: *app
