@@ -4,7 +4,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: fairwinds
-  namespace: monitoring
 spec:
   interval: 1h
   url: https://charts.fairwinds.com/stable

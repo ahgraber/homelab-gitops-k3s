@@ -5,10 +5,13 @@ kind: HelmRelease
 metadata:
   name: &app external-dns
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: *app
-    namespace: networking
+  chart:
+    spec:
+      chart: *app
+      version: 1.19.0
+      sourceRef:
+        kind: HelmRepository
+        name: *app
   interval: 15m
   install:
     remediation:

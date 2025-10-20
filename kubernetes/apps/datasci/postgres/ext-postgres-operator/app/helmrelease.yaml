@@ -11,8 +11,7 @@ spec:
       version: 2.2.0
       sourceRef:
         kind: HelmRepository
-        name: ext-postgres-operator-datasci
-        namespace: datasci
+        name: ext-postgres-operator
   interval: 15m
   install:
     remediation:

@@ -8,8 +8,7 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: scrutiny
-    namespace: monitoring
+    name: *app
   interval: 15m
   install:
     remediation:

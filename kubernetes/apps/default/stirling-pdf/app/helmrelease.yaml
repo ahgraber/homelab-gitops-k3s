@@ -7,8 +7,7 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: stirling-pdf
-    namespace: flux-system
+    name: *app
   interval: 15m
   install:
     remediation:

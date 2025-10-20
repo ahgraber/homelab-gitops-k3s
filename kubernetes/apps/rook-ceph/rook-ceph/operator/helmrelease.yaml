@@ -3,12 +3,11 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: rook-ceph-operator
+  name: &app rook-ceph-operator
 spec:
   chartRef:
     kind: OCIRepository
     name: rook-ceph
-    namespace: rook-ceph
   interval: 1h
   install:
     remediation:

@@ -3,12 +3,11 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kube-prometheus-stack
+  name: &app kube-prometheus-stack
 spec:
   chartRef:
     kind: OCIRepository
-    name: kube-prometheus-stack
-    namespace: monitoring
+    name: *app
   interval: 15m
   dependsOn:
     # - name: prometheus-operator-crds

@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: runix
-        namespace: database
   interval: 15m
   dependsOn:
     - name: rook-ceph-cluster

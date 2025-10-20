@@ -3,15 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: local-path-provisioner
+  name: &app local-path-provisioner
 spec:
   chart:
     spec:
       chart: ./deploy/chart/local-path-provisioner
       sourceRef:
         kind: GitRepository
-        name: local-path-provisioner
-        namespace: kube-system
+        name: *app
   interval: 15m
   install:
     remediation:

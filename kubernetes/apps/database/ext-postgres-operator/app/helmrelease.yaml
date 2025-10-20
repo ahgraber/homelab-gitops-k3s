@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ext-postgres-operator
-        namespace: database
   interval: 15m
   install:
     remediation:

@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: deliveryhero
-        namespace: monitoring
   interval: 15m
   install:
     remediation:
