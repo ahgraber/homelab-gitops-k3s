@@ -4,30 +4,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 # yamllint disable rule:comments
 # prettier-ignore
-resources:
+resources: []
   # - ./actions-runner-controller.yaml
-  # - ./backube.yaml                # volsync (co-located)
-  # - ./bitnami.yaml
   # - ./bjw-s.yaml                  # common app-template
-  # - ./cilium.yaml                # cilium (OCI)
-  # - ./cloudnativepg.yaml         # cloudnative-pg operator (OCI)
   # - ./coredns.yaml
-  # - ./deliveryhero.yaml           # node-problem-detector (co-located)
-  # - ./descheduler.yaml           # descheduler (OCI)
-  # - ./emberstack.yaml             # reflector (co-located)
-  # - ./external-dns.yaml          # external-dns (OCI)
-  # - ./fairwinds.yaml              # goldilocks (co-located)
-  # - ./grafana.yaml               # grafana (OCI)
-  # - ./ingress-nginx.yaml         # ingress-nginx (OCI)
   # - ./jetstack.yaml               # cert-manager
-  # - ./jupyterhub.yaml
-  # - ./k8s-gateway.yaml           # k8s-gateway (OCI)
-  # - ./metrics-server.yaml        # metrics-server (OCI)
-  # - ./movetokube.yaml             # ext-postgres-operator (co-located)
-  # - ./piraeus.yaml                # snapshot-controller (OCI)
-  # - ./prefect.yaml                # prefect (co-located)
-  # - ./prometheus-community.yaml   # kube-prometheus-stack (OCI)
-  # - ./runix.yaml                  # pgadmin (co-located)
-  # - ./stakater.yaml               # reloader (OCI)
   # - ./valheim.yaml
-  # - ./windmill.yaml               # windmill (co-located)
