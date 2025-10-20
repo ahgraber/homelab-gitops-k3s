@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Flux bootstrap and cluster config
+  - ./config
+  - ./vars
+
+  # App sources (Helm, OCI)
+  - ./repositories
+
+  # Top-level Flux Kustomization CR for apps
+  - ./apps.yaml
