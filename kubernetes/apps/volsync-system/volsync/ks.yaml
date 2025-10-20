@@ -6,14 +6,14 @@ metadata:
   name: &app volsync
   namespace: flux-system
 spec:
-  targetNamespace: volsync-system
+  targetNamespace: volsync
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: volsync-system
     - name: snapshot-controller
-  path: ./kubernetes/apps/volsync-system/volsync/app
+    - name: volsync-system
+  path: ./kubernetes/apps/volsync/volsync/app
   prune: true
   sourceRef:
     kind: GitRepository
