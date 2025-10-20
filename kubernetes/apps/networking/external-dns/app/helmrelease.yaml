@@ -34,23 +34,17 @@ spec:
     logLevel: debug
     provider: cloudflare
     env:
-      - name: &tok CF_API_TOKEN
+      - name: &token CF_API_TOKEN
         valueFrom:
           secretKeyRef:
             name: &secret cloudflare-api-secret
-            key: *tok
-      - name: &zone CF_ZONE_ID
-        valueFrom:
-          secretKeyRef:
-            name: *secret
-            key: *zone
+            key: *token
     extraArgs:
       - --ingress-class=external
       - --cloudflare-dns-records-per-page=1000
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
-      - --zone-id-filter=$(CF_ZONE_ID)
     triggerLoopOnEvent: true
     policy: sync
     sources: [crd, ingress]
