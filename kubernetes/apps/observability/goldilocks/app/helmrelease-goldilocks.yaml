@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/FairwindsOps/charts/master/stable/goldilocks/values.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app goldilocks
+spec:
+  chart:
+    spec:
+      chart: *app
+      version: 10.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: fairwinds
+  interval: 15m
+  dependsOn:
+    - name: vpa
+      namespace: observability
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    image:
+      repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks
+      tag: v4.14.5@sha256:3974fed8cdbde7e02f7aa32a6c056747bdd83740a84425a67389f3faff8dd0b7
+      pullPolicy: Always
+
+    controller:
+      enabled: true
+      resources:
+        requests:
+          cpu: 15m
+          memory: 105Mi
+        limits:
+          memory: 132Mi
+
+    dashboard:
+      enabled: true
+      replicaCount: 1
+      # Container names to exclude from displaying in the Goldilocks dashboard
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - host: &host "goldilocks.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                type: Prefix
+        tls:
+          - hosts:
+              - *host
+      resources:
+        requests:
+          cpu: 15m
+          memory: 105Mi
+        limits:
+          memory: 105Mi
+
+    annotations:
+      reloader.stakater.com/search: "true"

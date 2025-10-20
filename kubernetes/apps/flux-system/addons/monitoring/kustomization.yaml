@@ -7,23 +7,23 @@ resources:
   - ./prometheusrule.yaml
 configMapGenerator:
   - name: flux-cluster-dashboard
-    namespace: monitoring
+    namespace: observability
     files:
       - flux-cluster-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
   - name: flux-control-plane-dashboard
-    namespace: monitoring
+    namespace: observability
     files:
       - flux-control-plane-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
   - name: flux-logs-dashboard
-    namespace: monitoring
+    namespace: observability
     files:
       - flux-logs-dashboard.json=https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
   - name: node-exporter-full-dashboard
-    namespace: monitoring
+    namespace: observability
     files:
       - node-exporter-full.json=https://grafana.com/api/dashboards/1860/revisions/29/download
   - name: pod-resources-max-dashboard
-    namespace: monitoring
+    namespace: observability
     files:
       - ./pod-resources-max.json
 generatorOptions:

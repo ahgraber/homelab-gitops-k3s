@@ -6,7 +6,7 @@ resources:
   - ./prometheusrule.yaml
 # configMapGenerator:
 #   - name: cnpg-dashboard
-#     namespace: monitoring
+#     namespace: observability
 #     files:
 #       - ./cloudnative-postgres.json
 #       # - cloudnative-pg-dashboard.json=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/docs/src/samples/monitoring/grafana-dashboard.json

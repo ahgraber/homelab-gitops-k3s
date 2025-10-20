@@ -45,7 +45,7 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 
 ## Teardown and Cleanup
 
-> Order of operations is critical!  See [documentation](https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown)
+> Order of operations is critical! See [documentation](https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown)
 
 Run `task rook:decommission`
 
@@ -165,7 +165,6 @@ done
 
 Show current PGs/OSD:
 
-<!-- markdownlint-disable -->
 ```sh
 ceph pg dump | awk '
 BEGIN { IGNORECASE = 1 }
@@ -184,7 +183,6 @@ END {
  printf("SUM :\t"); for (i in poollist) printf("%s\t",sumpool[i]); printf("|\n");
 }'
 ```
-<!-- markdownlint-enable -->
 
 > The general rules for deciding how many PGs your pool(s) should contain is:
 >
