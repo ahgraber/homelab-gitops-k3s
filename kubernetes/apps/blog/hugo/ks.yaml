@@ -38,6 +38,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kyverno-policies
   path: ./kubernetes/apps/blog/hugo/cache
   prune: true
   sourceRef:
