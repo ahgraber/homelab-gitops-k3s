@@ -4,7 +4,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: backube
-  namespace: volsync-system
+  namespace: volsync
 spec:
   interval: 1h
   url: https://backube.github.io/helm-charts/

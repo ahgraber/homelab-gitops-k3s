@@ -6,7 +6,7 @@ metadata:
   name: volsync-system
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/volsync-system
+  path: ./kubernetes/apps/volsync
   prune: true
   sourceRef:
     kind: GitRepository

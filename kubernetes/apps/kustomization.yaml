@@ -16,4 +16,4 @@ resources:
   - ./networking/ks.yaml
   - ./rook-ceph/ks.yaml
   - ./system-upgrade/ks.yaml
-  - ./volsync-system/ks.yaml
+  - ./volsync/ks.yaml
