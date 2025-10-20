@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: hugo-cache-purge-on-rollout
+  namespace: blog
+  annotations:
+    policies.kyverno.io/category: Other
+    policies.kyverno.io/subject: Deployment, Job
+    policies.kyverno.io/description: >-
+      Automatically purge Cloudflare cache when Hugo deployment is updated
+      with a new image tag or configuration change.
+spec:
+  rules:
+    - name: create-cache-purge-job-on-rollout
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              names:
+                - hugo-*
+              namespaces:
+                - blog
+      preconditions:
+        all:
+          - key: "{{ request.operation || 'BACKGROUND' }}"
+            operator: Equals
+            value: UPDATE
+          - key: "{{ request.object.metadata.generation }}"
+            operator: NotEquals
+            value: "{{ request.oldObject.metadata.generation }}"
+      generate:
+        generateExisting: false
+        synchronize: false
+        apiVersion: batch/v1
+        kind: Job
+        name: "cache-purge-{{ request.object.metadata.generation }}"
+        namespace: "{{ request.namespace }}"
+        data:
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: purge
+                    image: curlimages/curl:latest
+                    command: ["/bin/sh"]
+                    args:
+                      - "-c"
+                      - |
+                        curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+                          -H "Authorization: Bearer ${CF_API_TOKEN}" \
+                          -H "Content-Type: application/json" \
+                          --data '{"purge_everything":true}'
+                    envFrom:
+                      - secretRef:
+                          name: cloudflare-api
+                restartPolicy: Never
+            backoffLimit: 2
+            ttlSecondsAfterFinished: 1800
