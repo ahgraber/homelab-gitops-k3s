@@ -92,8 +92,8 @@ spec:
         X-Frame-Options: SAMEORIGIN
         X-XSS-Protection: 1; mode=block
       extraArgs:
-        default-ssl-certificate: "cert-manager/${SECRET_DOMAIN/./-}-production-tls"
-        # default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-staging-tls
+        # default-ssl-certificate: "cert-manager/${SECRET_DOMAIN/./-}-production-tls"
+        default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-staging-tls
       metrics:
         enabled: true
         serviceMonitor:
