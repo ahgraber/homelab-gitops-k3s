@@ -1,0 +1,244 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app kube-prometheus-stack
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 15m
+  dependsOn:
+    # - name: prometheus-operator-crds
+    #   namespace: observability
+    - name: local-path-provisioner
+      namespace: kube-system
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  # driftDetection:
+  #   mode: enabled
+  #   ignore:
+  #     - paths:
+  #         - /spec/containers/resources/limits
+  #       target:
+  #         kind: Pod
+  values:
+    ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+    # fullnameOverride: kps
+    cleanPrometheusOperatorObjectNames: true
+
+    alertmanager:
+      enabled: true
+      fullnameOverride: alertmanager
+      alertmanagerSpec:
+        alertmanagerConfiguration:
+          name: alertmanager
+          global:
+            resolveTimeout: 5m
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              resources:
+                requests:
+                  storage: 1Gi
+      # config:  # see alertmanager.yaml configmap
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - alertmanager.${SECRET_DOMAIN}
+
+    grafana:
+      enabled: false # manage by itself
+      forceDeployDashboards: true
+    additionalPrometheusRulesMap:
+      dockerhub-rules:
+        groups:
+          - name: dockerhub
+            rules:
+              - alert: DockerhubRateLimitRisk
+                annotations:
+                  summary: Kubernetes cluster Dockerhub rate limit risk
+                expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
+                labels:
+                  severity: critical
+      oom-rules:
+        groups:
+          - name: oom
+            rules:
+              - alert: OomKilled
+                annotations:
+                  summary: Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
+                expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
+                labels:
+                  severity: critical
+    # coreDns:
+    #   enabled: false
+    kubelet:
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high-cardinality labels
+          - action: labeldrop
+            regex: (uid|id|name|pod_uid|interface)
+          # Remove service label to ensure RHS sums collapse duplicates
+          - action: labeldrop
+            regex: ^service$
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+    kubeApiServer:
+      serviceMonitor:
+        metricRelabelings:
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: apiserver_(response|watch_events)_sizes_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: apiserver_request_body_size_bytes_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: workqueue_(work|queue)_duration_seconds_bucket
+        selector:
+          k8s-app: kube-apiserver
+    kubeControllerManager:
+      enabled: true
+      endpoints: &cm
+        - 10.2.118.23
+        - 10.2.118.24
+        - 10.2.118.25
+      serviceMonitor: &sm
+        metricRelabelings:
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: workqueue_(work|queue)_duration_seconds_bucket
+      # service:
+      #   selector:
+      #     k8s-app: kube-controller-manager
+    kubeEtcd:
+      enabled: true
+      endpoints: *cm
+      service:
+        selector:
+          component: kube-apiserver # etcd runs on control plane nodes
+    kubeProxy:
+      enabled: false
+    kubeScheduler:
+      endpoints: *cm
+      serviceMonitor: *sm
+    kubeStateMetrics:
+      enabled: true
+      # config specified in kube-state-metrics.yaml configmap
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    nodeExporter:
+      enabled: true
+      serviceMonitor:
+        relabelings:
+          - action: replace
+            regex: (.*)
+            replacement: $1
+            sourceLabels:
+              - __meta_kubernetes_pod_node_name
+            targetLabel: kubernetes_node
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: [__meta_kubernetes_pod_node_name]
+              targetLabel: kubernetes_node
+
+    prometheusOperator:
+      resources:
+        requests:
+          cpu: 35m
+          memory: 273M
+        limits:
+          memory: 326M
+      prometheusConfigReloader:
+        # resource config for prometheusConfigReloader
+        resources:
+          requests:
+            cpu: 5m
+            memory: 32M
+          limits:
+            memory: 32M
+    prometheus:
+      enabled: true
+      fullNameOverride: prometheus
+      ingress:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          nginx.ingress.kubernetes.io/whitelist-source-range: |
+            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        hosts:
+          - &host prometheus.${SECRET_DOMAIN}
+        pathType: Prefix
+      prometheusSpec:
+        additionalScrapeConfigsSecret:
+          enabled: true
+          name: prometheus-additional-scrape-configs
+          key: additionalScrapeConfigs
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        enableAdminAPI: true
+        externalLabels:
+          cluster: home-kubernetes
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        ruleSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        resources:
+          requests:
+            cpu: 512m
+            memory: 1Gi
+          limits:
+            memory: 2Gi
+        retention: 2d
+        retentionSize: 8GiB
+        walCompression: true
+        persistentVolumeClaimRetentionPolicy:
+          whenDeleted: Delete
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              resources:
+                requests:
+                  storage: 10Gi
