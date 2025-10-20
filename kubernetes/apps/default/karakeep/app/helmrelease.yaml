@@ -38,6 +38,20 @@ spec:
       karakeep:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          wait-for-meilisearch:
+            image:
+              repository: ghcr.io/containerd/busybox
+              tag: 1.36
+            command:
+              - sh
+              - -c
+              - |
+                until wget -q --spider http://karakeep-meilisearch.default.svc.cluster.local:7700/health; do
+                  echo "Waiting for meilisearch..."
+                  sleep 2
+                done
+                echo "Meilisearch is ready!"
         containers:
           app:
             image:
@@ -64,6 +78,12 @@ spec:
               - secretRef:
                   name: *app
             probes:
+              startup:
+                enabled: true
+                spec:
+                  initialDelaySeconds: 30 # Wait 30 seconds before first check
+                  periodSeconds: 10
+                  failureThreshold: 30 # Total wait time: 30 + (10 * 30) = 330 seconds
               liveness:
                 enabled: true
               readiness:
