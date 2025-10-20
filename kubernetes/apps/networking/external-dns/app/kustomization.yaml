@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: networking
 resources:
   - ./source.yaml
-  - ./dnsendpoint-crd.yaml
+  # - ./dnsendpoint-crd.yaml
   - ./helmrelease.yaml
   - ./secret.sops.yaml
