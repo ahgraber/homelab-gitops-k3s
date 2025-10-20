@@ -40,7 +40,7 @@ spec:
               tag: master-collector
             env:
               - name: COLLECTOR_API_ENDPOINT
-                value: http://scrutiny.monitoring.svc.cluster.local:8080
+                value: http://scrutiny.observability.svc.cluster.local:8080
               - name: COLLECTOR_HOST_ID
                 valueFrom:
                   fieldRef:

@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/monitoring/goldilocks/app
+  path: ./kubernetes/apps/observability/goldilocks/app
   prune: true
   sourceRef:
     kind: GitRepository

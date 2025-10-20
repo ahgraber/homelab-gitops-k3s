@@ -91,8 +91,8 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        # prometheusEndpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
-        prometheusEndpoint: http://prometheus-operated.monitoring.svc.cluster.local:9090
+        # prometheusEndpoint: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
+        prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
         prometheusEndpointSSLVerify: false
       mgr:
         modules:
@@ -324,7 +324,7 @@ spec:
         #     path: /
 
   # # TODO: update CephCluster CR with prometheus and alertmanager endpoints?
-  # # prometheusEndpoint: http://prometheus-operated.monitoring.svc.cluster.local:9090
+  # # prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
   # # prometheusEndpointSSLVerify: false
   # postRenderers:
   #   - kustomize:

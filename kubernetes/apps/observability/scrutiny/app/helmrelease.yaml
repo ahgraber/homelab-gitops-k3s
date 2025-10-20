@@ -47,7 +47,7 @@ spec:
               tag: master-web
             env:
               TZ: "${TIMEZONE}"
-              # SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.monitoring.svc.cluster.local
+              # SCRUTINY_WEB_INFLUXDB_HOST: scrutiny-influxdb.observability.svc.cluster.local
               SCRUTINY_WEB_INFLUXDB_HOST: localhost
             probes:
               liveness: &probes
