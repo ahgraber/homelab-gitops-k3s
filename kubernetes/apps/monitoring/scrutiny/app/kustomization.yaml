@@ -5,6 +5,6 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ./source.yaml
-  - ./helmrelease-scrutiny.yaml
+  - ./helmrelease.yaml
   # - ../../../../templates/volsync/init
   - ../../../../templates/volsync/restore

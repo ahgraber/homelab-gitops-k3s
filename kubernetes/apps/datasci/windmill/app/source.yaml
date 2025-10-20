@@ -4,7 +4,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: windmill
-  namespace: datasci
 spec:
   interval: 1h
   url: https://windmill-labs.github.io/windmill-helm-charts/

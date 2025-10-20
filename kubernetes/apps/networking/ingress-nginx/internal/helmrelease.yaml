@@ -5,10 +5,13 @@ kind: HelmRelease
 metadata:
   name: nginx-internal
 spec:
-  chartRef:
-    kind: OCIRepository
-    name: ingress-nginx
-    namespace: networking
+  chart:
+    spec:
+      chart: ingress-nginx
+      version: 4.13.3
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
   interval: 15m
   install:
     remediation:

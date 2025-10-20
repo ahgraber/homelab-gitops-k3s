@@ -4,7 +4,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: local-path-provisioner
-  namespace: kube-system
 spec:
   interval: 30m
   url: https://github.com/rancher/local-path-provisioner

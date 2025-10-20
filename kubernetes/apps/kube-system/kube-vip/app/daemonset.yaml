@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: kube-vip
+  name: &app kube-vip
   namespace: kube-system
   labels:
-    app.kubernetes.io/name: kube-vip
+    app.kubernetes.io/name: *app
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: kube-vip
+      app.kubernetes.io/name: *app
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: kube-vip
+        app.kubernetes.io/name: *app
     spec:
       containers:
-        - name: kube-vip
+        - name: *app
           image: ghcr.io/kube-vip/kube-vip:v1.0.1
           imagePullPolicy: IfNotPresent
           args: ["manager"]
@@ -64,7 +64,7 @@ spec:
             - kubernetes
           ip: 127.0.0.1
       hostNetwork: true
-      serviceAccountName: kube-vip
+      serviceAccountName: *app
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app vpa
-  namespace: &namespace monitoring
 spec:
   chart:
     spec:
@@ -13,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds
-        namespace: monitoring
   interval: 15m
   install:
     createNamespace: true

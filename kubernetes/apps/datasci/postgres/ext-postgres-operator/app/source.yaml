@@ -3,8 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: ext-postgres-operator-datasci
-  namespace: datasci
+  name: ext-postgres-operator
 spec:
   interval: 1h
   url: https://movetokube.github.io/postgres-operator/
