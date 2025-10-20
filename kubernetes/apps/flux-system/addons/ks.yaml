@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: flux-system
   path: ./kubernetes/apps/flux-system/addons/alerts
   prune: true
   sourceRef:
@@ -31,6 +33,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: flux-system
   path: ./kubernetes/apps/flux-system/addons/monitoring
   prune: true
   sourceRef:
@@ -52,6 +56,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: flux-system
   path: ./kubernetes/apps/flux-system/addons/webhooks
   prune: true
   sourceRef:

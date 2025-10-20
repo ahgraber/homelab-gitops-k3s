@@ -11,6 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/windmill/db
@@ -35,6 +36,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
+    - name: datasci
     - name: windmill-db
   path: ./kubernetes/apps/datasci/windmill/app
   prune: true

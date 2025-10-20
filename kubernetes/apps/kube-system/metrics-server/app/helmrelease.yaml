@@ -1,9 +1,9 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes-sigs/metrics-server/master/charts/metrics-server/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: metrics-server
+  name: &app metrics-server
 spec:
   chart:
     spec:
@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: metrics-server
-        namespace: flux-system
   interval: 15m
   install:
     remediation:

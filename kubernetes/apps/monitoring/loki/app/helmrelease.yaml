@@ -1,13 +1,13 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana/helm-charts/main/charts/loki/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: loki
+  name: &app loki
 spec:
   chartRef:
     kind: OCIRepository
-    name: loki
+    name: *app
   interval: 15m
   dependsOn:
     - name: local-path-provisioner

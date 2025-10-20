@@ -1,14 +1,14 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/rook/rook/master/deploy/charts/rook-ceph/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: rook-ceph-operator
+  name: &app rook-ceph-operator
 spec:
   chartRef:
     kind: OCIRepository
     name: rook-ceph
-  interval: 15m
+  interval: 1h
   install:
     remediation:
       retries: -1
@@ -17,7 +17,7 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  timeout: 5m
+  timeout: 15m
   # driftDetection:
   #   mode: enabled
   #   ignore:

@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./blog/ks.yaml
+  - ./cert-manager/ks.yaml
+  - ./database/ks.yaml
+  - ./datasci/ks.yaml
+  - ./debug/ks.yaml
+  - ./default/ks.yaml
+  - ./flux-system/ks.yaml
+  - ./kube-system/ks.yaml
+  - ./kyverno/ks.yaml
+  - ./monitoring/ks.yaml
+  - ./networking/ks.yaml
+  - ./rook-ceph/ks.yaml
+  - ./system-upgrade/ks.yaml
+  - ./volsync/ks.yaml

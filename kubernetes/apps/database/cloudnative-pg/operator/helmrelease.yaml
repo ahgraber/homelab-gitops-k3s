@@ -5,14 +5,9 @@ kind: HelmRelease
 metadata:
   name: cnpg-operator
 spec:
-  chart:
-    spec:
-      chart: cloudnative-pg
-      version: 0.26.0
-      sourceRef:
-        kind: HelmRepository
-        name: cloudnativepg
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: cloudnativepg
   interval: 15m
   dependsOn:
     - name: local-path-provisioner

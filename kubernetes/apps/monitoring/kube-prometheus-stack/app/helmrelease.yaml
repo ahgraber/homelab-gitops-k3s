@@ -1,13 +1,13 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/prometheus-community/helm-charts/main/charts/kube-prometheus-stack/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kube-prometheus-stack
+  name: &app kube-prometheus-stack
 spec:
   chartRef:
     kind: OCIRepository
-    name: kube-prometheus-stack
+    name: *app
   interval: 15m
   dependsOn:
     # - name: prometheus-operator-crds

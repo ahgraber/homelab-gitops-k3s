@@ -56,6 +56,7 @@
             krew # Package manager for kubectl plugins
             kubectl # Kubernetes CLI
             kubecolor # colorize kubectl output
+            kubeconform # FAST Kubernetes manifests validator, with support for Custom Resources
             kubernetes-helm # helm CLI
             kustomize # Customization of kubernetes YAML configurations
             minio-client # CLI for minio, An S3-compatible object storage server

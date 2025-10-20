@@ -3,16 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: descheduler
+  name: &app descheduler
 spec:
   chart:
     spec:
-      chart: descheduler
+      chart: *app
       version: 0.33.0
       sourceRef:
         kind: HelmRepository
-        name: descheduler
-        namespace: flux-system
+        name: *app
   interval: 15m
   install:
     remediation:

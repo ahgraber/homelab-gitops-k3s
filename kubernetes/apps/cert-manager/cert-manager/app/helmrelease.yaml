@@ -1,13 +1,13 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/cert-manager/cert-manager/master/deploy/charts/cert-manager/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cert-manager
+  name: &app cert-manager
 spec:
   chartRef:
     kind: OCIRepository
-    name: cert-manager
+    name: *app
   interval: 15m
   install:
     remediation:

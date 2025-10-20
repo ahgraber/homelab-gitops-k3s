@@ -1,17 +1,16 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/chart/local-path-provisioner/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: local-path-provisioner
+  name: &app local-path-provisioner
 spec:
   chart:
     spec:
       chart: ./deploy/chart/local-path-provisioner
       sourceRef:
         kind: GitRepository
-        name: local-path-provisioner
-        namespace: flux-system
+        name: *app
   interval: 15m
   install:
     remediation:

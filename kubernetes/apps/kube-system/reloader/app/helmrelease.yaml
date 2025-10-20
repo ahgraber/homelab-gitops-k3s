@@ -3,11 +3,11 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: reloader
+  name: &app reloader
 spec:
   chartRef:
     kind: OCIRepository
-    name: reloader
+    name: *app
   interval: 15m
   install:
     remediation:

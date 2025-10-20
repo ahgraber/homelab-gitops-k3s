@@ -7,12 +7,11 @@ metadata:
 spec:
   chart:
     spec:
-      chart: prefect-worker
+      chart: *app
       version: 2025.10.16183503
       sourceRef:
         kind: HelmRepository
         name: prefect
-        namespace: flux-system
   interval: 15m
   install:
     remediation:
