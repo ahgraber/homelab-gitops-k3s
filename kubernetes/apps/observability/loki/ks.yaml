@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: local-path-provisioner
     - name: rook-ceph-cluster
-  path: ./kubernetes/apps/monitoring/loki/app
+  path: ./kubernetes/apps/observability/loki/app
   prune: true
   sourceRef:
     kind: GitRepository

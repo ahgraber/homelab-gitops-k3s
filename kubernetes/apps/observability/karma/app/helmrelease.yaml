@@ -46,7 +46,7 @@ spec:
               tag: v0.121
             env:
               - name: ALERTMANAGER_URI
-                value: http://alertmanager-operated.monitoring.svc.cluster.local:9093
+                value: http://alertmanager-operated.observability.svc.cluster.local:9093
             resources:
               requests:
                 cpu: 15m

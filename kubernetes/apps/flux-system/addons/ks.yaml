@@ -24,14 +24,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app flux-system-monitoring
+  name: &app flux-system-observability
   namespace: flux-system
 spec:
   targetNamespace: flux-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/flux-system/addons/monitoring
+  path: ./kubernetes/apps/flux-system/addons/observability
   prune: true
   sourceRef:
     kind: GitRepository

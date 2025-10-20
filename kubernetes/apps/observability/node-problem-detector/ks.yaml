@@ -12,7 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kube-prometheus-stack
-  path: ./kubernetes/apps/monitoring/node-problem-detector/app
+  path: ./kubernetes/apps/observability/node-problem-detector/app
   prune: true
   sourceRef:
     kind: GitRepository
