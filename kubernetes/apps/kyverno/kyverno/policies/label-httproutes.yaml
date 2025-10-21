@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kyverno.io/clusterpolicy_v1.json
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: label-httproutes
+  annotations:
+    policies.kyverno.io/category: Other
+    policies.kyverno.io/subject: HTTPRoute,Label
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/description: >-
+      Automatically labels HTTPRoutes as 'internal' or 'external' based on
+      their parent gateway reference. This helps with identifying and filtering
+      routes based on their exposure level.
+spec:
+  rules:
+    - name: label-external-httproutes
+      match:
+        any:
+          - resources:
+              kinds:
+                - HTTPRoute
+              operations:
+                - CREATE
+                - UPDATE
+      preconditions:
+        any:
+          - key: "{{ request.object.spec.parentRefs[].name || '' }}"
+            operator: AnyIn
+            value: ["*external*"]
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(route.gateway.io/exposure): external
+              +(route.gateway.io/gateway): "{{ request.object.spec.parentRefs[?contains(name, 'external')] | [0].name || 'unknown' }}"
+
+    - name: label-internal-httproutes
+      match:
+        any:
+          - resources:
+              kinds:
+                - HTTPRoute
+              operations:
+                - CREATE
+                - UPDATE
+      preconditions:
+        any:
+          - key: "{{ request.object.spec.parentRefs[].name || '' }}"
+            operator: AnyIn
+            value: ["*internal*"]
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(route.gateway.io/exposure): internal
+              +(route.gateway.io/gateway): "{{ request.object.spec.parentRefs[?contains(name, 'internal')] | [0].name || 'unknown' }}"
