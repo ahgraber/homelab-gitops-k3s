@@ -18,7 +18,7 @@ spec:
     http:
       requestTimeout: 120s
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/tags/v1.5.4/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
@@ -29,34 +29,47 @@ spec:
       numTrustedHops: 1
   connection:
     bufferLimit: 100Mi
-    maxAcceptPerSocketEvent: 0
+    maxAcceptPerSocketEvent: 1
+    connectionLimit:
+      value: 10000
+      closeDelay: 5s
+      # maxConnectionDuration: 1h
   enableProxyProtocol: false
   headers:
-    addToResponse:
-      - name: X-Content-Type-Options
-        value: nosniff
-      - name: X-Frame-Options
-        value: SAMEORIGIN
-      - name: X-XSS-Protection
-        value: "1; mode=block"
-      - name: Permissions-Policy
-        value: "accelerometer=(),autoplay=(),camera=(),display-capture=(),document-domain=(),encrypted-media=(),fullscreen=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),midi=(),payment=(),picture-in-picture=(),publickey-credentials-get=(),screen-wake-lock=(),sync-xhr=(self),usb=(),web-share=(),xr-spatial-tracking=()"
-      - name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - name: Strict-Transport-Security
-        value: "max-age=31536000; includeSubDomains; preload"
+    requestID: PreserveOrGenerate
+    # NOTE: not yet enabled
+    # lateResponseHeaders:
+    #   add:
+    #     - name: X-Content-Type-Options
+    #       value: nosniff
+    #     - name: X-Frame-Options
+    #       value: SAMEORIGIN
+    #     - name: X-XSS-Protection
+    #       value: "1; mode=block"
+    #     - name: Permissions-Policy
+    #       value: "accelerometer=(),autoplay=(),camera=(),display-capture=(),document-domain=(),encrypted-media=(),fullscreen=(),geolocation=(),gyroscope=(),magnetometer=(),microphone=(),midi=(),payment=(),picture-in-picture=(),publickey-credentials-get=(),screen-wake-lock=(),sync-xhr=(self),usb=(),web-share=(),xr-spatial-tracking=()"
+    #     - name: Referrer-Policy
+    #       value: strict-origin-when-cross-origin
+    #     - name: Strict-Transport-Security
+    #       value: "max-age=31536000; includeSubDomains; preload"
+    #     - name: Content-Security-Policy-Report-Only
+    #       value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'"
   http2:
     initialStreamWindowSize: 512Ki
     initialConnectionWindowSize: 8Mi
     onInvalidMessage: TerminateStream
   http3: {}
+  path:
+    escapedSlashesAction: RejectRequest
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
   tcpKeepalive: {}
   timeout:
     http:
-      requestReceivedTimeout: 120s
+      requestReceivedTimeout: 60s
+      idleTimeout: 5m
+      streamIdleTimeout: 5m
   tls:
     minVersion: "1.2"
     alpnProtocols:
