@@ -8,7 +8,7 @@ metadata:
     external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
 spec:
   hostnames:
-    - &host "flux-webhook.${SECRET_DOMAIN}"
+    - "flux-webhook.${SECRET_DOMAIN}"
   parentRefs:
     - name: envoy-external
       namespace: network
