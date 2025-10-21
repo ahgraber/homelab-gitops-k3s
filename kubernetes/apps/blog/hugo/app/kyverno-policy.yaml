@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kyverno.io/policy_v1.json
 apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
@@ -21,8 +21,6 @@ spec:
                 - Deployment
               names:
                 - hugo-*
-              namespaces:
-                - blog
       preconditions:
         all:
           - key: "{{ request.operation || 'BACKGROUND' }}"
@@ -37,7 +35,7 @@ spec:
         apiVersion: batch/v1
         kind: Job
         name: "cache-purge-{{ request.object.metadata.generation }}"
-        namespace: "{{ request.namespace }}"
+        namespace: blog
         data:
           spec:
             template:

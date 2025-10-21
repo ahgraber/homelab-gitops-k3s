@@ -3,6 +3,29 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: hugo-rbac
+  namespace: flux-system
+spec:
+  targetNamespace: blog
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: hugo-rbac
+  dependsOn:
+    - name: kyverno
+  path: ./kubernetes/apps/blog/hugo/rbac
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  wait: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: &app hugo
   namespace: flux-system
 spec:
@@ -10,6 +33,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: hugo-rbac
   path: ./kubernetes/apps/blog/hugo/app
   prune: true
   sourceRef:

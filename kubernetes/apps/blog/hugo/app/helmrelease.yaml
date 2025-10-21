@@ -68,7 +68,7 @@ spec:
         controller: *app
         ports:
           http:
-            port: 80
+            port: &port 80
     ingress:
       app:
         className: external
@@ -90,6 +90,31 @@ spec:
         tls:
           - hosts:
               - *host
+    # route:
+    #   app:
+    #     hostnames: ["aimlbling-about.${SECRET_DOMAIN}"]
+    #     annotations:
+    #       external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+    #     parentRefs:
+    #       - name: envoy-external
+    #         namespace: networking
+    #         sectionName: https
+    #     rules:
+    #       - matches:
+    #           - path:
+    #               type: PathPrefix
+    #               value: /
+    #         filters:
+    #           - type: ResponseHeaderModifier
+    #             responseHeaderModifier:
+    #               add:
+    #                 - name: Content-Security-Policy
+    #                   value: "default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self' ninerealmlabs.com *.ninerealmlabs.com;img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ninerealmlabs.com *.ninerealmlabs.com https://cdn.plot.ly;style-src 'self' 'unsafe-inline'"
+    #                 - name: Cache-Control
+    #                   value: "public, max-age=86400"
+    #         backendRefs:
+    #           - name: *app
+    #             port: *port
     persistence:
       tmp:
         type: emptyDir
