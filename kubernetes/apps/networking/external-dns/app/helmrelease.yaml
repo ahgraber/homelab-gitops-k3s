@@ -47,7 +47,7 @@ spec:
       - --crd-source-kind=DNSEndpoint
     triggerLoopOnEvent: true
     policy: sync
-    sources: [crd, ingress]
+    sources: [crd, ingress, gateway-httproute]
     txtOwnerId: default
     txtPrefix: k8s.
     domainFilters: ["${SECRET_DOMAIN}"]
