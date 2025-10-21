@@ -68,14 +68,14 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: networking
-        rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
-              - name: *app
-                port: *port
+        # rules:
+        #   - matches:
+        #       - path:
+        #           type: PathPrefix
+        #           value: /
+        #     backendRefs:
+        #       - name: *app
+        #         port: *port
 
     persistence:
       tmp:
