@@ -68,26 +68,27 @@ spec:
         controller: *app
         ports:
           http:
-            port: 6157
+            port: &port 6157
           # ssh:
           #   port: 2222
-    ingress:
+    route:
       app:
-        className: external
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
-          # nginx.ingress.kubernetes.io/whitelist-source-range: |
-          #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-        tls:
-          - hosts:
-              - *host
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-external
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: *app
+                port: *port
       ### sni routing for ssh?
       ### ref: https://github.com/brettinternet/homelab/tree/176df6db10916d8df6d7309742b171a23c414119/cluster/apps/auth
       # ssh:

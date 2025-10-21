@@ -69,52 +69,31 @@ spec:
         ports:
           http:
             port: &port 80
-    ingress:
+    route:
       app:
-        className: external
+        hostnames: ["aimlbling-about.${SECRET_DOMAIN}"]
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Content-Security-Policy: default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self' ninerealmlabs.com *.ninerealmlabs.com;img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ninerealmlabs.com *.ninerealmlabs.com https://cdn.plot.ly;style-src 'self' 'unsafe-inline'";
-            more_set_headers "Cache-Control: public, max-age=86400";
-          # nginx.ingress.kubernetes.io/whitelist-source-range: |
-          #   10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - host: &host "aimlbling-about.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
-    # route:
-    #   app:
-    #     hostnames: ["aimlbling-about.${SECRET_DOMAIN}"]
-    #     annotations:
-    #       external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-    #     parentRefs:
-    #       - name: envoy-external
-    #         namespace: networking
-    #         sectionName: https
-    #     rules:
-    #       - matches:
-    #           - path:
-    #               type: PathPrefix
-    #               value: /
-    #         filters:
-    #           - type: ResponseHeaderModifier
-    #             responseHeaderModifier:
-    #               add:
-    #                 - name: Content-Security-Policy
-    #                   value: "default-src 'self' ninerealmlabs.com *.ninerealmlabs.com;connect-src 'self' ninerealmlabs.com *.ninerealmlabs.com;img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ninerealmlabs.com *.ninerealmlabs.com https://cdn.plot.ly;style-src 'self' 'unsafe-inline'"
-    #                 - name: Cache-Control
-    #                   value: "public, max-age=86400"
-    #         backendRefs:
-    #           - name: *app
-    #             port: *port
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-external
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  add:
+                    - name: Content-Security-Policy
+                      value: "default-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN};connect-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN};img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ${SECRET_DOMAIN} *.${SECRET_DOMAIN} https://cdn.plot.ly;style-src 'self' 'unsafe-inline'"
+                    - name: Cache-Control
+                      value: "public, max-age=86400"
+            backendRefs:
+              - name: *app
+                port: *port
     persistence:
       tmp:
         type: emptyDir
