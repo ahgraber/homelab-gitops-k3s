@@ -46,4 +46,4 @@ spec:
     # filters:
     #   ingressClasses: ["internal"]
 
-    watchedResources: ["GRPCRoute", "Ingress", "Service"]
+    watchedResources: ["GRPCRoute", "HTTPRoute", "Ingress", "Service"]
