@@ -75,13 +75,24 @@ spec:
         enabled: true
         rollOutPods: true
         ingress:
-          enabled: true
-          className: internal
-          hosts:
-            - &host hubble.${SECRET_DOMAIN}
-          tls:
-            - hosts:
-                - *host
+          enabled: false
+        route:
+          app:
+            enabled: true
+            hostnames:
+              - &host hubble.${SECRET_DOMAIN}
+            parentRefs:
+              - name: envoy-internal
+                namespace: networking
+                sectionName: https
+            rules:
+              - matches:
+                  - path:
+                      type: PathPrefix
+                      value: /
+                backendRefs:
+                  - name: hubble-ui
+                    port: 80
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: ${CLUSTER_CIDR}

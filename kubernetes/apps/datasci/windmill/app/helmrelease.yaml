@@ -127,16 +127,7 @@ spec:
           targetCPUUtilizationPercentage: 80
 
     ingress:
-      # -- enable/disable included ingress resource
-      enabled: true
-      className: internal
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      tls:
-        - hosts:
-            - windmill.${SECRET_DOMAIN}
-          # secretName: ${SECRET_DOMAIN/./-}-production-tls
+      enabled: false
 
     enterprise:
       enabled: false

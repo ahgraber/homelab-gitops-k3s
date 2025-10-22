@@ -92,7 +92,7 @@ spec:
                     - name: Cache-Control
                       value: "public, max-age=86400"
             backendRefs:
-              - name: *app
+              - identifier: app
                 port: *port
     persistence:
       tmp:

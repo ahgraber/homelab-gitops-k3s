@@ -52,13 +52,24 @@ spec:
                   storage: 1Gi
       # config:  # see alertmanager.yaml configmap
       ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - alertmanager.${SECRET_DOMAIN}
+        enabled: false
+      route:
+        alertmanager:
+          enabled: true
+          hostnames:
+            - alertmanager.${SECRET_DOMAIN}
+          parentRefs:
+            - name: envoy-internal
+              namespace: networking
+              sectionName: https
+          rules:
+            - matches:
+                - path:
+                    type: PathPrefix
+                    value: /
+              backendRefs:
+                - name: alertmanager
+                  port: 9093
 
     grafana:
       enabled: false # manage by itself
@@ -198,14 +209,24 @@ spec:
       enabled: true
       fullNameOverride: prometheus
       ingress:
-        enabled: true
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-        hosts:
-          - &host prometheus.${SECRET_DOMAIN}
-        pathType: Prefix
+        enabled: false
+      route:
+        prometheus:
+          enabled: true
+          hostnames:
+            - &host prometheus.${SECRET_DOMAIN}
+          parentRefs:
+            - name: envoy-internal
+              namespace: networking
+              sectionName: https
+          rules:
+            - matches:
+                - path:
+                    type: PathPrefix
+                    value: /
+              backendRefs:
+                - name: prometheus
+                  port: 9090
       prometheusSpec:
         additionalScrapeConfigsSecret:
           enabled: true

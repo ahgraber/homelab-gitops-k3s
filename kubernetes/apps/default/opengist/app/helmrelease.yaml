@@ -87,7 +87,7 @@ spec:
                   type: PathPrefix
                   value: /
             backendRefs:
-              - name: *app
+              - identifier: app
                 port: *port
       ### sni routing for ssh?
       ### ref: https://github.com/brettinternet/homelab/tree/176df6db10916d8df6d7309742b171a23c414119/cluster/apps/auth

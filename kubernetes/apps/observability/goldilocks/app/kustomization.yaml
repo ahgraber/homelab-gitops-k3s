@@ -6,3 +6,4 @@ resources:
   - ./source.yaml
   - ./helmrelease-goldilocks.yaml
   - ./helmrelease-vpa.yaml
+  - ./httproute.yaml

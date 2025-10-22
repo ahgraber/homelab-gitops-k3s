@@ -38,18 +38,16 @@ spec:
       # https://raw.githubusercontent.com/rook/rook/master/deploy/examples/monitoring/localrules.yaml
       createPrometheusRules: true
 
-    ingress:
+    route:
       dashboard:
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
         host:
           name: &host ceph.${SECRET_DOMAIN}
-          path: /
-        tls:
-          - hosts:
-              - *host
+          path: "/"
+          pathType: PathPrefix
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+            sectionName: https
 
     toolbox:
       enabled: true

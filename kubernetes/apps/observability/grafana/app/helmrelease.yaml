@@ -257,17 +257,24 @@ spec:
     serviceMonitor:
       enabled: true
     ingress:
-      enabled: true
-      ingressClassName: internal
-      annotations:
-        nginx.ingress.kubernetes.io/whitelist-source-range: |
-          10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-      pathType: Prefix
-      hosts:
-        - &host grafana.${SECRET_DOMAIN}
-      tls:
-        - hosts:
-            - *host
+      enabled: false
+    route:
+      app:
+        enabled: true
+        hostnames:
+          - &host grafana.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: *app
+                port: 80
     persistence:
       enabled: false
     testFramework:

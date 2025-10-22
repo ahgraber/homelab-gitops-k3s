@@ -117,7 +117,7 @@ spec:
                     - name: Content-Security-Policy
                       value: "default-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN};connect-src 'self';img-src *;font-src 'self' cdn.jsdelivr.net;frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' cdn.jsdelivr.net"
             backendRefs:
-              - name: *app
+              - identifier: app
                 port: *port
 
     persistence:
