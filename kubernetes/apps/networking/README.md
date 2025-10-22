@@ -28,7 +28,7 @@
 │          │          │          │          │
 │  ┌───────▼───────┐  │  ┌───────▼───────┐  │
 │  │   internal    │  │  │   external    │  │
-│  │ ingress-nginx │  └──► ingress-nginx │  │
+│  │ envoy-gateway │  └──► envoy-gateway │  │
 │  │  10.2.118.3   │     │  10.2.118.4   │  │
 │  └───────┬───────┘     └───────┬───────┘  │
 │          │                     │          │
@@ -46,11 +46,11 @@
 ## 🌎 Public Applications
 
 The `external-dns` application will create public DNS records.
-External-facing application access relies on a `cloudflared` tunnel to access the external `ingress-nginx`,
+External-facing application access relies on a `cloudflared` tunnel to access the external `envoy-gateway`,
 which acts as a reverse proxy to the application.
 
 By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
-In order to make additional applications public you must set set the correct ingress class name and ingress annotations (see the `echo-server` HelmRelease).
+In order to make additional applications public you must set set the correct ingress/gateway name and annotations (see the `echo-server` HelmRelease).
 
 ## 🏠 Private Applications
 
@@ -58,4 +58,4 @@ In order to make additional applications public you must set set the correct ing
 For this to work, your home DNS server must be configured to forward DNS queries for `${bootstrap_cloudflare_domain}` to `${bootstrap_k8s_gateway_addr}` instead of the upstream DNS server(s) it normally uses.
 This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
 
-Internal/Private applications will access external and/or internal ingress-nginx local/private IP(s) provided by k8s_gateway
+Internal/Private applications will access external and/or internal envoy gateway local/private IP(s) provided by k8s_gateway
