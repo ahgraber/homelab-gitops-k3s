@@ -40,7 +40,7 @@ spec:
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}
-          io.cilium/lb-ipam-ips: 10.2.118.3
+          lbipam.cilium.io/ips: 10.2.118.3
       ingressClassResource:
         name: internal
         default: true

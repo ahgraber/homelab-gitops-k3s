@@ -78,8 +78,8 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.${SECRET_DOMAIN}"
           - "echo.${SECRET_DOMAIN}"
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: networking

@@ -6,12 +6,12 @@ metadata:
   name: envoy-internal
   annotations:
     external-dns.alpha.kubernetes.io/hostname: &hostname internal.${SECRET_DOMAIN}
-    io.cilium/lb-ipam-ips: 10.2.118.5
 spec:
   gatewayClassName: envoy
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/target: *hostname
+      lbipam.cilium.io/ips: 10.2.118.5
   listeners:
     - name: http
       protocol: HTTP

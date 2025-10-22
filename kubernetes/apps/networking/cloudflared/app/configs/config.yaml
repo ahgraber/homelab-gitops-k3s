@@ -6,9 +6,9 @@ originRequest:
 ingress:
   ### Traffic coming in thru cloudflare should go to `external` gateway
   - hostname: "${SECRET_DOMAIN}"
-    service: https://envoy-external.networking.svc.cluster.local:443
+    service: &svc https://envoy-external.networking.svc.cluster.local:443
   - hostname: "*.${SECRET_DOMAIN}"
-    service: https://envoy-external.networking.svc.cluster.local:443
+    service: *svc
 
   ### "Else" rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
   - service: http_status:404
