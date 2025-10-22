@@ -88,12 +88,12 @@ In your GitHub repository (**Settings → Webhooks**):
 
 ### 4. Update Ingress Configuration
 
-Edit `ingress.yaml` to match your domain and environment variables:
+Edit `httproute.yaml` to match your domain and environment variables:
 
 ```yaml
 spec:
-  rules:
-    - host: &host flux-webhook.${SECRET_DOMAIN}    # Will be substituted by your environment
+  hostnames:
+    - flux-webhook.${SECRET_DOMAIN}        # Will be substituted by your environment
 ```
 
 The domain uses the `${SECRET_DOMAIN}` placeholder which should be replaced via your kustomization build process or environment. Ensure your DNS (via Cloudflare external-dns) points to your Ingress external IP.
