@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: external-wildcard
+spec:
+  endpoints:
+    # Wildcard CNAME - all subdomains point to external.${SECRET_DOMAIN}
+    # which is managed by the cloudflared tunnel
+    - dnsName: "*.${SECRET_DOMAIN}"
+      recordTTL: 1
+      recordType: CNAME
+      targets:
+        - external.${SECRET_DOMAIN}
+      providerSpecific:
+        - name: cloudflare-proxied
+          value: "true"
