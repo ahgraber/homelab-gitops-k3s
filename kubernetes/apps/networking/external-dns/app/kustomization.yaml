@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-  - ./dnsendpoint.yaml
+  # - ./dnsendpoint.yaml # Not needed if external-dns annotations work
   - ./secret.sops.yaml
