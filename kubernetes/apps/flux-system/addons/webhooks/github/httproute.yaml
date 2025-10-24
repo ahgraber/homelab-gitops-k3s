@@ -10,7 +10,7 @@ spec:
     - "flux-webhook.${SECRET_DOMAIN}"
   parentRefs:
     - name: envoy-external
-      namespace: network
+      namespace: networking
   rules:
     - backendRefs:
         - name: webhook-receiver
