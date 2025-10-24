@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: ingress-nginx-internal
+    - name: envoy-system
   path: ./kubernetes/apps/networking/external-services/services
   prune: true
   sourceRef:
