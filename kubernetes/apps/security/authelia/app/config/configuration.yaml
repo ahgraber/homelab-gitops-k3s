@@ -71,7 +71,7 @@ regulation:
   ban_time: 5m
 
 notifier:
-  disable_startup_check: false
+  disable_startup_check: true
   smtp:
     address: '{{ secret "/config/secrets/SMTP_ADDRESS" }}'
     username: '{{ secret "/config/secrets/SMTP_USERNAME" }}'
