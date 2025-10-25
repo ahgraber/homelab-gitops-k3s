@@ -2,6 +2,8 @@
 # yaml-language-server: $schema=https://www.authelia.com/schemas/latest/json-schema/configuration.json
 theme: auto
 
+server:
+  disable_healthcheck: true
 telemetry:
   metrics:
     enabled: true
