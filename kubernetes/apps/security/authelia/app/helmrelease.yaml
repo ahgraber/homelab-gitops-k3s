@@ -43,36 +43,31 @@ spec:
               tag: 4.38.12
             env:
               TZ: ${TIMEZONE}
-              AUTHELIA_SERVER_ADDRESS: tcp://0.0.0.0:8888
-              AUTHELIA_SERVER_DISABLE_HEALTHCHECK: "true"
-              AUTHELIA_TELEMETRY_METRICS_ADDRESS: tcp://0.0.0.0:8080
-              AUTHELIA_TELEMETRY_METRICS_ENABLED: "true"
+              # AUTHELIA_SERVER_ADDRESS: tcp://0.0.0.0:8888
+              # AUTHELIA_SERVER_DISABLE_HEALTHCHECK: "true"
+              # AUTHELIA_TELEMETRY_METRICS_ADDRESS: tcp://0.0.0.0:9999
+              # AUTHELIA_TELEMETRY_METRICS_ENABLED: "true"
               X_AUTHELIA_CONFIG: /config/configuration.yml
               X_AUTHELIA_CONFIG_FILTERS: template
             envFrom:
               - secretRef:
                   name: *app
             probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api/health
-                    port: &port 8888
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
               startup:
-                enabled: false
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             resources:
               requests:
                 cpu: 10m
-                memory: 32Mi
+                memory: 1Gi
               limits:
-                memory: 128Mi
+                memory: 1536Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -80,11 +75,12 @@ spec:
                 drop: ["ALL"]
 
     defaultPodOptions:
+      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
@@ -94,9 +90,10 @@ spec:
         controller: *app
         ports:
           http:
-            port: *port
+            port: &port 9091
+            primary: true
           metrics:
-            port: 8080
+            port: 9959
     serviceMonitor:
       app:
         serviceName: *app
