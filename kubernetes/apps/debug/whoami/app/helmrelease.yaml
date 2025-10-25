@@ -19,7 +19,7 @@ spec:
   values:
     controllers:
       whoami:
-        replicas: 2
+        replicas: 1
         containers:
           app:
             image:

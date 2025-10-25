@@ -1,0 +1,135 @@
+---
+# yaml-language-server: $schema=https://www.authelia.com/schemas/latest/json-schema/configuration.json
+theme: auto
+
+telemetry:
+  metrics:
+    enabled: true
+log:
+  level: debug
+
+duo_api:
+  disable: true
+totp:
+  disable: false
+  # issuer: ${SECRET_DOMAIN}
+webauthn:
+  disable: true
+
+authentication_backend:
+  ldap:
+    implementation: custom
+    address: ldap://lldap.security.svc.cluster.local:3890
+    timeout: 5s
+    start_tls: false
+    base_dn: dc=home,dc=arpa
+    additional_users_dn: ou=people
+    users_filter: (&({username_attribute}={input})(objectClass=person))
+    additional_groups_dn: ou=groups
+    groups_filter: (member={dn})
+    user: uid=admin,ou=people,dc=home,dc=arpa
+    # password: "" # Load from AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD
+    attributes:
+      username: uid
+      display_name: displayName
+      group_name: cn
+      mail: mail
+      member_of: memberOf
+  password_reset:
+    disable: true
+  refresh_interval: 1m
+
+identity_validation:
+  reset_password:
+    jwt_lifespan: "10 minutes"
+    # jwt_secret: "" # Load from AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET
+
+storage:
+  local:
+    path: /data/storage.sqlite3
+  encryption_key: '{{ secret "/config/secrets/AUTHELIA_STORAGE_ENCRYPTION_KEY" }}'
+
+session:
+  name: authelia_session
+  same_site: lax
+  inactivity: 5m
+  expiration: 1h
+  remember_me: 1M
+  cookies:
+    - name: authelia_session
+      domain: ${SECRET_DOMAIN}
+      authelia_url: https://auth.${SECRET_DOMAIN}
+      default_redirection_url: https://${SECRET_DOMAIN}
+  # secret: '{{ secret "/config/secrets/AUTHELIA_SESSION_SECRET" }}'
+  # redis:
+  #   host: dragonfly.database.svc.cluster.local.
+  #   port: 6379
+  #   database_index: 2
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+
+notifier:
+  disable_startup_check: false
+  smtp:
+    address: '{{ secret "/config/secrets/SMTP_ADDRESS" }}'
+    username: '{{ secret "/config/secrets/SMTP_USERNAME" }}'
+    password: '{{ secret "/config/secrets/SMTP_PASSWORD" }}'
+    sender: '{{ secret "/config/secrets/SMTP_SENDER" }}'
+    disable_require_tls: false # Use SSL/TLS
+    # disable_starttls: true # But not STARTTLS
+
+access_control:
+  ## Default policy can be: 'bypass', 'one_factor', 'two_factor', 'deny'
+  ## Default policy is applied to any resource if there is no policy specified.
+  default_policy: deny
+  networks:
+    - name: internal
+      networks:
+        - 10.0.0.0/8
+        - 192.168.0.0/16
+  rules:
+    # bypass Authelia WAN + LAN
+    - domain:
+        - auth.${SECRET_DOMAIN}
+      policy: bypass
+    # One factor auth for LAN
+    - domain:
+        - "${SECRET_DOMAIN}"
+        - "*.${SECRET_DOMAIN}"
+      policy: one_factor
+      # subject: [group:admins, group:users]
+      networks:
+        - internal
+    # Two factor auth for WAN
+    - domain:
+        - "${SECRET_DOMAIN}"
+        - "*.${SECRET_DOMAIN}"
+      policy: two_factor
+    # # Deny public resources
+    # - domain: ["navidrome.${SECRET_DOMAIN}"]
+    #   resources: [^/metrics.*$]
+    #   policy: deny
+
+identity_providers:
+  oidc:
+    # hmac_secret: # Load From AUTHELIA_IDENTITY_PROVIDERS_OIDC_HMAC_SECRET
+    jwks:
+      - key: |
+          {{ secret "/config/secrets/OIDC_JWKS_KEY" | mindent 10 "|" | msquote }}
+    cors:
+      endpoints: [authorization, token, revocation, introspection]
+      allowed_origins_from_client_redirect_uris: true
+    clients:
+      # Generate client_secret
+      # https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#how-do-i-generate-a-client-identifier-or-client-secret
+      - client_id: whoami
+        client_name: WhoAmI
+        client_secret: '{{ secret "/config/secrets/WHOAMI_OAUTH_CLIENT_DIGEST" }}'
+        public: false
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris: ["https://whoami.${SECRET_DOMAIN}/oauth2/callback"]
+        userinfo_signed_response_alg: none
