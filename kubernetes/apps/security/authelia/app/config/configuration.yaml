@@ -79,8 +79,8 @@ notifier:
     username: '{{ secret "/config/secrets/SMTP_USERNAME" }}'
     password: '{{ secret "/config/secrets/SMTP_PASSWORD" }}'
     sender: '{{ secret "/config/secrets/SMTP_SENDER" }}'
-    disable_require_tls: false # Use SSL/TLS
-    # disable_starttls: true # But not STARTTLS
+    disable_require_tls: false
+    disable_starttls: false
 
 access_control:
   ## Default policy can be: 'bypass', 'one_factor', 'two_factor', 'deny'
