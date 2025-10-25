@@ -19,6 +19,8 @@ spec:
   values:
     controllers:
       whoami:
+        annotations:
+          reloader.stakater.com/search: "true"
         replicas: 1
         containers:
           app:

@@ -38,7 +38,7 @@ spec:
         replicas: 2
         strategy: Recreate
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/search: "true"
         containers:
           app:
             image:

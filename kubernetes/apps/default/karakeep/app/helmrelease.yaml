@@ -37,7 +37,7 @@ spec:
     controllers:
       karakeep:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/search: "true"
         initContainers:
           wait-for-meilisearch:
             image:
@@ -96,8 +96,6 @@ spec:
                 memory: 3Gi
 
       chrome:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -128,8 +126,6 @@ spec:
                 memory: 3Gi
 
       meilisearch:
-        annotations:
-          reloader.stakater.com/auto: "true"
         pod:
           affinity:
             podAffinity:

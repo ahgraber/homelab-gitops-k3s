@@ -36,7 +36,7 @@ spec:
       image:
         image: ingress-nginx/controller
       annotations:
-        reloader.stakater.com/auto: "true"
+        reloader.stakater.com/search: "true"
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: internal.${SECRET_DOMAIN}

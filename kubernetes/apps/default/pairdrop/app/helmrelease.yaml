@@ -38,8 +38,6 @@ spec:
       pairdrop:
         replicas: 2
         strategy: Recreate
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:

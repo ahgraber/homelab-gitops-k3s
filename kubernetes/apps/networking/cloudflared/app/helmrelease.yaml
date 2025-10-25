@@ -31,7 +31,7 @@ spec:
         replicas: 2
         strategy: RollingUpdate
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/search: "true"
         containers:
           app:
             image:

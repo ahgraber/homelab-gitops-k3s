@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
+  - ./secret-oidc.sops.yaml
   - ./securitypolicy.yaml
-  - ./secret.sops.yaml
