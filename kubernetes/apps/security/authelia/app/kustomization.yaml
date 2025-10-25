@@ -7,8 +7,8 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ./referencegrant.yaml
-  - ../../../../templates/volsync/init
-  # - ../../../../templates/volsync/restore
+  # - ../../../../templates/volsync/init
+  - ../../../../templates/volsync/restore
 configMapGenerator:
   - name: authelia
     files:
