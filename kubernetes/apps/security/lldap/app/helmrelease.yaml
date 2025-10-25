@@ -41,9 +41,9 @@ spec:
               tag: stable-alpine-rootless
             env:
               TZ: ${TIMEZONE}
-              LLDAP_HTTP_PORT: &port 8080
+              LLDAP_HTTP_PORT: &port 17170
               LLDAP_HTTP_URL: https://lldap.${SECRET_DOMAIN}
-              LLDAP_LDAP_PORT: &ldapPort 5389
+              LLDAP_LDAP_PORT: &ldapPort 3890
               LLDAP_LDAP_BASE_DN: dc=home,dc=arpa
               LLDAP_DATABASE_URL: sqlite:///data/users.db?mode=rwc
             envFrom:
