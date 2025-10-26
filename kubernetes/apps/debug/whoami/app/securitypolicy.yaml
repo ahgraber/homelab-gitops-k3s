@@ -2,17 +2,17 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
 metadata:
-  name: &sname whoami-oidc
+  name: &name whoami-oidc
 spec:
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      name: &name whoami
+      name: &route whoami
   oidc:
     provider:
       issuer: "https://auth.${SECRET_DOMAIN}"
-    clientID: *name
+    clientID: *route
     clientSecret:
-      name: *sname
+      name: *name
     redirectURL: "https://whoami.${SECRET_DOMAIN}/oauth2/callback"
     logoutPath: "/logout"

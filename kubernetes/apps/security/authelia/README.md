@@ -4,20 +4,21 @@ Authelia is an open-source authentication and authorization server providing two
 
 ## Generating Secrets
 
-For all 32-byte base64 secrets (like session secret, storage encryption key)
+For all 32-byte base64 secrets (like session secret, storage encryption key):
 
 ```bash
 openssl rand -hex 64
 ```
 
-For RSA private key (like JWKS key)
+For RSA private key (like JWKS key), the following will create public/private .pem files in your working directory:
 
 ```bash
-openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048
+openssl genrsa -out private.pem 2048
+openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 ```
 
-For client password / digest hash, create a long random password and PBKDF2-SHA512 hash.
-The hash/digest is provided to authelia; the password is used by the app.
+For client password / digest hash, create a long random password and PBKDF2-SHA512 hash
+(the hash/digest is provided to authelia; the password is used by the app):
 
 ```bash
 uv run scripts/authelia_hash.py
