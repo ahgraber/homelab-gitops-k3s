@@ -60,6 +60,7 @@ bootstrap/.latest-template.sha
 .task/
 .temp*
 .todo*
+TODO.md
 report/
 
 # extras

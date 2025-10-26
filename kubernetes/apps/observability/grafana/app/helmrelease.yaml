@@ -36,23 +36,47 @@ spec:
     replicas: 1 # get 'too many redirects' with > 1 replica
     env:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
+      GF_DATE_FORMATS_FULL_DATE: DD.MM.YYYY hh:mm:ss
       GF_EXPLORE_ENABLED: true
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
+      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
 
     grafana.ini:
+      # server:
+      #   root_url: https://grafana.${SECRET_DOMAIN}
       analytics:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
+      auth:
+        signout_redirect_url: "https://auth.${SECRET_DOMAIN}/logout"
+        oauth_auto_login: true
+        oauth_allow_insecure_email_lookup: true
       auth.anonymous:
+        enabled: false
+      auth.basic:
+        enabled: false
+      auth.generic_oauth:
         enabled: true
+        name: Authelia
+        icon: signin
+        scopes: openid profile email groups
+        empty_scopes: false
+        login_attribute_path: preferred_username
+        groups_attribute_path: groups
+        name_attribute_path: name
+        use_pkce: true
+      auth.generic_oauth.group_mapping:
         org_id: 1
-        org_name: Main Org.
-        org_role: Viewer
+        role_attribute_path: |
+          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
       news:
         news_feed_enabled: false
     datasources:
@@ -143,6 +167,7 @@ spec:
           url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
           datasource: Prometheus
         cloudflared:
+          # renovate: depName="Cloudflare Tunnels (cloudflared)"
           gnetId: 17457 # https://grafana.com/grafana/dashboards/17457?tab=revisions
           revision: 6
           datasource:
@@ -158,6 +183,19 @@ spec:
           gnetId: 1860 # https://grafana.com/grafana/dashboards/1860?tab=revisions
           revision: 31
           datasource: Prometheus
+        opnsense:
+          # renovate: depName="OPNsense"
+          gnetId: 21113
+          revision: 1
+          datasource:
+            - { name: DS_PROMETHEUS-K0, value: Prometheus }
+        volsync:
+          # renovate: depName="VolSync Dashboard"
+          gnetId: 21356
+          revision: 3
+          datasource:
+            - { name: DS_PROMETHEUS, value: Prometheus }
+            - { name: VAR_REPLICATIONDESTNAME, value: ".*-dst|.*-bootstrap" }
       ceph:
         ceph-cluster:
           # renovate: depName="Ceph Cluster"
@@ -220,13 +258,6 @@ spec:
           gnetId: 11454
           revision: 14
           datasource: Prometheus
-      nginx:
-        nginx:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json
-          datasource: Prometheus
-        nginx-request-handling-performance:
-          url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/request-handling-performance.json
-          datasource: Prometheus
       prometheus:
         prometheus:
           # renovate: depName="Prometheus"
@@ -259,7 +290,7 @@ spec:
     ingress:
       enabled: false
     route:
-      app:
+      main:
         enabled: true
         hostnames:
           - &host grafana.${SECRET_DOMAIN}

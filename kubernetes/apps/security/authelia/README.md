@@ -24,12 +24,7 @@ For client password / digest hash, create a long random password and PBKDF2-SHA5
 uv run scripts/authelia_hash.py
 ```
 
-## Setup Instructions
+## References
 
-1. Copy `app/secret.sops.yaml.tmpl` to `app/secret.sops.yaml` (or edit the encrypted file directly)
-2. Generate and populate each required secret using the commands above
-3. Fill in `AUTHELIA_LDAP_BASE_DN` and `AUTHELIA_LDAP_ADMIN_PASSWORD` with your LDAP credentials
-4. Encrypt the secret file: `sops --encrypt --in-place app/secret.sops.yaml`
-5. Commit the encrypted file to Git – Flux will decrypt it at runtime using your age key
-
-> **Tip:** Ensure your `age.key` is properly configured in your repository before encrypting secrets, or they won't decrypt at runtime.
+- [How do I generate a client identifier or client secret? | FAQ | Authelia](https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#how-do-i-generate-a-client-identifier-or-client-secret)
+- [OpenID Connect 1.0 Clients | Configuration | Authelia](https://www.authelia.com/configuration/identity-providers/openid-connect/clients/)
