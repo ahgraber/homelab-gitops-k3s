@@ -14,5 +14,5 @@ spec:
     clientID: *route
     clientSecret:
       name: *name
-    redirectURL: "https://grafana.${SECRET_DOMAIN}/oauth2/callback"
+    redirectURL: "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
     logoutPath: "/logout"
