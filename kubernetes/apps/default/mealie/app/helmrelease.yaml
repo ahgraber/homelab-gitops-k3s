@@ -70,6 +70,11 @@ spec:
               OIDC_AUTH_ENABLED: true
               OIDC_SIGNUP_ENABLED: true
               OIDC_CONFIGURATION_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: mealie-oidc
+                    key: client-secret
               OIDC_CLIENT_ID: mealie
               OIDC_USER_CLAIM: preferred_username
               OIDC_AUTO_REDIRECT: false
