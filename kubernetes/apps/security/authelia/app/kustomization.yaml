@@ -7,7 +7,6 @@ resources:
   - ./secret.sops.yaml
   - ./helmrelease.yaml
   - ./kyverno-policy.yaml
-  - ./kyverno-secret-access.yaml
   - ./referencegrant.yaml
   # - ../../../../templates/volsync/init
   - ../../../../templates/volsync/restore
