@@ -153,25 +153,21 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
           - "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
+      - client_name: Mealie
+        client_id: mealie
+        client_secret: '{{ secret "/config/secrets/MEALIE_OAUTH_CLIENT_DIGEST" }}'
+        public: false
+        authorization_policy: two_factor
+        require_pkce: true
+        pkce_challenge_method: S256
+        redirect_uris:
+          - https://mealie.${SECRET_DOMAIN}/login
+        scopes: [openid, email, groups, profile]
+        response_types: [code]
         grant_types: [authorization_code]
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_basic
-      # - client_name: Mealie
-      #   client_id: mealie
-      #   client_secret: '{{ secret "/config/secrets/MEALIE_OAUTH_CLIENT_DIGEST" }}'
-      #   public: false
-      #   authorization_policy: two_factor
-      #   require_pkce: true
-      #   pkce_challenge_method: S256
-      #   redirect_uris:
-      #     - https://mealie.${SECRET_DOMAIN}/login
-      #   scopes: [openid, email, groups, profile]
-      #   response_types: [code]
-      #   grant_types: [authorization_code]
-      #   access_token_signed_response_alg: none
-      #   userinfo_signed_response_alg: none
-      #   token_endpoint_auth_method: client_secret_basic
       # - client_id: miniflux
       #   client_name: Miniflux
       #   client_secret: '{{ secret "/config/secrets/MINIFLUX_OAUTH_CLIENT_DIGEST" }}'

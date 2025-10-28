@@ -6,5 +6,7 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./secret.sops.yaml
+  - ./secret-oidc.sops.yaml
+  - ./securitypolicy.yaml
   # - ../../../../templates/volsync/init
   - ../../../../templates/volsync/restore
