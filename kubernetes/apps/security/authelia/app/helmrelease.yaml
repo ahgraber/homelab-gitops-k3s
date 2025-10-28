@@ -135,3 +135,10 @@ spec:
         globalMounts:
           - path: /config/secrets
             readOnly: true
+      session:
+        type: secret
+        name: authelia-session
+        globalMounts:
+          - path: "/config/secrets"
+            subPath: AUTHELIA_SESSION_SECRET
+            readOnly: true
