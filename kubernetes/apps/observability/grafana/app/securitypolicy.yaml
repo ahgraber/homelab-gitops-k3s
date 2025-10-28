@@ -11,8 +11,35 @@ spec:
   oidc:
     provider:
       issuer: "https://auth.${SECRET_DOMAIN}"
+      authorizationEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/authorization"
+      tokenEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/token"
     clientID: *route
     clientSecret:
       name: *name
+    scopes:
+      - "openid"
+      - "offline_access"
     redirectURL: "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
     logoutPath: "/logout"
+    forwardAccessToken: false
+    refreshToken: true
+    passThroughAuthHeader: false
+
+  # # To allow Envoy Gateway to act as auth gateway
+  # extAuth:
+  #   http:
+  #     backendRefs:
+  #       - name: 'authelia'
+  #         namespace: 'security'
+  #         port: 9091
+  #     path: '/api/authz/ext-authz/'
+  #     failOpen: false
+  #     headersToExtAuth:
+  #       - 'accept'
+  #       - 'cookie'
+  #       - 'authorization'
+  #       - 'header-authorization'
+  #       - 'x-forwarded-proto'
+  #     headersToBackend:
+  #       - 'remote-*'
+  #       - 'authelia-*'

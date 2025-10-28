@@ -44,11 +44,11 @@ spec:
       GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
-      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
-      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
-      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
+      # GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
+      # GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
+      # GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
+      # GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
+      # GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
     envValueFrom:
       GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
         secretKeyRef:
@@ -56,16 +56,17 @@ spec:
           key: client-secret
 
     grafana.ini:
-      # server:
-      #   root_url: https://grafana.${SECRET_DOMAIN}
+      server:
+        root_url: https://grafana.${SECRET_DOMAIN}
       analytics:
         check_for_updates: false
         check_for_plugin_updates: false
+        feedback_links_enabled: false
         reporting_enabled: false
       auth:
-        signout_redirect_url: "https://auth.${SECRET_DOMAIN}/logout"
         oauth_auto_login: true
         oauth_allow_insecure_email_lookup: true
+        signout_redirect_url: "https://auth.${SECRET_DOMAIN}/logout"
       auth.anonymous:
         enabled: false
       auth.basic:
@@ -74,8 +75,12 @@ spec:
         enabled: true
         name: Authelia
         icon: signin
+        client_id: grafana
         scopes: openid profile email groups
         empty_scopes: false
+        auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
+        token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
+        api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
         login_attribute_path: preferred_username
         groups_attribute_path: groups
         name_attribute_path: name
@@ -83,9 +88,13 @@ spec:
       auth.generic_oauth.group_mapping:
         org_id: 1
         role_attribute_path: |
-          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer' || 'Viewer'
+          contains(groups[*], 'grafana:admin') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
       news:
         news_feed_enabled: false
+      plugins:
+        plugin_admin_enabled: false
+      security:
+        angular_support_enabled: true
     datasources:
       datasources.yaml:
         apiVersion: 1
