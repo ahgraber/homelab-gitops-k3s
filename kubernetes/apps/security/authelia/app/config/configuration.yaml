@@ -96,7 +96,7 @@ access_control:
     #   policy: bypass
 
 session:
-  # secret: '{{ secret "/config/secrets/AUTHELIA_SESSION_SECRET" }}'
+  secret: '{{ secret "/config/secrets/AUTHELIA_SESSION_SECRET" }}'
   cookies:
     - name: authelia_session
       domain: "${SECRET_DOMAIN}"
