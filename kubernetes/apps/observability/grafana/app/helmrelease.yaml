@@ -31,8 +31,10 @@ spec:
         target:
           kind: Pod
   values:
-    admin:
-      existingSecret: *app
+    # NOTE: use authelia instead
+    # admin:
+    #   existingSecret: *app
+
     replicas: 1 # get 'too many redirects' with > 1 replica
     env:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
@@ -47,6 +49,11 @@ spec:
       GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
       GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
       GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.${SECRET_DOMAIN}/api/oidc/token
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+        valueFrom:
+          secretKeyRef:
+            name: grafana-oidc
+            key: client-secret
 
     grafana.ini:
       # server:

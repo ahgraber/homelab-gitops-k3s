@@ -7,4 +7,4 @@ resources:
   - ./helmrelease.yaml
   - ./secret.sops.yaml
   - ./secret-oidc.sops.yaml
-  - ./securitypolicy.yaml
+  # - ./securitypolicy.yaml # let grafana handle OIDC

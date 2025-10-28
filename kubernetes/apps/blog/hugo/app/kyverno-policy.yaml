@@ -4,7 +4,6 @@ apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
   name: hugo-cache-purge-on-rollout
-  namespace: blog
   annotations:
     policies.kyverno.io/category: Other
     policies.kyverno.io/subject: Deployment, Job

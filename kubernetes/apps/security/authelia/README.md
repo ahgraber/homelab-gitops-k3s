@@ -24,6 +24,10 @@ For client password / digest hash, create a long random password and PBKDF2-SHA5
 uv run scripts/authelia_hash.py
 ```
 
+### Kyverno Policy
+
+The Kyverno policy generates a new session secret every time authelia redeploys, invalidating existing sessions and preventing the invalid cookies from causing users auth problems.
+
 ## References
 
 - [How do I generate a client identifier or client secret? | FAQ | Authelia](https://www.authelia.com/integration/openid-connect/frequently-asked-questions/#how-do-i-generate-a-client-identifier-or-client-secret)
