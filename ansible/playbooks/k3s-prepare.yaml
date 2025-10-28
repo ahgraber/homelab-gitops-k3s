@@ -37,7 +37,7 @@
               - lsscsi
               - lvm2
               - multipath-tools
-              - neofetch
+              - fastfetch
               - net-tools
               - nfs-common
               - nvme-cli
@@ -142,11 +142,11 @@
     - name: System Configuration
       notify: Reboot
       block:
-        - name: System Configuration | Neofetch
+        - name: System Configuration | Fastfetch
           ansible.builtin.copy:
-            dest: /etc/profile.d/neofetch.sh
+            dest: /etc/profile.d/fastfetch.sh
             mode: "0755"
-            content: neofetch --config none
+            content: fastfetch
         - name: System Configuration | Disable apparmor
           when: ansible_facts.services['apparmor.service'] is defined
           ansible.builtin.systemd:
