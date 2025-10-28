@@ -24,7 +24,7 @@ spec:
         apiVersion: v1
         kind: Secret
         name: authelia-session
-        namespace: "{{ request.namespace }}"
+        namespace: security
         data:
           metadata:
             labels:

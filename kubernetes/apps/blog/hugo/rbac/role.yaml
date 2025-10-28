@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: kyverno-generate-job
+  name: hugo-kyverno-generate-job
   namespace: blog
 rules:
   - apiGroups: ["batch"]
@@ -12,12 +12,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: kyverno-generate-job
+  name: hugo-kyverno-generate-job
   namespace: blog
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: kyverno-generate-job
+  name: hugo-kyverno-generate-job
 subjects:
   - kind: ServiceAccount
     name: kyverno-background-controller
