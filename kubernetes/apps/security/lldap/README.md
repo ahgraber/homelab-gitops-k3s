@@ -15,6 +15,8 @@ config variables are prefixed with `LLDAP_` or `LLDAP_<SECTION>_` when passed as
 1. Add `grafana:admin` and `grafana:viewer` groups
 2. Add appropriate users to each group
 
+> NOTE: If username(s) overlap with existing Grafana usernames, they will conflict and OICD flow will fail.
+
 ## View LLDAP Objects
 
 Prerequisites: `openldap` (brew), `ldap-utils` (apt), or `openldap-clients` (dnf, yum, apk)

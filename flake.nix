@@ -48,7 +48,7 @@
             # ansible       # Radically simple IT automation
             # ansible-lint  # Best practices checker for Ansible
             bws # Bitwarden Secrets Manager
-            docker # Pack, ship and run any application as a lightweight container
+            # freelens # Kubernetes IDE
             fluxcd # flux CLI for gitops
             hadolint # Dockerfile Linter JavaScript API
             # helm           # A package manager for kubernetes
@@ -61,10 +61,11 @@
             kustomize # Customization of kubernetes YAML configurations
             minio-client # CLI for minio, An S3-compatible object storage server
             # nerdctl        # A Docker-compatible CLI for containerd
-            # freelens # Kubernetes IDE
+            openldap # Open source implementation of the Lightweight Directory Access Protocol
             restic # A backup program that is fast, efficient and secure
             # velero         # Kubernetes disaster recovery
             #--- containers ---
+            docker # Pack, ship and run any application as a lightweight container
             # podman
             colima
             qemu
