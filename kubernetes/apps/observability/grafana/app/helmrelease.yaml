@@ -88,7 +88,7 @@ spec:
       auth.generic_oauth.group_mapping:
         org_id: 1
         role_attribute_path: |
-          contains(groups[*], 'grafana:admin') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
+          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
       news:
         news_feed_enabled: false
       plugins:

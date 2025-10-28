@@ -153,10 +153,10 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
           - "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
-        # token_endpoint_auth_method: client_secret_post
         grant_types: [authorization_code]
-        # access_token_signed_response_alg: none
+        access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
+        token_endpoint_auth_method: client_secret_basic
       # - client_name: Mealie
       #   client_id: mealie
       #   client_secret: '{{ secret "/config/secrets/MEALIE_OAUTH_CLIENT_DIGEST" }}'
