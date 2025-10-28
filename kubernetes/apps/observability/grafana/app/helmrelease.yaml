@@ -83,7 +83,7 @@ spec:
       auth.generic_oauth.group_mapping:
         org_id: 1
         role_attribute_path: |
-          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
+          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer' || 'Viewer'
       news:
         news_feed_enabled: false
     datasources:
