@@ -14,5 +14,5 @@ spec:
     clientID: *route
     clientSecret:
       name: *name
-    redirectURL: "https://mealie.${SECRET_DOMAIN}/oauth2/callback"
+    redirectURL: "https://mealie.${SECRET_DOMAIN}/login"
     logoutPath: "/logout"
