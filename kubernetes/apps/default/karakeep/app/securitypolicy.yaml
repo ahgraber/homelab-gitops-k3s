@@ -1,0 +1,18 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: &name karakeep-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: &route karakeep
+  oidc:
+    provider:
+      issuer: "https://auth.${SECRET_DOMAIN}"
+    clientID: *route
+    clientSecret:
+      name: *name
+    redirectURL: "https://karakeep.${SECRET_DOMAIN}/oauth2/callback"
+    logoutPath: "/logout"
