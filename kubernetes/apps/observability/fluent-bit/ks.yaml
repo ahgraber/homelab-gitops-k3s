@@ -10,9 +10,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: local-path-provisioner
-    - name: victoria-metrics
   path: ./kubernetes/apps/observability/fluent-bit/app
   prune: true
   sourceRef:

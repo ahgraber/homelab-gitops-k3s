@@ -11,8 +11,9 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: local-path-provisioner
     # - name: prometheus-operator-crds
+    # - name: local-path-provisioner
+    - name: rook-ceph-cluster
   path: ./kubernetes/apps/observability/kube-prometheus-stack/app
   prune: true
   sourceRef:

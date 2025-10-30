@@ -12,8 +12,8 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
       namespace: observability
-    - name: victoria-metrics
-      namespace: observability
+    # - name: victoria-logs
+    #   namespace: observability
   install:
     remediation:
       retries: -1
@@ -100,9 +100,15 @@ spec:
         apiVersion: 1
         deleteDatasources:
           - { name: Alertmanager, orgId: 1 }
-          - { name: Loki, orgId: 1 }
           - { name: Prometheus, orgId: 1 }
         datasources:
+          - name: Alertmanager
+            type: alertmanager
+            uid: alertmanager
+            access: proxy
+            url: http://alertmanager-operated.observability.svc.cluster.local:9093
+            jsonData:
+              implementation: prometheus
           - name: Prometheus
             type: prometheus
             uid: prometheus
@@ -111,20 +117,6 @@ spec:
             jsonData:
               prometheusType: Prometheus
             isDefault: true
-          - name: Loki
-            type: loki
-            uid: loki
-            access: proxy
-            url: http://victoria-metrics.observability.svc.cluster.local:3100
-            jsonData:
-              maxLines: 250
-          - name: Alertmanager
-            type: alertmanager
-            uid: alertmanager
-            access: proxy
-            url: http://alertmanager-operated.observability.svc.cluster.local:9093
-            jsonData:
-              implementation: prometheus
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1

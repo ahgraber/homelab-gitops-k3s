@@ -14,4 +14,4 @@ resources:
   - ./node-problem-detector/ks.yaml
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
-  - ./victoria-metrics/ks.yaml
+  - ./victoria-logs/ks.yaml

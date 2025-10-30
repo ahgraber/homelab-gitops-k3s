@@ -7,8 +7,8 @@ metadata:
 spec:
   chart:
     spec:
-      chart: fluent-bit
-      version: 0.47.7
+      chart: *app
+      version: 0.54.0
       sourceRef:
         kind: HelmRepository
         name: fluent
@@ -23,89 +23,82 @@ spec:
       retries: 3
   timeout: 5m
   values:
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
-    service:
-      type: ClusterIP
-      port: 2020
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        namespace: observability
-        interval: 30s
-        scrapeTimeout: 10s
-    securityContext:
-      privileged: false
-      readOnlyRootFilesystem: true
-      allowPrivilegeEscalation: false
-      runAsUser: 65534
-      runAsGroup: 65534
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-    podSecurityContext:
-      fsGroup: 65534
     config:
-      service: |
+      service: |-
         [SERVICE]
-            Flush        1
-            Daemon       Off
-            Log_Level    info
-            Parsers_File parsers.conf
-            HTTP_Server  On
-            HTTP_Listen  0.0.0.0
-            HTTP_Port    2020
-            Health_Check On
-      inputs: |
+          daemon off
+          flush {{ .Values.flush }}
+          log_level {{ .Values.logLevel }}
+          parsers_file /fluent-bit/etc/parsers.conf
+          parsers_file /fluent-bit/etc/conf/custom_parsers.conf
+          http_server on
+          http_listen 0.0.0.0
+          http_port {{ .Values.metricsPort }}
+          health_check on
+
+      inputs: |-
         [INPUT]
-            Name              tail
-            Path              /var/log/containers/*.log
-            Parser            cri
-            Tag               kube.*
-            Mem_Buf_Limit     5MB
-            Skip_Long_Lines   On
-            Refresh_Interval  10
-            Rotate_Wait       30
-            DB                /var/log/flb_kube.db
-            DB.Sync           Normal
-            Docker_Mode       On
-            Docker_Mode_Flush 4
-            Storage_Type      filesystem
-      filters: |
+          name tail
+          alias kubernetes
+          path /var/log/containers/*.log
+          parser containerd
+          tag kubernetes.*
+          skip_empty_lines on
+          skip_long_lines on
+
+      filters: |-
         [FILTER]
-            Name                kubernetes
-            Match               kube.*
-            Merge_Log           On
-            Keep_Log            Off
-            Kube_Tag_Prefix     kube.var.log.containers.
-            Kube_Meta_Cache_TTL 300s
+          name kubernetes
+          match kubernetes.*
+          merge_log on
+          kube_tag_prefix kubernetes.var.log.containers.
+          k8s-logging.parser on
+          k8s-logging.exclude on
+          namespace_labels off
+          annotations off
+
         [FILTER]
-            Name                modify
-            Match               kube.*
-            Rename              log   message
-      outputs: |
-        [OUTPUT]
-            Name              loki
-            Match             kube.*
-            Host              victoria-metrics.observability.svc.cluster.local
-            Port              3100
-            Labels            {cluster="k3s", job="fluent-bit"}
-            line_format       json
-            log_level         info
-            auto_kubernetes_labels off
-      parsers: |
+          name nest
+          match kubernetes.*
+          operation lift
+          nested_under kubernetes
+          add_prefix k_
+
+        [FILTER]
+          name nest
+          match kubernetes.*
+          operation lift
+          nested_under k_labels
+          add_prefix k_labels_
+
+        [FILTER]
+          name modify
+          match kubernetes.*
+          rename k_labels_app.kubernetes.io/name app
+          rename k_labels_app app
+          rename k_labels_k8s-app app
+
+      customParsers: |-
         [PARSER]
-            Name        cri
-            Format      regex
-            Regex       ^(?<time>[^ ]*) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
-            Time_Key    time
-            Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-    resources:
-      requests:
-        cpu: 50m
-        memory: 128Mi
-      limits:
-        memory: 512Mi
+          name containerd
+          format regex
+          regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+          time_key time
+          time_format %Y-%m-%dT%H:%M:%S.%L%z
+
+      outputs: |-
+        [OUTPUT]
+          name http
+          match kubernetes.*
+          host victoria-logs-server.observability.svc.cluster.local
+          port 9428
+          uri /insert/jsonline?_stream_fields=stream,k_namespace_name,k_pod_name,app&_msg_field=log&_time_field=date
+          format json_lines
+          json_date_format iso8601
+          compress gzip
+          log_response_payload false
+    dashboards:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+    logLevel: warn
