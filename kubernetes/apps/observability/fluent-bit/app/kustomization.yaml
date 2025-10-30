@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-  # - ./objectbucketclaim.yaml

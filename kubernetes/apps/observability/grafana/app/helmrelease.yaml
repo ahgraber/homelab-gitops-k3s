@@ -12,7 +12,7 @@ spec:
   dependsOn:
     - name: kube-prometheus-stack
       namespace: observability
-    - name: loki
+    - name: victoria-metrics
       namespace: observability
   install:
     remediation:
@@ -115,7 +115,7 @@ spec:
             type: loki
             uid: loki
             access: proxy
-            url: http://loki-headless.observability.svc.cluster.local:3100
+            url: http://victoria-metrics.observability.svc.cluster.local:3100
             jsonData:
               maxLines: 250
           - name: Alertmanager

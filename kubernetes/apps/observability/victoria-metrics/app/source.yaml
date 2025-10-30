@@ -3,12 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: loki
+  name: victoria-metrics
 spec:
   interval: 5m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 6.44.0
-  url: oci://ghcr.io/grafana/helm-charts/loki
+    tag: 4.4.0
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template

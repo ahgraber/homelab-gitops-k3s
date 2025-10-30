@@ -1,0 +1,111 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app fluent-bit
+spec:
+  chart:
+    spec:
+      chart: fluent-bit
+      version: 0.47.7
+      sourceRef:
+        kind: HelmRepository
+        name: fluent
+  interval: 15m
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  values:
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+    service:
+      type: ClusterIP
+      port: 2020
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        namespace: observability
+        interval: 30s
+        scrapeTimeout: 10s
+    securityContext:
+      privileged: false
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsUser: 65534
+      runAsGroup: 65534
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    podSecurityContext:
+      fsGroup: 65534
+    config:
+      service: |
+        [SERVICE]
+            Flush        1
+            Daemon       Off
+            Log_Level    info
+            Parsers_File parsers.conf
+            HTTP_Server  On
+            HTTP_Listen  0.0.0.0
+            HTTP_Port    2020
+            Health_Check On
+      inputs: |
+        [INPUT]
+            Name              tail
+            Path              /var/log/containers/*.log
+            Parser            cri
+            Tag               kube.*
+            Mem_Buf_Limit     5MB
+            Skip_Long_Lines   On
+            Refresh_Interval  10
+            Rotate_Wait       30
+            DB                /var/log/flb_kube.db
+            DB.Sync           Normal
+            Docker_Mode       On
+            Docker_Mode_Flush 4
+            Storage_Type      filesystem
+      filters: |
+        [FILTER]
+            Name                kubernetes
+            Match               kube.*
+            Merge_Log           On
+            Keep_Log            Off
+            Kube_Tag_Prefix     kube.var.log.containers.
+            Kube_Meta_Cache_TTL 300s
+        [FILTER]
+            Name                modify
+            Match               kube.*
+            Rename              log   message
+      outputs: |
+        [OUTPUT]
+            Name              loki
+            Match             kube.*
+            Host              victoria-metrics.observability.svc.cluster.local
+            Port              3100
+            Labels            {cluster="k3s", job="fluent-bit"}
+            line_format       json
+            log_level         info
+            auto_kubernetes_labels off
+      parsers: |
+        [PARSER]
+            Name        cri
+            Format      regex
+            Regex       ^(?<time>[^ ]*) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+            Time_Key    time
+            Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
