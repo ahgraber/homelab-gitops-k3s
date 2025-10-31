@@ -40,7 +40,9 @@
 | monitoring/grafana                     | OCI (OCIRepository) | repo: grafana                                                        |
 | monitoring/karma                       | OCI (OCIRepository) | repo: app-template                                                   |
 | monitoring/kube-prometheus-stack       | OCI (OCIRepository) | repo: kube-prometheus-stack                                          |
-| monitoring/loki                        | OCI (OCIRepository) | repo: loki                                                           |
+| monitoring/fluent-bit                  | HelmRepository      | repo: fluent
+      |
+| monitoring/victoria-metrics            | OCI (OCIRepository) | repo: app-template                                                           |
 | monitoring/node-problem-detector       | HelmRepository      | repo: deliveryhero (v2.3.14)                                         |
 | monitoring/nut-exporter                | OCI (OCIRepository) | repo: app-template                                                   |
 | monitoring/speedtest-exporter          | OCI (OCIRepository) | repo: app-template                                                   |

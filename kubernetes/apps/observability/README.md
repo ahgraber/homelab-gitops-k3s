@@ -6,7 +6,8 @@ Included components
 
 - `kube-prometheus-stack/` - Prometheus, Alertmanager, PrometheusOperator, node-exporter, kube-state-metrics, ServiceMonitors and rules (via the kube-prometheus-stack Helm chart / manifests).
 - `grafana/` - Grafana dashboards and configuration.
-- `loki/` - Loki for log aggregation (collects logs for Grafana).
+- `fluent-bit/` - DaemonSet that forwards cluster logs into the log store.
+- `victoria-metrics/` - VictoriaMetrics single instance providing log and metric storage.
 - `karma/` - Grafana Karma for sharing alerts and silences UI.
 - `goldilocks/` - Goldilocks (Vertical Pod Autoscaler recommendations via VPA).
 - `node-problem-detector/` - Daemon to detect kernel/node issues.
@@ -19,8 +20,8 @@ Included components
 Quick notes
 
 - The primary metrics stack is provided by `kube-prometheus-stack` (Prometheus + Alertmanager + exporters).
-- Logs are handled by `loki` and can be queried from Grafana.
-- Dashboards live in `grafana/` and are configured to read from Prometheus and Loki.
+- Logs are collected by `fluent-bit` and stored in `victoria-metrics`, which exposes a Loki-compatible API for Grafana.
+- Dashboards live in `grafana/` and are configured to read from Prometheus and VictoriaMetrics.
 - `karma` provides a lightweight alerts/silences UI for Grafana alerts.
 - Resource recommendation tooling: `goldilocks` (uses VPA) — check its namespace for recommendations.
 - Node-level issues are surfaced by `node-problem-detector`.

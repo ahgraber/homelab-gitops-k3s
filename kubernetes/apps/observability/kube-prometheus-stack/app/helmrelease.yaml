@@ -12,8 +12,10 @@ spec:
   dependsOn:
     # - name: prometheus-operator-crds
     #   namespace: observability
-    - name: local-path-provisioner
-      namespace: kube-system
+    # - name: local-path-provisioner
+    #   namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   install:
     remediation:
       retries: -1
@@ -46,7 +48,7 @@ spec:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path
+              storageClassName: ceph-block
               resources:
                 requests:
                   storage: 1Gi
@@ -251,15 +253,15 @@ spec:
             memory: 1Gi
           limits:
             memory: 2Gi
-        retention: 2d
-        retentionSize: 8GiB
+        retention: 5d
+        retentionSize: 18GiB
         walCompression: true
         persistentVolumeClaimRetentionPolicy:
           whenDeleted: Delete
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path
+              storageClassName: ceph-block
               resources:
                 requests:
-                  storage: 10Gi
+                  storage: 20Gi
