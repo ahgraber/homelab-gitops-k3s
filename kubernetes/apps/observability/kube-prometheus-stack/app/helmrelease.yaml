@@ -186,6 +186,11 @@ spec:
             - action: replace
               sourceLabels: [__meta_kubernetes_pod_node_name]
               targetLabel: node
+          metricRelabelings:
+            # Drop bogus WMI/ACPI temp series defensively at scrape time
+            - action: drop
+              sourceLabels: [__name__, chip]
+              regex: node_hwmon_temp_celsius;wmi_bus_.*
 
     prometheusOperator:
       resources:
