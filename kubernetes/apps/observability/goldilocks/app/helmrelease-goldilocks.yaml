@@ -34,7 +34,7 @@ spec:
   values:
     image:
       repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks
-      tag: v4.14.6@sha256:2ad3599ba03c2736a699befd2ea15f087c27626e96eb7db957a632b4abb44a3a
+      tag: v4.14.7@sha256:1fba254a77bbf44ec98007a502c788bd2a3eb14588460d9aa3354f3dc99530f9
       pullPolicy: Always
 
     controller:
