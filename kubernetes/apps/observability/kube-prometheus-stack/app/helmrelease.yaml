@@ -102,6 +102,10 @@ spec:
     kubelet:
       serviceMonitor:
         metricRelabelings:
+          # Rename 'name' label to 'container' for Freelens compatibility
+          - action: replace
+            sourceLabels: [name]
+            targetLabel: container
           # Drop high-cardinality labels
           - action: labeldrop
             regex: (uid|id|name|pod_uid|interface)
@@ -241,7 +245,7 @@ spec:
           enabled: true
           name: prometheus-additional-scrape-configs
           key: additionalScrapeConfigs
-        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        scrapeInterval: 30s # Must match interval in Grafana Helm chart
         enableAdminAPI: true
         externalLabels:
           cluster: home-kubernetes

@@ -4972,12 +4972,12 @@
             "value": "5s"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "10s",
             "value": "10s"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "30s",
             "value": "30s"
           },
