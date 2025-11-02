@@ -130,6 +130,10 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: workqueue_(work|queue)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            # Defensively catch any remaining API server histogram buckets
+            regex: apiserver_.*_bucket
         selector:
           k8s-app: kube-apiserver
     kubeControllerManager:
@@ -143,6 +147,9 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: workqueue_(work|queue)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: rest_client_request_duration_seconds_bucket
       # service:
       #   selector:
       #     k8s-app: kube-controller-manager
@@ -152,6 +159,12 @@ spec:
       service:
         selector:
           component: kube-apiserver # etcd runs on control plane nodes
+      serviceMonitor:
+        metricRelabelings:
+          - action: drop
+            sourceLabels: ["__name__"]
+            # Trim large etcd histograms that offer little operational value
+            regex: etcd_.*_bucket
     kubeProxy:
       enabled: false
     kubeScheduler:
