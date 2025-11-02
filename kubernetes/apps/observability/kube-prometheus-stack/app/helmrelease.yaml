@@ -263,7 +263,7 @@ spec:
             cpu: 512m
             memory: 1Gi
           limits:
-            memory: 2Gi
+            memory: 4Gi
         retention: 5d
         retentionSize: 18GiB
         walCompression: true
