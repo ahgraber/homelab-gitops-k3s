@@ -15,11 +15,18 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, devshell, flake-utils, nixpkgs }:
+  outputs = {
+    self,
+    devshell,
+    flake-utils,
+    nixpkgs,
+    # nixpkgs-unstable
+  }:
     flake-utils.lib.eachDefaultSystem (system: {
       devShells.default =
         let
@@ -27,6 +34,13 @@
             inherit system;
             overlays = [
               devshell.overlays.default
+              # # When applied, the unstable nixpkgs set (declared in the flake inputs) will be accessible through 'pkgs.unstable'
+              # (final: prev: {
+              #   unstable = import nixpkgs-unstable {
+              #     system = final.system;
+              #     config = { allowUnfree = true; };
+              #   };
+              # })
               # (final: prev: {
               #   ansible = prev.python311.pkgs.ansible;
               #   ansible-lint = (prev.ansible-lint.override {
