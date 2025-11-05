@@ -18,8 +18,8 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ## 📝 Prerequisites
 
-- [ ] a domain managed on Cloudflare.
-- [ ] a DNS server that supports split DNS (e.g. Pi-Hole) deployed somewhere outside your cluster **ON** your home network.
+- [ ] A domain managed on Cloudflare.
+- [ ] A DNS server that supports split DNS (e.g., Pi-hole) deployed somewhere outside your cluster **on** your home network.
 
 ## 🚀 Installation
 
@@ -37,7 +37,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    ```
 
 4. Finish configuring the workstation.\
-   Conveniently, we can use a `task` that has been defined for this!
+   Conveniently, we can use a `task` that has been defined for this.
 
    ```sh
    task workstation:setup
@@ -49,11 +49,11 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 🔧 Initial configuration
 
-1. Setup Age private / public key
+1. Set up Age private/public key
 
    📍 _Using [SOPS](https://github.com/getsops/sops) with [Age](https://github.com/FiloSottile/age) allows us to encrypt secrets and use them in Ansible and Flux._
 
-   a. Create an Age private / public key (this file is gitignored)
+   a. Create an Age private/public key (this file is gitignored)
 
    ```sh
    age-keygen -o age.key
@@ -73,7 +73,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 2. Create Cloudflare API Token
 
-   📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create a API Token._
+   📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create an API token._
 
    a. [Create a Cloudflare API Token here](https://dash.cloudflare.com/profile/api-tokens).
 
@@ -118,10 +118,10 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    cloudflared tunnel create k8s
    ```
 
-   c. Fill out the appropriate Cloudflare Tunnel vars in `.env` file:
+   c. Fill out the appropriate Cloudflare Tunnel vars in the `.env` file:
    CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
 
-   > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`
+   > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`.
 
 ### ⚡ Prepare your nodes for k3s
 
@@ -198,9 +198,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    # ✔ prerequisites checks passed
    ```
 
-2. Push you changes to git
+2. Push your changes to git
 
-   📍 **Verify** all the `*.sops.yaml` and `*.sops.yaml` files under the `./ansible`, and `./kubernetes` directories are **encrypted** with SOPS
+   📍 **Verify** all the `*.sops.yaml` files under the `./ansible` and `./kubernetes` directories are **encrypted** with SOPS
 
    ```sh
    git add -A
@@ -232,7 +232,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Output all the common resources in your cluster.
 
-   📍 _Feel free to use the provided [cluster tasks](.taskfiles/ClusterTasks.yaml) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
+   📍 _Suggestion: Use the provided [tasks](.taskfiles/) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
 
    ```sh
    task k8s:resources
@@ -246,12 +246,12 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 The `external-dns` application created in the `networking` namespace will handle creating public DNS records.
 By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
-In order to make additional applications public you must set set the correct ingress class name and ingress annotations like in the HelmRelease for `echo-server`.
+In order to make additional applications public you must set the correct ingress class name and ingress annotations like in the HelmRelease for `echo-server`.
 
 ### 🏠 Home DNS
 
 `k8s_gateway` will provide DNS resolution to external Kubernetes resources (i.e. points of entry to the cluster) from any device that uses your home DNS server.
-For this to work, your home DNS server must be configured to forward DNS queries for `${bootstrap_cloudflare_domain}` to `${bootstrap_k8s_gateway_addr}` instead of the upstream DNS server(s) it normally uses.
+For this to work, your home DNS server must be configured to forward DNS queries for `<cloudflare_domain>` to `<k8s_gateway_addr>` instead of the upstream DNS server(s) it normally uses.
 This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
 
 > [!TIP]
@@ -274,7 +274,7 @@ If you're having trouble with DNS be sure to check out these two GitHub discussi
 
 #### 📜 Certificates
 
-By default this template will deploy a wildcard certificate using the Let's Encrypt **staging environment**, which prevents you from getting rate-limited by the Let's Encrypt production servers if your cluster doesn't deploy properly (for example due to a misconfiguration). Once you are sure you will keep the cluster up for more than a few hours be sure to switch to the production servers as outlined in `config.yaml`.
+By default this template will deploy a wildcard certificate using the Let's Encrypt **staging environment**, which prevents you from getting rate-limited by the Let's Encrypt production servers if your cluster doesn't deploy properly (for example, due to a misconfiguration). Once you are sure you will keep the cluster up for more than a few hours, be sure to switch to the production servers as outlined in `config.yaml`.
 
 📍 _You will need a production certificate to reach internet-exposed applications through `cloudflared`._
 
@@ -286,16 +286,16 @@ By default Flux will periodically check your git repository for changes. In orde
 
 2. Obtain the webhook path
 
-   📍 _Hook id and path should look like `/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123`_
+   📍 _Hook id and path should look like `/hook/123abc123abc...`_
 
    ```sh
-   kubectl -n flux-system get receiver github-receiver -o jsonpath='{.status.webhookPath}'
+   kubectl -n flux-system get receiver github-webhook -o jsonpath='{.status.webhookPath}'
    ```
 
 3. Piece together the full URL with the webhook path appended
 
    ```text
-   https://flux-webhook.${bootstrap_cloudflare_domain}/hook/12ebd1e363c641dc3c2e430ecf3cee2b3c7a5ac9e1234506f6f5f3ce1230e123
+   https://flux-webhook.${bootstrap_cloudflare_domain}/hook/123abc123abc...
    ```
 
 4. Navigate to the settings of your repository on GitHub, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
@@ -310,7 +310,7 @@ The base Renovate configuration in your repository can be viewed at [.github/ren
 
 ## 🐛 Debugging
 
-Below is a general guide on trying to debug an issue with an resource or application. For example, if a workload/resource is not showing up or a pod has started but in a `CrashLoopBackOff` or `Pending` state.
+Below is a general guide on trying to debug an issue with a resource or application. For example, if a workload/resource is not showing up or a pod has started but is in a `CrashLoopBackOff` or `Pending` state.
 
 1. Start by checking all Flux Kustomizations & Git Repository & OCI Repository and verify they are healthy.
 
@@ -326,13 +326,13 @@ Below is a general guide on trying to debug an issue with an resource or applica
    flux get hr -A
    ```
 
-3. Then check the if the pod is present.
+3. Then check if the pod is present.
 
    ```sh
    kubectl -n <namespace> get pods -o wide
    ```
 
-4. Then check the logs of the pod if its there.
+4. Then check the logs of the pod if it's there.
 
    ```sh
    kubectl -n <namespace> logs <pod-name> -f
@@ -352,18 +352,18 @@ Below is a general guide on trying to debug an issue with an resource or applica
    kubectl -n <namespace> get events --sort-by='.metadata.creationTimestamp'
    ```
 
-Resolving problems that you have could take some tweaking of your YAML manifests in order to get things working, other times it could be a external factor like permissions on NFS. If you are unable to figure out your problem see the help section below.
+Resolving problems that you have could take some tweaking of your YAML manifests in order to get things working, other times it could be an external factor like permissions on NFS. If you are unable to figure out your problem see the help section below.
 
 ### Authenticate Flux over SSH
 
-Authenticating Flux to your git repository has a couple benefits like using a private git repository and/or using the Flux [Image Automation Controllers](https://fluxcd.io/docs/components/image/).
+Authenticating Flux to your git repository has a benefits like using a private git repository and/or using the Flux [Image Automation Controllers](https://fluxcd.io/docs/components/image/).
 
 By default this template only works on a public GitHub repository, it is advised to keep your repository public.
 
 The benefits of a public repository include:
 
-- Debugging or asking for help, you can provide a link to a resource you are having issues with.
-- Adding a topic to your repository of `k8s-at-home` to be included in the [k8s-at-home-search](https://nanne.dev/k8s-at-home-search/). This search helps people discover different configurations of Helm charts across others Flux based repositories.
+- When debugging or asking for help, you can provide a link to a resource you are having issues with.
+- Adding a topic to your repository of `k8s-at-home` to be included in the [k8s-at-home-search](https://nanne.dev/k8s-at-home-search/). This search helps people discover different configurations of Helm charts across other Flux-based repositories.
 
 <!-- markdownlint-disable MD033 -->
 
