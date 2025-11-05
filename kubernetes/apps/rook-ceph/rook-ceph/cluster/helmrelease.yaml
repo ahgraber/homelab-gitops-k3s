@@ -75,6 +75,8 @@ spec:
           mgr/crash/warn_recent_interval: "7200" # 2h
         mon:
           mon_compact_on_start: "true" # quote
+        osd:
+          rocksdb_perf: "true"
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
       crashCollector:
