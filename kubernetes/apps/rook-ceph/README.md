@@ -11,6 +11,9 @@
     - [Crash](#crash)
     - [View OSD pods](#view-osd-pods)
     - [Too many PGs per OSD](#too-many-pgs-per-osd)
+    - [BlueStore slow operations](#bluestore-slow-operations)
+      - [Diagnose the issue](#diagnose-the-issue)
+      - [Force compaction](#force-compaction)
     - [Ceph Mon Low Space warning](#ceph-mon-low-space-warning)
       - [Identify what is taking up all of the space](#identify-what-is-taking-up-all-of-the-space)
       - [Clean up logs](#clean-up-logs)
@@ -221,6 +224,51 @@ ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 [stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
 [cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
 [pgcalc](https://old.ceph.com/pgcalc/)
+
+### BlueStore slow operations
+
+> Run the following commands from the ceph-toolbox pod
+
+When OSDs report slow operations in BlueStore, this is typically caused by RocksDB compaction backlogs or slow disk I/O.
+
+#### Diagnose the issue
+
+Check RocksDB and BlueStore metrics for affected OSDs from rook-ceph-tools:
+
+```sh
+# Check compaction queue and write delays
+ceph tell osd.0 perf dump | jq '.rocksdb | {compact_queue_len, compact_running, rocksdb_write_delay_time}'
+
+# Check BlueStore KV latencies
+ceph tell osd.0 perf dump | jq '.bluestore | {kv_flush_lat, kv_final_lat, kv_sync_lat}'
+```
+
+Look for:
+
+- `compact_queue_len` > 0 (compactions queued up)
+- `compact_running` > 0 for extended periods
+- High `rocksdb_write_delay_time` avgtime
+- High `kv_flush_lat` or `kv_sync_lat` avgtime (>5ms is concerning)
+
+#### Force compaction
+
+If RocksDB has a backlog, manually trigger compaction:
+
+```sh
+ceph tell osd.0 compact
+ceph tell osd.1 compact
+```
+
+Watch OSD logs to confirm compaction completes:
+
+```sh
+kubectl -n rook-ceph logs deploy/rook-ceph-osd-0 --tail=100 | grep -i 'rocksdb\|compact'
+```
+
+The warning should clear automatically once the slow-op counter stops incrementing.
+
+[docs - bluestore config](https://docs.ceph.com/en/latest/rados/configuration/bluestore-config-ref/)
+[docs - perf counters](https://docs.ceph.com/en/latest/dev/perf_counters/)
 
 ### Ceph Mon Low Space warning
 
