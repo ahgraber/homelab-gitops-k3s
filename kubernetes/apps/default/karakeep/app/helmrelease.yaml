@@ -168,7 +168,7 @@ spec:
                 cpu: 100m
                 memory: 3Gi
               limits:
-                memory: 6Gi
+                memory: 8Gi
 
     service:
       app:
