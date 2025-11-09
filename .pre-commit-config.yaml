@@ -127,7 +127,7 @@ repos:
           - mdformat-frontmatter
           - mdformat-footnote
           - mdformat-gfm-alerts
-          - mdformat-tables
+          # - mdformat-tables # now included in mdformat-gfm
           - mdformat-toc
           - mdformat-config
           - mdformat-ruff
