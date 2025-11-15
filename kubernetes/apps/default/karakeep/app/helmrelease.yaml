@@ -70,10 +70,11 @@ spec:
               NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
               DISABLE_NEW_RELEASE_CHECK: true
               # OpenAI Config
-              INFERENCE_TEXT_MODEL: gpt-4o-mini # gpt-5-mini
-              INFERENCE_IMAGE_MODEL: gpt-4o-mini # gpt-5-mini
+              INFERENCE_TEXT_MODEL: gpt-5-mini
+              INFERENCE_IMAGE_MODEL: gpt-5-mini
               EMBEDDING_TEXT_MODEL: text-embedding-3-small
               INFERENCE_CONTEXT_LENGTH: "8192"
+              INFERENCE_USE_MAX_COMPLETION_TOKENS: true
               # OIDC
               OAUTH_WELLKNOWN_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
               OAUTH_CLIENT_SECRET:
