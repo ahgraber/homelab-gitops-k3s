@@ -48,6 +48,8 @@ spec:
               JELU_CORS_ALLOWEDORIGINS: https://{{ .Release.Name }}.${SECRET_DOMAIN}
               JELU_AUTH_OAUTH2_ACCOUNT_CREATION: "true"
               JELU_AUTH_OIDC_EMAIL_VERIFICATION: "true"
+              JELU_AUTH_LDAP_ENABLED: "false"
+              JELU_AUTH_PROXY_ENABLED: "false"
               SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_ID: jelu
               SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_SECRET:
                 valueFrom:
