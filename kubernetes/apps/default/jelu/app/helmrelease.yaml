@@ -47,22 +47,14 @@ spec:
               JELU_FILES_IMPORTS: /data/files/imports
               JELU_CORS_ALLOWEDORIGINS: https://{{ .Release.Name }}.${SECRET_DOMAIN}
               JELU_AUTH_OAUTH2_ACCOUNT_CREATION: "true"
-              JELU_AUTH_OIDC_EMAIL_VERIFICATION: "true"
+              JELU_AUTH_OIDC_EMAIL_VERIFICATION: "false"
               JELU_AUTH_LDAP_ENABLED: "false"
               JELU_AUTH_PROXY_ENABLED: "false"
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_ID: jelu
               SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
                     name: jelu-oidc
                     key: client-secret
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_NAME: Authelia
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_SCOPE: openid,email,profile
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_AUTHORIZATION_GRANT_TYPE: authorization_code
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_REDIRECT_URI: "{baseUrl}/login/oauth2/code/{registrationId}"
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_PROVIDER: authelia
-              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_USER_NAME_ATTRIBUTE: preferred_username
-              SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHELIA_ISSUER_URI: https://auth.${SECRET_DOMAIN}
             resources:
               requests:
                 cpu: 100m
@@ -97,6 +89,12 @@ spec:
                 port: *port
 
     persistence:
+      config:
+        type: configMap
+        name: jelu-config
+        globalMounts:
+          - subPath: application.yml
+            path: /config/application.yml
       data:
         existingClaim: *app
         globalMounts:

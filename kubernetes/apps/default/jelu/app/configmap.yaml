@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jelu-config
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  # application.yml: |
+  #   jelu:
+  #     database:
+  #       path: /data/database
+  #     files:
+  #       images: /data/files/images
+  #       imports: /data/files/imports
+  #     cors:
+  #       allowed-origins:
+  #         - https://jelu.${SECRET_DOMAIN}
+  #     auth:
+  #       oauth2-account-creation: true
+  #       oidc-email-verification: false
+  #       ldap:
+  #         enabled: false
+  #       proxy:
+  #         enabled: false
+  application.yml: |
+    spring:
+      security:
+        oauth2:
+          client:
+            registration:
+              authelia:
+                client-id: jelu
+                client-name: Authelia
+                # client-secret: # injected via env var
+                scope: 'openid,email,profile'
+                authorization-grant-type: authorization_code
+                redirect-uri: https://jelu.${SECRET_DOMAIN}/login/oauth2/code/authelia
+            provider:
+              authelia:
+                issuer-uri: https://auth.${SECRET_DOMAIN}
+                user-name-attribute: preferred_username
