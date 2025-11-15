@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app temporal-db
+  namespace: flux-system
+spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cnpg-cluster-datasci
+    - name: ext-postgres-operator-datasci
+  path: ./kubernetes/apps/datasci/temporal/db
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  wait: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app temporal
+  namespace: flux-system
+spec:
+  targetNamespace: datasci
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: temporal-db
+  path: ./kubernetes/apps/datasci/temporal/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  wait: true

@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.networking.k8s.io/httproute_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: temporal
+  namespace: datasci
+spec:
+  parentRefs:
+    - name: envoy-internal
+      namespace: networking
+      sectionName: https
+  hostnames:
+    - temporal.${SECRET_DOMAIN}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: temporal-web
+          port: 8080

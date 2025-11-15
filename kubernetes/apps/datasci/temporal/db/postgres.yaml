@@ -1,0 +1,42 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: &app temporal
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  database: *app
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: &app temporal
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  role: *app
+  database: *app
+  secretName: database
+  privileges: OWNER
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: &visibility temporal-visibility
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  database: *visibility
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: &visibility temporal-visibility
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  role: *visibility
+  database: *visibility
+  secretName: database
+  privileges: OWNER
