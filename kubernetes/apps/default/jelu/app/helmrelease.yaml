@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app jelu
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    controllers:
+      jelu:
+        annotations:
+          reloader.stakater.com/search: "true"
+        strategy: Recreate
+        containers:
+          app:
+            image:
+              repository: docker.io/wabayang/jelu
+              tag: 0.74.0@sha256:db34bc341408f4b5219ec29decc378855964bd88a19aa1374fb2363404dbe656
+            env:
+              TZ: ${TIMEZONE}
+              SERVER_PORT: &port 11111
+              JELU_DATABASE_PATH: /data/database
+              JELU_FILES_IMAGES: /data/files/images
+              JELU_FILES_IMPORTS: /data/files/imports
+              JELU_CORS_ALLOWEDORIGINS: https://{{ .Release.Name }}.${SECRET_DOMAIN}
+              JELU_AUTH_OAUTH2_ACCOUNT_CREATION: "true"
+              JELU_AUTH_OIDC_EMAIL_VERIFICATION: "true"
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_ID: jelu
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: jelu-oidc
+                    key: client-secret
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_CLIENT_NAME: Authelia
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_SCOPE: openid,email,profile
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_AUTHORIZATION_GRANT_TYPE: authorization_code
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_REDIRECT_URI: "{baseUrl}/login/oauth2/code/{registrationId}"
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_PROVIDER: authelia
+              SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_AUTHELIA_USER_NAME_ATTRIBUTE: preferred_username
+              SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_AUTHELIA_ISSUER_URI: https://auth.${SECRET_DOMAIN}
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames:
+          - &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+        # annotations:
+        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-external
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data

@@ -8,6 +8,7 @@ resources:
   - ./cyberchef/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
+  - ./jelu/ks.yaml
   - ./karakeep/ks.yaml
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
