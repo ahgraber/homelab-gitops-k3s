@@ -36,7 +36,7 @@ spec:
                 memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
@@ -53,10 +53,3 @@ spec:
         ports:
           http:
             port: &port 8191
-
-    persistence:
-      tmp:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
