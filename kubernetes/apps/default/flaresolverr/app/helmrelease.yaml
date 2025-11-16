@@ -40,10 +40,7 @@ spec:
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 65534
-        runAsGroup: 65534
-        fsGroup: 65534
+        runAsNonRoot: false
         seccompProfile:
           type: RuntimeDefault
 
