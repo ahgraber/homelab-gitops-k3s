@@ -124,8 +124,7 @@ spec:
           - path: *ingest
             readOnly: false
       tmpfs:
+        type: emptyDir
         globalMounts:
           - path: /tmp
-            subPath: tmp
           - path: /app/downloaded_files
-            subPath: downloaded_files

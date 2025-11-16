@@ -136,4 +136,3 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /cache
-            subPath: cache

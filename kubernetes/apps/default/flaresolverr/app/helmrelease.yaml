@@ -55,7 +55,8 @@ spec:
             port: &port 8191
 
     persistence:
-      tmpfs:
+      tmp:
+        enabled: true
+        type: emptyDir
         globalMounts:
           - path: /tmp
-            subPath: tmp
