@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app calibre-web-downloader
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 15m
+  dependsOn:
+    - name: calibre-web-automated
+      namespace: default
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      calibre-web-downloader:
+        annotations:
+          reloader.stakater.com/search: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/calibrain/calibre-web-automated-book-downloader-extbp
+              tag: v0.2.3@sha256:ecb7d3e650890212afb2e26df6622c5d4ec70022434d46b3288a53e56b27b6d3
+            env:
+              TZ: ${TIMEZONE}
+              FLASK_PORT: &port 8084
+              INGEST_DIR: &ingest /cwa-book-ingest
+              BOOK_LANGUAGE: en
+              DEFAULT_SLEEP: "15"
+              USE_BOOK_TITLE: "true"
+              LOG_LEVEL: debug
+              EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
+            command:
+              - /bin/sh
+              - -c
+              - |
+                gunicorn -t 300 -b 0.0.0.0:${FLASK_PORT} app:app
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /request/api/status
+                    port: *port
+                  initialDelaySeconds: 15
+                  timeoutSeconds: 5
+                  periodSeconds: 15
+                  failureThreshold: 8
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 600Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+          # bypass:
+          #   image:
+          #     repository: ghcr.io/sarperavci/cloudflarebypassforscraping
+          #     tag: latest@sha256:9ac4cd4d6d5dfc270a92502b92761d9039297abfb123f4a2a3abca5209d9eec5
+          #   resources:
+          #     requests:
+          #       cpu: 25m
+          #       memory: 128Mi
+          #     limits:
+          #       memory: 256Mi
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - calibre-downloader.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+            timeouts:
+              request: 0s
+
+    persistence:
+      config:
+        existingClaim: *app
+        globalMounts:
+          - path: /config
+      ingest:
+        existingClaim: calibre-library
+        globalMounts:
+          - path: *ingest
+            readOnly: false
+      tmpfs:
+        globalMounts:
+          - path: /tmp
+          - path: /app/downloaded_files
