@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: calibre-library
+  namespace: default
+  labels:
+    app.kubernetes.io/name: calibre-web-automated
+    app.kubernetes.io/instance: calibre-library
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ceph-filesystem
+  resources:
+    requests:
+      storage: 10Gi

@@ -5,7 +5,10 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations | Apps
+  - ./calibre-web-automated/ks.yaml
+  - ./calibre-web-downloader/ks.yaml
   - ./cyberchef/ks.yaml
+  - ./flaresolverr/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./jelu/ks.yaml
