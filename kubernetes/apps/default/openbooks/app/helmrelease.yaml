@@ -1,0 +1,107 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app openbooks
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 15m
+  dependsOn:
+    - name: calibre-web-automated
+      namespace: default
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    controllers:
+      openbooks:
+        annotations:
+          reloader.stakater.com/search: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/evan-buss/openbooks
+              tag: 4.5.0@sha256:3f2e59a75b68950d57cfec5dc2b1b31d6c6b02706097c70b5438499b59fbdea2
+            command:
+              - /app/openbooks
+            args:
+              - server
+              - --dir
+              - /books
+              - --name
+              - openbooks
+              - --port
+              - &port 8080
+              - --useragent
+              - "HexChat 2.9.1"
+              - --searchbot
+              - searchook
+              - --no-browser-downloads
+            env:
+              TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - openbooks.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      downloads:
+        existingClaim: calibre-library
+        globalMounts:
+          - path: /books
+            subPath: ingest

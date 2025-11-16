@@ -16,6 +16,7 @@ resources:
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
   - ./miniflux/ks.yaml
+  - ./openbooks/ks.yaml
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
   - ./picoshare/ks.yaml
