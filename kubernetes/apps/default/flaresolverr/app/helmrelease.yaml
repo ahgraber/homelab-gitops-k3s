@@ -58,3 +58,4 @@ spec:
       tmpfs:
         globalMounts:
           - path: /tmp
+            subPath: tmp
