@@ -4,6 +4,6 @@ Automates discovery and downloading of ebooks for Calibre Web Automated. Downloa
 
 ## Notes
 
-- Uses the same CephFS-backed library PVC as Calibre Web Automated (mounted at `/book-intake`).
+- Uses the same CephFS-backed library PVC as Calibre Web Automated (mounted at `/cwa-book-ingest`).
 - Includes the Cloudflare bypass sidecar (via `flaresolverr`) so Annas Archive requests can complete reliably.
 - Relies on the `calibre-web-automated` deployment and the shared `calibre-library` PVC being present before it reconciles.

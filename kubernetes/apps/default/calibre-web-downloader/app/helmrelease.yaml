@@ -119,6 +119,7 @@ spec:
         existingClaim: calibre-library
         globalMounts:
           - path: *ingest
+            subPath: ingest
             readOnly: false
       tmpfs:
         type: emptyDir
