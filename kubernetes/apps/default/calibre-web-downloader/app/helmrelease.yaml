@@ -23,11 +23,9 @@ spec:
   timeout: 5m
   values:
     defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
@@ -42,6 +40,8 @@ spec:
               tag: v0.2.3@sha256:ecb7d3e650890212afb2e26df6622c5d4ec70022434d46b3288a53e56b27b6d3
             env:
               TZ: ${TIMEZONE}
+              UID: 1000
+              GID: 1000
               FLASK_PORT: &port 8084
               INGEST_DIR: &ingest /cwa-book-ingest
               BOOK_LANGUAGE: en
