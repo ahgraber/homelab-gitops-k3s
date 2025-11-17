@@ -40,8 +40,6 @@ spec:
               tag: v0.2.3@sha256:ecb7d3e650890212afb2e26df6622c5d4ec70022434d46b3288a53e56b27b6d3
             env:
               TZ: ${TIMEZONE}
-              UID: 1000
-              GID: 1000
               FLASK_PORT: &port 8084
               INGEST_DIR: &ingest /cwa-book-ingest
               BOOK_LANGUAGE: en
@@ -75,8 +73,7 @@ spec:
                 memory: 600Mi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              readOnlyRootFilesystem: false
           # bypass:
           #   image:
           #     repository: ghcr.io/sarperavci/cloudflarebypassforscraping
