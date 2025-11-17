@@ -46,7 +46,8 @@ spec:
               DEFAULT_SLEEP: "15"
               USE_BOOK_TITLE: "true"
               LOG_LEVEL: debug
-              EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
+              # EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
+              CLOUDFLARE_PROXY_URL: http://localhost:8000
             # command:
             #   - /bin/sh
             #   - -c
@@ -74,16 +75,16 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-          # bypass:
-          #   image:
-          #     repository: ghcr.io/sarperavci/cloudflarebypassforscraping
-          #     tag: latest@sha256:9ac4cd4d6d5dfc270a92502b92761d9039297abfb123f4a2a3abca5209d9eec5
-          #   resources:
-          #     requests:
-          #       cpu: 25m
-          #       memory: 128Mi
-          #     limits:
-          #       memory: 256Mi
+          bypass:
+            image:
+              repository: ghcr.io/sarperavci/cloudflarebypassforscraping
+              tag: latest@sha256:9ac4cd4d6d5dfc270a92502b92761d9039297abfb123f4a2a3abca5209d9eec5
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
 
     service:
       app:
