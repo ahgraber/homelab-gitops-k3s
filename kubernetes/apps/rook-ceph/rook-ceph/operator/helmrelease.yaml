@@ -47,6 +47,7 @@ spec:
         operator: Exists
 
     csi:
+      cephFSKernelMountOptions: ms_mode=crc
       enableLiveness: true
       serviceMonitor:
         enabled: true
