@@ -28,7 +28,7 @@ spec:
       APP: *app
       APP_UID: "1000"
       APP_GID: "1000"
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 128Mi
       VOLSYNC_STORAGECLASS: ceph-block
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block
       VOLSYNC_COPY_METHOD: Snapshot
