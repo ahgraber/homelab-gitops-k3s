@@ -63,6 +63,7 @@ spec:
               CRAWLER_ENABLE_ADBLOCKER: true
               CRAWLER_STORE_SCREENSHOT: true
               CRAWLER_FULL_PAGE_SCREENSHOT: true
+              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local"
               DATA_DIR: /data
               DISABLE_SIGNUPS: true
               MAX_ASSET_SIZE_MB: 128
