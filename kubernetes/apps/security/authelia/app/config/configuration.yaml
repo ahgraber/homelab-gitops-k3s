@@ -145,6 +145,27 @@ identity_providers:
     clients:
       ## ref: https://www.authelia.com/configuration/identity-providers/openid-connect/clients/
       # https://grafana.com/docs/grafana/latest/setup-grafana/configure-access/configure-authentication/generic-oauth/
+      - client_id: calibre
+        client_name: Calibre-Web-Automated
+        client_secret: '{{ secret "/config/secrets/CALIBRE_OAUTH_CLIENT_DIGEST" }}'
+        public: false
+        authorization_policy: two_factor
+        require_pkce: false
+        pkce_challenge_method: ""
+        redirect_uris:
+          - "https://calibre.${SECRET_DOMAIN}/login/generic/authorized"
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+        response_types:
+          - code
+        grant_types:
+          - authorization_code
+        access_token_signed_response_alg: none
+        userinfo_signed_response_alg: none
+        token_endpoint_auth_method: client_secret_basic
       - client_id: grafana
         client_name: Grafana
         client_secret: '{{ secret "/config/secrets/GRAFANA_OAUTH_CLIENT_DIGEST" }}'
