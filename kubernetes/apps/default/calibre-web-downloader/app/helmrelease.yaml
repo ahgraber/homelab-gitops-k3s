@@ -36,8 +36,9 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/calibrain/calibre-web-automated-book-downloader-extbp
-              tag: v0.2.4@sha256:23aabf29f4db80d21f20dfaff6fc4bafad8858987bfd89fccb8c78c101b92068
+              repository: ghcr.io/calibrain/calibre-web-automated-book-downloader
+              # repository: ghcr.io/calibrain/calibre-web-automated-book-downloader-extbp # with flaresolverr
+              tag: v0.2.4
             env:
               TZ: ${TIMEZONE}
               FLASK_PORT: &port 8084
@@ -46,8 +47,9 @@ spec:
               DEFAULT_SLEEP: "15"
               USE_BOOK_TITLE: "true"
               LOG_LEVEL: debug
-              # EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
+              USE_CF_BYPASS: true
               CLOUDFLARE_PROXY_URL: http://localhost:8000
+              # EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
             # command:
             #   - /bin/sh
             #   - -c

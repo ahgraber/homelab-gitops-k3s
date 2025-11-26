@@ -5,4 +5,11 @@ Automated Calibre Web deployment that watches an ingest directory and keeps a se
 ## Notes
 
 - Persists both the application config and the Calibre library onto Ceph storage. The config ( `calibre-web-automated-config` ) is RWO, while the shared library volume uses RWX so additional apps can drop downloads into `/cwa-book-ingest`.
-  .
+- Review the source README - substantial configuration is done manually in-app rather than via deployment configuration.
+
+## Configuration
+
+- [ ] Enable uploads
+- [ ] Enable/Disable metadata providers
+- [ ] Configure email notifications and sending
+- [ ] Configure OAuth
