@@ -57,7 +57,7 @@ spec:
                 memory: 512M
             securityContext:
               # allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
