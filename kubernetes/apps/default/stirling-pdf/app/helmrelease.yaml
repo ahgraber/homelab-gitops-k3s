@@ -35,40 +35,25 @@ spec:
               tag: 2.0.2@sha256:af9942975d39b953a008aaa1bb2bbb23330d725d8aeda835eb53de3715e42e36
             env:
               TZ: ${TIMEZONE}
+              MODE: BOTH
               DOCKER_ENABLE_SECURITY: "false"
+              METRICS_ENABLED: "false"
               SYSTEM_ENABLEANALYTICS: "false"
+              SYSTEM_GOOGLEVISIBILITY: "false"
               INSTALL_BOOK_AND_ADVANCED_HTML_OPS: "true"
             probes:
-              liveness: &probe
+              liveness:
                 enabled: true
-                type: HTTP
-                path: /api/v1/info/status
-              readiness: *probe
+              readiness:
+                enabled: true
               startup:
-                <<: *probe
-                spec:
-                  failureThreshold: 90
-                  periodSeconds: 5
+                enabled: true
             resources:
               requests:
                 cpu: 100m
-                memory: 128M
+                memory: 256M
               limits:
-                memory: 512M
-            securityContext:
-              # allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
+                memory: 1Gi
 
     service:
       app:
