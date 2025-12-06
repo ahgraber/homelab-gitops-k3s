@@ -44,7 +44,7 @@ spec:
   type: JSONPatch
   jsonPatches:
     - type: type.googleapis.com/envoy.config.listener.v3.Listener
-      name: network/envoy-external/https
+      name: networking/envoy-external/https
       operation: &operation
         op: add
         jsonPath: ..filters[*].typed_config.http_filters[?(@.name=="envoy.filters.http.compressor.zstd")].typed_config
@@ -58,5 +58,5 @@ spec:
           response_direction_config:
             remove_accept_encoding_header: true
     - type: type.googleapis.com/envoy.config.listener.v3.Listener
-      name: network/envoy-external/https-quic
+      name: networking/envoy-external/https-quic
       operation: *operation
