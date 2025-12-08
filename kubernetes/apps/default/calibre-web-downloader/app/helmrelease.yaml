@@ -80,7 +80,7 @@ spec:
           bypass:
             image:
               repository: ghcr.io/sarperavci/cloudflarebypassforscraping
-              tag: latest@sha256:0b6c2228b1a2441b0d4af516d871bb2461518f50699b4b420e6166bae054398b
+              tag: latest@sha256:3776791cc8bc879361f89d3bd448bb860436b0f0231c1606582cf5450bab2848
             resources:
               requests:
                 cpu: 25m
