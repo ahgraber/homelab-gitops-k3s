@@ -86,7 +86,7 @@ spec:
           influxdb:
             image:
               repository: docker.io/library/influxdb
-              tag: 2.7-alpine
+              tag: 2.8-alpine
             probes:
               liveness: &probes-db
                 enabled: true
