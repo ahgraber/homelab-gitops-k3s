@@ -56,7 +56,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: 0.29.1
+              tag: 0.29.3
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
               CRAWLER_DOMAIN_RATE_LIMIT_WINDOW_MS: 15000
