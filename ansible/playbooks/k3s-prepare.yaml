@@ -147,6 +147,11 @@
             dest: /etc/profile.d/fastfetch.sh
             mode: "0755"
             content: fastfetch
+        - name: System Configuration | Enable fstrim timer
+          ansible.builtin.systemd:
+            name: fstrim.timer
+            enabled: true
+            state: started
         - name: System Configuration | Disable apparmor
           when: ansible_facts.services['apparmor.service'] is defined
           ansible.builtin.systemd:
