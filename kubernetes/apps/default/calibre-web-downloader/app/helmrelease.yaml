@@ -38,7 +38,7 @@ spec:
             image:
               repository: ghcr.io/calibrain/calibre-web-automated-book-downloader
               # repository: ghcr.io/calibrain/calibre-web-automated-book-downloader-extbp # with flaresolverr
-              tag: v0.3.0
+              tag: v0.3.4
             env:
               TZ: ${TIMEZONE}
               FLASK_PORT: &port 8084
