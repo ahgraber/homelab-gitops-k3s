@@ -35,6 +35,10 @@ spec:
     podAnnotations:
       reloader.stakater.com/search: "true"
 
+    image:
+      # repository: ghcr.io/movetokube/postgres-operator
+      tag: 2.3.0
+
     env:
       # OPERATOR_NAME: *app
       POSTGRES_INSTANCE: postgres # match with `postgres.db.movetokube.com/instance: postgres` in CRs
