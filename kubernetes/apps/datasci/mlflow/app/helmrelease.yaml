@@ -233,25 +233,7 @@ spec:
               - identifier: gateway
                 port: *gport
     persistence:
-      # data:
-      #   enabled: true
-      #   type: persistentVolumeClaim
-      #   existingClaim: *app
-      #   # globalMounts:
-      #   #   - path: /mlflow # defaults to persistence.key
-      #   advancedMounts:
-      #     mlflow:
-      #       app:
-      #         - path: /mlflow
       config:
-        # type: configMap
-        # name: mlflow-gateway-config
-        # advancedMounts: # only attach to gateway container
-        #   gateway:
-        #     app:
-        #       - path: /config/config.yaml
-        #         readOnly: false
-        #         subPath: config.yaml
         type: secret
         name: mlflow-gateway
         advancedMounts: # only attach to gateway container
