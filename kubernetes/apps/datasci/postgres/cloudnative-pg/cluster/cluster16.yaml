@@ -70,7 +70,7 @@ spec:
   externalClusters:
     - name: *prior_db
       barmanObjectStore:
-        endpointURL: https://${SECRET_S3_ENDPOINT}
+        endpointURL: http://${SECRET_S3_ENDPOINT}
         destinationPath: s3://postgres/
         s3Credentials:
           accessKeyId:
@@ -90,7 +90,7 @@ spec:
     retentionPolicy: 30d
     barmanObjectStore:                        # name of s3 folder to save to
       serverName: &current_db datasci16-v5    # next time it will be datasci16-v6
-      endpointURL: https://${SECRET_S3_ENDPOINT}
+      endpointURL: http://${SECRET_S3_ENDPOINT}
       destinationPath: s3://postgres/
       s3Credentials:
         accessKeyId:
