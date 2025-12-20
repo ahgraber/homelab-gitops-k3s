@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: &app "${APP}"
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: "${APP}-bootstrap-restore"
+  resources:
+    requests:
+      storage: "${VOLSYNC_CAPACITY}"
+  storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
