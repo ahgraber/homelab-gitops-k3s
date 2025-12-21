@@ -1,12 +1,13 @@
 ---
+# yaml-language-server: $schema=https://github.com/datreeio/CRDs-catalog/raw/refs/heads/main/barmancloud.cnpg.io/objectstore_v1.json
 apiVersion: barmancloud.cnpg.io/v1
 kind: ObjectStore
 metadata:
-  name: postgres-s3
+  name: pg-s3-store
 spec:
   retentionPolicy: 30d
   configuration:
-    endpointURL: http://${SECRET_S3_ENDPOINT}
+    endpointURL: ${SECRET_S3_ENDPOINT} # from cluster custom secrets
     destinationPath: s3://postgres/
     s3Credentials:
       accessKeyId:

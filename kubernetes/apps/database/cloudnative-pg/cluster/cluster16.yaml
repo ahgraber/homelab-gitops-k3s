@@ -1,8 +1,12 @@
 ---
+# yaml-language-server: $schema=https://github.com/datreeio/CRDs-catalog/raw/refs/heads/main/postgresql.cnpg.io/cluster_v1.json
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: &app postgres16
+  name: postgres16
+  annotations:
+    # required for seamless bootstrap: https://github.com/cloudnative-pg/cloudnative-pg/issues/5778#issuecomment-2783417464
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9-22
   instances: 3
@@ -12,21 +16,22 @@ spec:
     parameters:
       max_connections: "300"
       shared_buffers: 256MB
-      # pg_stat_statements.max: "10000"
-      # pg_stat_statements.track: all
-      # auto_explain.log_min_duration: "10s"
-    # pg_hba:
-    #   - host all all 10.244.0.0/16 md5
 
   enableSuperuserAccess: true
   superuserSecret:
     name: postgres-superuser
 
-  storage:
-    size: 15Gi
-    storageClass: local-path
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters: &pluginparams
+        barmanObjectName: pg-s3-store
+        serverName: postgres16-v4
+        # Current database object in S3.
+        # hopefully we no longer have to step this;
+        # otherwise next time it will be postgres16-v5
 
-  # ## for initial setup
+  # ### for initial setup from raw ###
   # bootstrap:
   #   initdb:
   #     # set up 'default' db/owner
@@ -35,7 +40,7 @@ spec:
   #     secret:
   #       name: <app>-user
 
-  # ## For major postgres version upgrade
+  # ### For major postgres version upgrade ###
   # bootstrap:
   #   initdb:
   #     import:
@@ -46,6 +51,7 @@ spec:
   #         - "*"
   #       source:
   #         externalCluster: &prior_db postgres14-before-migration
+  #
   # # externalClusters is needed when recovering from an existing cnpg cluster
   # externalClusters:
   #   - name: *prior_db
@@ -58,33 +64,22 @@ spec:
   #       name: postgres-superuser
   #       key: password
 
-  ## Restore from a backup
+  ### Restore from a backup ###
   # yamllint disable rule:comments
   # prettier-ignore
   bootstrap:
-    recovery:                          # s3 blob folder to recover from
-      source: &prior_db postgres16-v4  # next time it will be postgres16-v5?
-      # recoveryTarget:                # If not present, latest
-      #   targetTime: "2025-03-05 00:00:00+00" # RFC3339 format
+    recovery:
+      source: source
+      # recoveryTarget:                         # If not present, latest
+      #   targetTime: "2025-03-05 00:00:00+00"  # RFC3339 format
 
   # externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: *prior_db
+    - name: source
       plugin:
         name: barman-cloud.cloudnative-pg.io
-        parameters:
-          barmanObjectName: postgres-s3
-          serverName: *prior_db
+        parameters: *pluginparams
   # yamllint enable
-
-  plugins:
-    - name: barman-cloud.cloudnative-pg.io
-      isWALArchiver: true
-      parameters:
-        barmanObjectName: postgres-s3
-        serverName: &current_db postgres16-v4
-        # hopefully we no longer have to step this;
-        # otherwise next time it will be postgres16-v5
 
   resources:
     requests:
@@ -92,6 +87,10 @@ spec:
       cpu: 50m
     limits:
       memory: 1Gi
+
+  storage:
+    size: 15Gi
+    storageClass: local-path
 
   affinity:
     enablePodAntiAffinity: true
