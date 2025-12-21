@@ -7,6 +7,13 @@ as provided by CRDs.
 
 The operator is deployed via helm release
 
+## Barman Cloud Plugin
+
+CloudNativePG's in-tree Barman Cloud integration is deprecated; backups/WAL archiving are
+handled by the Barman Cloud plugin.
+
+This repo installs the plugin as a separate Flux app under `cloudnative-pg/barman`.
+
 ## Cluster & Backups
 
 Local storage is used by default; S3-compatible storage can be used as a live WAL backup.

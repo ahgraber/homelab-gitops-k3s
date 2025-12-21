@@ -1,0 +1,24 @@
+---
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: postgres-s3
+spec:
+  retentionPolicy: 30d
+  configuration:
+    endpointURL: http://${SECRET_S3_ENDPOINT}
+    destinationPath: s3://postgres/
+    s3Credentials:
+      accessKeyId:
+        name: postgres-s3
+        key: S3_ACCESS_KEY
+      secretAccessKey:
+        name: postgres-s3
+        key: S3_SECRET_KEY
+    wal:
+      compression: bzip2
+      maxParallel: 8
+    data:
+      compression: bzip2
+      immediateCheckpoint: false
+      jobs: 4

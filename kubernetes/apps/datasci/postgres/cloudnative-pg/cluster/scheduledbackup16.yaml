@@ -10,3 +10,6 @@ spec:
   backupOwnerReference: self
   cluster:
     name: datasci16
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

@@ -12,6 +12,8 @@ The operator is deployed via helm release
 S3-compatible storage can be used as a live WAL backup.
 Since the native PVC/PV is using k8s-local local-path, the backup should use NAS-based s3.
 
+CNPG now uses a [plugin system](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/).
+
 ## Restore
 
 [k8s-at-home discussion](https://discord.com/channels/673534664354430999/1036720267474509885)

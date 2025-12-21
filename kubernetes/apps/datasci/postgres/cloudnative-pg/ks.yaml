@@ -12,6 +12,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-operator
+    - name: cnpg-barman-cloud
     - name: local-path-provisioner
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/datasci/postgres/cloudnative-pg/cluster

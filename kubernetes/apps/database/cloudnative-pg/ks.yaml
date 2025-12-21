@@ -10,7 +10,33 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cert-manager
   path: ./kubernetes/apps/database/cloudnative-pg/operator
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: home-kubernetes
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  wait: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app cnpg-barman-cloud
+  namespace: flux-system
+spec:
+  targetNamespace: database
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cert-manager
+    - name: cnpg-operator
+  path: ./kubernetes/apps/database/cloudnative-pg/barman
   prune: true
   sourceRef:
     kind: GitRepository
@@ -33,6 +59,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-operator
+    - name: cnpg-barman-cloud
     - name: local-path-provisioner
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
