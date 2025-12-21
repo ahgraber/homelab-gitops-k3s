@@ -5,8 +5,8 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-  - ../../../../templates/volsync-ftp/init
-  # - ../../../../templates/volsync-ftp/restore
+  # - ../../../../templates/volsync/init
+  # - ../../../../templates/volsync/restore
 configMapGenerator:
   - name: garage
     files:

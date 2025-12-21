@@ -82,16 +82,16 @@ spec:
       config:
         enabled: true
         type: configMap
-        name: garage-configmap
+        name: *app
         globalMounts:
           - path: /etc/garage.toml
             subPath: configuration.toml
-      garage:
-        existingClaim: *app
-        advancedMounts:
-          garage:
-            app:
-              - path: /data
-                subPath: data
-              - path: /meta
-                subPath: meta
+      # garage:
+      #   existingClaim: *app
+      #   advancedMounts:
+      #     garage:
+      #       app:
+      #         - path: /data
+      #           subPath: data
+      #         - path: /meta
+      #           subPath: meta
