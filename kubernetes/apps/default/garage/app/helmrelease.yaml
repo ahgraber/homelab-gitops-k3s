@@ -86,12 +86,16 @@ spec:
         globalMounts:
           - path: /etc/garage.toml
             subPath: configuration.toml
-      # garage:
-      #   existingClaim: *app
-      #   advancedMounts:
-      #     garage:
-      #       app:
-      #         - path: /data
-      #           subPath: data
-      #         - path: /meta
-      #           subPath: meta
+      garage:
+        type: emptyDir
+        globalMounts:
+          - path: /data
+          - path: /meta
+        # existingClaim: *app
+        # advancedMounts:
+        #   garage:
+        #     app:
+        #       - path: /data
+        #         subPath: data
+        #       - path: /meta
+        #         subPath: meta

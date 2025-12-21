@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
+  - ./secret.sops.yaml
   # - ../../../../templates/volsync/init
   # - ../../../../templates/volsync/restore
 configMapGenerator:
