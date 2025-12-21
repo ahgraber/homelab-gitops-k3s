@@ -38,7 +38,7 @@ spec:
           app:
             image:
               repository: docker.io/wabayang/jelu
-              tag: 0.74.0@sha256:db34bc341408f4b5219ec29decc378855964bd88a19aa1374fb2363404dbe656
+              tag: 0.75.2@sha256:0a46e807d6d38ceca142f873b9e609970a4e35b06aca1e8cd645f85d299f190f
             env:
               TZ: ${TIMEZONE}
               SERVER_PORT: &port 11111
