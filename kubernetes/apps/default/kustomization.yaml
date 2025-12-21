@@ -9,7 +9,7 @@ resources:
   - ./calibre-web-downloader/ks.yaml
   - ./cyberchef/ks.yaml
   - ./flaresolverr/ks.yaml
-  - ./garage/ks.yaml
+  # - ./garage/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./jelu/ks.yaml
