@@ -35,9 +35,9 @@ spec:
     podAnnotations:
       reloader.stakater.com/search: "true"
 
-    image:
-      # repository: ghcr.io/movetokube/postgres-operator
-      tag: 2.3.0
+    # image:
+    #   # repository: ghcr.io/movetokube/postgres-operator
+    #   tag: 2.4.0
 
     env:
       # OPERATOR_NAME: *app
