@@ -4,10 +4,10 @@ Prefect is a modern workflow orchestration tool for coordinating all of your dat
 Orchestrate and observe your dataflow using Prefect's open source Python library, the glue of the modern data stack.
 Scheduling, executing and visualizing your data workflows has never been easier!
 
-* Design and test your workflow
-* Execute code and keep data secure in your existing infrastructure
-* Gain complete confidence with total oversight of your workflows
+- Design and test your workflow
+- Execute code and keep data secure in your existing infrastructure
+- Gain complete confidence with total oversight of your workflows
 
 ## CLI
 
-Install with `pipx install prefect`
+Install with `uv tool install prefect`

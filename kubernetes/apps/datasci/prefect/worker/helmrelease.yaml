@@ -63,35 +63,53 @@ spec:
         # -- maximum number of flow runs to start simultaneously (default: unlimited)
         limit:
 
-      ## connection settings
-      # -- one of 'cloud' or 'server'
+      ## Connection settings
+      # -- one of 'cloud', 'customerManagedCloud', or 'selfHostedServer'
       apiConfig: selfHostedServer
-      # selfHostedCloudApiConfig:
+
+      # Example for Prefect Cloud:
+      # cloudApiConfig:
       #   accountId: ""
       #   workspaceId: ""
       #   apiKeySecret:
       #     name: prefect-api-key
       #     key: key
       #   cloudUrl: https://api.prefect.cloud/api
-      # selfHostedCloudApiConfig:
-      #   apiUrl: "" # (PREFECT_API_URL)
+
+      # Example for Customer Managed Cloud (self-managed Prefect Cloud):
+      # customerManagedCloudApiConfig:
+      #   apiUrl: "https://prefect.example.com/api"
       #   accountId: ""
       #   workspaceId: ""
       #   apiKeySecret:
-      #     # -- prefect API secret name
+      #     name: prefect-api-key
       #     key: key
-      #   uiUrl: ""
+      #   cloudApiUrl: ""  # For websocket connections (events/logs)
+
+      # Self-hosted Prefect Server configuration:
       selfHostedServerApiConfig:
         # -- prefect API url (PREFECT_API_URL); should be in-cluster URL if the worker is deployed in the same cluster as the API
         apiUrl: http://prefect-server.datasci.svc.cluster.local:4200/api
-        # uiUrl: http://localhost:4200
+        # Optional basic authentication (if enabled on server):
+        # basicAuth:
+        #   enabled: false
+        #   authString: "admin:pass"
+        #   # Or use existing secret:
+        #   # existingSecret: prefect-basic-auth
 
       replicaCount: 1
 
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 3
+        targetCPUUtilizationPercentage: 80
+        targetMemoryUtilizationPercentage: 80
+
       resources:
         requests:
-          memory: 256Mi
           cpu: 100m
+          memory: 256Mi
         limits:
           memory: 1Gi
 

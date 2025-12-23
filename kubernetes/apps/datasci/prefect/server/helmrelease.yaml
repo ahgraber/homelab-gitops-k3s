@@ -57,30 +57,24 @@ spec:
       debug: true
 
       uiConfig:
-        enabled: true
         # to connect to the UI from somewhere external to the cluster (i.e. via an ingress), set this value to the ingress URL
         prefectUiApiUrl: "https://prefect.${SECRET_DOMAIN}/api"
 
-      env:
-        - name: PREFECT_API_DATABASE_MIGRATE_ON_START
-          value: "True"
+      replicaCount: 1
 
-      # # Autoscaling configuration
-      # # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
-      # autoscaling:
-      #   enabled: false
-      #   minReplicas: 1
-      #   maxReplicas: 100
-      #   targetCPU: 80
-      #   targetMemory: 80
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 3
+        targetCPU: 80
+        targetMemory: 80
 
-      # # requests MUST be specified if using an HPA, otherwise the HPA will not know when to trigger a scale event
-      # resources:
-      #   requests:
-      #     # cpu: 25m
-      #     # memory: 105M
-      #   limits:
-      #     # memory: 105M
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          memory: 1Gi
 
       ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
       podSecurityContext:
@@ -98,13 +92,29 @@ spec:
     service:
       type: ClusterIP
       port: 4200
+      targetPort: 4200
 
     ingress:
       enabled: false
 
+    # Database migrations configuration
+    migrations:
+      enabled: true
+      backoffLimit: 5
+      timeoutSeconds: 300
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 256Mi
+
+    # External PostgreSQL configuration
     # https://discourse.prefect.io/t/how-to-use-external-postgres-when-deploy-by-helm-chart/2501/4
     postgresql:
       enabled: false
+
     secret:
       create: true
       # ... filled with valuesFrom below
