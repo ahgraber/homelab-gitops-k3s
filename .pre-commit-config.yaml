@@ -119,12 +119,12 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=hukkin/mdformat
   - repo: https://github.com/hukkin/mdformat
-    rev: 0.7.22
+    rev: 1.0.0
     hooks:
       - id: mdformat
         additional_dependencies:
           - mdformat-gfm
-          - mdformat-frontmatter
+          - mdformat-front-matters
           - mdformat-footnote
           - mdformat-gfm-alerts
           # - mdformat-tables # now included in mdformat-gfm

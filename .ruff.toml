@@ -87,7 +87,7 @@ ignore = [
   "Q002",  # redundant w formatter
   "Q003",  # redundant w formatter
   # "S101",  # assert
-  "S311",  # allow psuedorandom generators (we use for stats)
+  "S311",  # allow pseudorandom generators (we use for stats)
   "SIM105",  # allow except: pass
   "TRY003",  # Avoid specifying messages outside exception class; overly strict, especially for ValueError
   "TRY201",  # Allow raise without exception name (align with Sonarlint)
