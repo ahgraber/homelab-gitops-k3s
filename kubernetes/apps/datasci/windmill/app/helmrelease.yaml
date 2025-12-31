@@ -60,6 +60,7 @@ spec:
         # The default worker group
         - name: default
           replicas: 1
+          privileged: false
           resources:
             requests:
               memory: 1028Mi
@@ -70,6 +71,7 @@ spec:
 
         - name: gpu
           replicas: 0
+          privileged: false
           nodeSelector: {}
           tolerations: []
           affinity: {}
@@ -77,6 +79,7 @@ spec:
 
         - name: native
           replicas: 1
+          privileged: false
           resources:
             requests:
               memory: 128Mi
