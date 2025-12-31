@@ -15,7 +15,7 @@ vars:
   AGE_FILE: "{{.ROOT_DIR}}/age.key"
   BOOTSTRAP_CONFIG_FILE: "{{.ROOT_DIR}}/config.yaml"
   KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
-  PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
+  # PIP_REQUIREMENTS_FILE: "{{.ROOT_DIR}}/requirements.txt"
 
 includes:
   ansible: .taskfiles/ansible/taskfile.yaml
