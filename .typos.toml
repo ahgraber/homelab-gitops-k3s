@@ -30,8 +30,12 @@ locale = "en"
 extend-ignore-re = [
   # Line ignore with trailing "typos:disable"
   "(?Rm)^.*(#|//)\\s*typos:disable$",
-  # Block ignore with "typos:off"||"typos:on"
-  "(?s)(#|//)\\s*typos:off.*?\\n\\s*(#|//)\\s*typos:on",
+  # Block ignore with "typos:off"||"typos:on" for code
+  "(?s)(#|//)\\s*typos:off.*?\\n?(#|//)\\s*typos:on",
+  # Block ignore with HTML/Markdown-style comments
+  "(?s)<!--\\s*typos:off\\s*-->.*?\\n?<!--\\s*typos:on\\s*-->",
+  # Ignore URLs
+  "https?://[^\\s]+",
 ]
 
 ## Pattern-match always-valid identifiers

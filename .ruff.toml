@@ -88,6 +88,7 @@ ignore = [
   "Q003",  # redundant w formatter
   # "S101",  # assert
   "S311",  # allow pseudorandom generators (we use for stats)
+  "S607",  # allow partial paths ("git" rather than "/usr/bin/git")
   "SIM105",  # allow except: pass
   "TRY003",  # Avoid specifying messages outside exception class; overly strict, especially for ValueError
   "TRY201",  # Allow raise without exception name (align with Sonarlint)
