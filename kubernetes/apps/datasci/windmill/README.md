@@ -16,7 +16,21 @@ but it is also possible to keep using your editor and deploy from a git repo usi
 
 ## GitOps
 
-Github Actions can be used to sync code <--> Windmill.  See [examples](https://github.com/windmill-labs/windmill-sync-example/tree/main)
+Github Actions can be used to sync code \<--> Windmill. See [examples](https://github.com/windmill-labs/windmill-sync-example/tree/main)
+
+## Worker privilege and PID isolation
+
+Windmill 4.x defaults some worker groups to privileged to enable PID namespace isolation (unshare) and improved OOM handling. This repo explicitly disables privileged workers for all groups.
+
+Reconsider enabling privileged workers if:
+
+- You see errors related to `unshare`/PID namespace isolation.
+- You need Windmill's stronger sandboxing behavior or improved OOM handling on newer Kubernetes versions.
+
+Switches to flip:
+
+- `windmill.workerGroups[].privileged: true` for the group(s) that need it.
+- `windmill.disableUnsharePid: true` (or `windmill.workerGroups[].disableUnsharePid: true`) if your nodes disable user namespaces and `unshare` fails.
 
 ## Database
 
