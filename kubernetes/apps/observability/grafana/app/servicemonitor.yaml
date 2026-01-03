@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: grafana
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  namespaceSelector:
+    matchNames:
+      - observability
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 1m

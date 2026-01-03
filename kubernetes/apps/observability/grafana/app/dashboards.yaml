@@ -1,0 +1,301 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-cert-manager
+spec:
+  folder: ""
+  url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-cloudflared
+spec:
+  folder: ""
+  grafanaCom:
+    id: 17457
+    revision: 6
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-external-dns
+spec:
+  folder: ""
+  grafanaCom:
+    id: 15038
+    revision: 1
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-node-exporter
+spec:
+  folder: ""
+  grafanaCom:
+    id: 1860
+    revision: 31
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-opnsense
+spec:
+  folder: ""
+  grafanaCom:
+    id: 21113
+    revision: 1
+  datasources:
+    - inputName: DS_PROMETHEUS-K0
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-volsync
+spec:
+  folder: ""
+  grafanaCom:
+    id: 21356
+    revision: 3
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  inputs:
+    - name: VAR_REPLICATIONDESTNAME
+      value: .*-dst|.*-bootstrap
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-ceph-cluster
+spec:
+  folder: Ceph
+  grafanaCom:
+    id: 2842
+    revision: 18
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-ceph-osd
+spec:
+  folder: Ceph
+  grafanaCom:
+    id: 5336
+    revision: 9
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-ceph-pools
+spec:
+  folder: Ceph
+  grafanaCom:
+    id: 5342
+    revision: 9
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-flux-cluster
+spec:
+  folder: Flux
+  url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/cluster.json
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-flux-control-plane
+spec:
+  folder: Flux
+  url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/control-plane.json
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-api-server
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15761
+    revision: 20
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-coredns
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15762
+    revision: 22
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-global
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15757
+    revision: 43
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-namespaces
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15758
+    revision: 44
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-nodes
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15759
+    revision: 40
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-pods
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 15760
+    revision: 21
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-kubernetes-volumes
+spec:
+  folder: Kubernetes
+  grafanaCom:
+    id: 11454
+    revision: 14
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-prometheus
+spec:
+  folder: Prometheus
+  grafanaCom:
+    id: 19105
+    revision: 8
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
