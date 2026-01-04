@@ -5,13 +5,13 @@ kind: GrafanaDashboard
 metadata:
   name: grafana-dashboard-cloudflared
 spec:
-  folder: ""
-  grafanaCom:
-    id: 17457
-    revision: 6
-  datasources:
-    - inputName: DS_PROMETHEUS
-      datasourceName: Prometheus
+  allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  grafanaCom:
+    id: 17457
+    revision: 6

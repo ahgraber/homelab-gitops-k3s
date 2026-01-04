@@ -14,35 +14,36 @@ spec:
       feedback_links_enabled: "false"
       reporting_enabled: "false"
     auth:
-      oauth_allow_insecure_email_lookup: "true"
-      oauth_auto_login: "true"
-      signout_redirect_url: https://auth.${SECRET_DOMAIN}/logout
+      disable_login_form: "false"
+      # oauth_allow_insecure_email_lookup: "true"
+      # oauth_auto_login: "true"
+      # signout_redirect_url: https://auth.${SECRET_DOMAIN}/logout
     auth.anonymous:
-      enabled: "false"
-    auth.basic:
-      enabled: "false"
-    auth.generic_oauth:
       enabled: "true"
-      name: Authelia
-      allow_sign_up: "true"
-      client_id: grafana
-      # double "$$" escape flux substitutions
-      client_secret: $${GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET}
-      scopes: openid profile email groups
-      email_attribute_path: email
-      login_attribute_path: preferred_username
-      name_attribute_path: full_name
-      groups_attribute_path: groups
-      auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
-      token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
-      api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
-      empty_scopes: "false"
-      icon: signin
-      use_pkce: "true"
-    auth.generic_oauth.group_mapping:
-      org_id: "1"
-      role_attribute_path: |-
-        contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
+    # auth.basic:
+    #   enabled: "false"
+    # auth.generic_oauth:
+    #   enabled: "true"
+    #   name: Authelia
+    #   allow_sign_up: "true"
+    #   client_id: grafana
+    #   # double "$$" escape flux substitutions
+    #   client_secret: $${GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET}
+    #   scopes: openid profile email groups
+    #   email_attribute_path: email
+    #   login_attribute_path: preferred_username
+    #   name_attribute_path: full_name
+    #   groups_attribute_path: groups
+    #   auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
+    #   token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
+    #   api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
+    #   empty_scopes: "false"
+    #   icon: signin
+    #   use_pkce: "true"
+    # auth.generic_oauth.group_mapping:
+    #   org_id: "1"
+    #   role_attribute_path: |-
+    #     contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
     metrics:
       enabled: "true"
     news:
@@ -69,16 +70,11 @@ spec:
                   value: "true"
                 - name: GF_DATE_FORMATS_FULL_DATE
                   value: DD.MM.YYYY hh:mm:ss
-                - name: GF_EXPLORE_ENABLED
-                  value: "true"
-                - name: GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS
-                  value: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
-                - name: GF_SECURITY_ALLOW_EMBEDDING
-                  value: "true"
-                - name: GF_SECURITY_ANGULAR_SUPPORT_ENABLED
-                  value: "true"
-                - name: GF_SECURITY_COOKIE_SAMESITE
-                  value: grafana
+                - name: GF_SECURITY_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana
+                      key: admin-password
                 - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
                   valueFrom:
                     secretKeyRef:
