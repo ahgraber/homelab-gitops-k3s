@@ -1,5 +1,6 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+# renovate: registryUrl=ghcr.io/grafana-operator/helm-charts
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
