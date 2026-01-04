@@ -7,3 +7,4 @@ resources:
   - ./helmrelease.yaml
   # - ./dnsendpoint.yaml # Not needed if external-dns annotations work
   - ./secret.sops.yaml
+  - ./grafana-dashboard.yaml

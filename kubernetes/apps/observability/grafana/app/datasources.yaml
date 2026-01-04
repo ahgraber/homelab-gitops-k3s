@@ -3,6 +3,8 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: grafana-datasources
+  labels:
+    grafana.integreatly.org/instance: grafana
 spec:
   instanceSelector:
     matchLabels:

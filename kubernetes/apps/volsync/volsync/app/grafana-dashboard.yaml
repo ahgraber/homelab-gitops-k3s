@@ -1,0 +1,22 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: grafana-dashboard-volsync
+  labels:
+    app.kubernetes.io/name: grafana
+    grafana.integreatly.org/instance: grafana
+spec:
+  folder: ""
+  grafanaCom:
+    id: 21356
+    revision: 3
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: Prometheus
+  inputs:
+    - name: VAR_REPLICATIONDESTNAME
+      value: .*-dst|.*-bootstrap
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
