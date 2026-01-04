@@ -1,6 +1,5 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
-# renovate: registryUrl=oci://ghcr.io/grafana-operator/helm-charts/grafana-operator chart=grafana-operator
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:

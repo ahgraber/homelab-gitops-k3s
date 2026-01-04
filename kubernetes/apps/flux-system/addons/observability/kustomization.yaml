@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./podmonitor.yaml
   - ./prometheusrule.yaml
-  - ./grafana-dashboards.yaml
+  - ./grafanadashboard.yaml
