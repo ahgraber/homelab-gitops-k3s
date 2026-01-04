@@ -1,28 +1,38 @@
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadatasource_v1beta1.json
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadatasource_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
-  name: grafana-datasources
+  name: prometheus
   labels:
-    grafana.integreatly.org/instance: grafana
+    app.kubernetes.io/name: grafana
 spec:
   instanceSelector:
     matchLabels:
       app.kubernetes.io/name: grafana
-  datasources:
-    - name: Alertmanager
-      type: alertmanager
-      uid: alertmanager
-      access: proxy
-      url: http://alertmanager-operated.observability.svc.cluster.local:9093
-      jsonData:
-        implementation: prometheus
-    - name: Prometheus
-      type: prometheus
-      uid: prometheus
-      access: proxy
-      url: http://prometheus-operated.observability.svc.cluster.local:9090
-      jsonData:
-        prometheusType: Prometheus
-      isDefault: true
+  datasource:
+    name: prometheus
+    type: prometheus
+    uid: prometheus
+    access: proxy
+    isDefault: true
+    url: http://prometheus-operated.observability.svc.cluster.local:9090
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadatasource_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: alertmanager
+  labels:
+    app.kubernetes.io/name: grafana
+spec:
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  datasource:
+    name: alertmanager
+    type: alertmanager
+    access: proxy
+    jsonData:
+      implementation: prometheus
+    url: http://alertmanager-operated.observability.svc.cluster.local:9093

@@ -12,6 +12,7 @@ spec:
     matchNames:
       - observability
   endpoints:
-    - port: http
+    - port: grafana
       path: /metrics
-      interval: 1m
+      honorLabels: true
+  jobLabel: grafana

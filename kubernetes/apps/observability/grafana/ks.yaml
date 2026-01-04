@@ -31,7 +31,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: grafana
-      grafana.integreatly.org/instance: grafana
   dependsOn:
     - name: grafana-operator
   path: ./kubernetes/apps/observability/grafana/app
