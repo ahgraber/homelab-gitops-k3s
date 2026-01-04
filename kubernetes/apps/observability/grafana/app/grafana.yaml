@@ -22,18 +22,22 @@ spec:
     auth.basic:
       enabled: "false"
     auth.generic_oauth:
-      api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
-      auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
-      client_id: grafana
       enabled: "true"
-      empty_scopes: "false"
-      groups_attribute_path: groups
-      icon: signin
-      login_attribute_path: preferred_username
       name: Authelia
-      name_attribute_path: name
+      allow_sign_up: "true"
+      client_id: grafana
+      # double "$$" escape flux substitutions
+      client_secret: $${GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET}
       scopes: openid profile email groups
+      email_attribute_path: email
+      login_attribute_path: preferred_username
+      name_attribute_path: full_name
+      groups_attribute_path: groups
+      auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
       token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
+      api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
+      empty_scopes: "false"
+      icon: signin
       use_pkce: "true"
     auth.generic_oauth.group_mapping:
       org_id: "1"
