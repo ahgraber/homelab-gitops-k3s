@@ -73,11 +73,11 @@ spec:
   datasourceNamespaceSelector: {}
   datasourceLabelSelector:
     - matchLabels:
-        app.kubernetes.io/name: grafana
+        grafana.integreatly.org/instance: grafana
   dashboardNamespaceSelector: {}
   dashboardLabelSelector:
     - matchLabels:
-        app.kubernetes.io/name: grafana
+        grafana.integreatly.org/instance: grafana
   ingress:
     enabled: false
   service:

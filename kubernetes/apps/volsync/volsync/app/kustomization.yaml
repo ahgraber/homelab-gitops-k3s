@@ -6,3 +6,4 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
+  - ./grafana-dashboard.yaml
