@@ -4,12 +4,10 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: prometheus
-  labels:
-    app.kubernetes.io/name: grafana
 spec:
   instanceSelector:
     matchLabels:
-      app.kubernetes.io/name: grafana
+      dashboards: "grafana"
   datasource:
     name: prometheus
     type: prometheus
@@ -23,12 +21,10 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   name: alertmanager
-  labels:
-    app.kubernetes.io/name: grafana
 spec:
   instanceSelector:
     matchLabels:
-      app.kubernetes.io/name: grafana
+      dashboards: "grafana"
   datasource:
     name: alertmanager
     type: alertmanager

@@ -5,7 +5,7 @@ kind: Grafana
 metadata:
   name: grafana
   labels:
-    app.kubernetes.io/name: grafana
+    dashboards: "grafana"
 spec:
   config:
     analytics:
