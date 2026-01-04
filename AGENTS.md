@@ -411,6 +411,105 @@ pre-commit run --all-files
 - **App README**: Always `README.md` (not readme.md or README.MD)
 - **ConfigMaps/Secrets**: Descriptive names like `app-config.yaml`, `app-secret.sops.yaml`
 
+## Commit Message Convention
+
+All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+
+### Format
+
+```text
+<type>[optional scope][!]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Rules
+
+**Type and Description:**
+
+- Allowed types: `feat`, `fix`, `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `test`, `revert`
+- Use imperative, present tense (e.g., "add feature" not "added feature")
+- No trailing period on the description
+- Prefer lowercase unless referencing a proper noun
+- Keep the description concise and specific
+
+**Scope:**
+
+- Use a short, specific scope that identifies the area of change
+- Examples: `api`, `ui`, `deps`, `ci`, `docs`, `flux`, `ansible`, `networking`
+- Scope is optional but recommended for clarity
+
+**Breaking Changes:**
+
+- Mark breaking changes with `!` after the type/scope: `feat(api)!: change authentication method`
+- Include a `BREAKING CHANGE:` footer describing the impact and migration path
+
+**Body:**
+
+- Explain what and why, not how
+- Use bullet points for lists
+- Avoid repeating the subject line
+- Separate from subject with a blank line
+
+**Footers:**
+
+- Use `BREAKING CHANGE:` footer for breaking changes
+- Coding assistants MUST indicate their assistance via a co-authored-by message: `Co-authored-by: <agent name><email>`
+- Reference issues/PRs: `Closes #123`, `Refs #456`, `Fixes #789`
+
+### Type Guidance
+
+- `feat`: New user-facing behavior or capability
+- `fix`: Bug fix that affects users
+- `docs`: Documentation only changes
+- `style`: Formatting changes that don't affect code meaning (whitespace, formatting, etc.)
+- `refactor`: Code changes that neither fix bugs nor add features
+- `test`: Adding or updating tests only
+- `build`: Changes to build system, dependencies, or tooling (e.g., npm, ansible roles)
+- `ci`: CI/CD configuration changes (e.g., GitHub Actions, Flux)
+- `chore`: Routine tasks, maintenance, or other changes that don't modify src or test files
+- `revert`: Reverts a previous commit
+
+### Examples
+
+```text
+feat(networking): add external ingress for blog service
+
+Configures HTTPRoute with external gateway and Cloudflare DNS annotation
+to make the blog publicly accessible.
+
+Closes #42
+```
+
+```text
+fix(cert-manager): resolve certificate renewal failures
+
+The ClusterIssuer was using an expired API token. Updated the secret
+with a new token and verified certificate issuance.
+
+Fixes #128
+```
+
+```text
+chore(deps): update flux to v2.3.0
+
+Updated Flux components to latest stable release for security patches
+and performance improvements.
+```
+
+```text
+feat(storage)!: migrate from local-path to rook-ceph
+
+BREAKING CHANGE: All PVCs must be migrated manually. Local-path storage
+class is deprecated and will be removed in the next release.
+
+Migration guide: docs/storage-migration.md
+
+Refs #201
+```
+
 ## Important Gotchas
 
 ### Security
@@ -520,6 +619,6 @@ ansible-playbook -i ansible/inventory/hosts.yaml ansible/playbooks/<playbook>.ya
 - [k3s Documentation](https://docs.k3s.io/) - k3s official docs
 - [SOPS Documentation](https://github.com/getsops/sops) - SOPS usage and configuration
 
-______________________________________________________________________
+---
 
 Remember: This repository manages real infrastructure. Always test changes carefully, verify SOPS encryption, and understand the impact before committing.
