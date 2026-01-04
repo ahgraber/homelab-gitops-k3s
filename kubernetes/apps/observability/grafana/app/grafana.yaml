@@ -36,7 +36,7 @@ spec:
       token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
       use_pkce: "true"
     auth.generic_oauth.group_mapping:
-      org_id: 1
+      org_id: "1"
       role_attribute_path: |-
         contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'grafana:viewer') && 'Viewer' || 'Viewer'
     metrics:
