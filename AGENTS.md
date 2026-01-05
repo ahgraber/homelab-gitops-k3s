@@ -411,6 +411,16 @@ pre-commit run --all-files
 - **App README**: Always `README.md` (not readme.md or README.MD)
 - **ConfigMaps/Secrets**: Descriptive names like `app-config.yaml`, `app-secret.sops.yaml`
 
+## Secrets Management Naming Conventions (ESO vs SOPS)
+
+- Prefer Bitwarden/ESO as the primary secrets path; SOPS stays only for minimal bootstrap credentials.
+- Bitwarden project: **Homelab**. Keep all ExternalSecret targets in this project for consistency and access control.
+- Bitwarden item names: `{namespace}-{app}-{purpose}` (e.g., `default-ghost-db`); shared items use `shared-{purpose}`.
+- Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey` (avoid generic keys like `value`).
+- Kubernetes Secret names mirror Bitwarden items where possible; avoid ambiguous names like `credentials` or `secret`.
+- ExternalSecret resource names: `{namespace}-{app}-{source}` (e.g., `default-ghost-bitwarden`).
+- ClusterSecretStore name: `bitwarden-cluster-store`; ESO controller ServiceAccount: `external-secrets-controller` in the `external-secrets` namespace.
+
 ## Commit Message Convention
 
 All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
