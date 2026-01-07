@@ -3,7 +3,7 @@
   customManagers: [
     {
       customType: "regex",
-      description: ["Process custom dependencies"],
+      description: ["Process annotated dependencies"],
       managerFilePatterns: [
         "/(^|/)\\.taskfiles/.+\\.ya?ml$/",
         "/(^|/)ansible/.+\\.ya?ml(\\.j2)?$/",
@@ -21,15 +21,26 @@
     },
     {
       customType: "regex",
+      description: "Process OCI dependencies",
+      managerFilePatterns: [
+        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
+      ],
+      matchStrings: [
+        "oci://(?<depName>[^:]+):(?<currentValue>\\S+)",
+      ],
+      datasourceTemplate: "docker",
+    },
+    {
+      customType: "regex",
       description: ["Process CloudnativePG Postgresql version"],
       managerFilePatterns: [
         "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
       ],
       matchStrings: [
-        "imageName: (?<depName>\\S+):(?<currentValue>.*\\-.*)"
+        ": (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[\\w.-]+)"
       ],
       datasourceTemplate: "docker",
-      versioningTemplate: "redhat"
+      versioningTemplate: "docker"
     }
   ]
 }

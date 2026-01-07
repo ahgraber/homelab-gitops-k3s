@@ -8,6 +8,7 @@ metadata:
     # required for seamless bootstrap: https://github.com/cloudnative-pg/cloudnative-pg/issues/5778#issuecomment-2783417464
     cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
+  # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/postgresql
   imageName: ghcr.io/cloudnative-pg/postgresql:16.9-22
   instances: 3
   primaryUpdateStrategy: unsupervised
