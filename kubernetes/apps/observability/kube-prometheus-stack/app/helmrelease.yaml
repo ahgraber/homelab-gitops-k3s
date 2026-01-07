@@ -34,6 +34,12 @@ spec:
   #         kind: Pod
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+    crds:
+      enabled: true
+      upgradeJob:
+        enabled: true
+        forceConflicts: true
+
     # fullnameOverride: kps
     cleanPrometheusOperatorObjectNames: true
 
