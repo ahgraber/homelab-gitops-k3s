@@ -34,7 +34,8 @@
   ignorePaths: [
     "**/*.sops.*",
     "**/.archive/**",
-    "**/resources/**"
+    "**/resources/**",
+    ".copier-answers.yaml"
   ],
   flux: {
     managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"],
