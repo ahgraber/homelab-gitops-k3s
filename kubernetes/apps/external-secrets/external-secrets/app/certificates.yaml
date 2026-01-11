@@ -10,15 +10,18 @@ kind: Certificate
 metadata:
   name: bitwarden-bootstrap-certificate
   namespace: cert-manager
-  annotations:
-    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
 spec:
   commonName: cert-manager-bitwarden-tls
   isCA: true
   duration: 8760h # 1 year
   renewBefore: 720h # 30 days
   secretName: bitwarden-tls-certs
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
   subject:
     organizations:
       - external-secrets.io
