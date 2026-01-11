@@ -41,6 +41,8 @@ tasks:
       - for:
           # renovate: datasource=github-releases depName=kubernetes-sigs/external-dns
           - https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/tags/v0.20.0/config/crd/standard/dnsendpoints.externaldns.k8s.io.yaml
+          # renovate: datasource=github-releases depName=external-secrets/external-secrets
+          - https://raw.githubusercontent.com/external-secrets/external-secrets/refs/tags/v0.10.5/deploy/crds/bundle.yaml
           # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
           - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.87.1/stripped-down-crds.yaml
         cmd: kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename {{ .ITEM }}

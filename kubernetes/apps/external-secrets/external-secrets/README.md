@@ -33,3 +33,27 @@ stringData:
 - Bitwarden SDK server endpoint: `bitwarden-sdk-server.external-secrets.svc.cluster.local:8087` (HTTP).
 - Add namespace-specific ExternalSecrets that point at Bitwarden items in the **Homelab** project; see `examples/` for patterns.
 - Monitor `ExternalSecret` and `ClusterSecretStore` conditions after bootstrapping credentials.
+
+## Operational workflows
+
+### Add or change a secret
+
+1. Add/update the Bitwarden item in the **Homelab** project using the naming convention.
+2. Define or update an `ExternalSecret` to map Bitwarden fields to K8s keys.
+3. Validate sync by checking `ExternalSecret` conditions and the target Secret contents.
+
+### Rotate credentials
+
+1. Update the Bitwarden item fields (e.g., `password`, `token`).
+2. Ensure the `ExternalSecret` refresh interval is acceptable for the rotation window.
+3. Watch the `ExternalSecret` status and dependent workloads for successful reloads.
+
+### Troubleshoot sync issues
+
+- Inspect `ExternalSecret` and `ClusterSecretStore` conditions for authentication or lookup errors.
+- Confirm `bitwarden-credentials` is present and encrypted in bootstrap and that the SDK server is healthy.
+- Verify the Bitwarden item name and field keys match the ExternalSecret `remoteRef` entries.
+
+### Migration tooling
+
+- See `docs/bitwarden-eso-migration-tooling.md` for mapping format and the dry-run migration helper.

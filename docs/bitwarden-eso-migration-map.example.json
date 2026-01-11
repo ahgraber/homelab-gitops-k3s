@@ -1,0 +1,16 @@
+{
+  "defaults": {
+    "project_id": "<bitwarden-project-id>"
+  },
+  "entries": [
+    {
+      "name": "default-homebox-app",
+      "namespace": "default",
+      "sops_path": "kubernetes/apps/default/homebox/app/secret.sops.yaml",
+      "fields": {
+        "username": "HOMEB0X_USERNAME",
+        "password": "HOMEB0X_PASSWORD"
+      }
+    }
+  ]
+}

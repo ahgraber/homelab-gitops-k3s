@@ -88,12 +88,18 @@ Status checklist:
 
 ## Phase 2: Migration tooling and documentation
 
-- [ ] Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
+- [x] Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
   - Scripted push: decrypt SOPS locally (`sops --decrypt`) and stream values to Bitwarden via `bws` CLI or API without writing plaintext to disk.
   - Optional in-cluster `PushSecret` pattern: create a temporary K8s Secret, push to Bitwarden, then remove the temporary Secret.
-- [ ] Define a mapping file format (YAML/JSON) for batch migrations with explicit Bitwarden item names and fields.
-- [ ] Provide dry-run and idempotency checks (e.g., skip/confirm overwrites, verify item existence).
-- [ ] Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
+- [x] Define a mapping file format (YAML/JSON) for batch migrations with explicit Bitwarden item names and fields.
+- [x] Provide dry-run and idempotency checks (e.g., skip/confirm overwrites, verify item existence).
+- [x] Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
+
+### Phase 2 outputs (current repository state)
+
+- Migration helper: `scripts/bitwarden-eso-migrate.py` (dry-run by default, optional apply with command template).
+- Mapping template: `docs/bitwarden-eso-migration-map.example.json`.
+- Tooling guide: `docs/bitwarden-eso-migration-tooling.md`.
 
 ## Phase 3: Namespace-by-namespace cutover
 
