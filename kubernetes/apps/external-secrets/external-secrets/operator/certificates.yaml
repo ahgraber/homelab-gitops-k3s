@@ -15,13 +15,8 @@ spec:
   isCA: true
   duration: 8760h # 1 year
   renewBefore: 720h # 30 days
-  secretName: bitwarden-tls-certs
-  secretTemplate:
-    annotations:
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
-      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
+  # CA keypair used by the ClusterIssuer below. Do not reflect this Secret into other namespaces.
+  secretName: bitwarden-bootstrap-ca
   subject:
     organizations:
       - external-secrets.io
@@ -56,4 +51,40 @@ metadata:
   name: bitwarden-certificate-issuer
 spec:
   ca:
-    secretName: bitwarden-tls-certs
+    secretName: bitwarden-bootstrap-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-tls-certs
+spec:
+  secretName: bitwarden-tls-certs
+  secretTemplate:
+    annotations:
+      # allow replication?
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
+  dnsNames:
+    - bitwarden-sdk-server.external-secrets.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.external-secrets.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+    - ::1
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    # algorithm: RSA
+    # size: 2048
+    encoding: PKCS8
+    rotationPolicy: Always
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: bitwarden-certificate-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

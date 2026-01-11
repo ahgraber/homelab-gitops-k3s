@@ -14,11 +14,19 @@ metadata:
   namespace: cert-manager
 spec:
   isCA: true
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
   commonName: selfsigned-ca
   secretName: root-secret
   privateKey:
     algorithm: ECDSA
     size: 256
+    encoding: PKCS8
+    rotationPolicy: Always
+  usages:
+    - digital signature
+    - key encipherment
+    - cert sign
   issuerRef:
     name: selfsigned-issuer
     kind: Issuer
