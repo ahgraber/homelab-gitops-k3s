@@ -71,11 +71,13 @@ Notes:
 
 ## Phase 1: GitOps foundation in `kubernetes/apps/external-secrets`
 
-- Add `kubernetes/apps/external-secrets/external-secrets/` (or `kubernetes/apps/external-secrets/`) with Flux Kustomization, Namespace, HelmRelease, and README.
-- Configure HelmRelease for External Secrets Operator with Bitwarden provider enabled and `bitwarden-sdk-server` turned on.
-- Create Namespace manifest (`external-secrets`), ServiceAccount, and RBAC to scope ESO controllers.
-- Add a `ClusterSecretStore` targeting Bitwarden with references to the bootstrap Secret for client credentials.
-- Provide example `ExternalSecret` and `ClusterExternalSecret` manifests for validation.
+Status checklist:
+
+- [x] Add `kubernetes/apps/external-secrets/external-secrets/` (or `kubernetes/apps/external-secrets/`) with Flux Kustomization, HelmRelease, and README.
+- [x] Configure HelmRelease for External Secrets Operator with Bitwarden provider enabled and `bitwarden-sdk-server` turned on.
+- [ ] Create Namespace manifest (`external-secrets`), ServiceAccount, and RBAC to scope ESO controllers. (Namespace manifest currently defines `security`.)
+- [x] Add a `ClusterSecretStore` targeting Bitwarden with references to the bootstrap Secret for client credentials.
+- [x] Provide example `ExternalSecret` and `ClusterExternalSecret` manifests for validation.
 
 ### Phase 1 outputs (current repository state)
 
@@ -86,16 +88,16 @@ Notes:
 
 ## Phase 2: Migration tooling and documentation
 
-- Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
+- [ ] Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
   - Scripted push: decrypt SOPS locally (`sops --decrypt`) and stream values to Bitwarden via `bws` CLI or API without writing plaintext to disk.
   - Optional in-cluster `PushSecret` pattern: create a temporary K8s Secret, push to Bitwarden, then remove the temporary Secret.
-- Define a mapping file format (YAML/JSON) for batch migrations with explicit Bitwarden item names and fields.
-- Provide dry-run and idempotency checks (e.g., skip/confirm overwrites, verify item existence).
-- Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
+- [ ] Define a mapping file format (YAML/JSON) for batch migrations with explicit Bitwarden item names and fields.
+- [ ] Provide dry-run and idempotency checks (e.g., skip/confirm overwrites, verify item existence).
+- [ ] Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
 
 ## Phase 3: Namespace-by-namespace cutover
 
-- For each namespace:
+- [ ] For each namespace:
   - Create/adjust `ExternalSecret` resources that map namespace secrets to Bitwarden items/fields via the shared `ClusterSecretStore`.
   - Update namespace README/kustomizations to reference the new secrets and remove direct SOPS consumption.
   - Validate reconciliation: ensure `ExternalSecret` conditions are healthy and secrets populate correctly before disabling SOPS references.
@@ -103,10 +105,10 @@ Notes:
 
 ## Phase 4: Cleanup and legacy handling
 
-- Keep minimal SOPS bootstrap secrets and legacy Taskfiles for reference, but mark SOPS workflows as deprecated.
-- Update top-level docs to reference Bitwarden + ESO as the default secret management path.
-- Remove unused SOPS secrets from repos once namespaces have fully cut over.
-- Add monitoring/alerting for ESO sync errors and SecretStore readiness.
+- [ ] Keep minimal SOPS bootstrap secrets and legacy Taskfiles for reference, but mark SOPS workflows as deprecated.
+- [ ] Update top-level docs to reference Bitwarden + ESO as the default secret management path.
+- [ ] Remove unused SOPS secrets from repos once namespaces have fully cut over.
+- [ ] Add monitoring/alerting for ESO sync errors and SecretStore readiness.
 
 ## Additional recommended milestones
 
