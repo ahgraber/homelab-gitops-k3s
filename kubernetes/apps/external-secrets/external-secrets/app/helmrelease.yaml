@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app external-secrets
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 15m
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      strategy: rollback
+      retries: 3
+  timeout: 5m
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths:
+          - /spec/containers/resources/limits
+        target:
+          kind: Pod
+  values:
+    replicaCount: 2
+    leaderElect: true
+
+    installCRDs: true
+    fullnameOverride: external-secrets
+
+    serviceMonitor:
+      enabled: true
+
+    controller:
+      logLevel: info
+      metrics:
+        serviceMonitor:
+          enabled: true
+          additionalLabels:
+            release: kube-prometheus-stack
+      podAnnotations:
+        secret.reloader.stakater.com/reload: bitwarden-credentials
+    grafanaDashboard:
+      enabled: true
+    webhook:
+      serviceMonitor:
+        enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+    certController:
+      serviceMonitor:
+        enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+    bitwarden-sdk-server:
+      enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+      serviceMonitor:
+        enabled: true
