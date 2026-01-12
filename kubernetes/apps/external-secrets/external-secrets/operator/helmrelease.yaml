@@ -31,8 +31,8 @@ spec:
         target:
           kind: Pod
   values:
-    replicaCount: 2
-    leaderElect: true
+    # replicaCount: 2
+    # leaderElect: true
 
     installCRDs: true
     fullnameOverride: external-secrets
@@ -50,6 +50,16 @@ spec:
     grafanaDashboard:
       enabled: true
     webhook:
+      replicaCount: 2
+      podDisruptionBudget:
+        enabled: true
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: external-secrets-webhook
       serviceMonitor:
         enabled: true
       resources:
