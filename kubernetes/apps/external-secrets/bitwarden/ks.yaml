@@ -3,23 +3,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app external-secrets-operator
+  name: &app bitwarden-certs
   namespace: flux-system
 spec:
-  targetNamespace: external-secrets
+  # targetNamespace: external-secrets # Do not set targetNamespace for certs
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/external-secrets/external-secrets/operator
+  path: ./kubernetes/apps/external-secrets/bitwarden/certs
+  dependsOn:
+    - name: cert-manager
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: external-secrets
-      namespace: external-secrets
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -29,26 +26,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app external-secrets-store
+  name: &app bitwarden-sdk-server
   namespace: flux-system
 spec:
   targetNamespace: external-secrets
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/external-secrets/external-secrets/app
+  path: ./kubernetes/apps/external-secrets/bitwarden/app
   dependsOn:
-    - name: external-secrets-operator
-    - name: bitwarden-sdk-server
+    - name: bitwarden-certs
+    # - name: external-secrets-operator
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  healthCheckExprs:
-    - apiVersion: external-secrets.io/v1
-      kind: ClusterSecretStore
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 30m
   retryInterval: 1m
   timeout: 5m

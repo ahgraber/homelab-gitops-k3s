@@ -1,3 +1,4 @@
+---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -13,10 +14,9 @@ metadata:
 spec:
   commonName: cert-manager-bitwarden-tls
   isCA: true
+  secretName: bitwarden-bootstrap-ca
   duration: 8760h # 1 year
   renewBefore: 720h # 30 days
-  # CA keypair used by the ClusterIssuer below. Do not reflect this Secret into other namespaces.
-  secretName: bitwarden-bootstrap-ca
   subject:
     organizations:
       - external-secrets.io
@@ -30,16 +30,12 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
-    # algorithm: RSA
-    # size: 2048
     encoding: PKCS8
     rotationPolicy: Always
   usages:
     - digital signature
     - key encipherment
     - cert sign
-    # - server auth
-    # - client auth
   issuerRef:
     name: bitwarden-bootstrap-issuer
     kind: ClusterIssuer
@@ -57,15 +53,17 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: bitwarden-tls-certs
+  namespace: external-secrets
 spec:
   secretName: bitwarden-tls-certs
-  secretTemplate:
-    annotations:
-      # allow replication?
-      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
-      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
+  # secretTemplate:
+  #   annotations:
+  #     # allow replication?
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
+  #     # automatically create replicated resources?
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
   dnsNames:
     - bitwarden-sdk-server.external-secrets.svc.cluster.local
     - external-secrets-bitwarden-sdk-server.external-secrets.svc.cluster.local
@@ -76,8 +74,6 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
-    # algorithm: RSA
-    # size: 2048
     encoding: PKCS8
     rotationPolicy: Always
   usages:

@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: bitwarden-sdk-server
+spec:
+  interval: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/bitwarden-sdk-server
+    tag: v0.5.1
+  url: oci://ghcr.io/external-secrets/charts/bitwarden-sdk-server

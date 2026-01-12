@@ -30,7 +30,7 @@ stringData:
 ## Usage notes
 
 - `ClusterSecretStore` target: `bitwarden-cluster-store`.
-- Bitwarden SDK server endpoint: `bitwarden-sdk-server.external-secrets.svc.cluster.local:8087` (HTTP).
+- Bitwarden SDK server endpoint: `bitwarden-sdk-server.external-secrets.svc.cluster.local:9998` (HTTPS).
 - Add namespace-specific ExternalSecrets that point at Bitwarden items in the **Homelab** project; see `examples/` for patterns.
 - Monitor `ExternalSecret` and `ClusterSecretStore` conditions after bootstrapping credentials.
 

@@ -9,7 +9,7 @@ spec:
     annotations:
       # allow replication?
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "networking" # Allow all namespaces
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "networking"
       # automatically create replicated resources?
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "networking"
