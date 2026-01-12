@@ -1,0 +1,76 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: bitwarden-bootstrap-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-ca
+spec:
+  isCA: true
+  secretName: bitwarden-ca
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
+  subject:
+    organizations:
+      - external-secrets.io
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    encoding: PKCS8
+    rotationPolicy: Always
+  usages:
+    - digital signature
+    - key encipherment
+    - cert sign
+  issuerRef:
+    name: bitwarden-bootstrap-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: bitwarden-ca-issuer
+spec:
+  ca:
+    secretName: bitwarden-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-tls-certs
+  namespace: external-secrets
+spec:
+  secretName: bitwarden-tls-certs
+  # secretTemplate:
+  #   annotations:
+  #     # allow replication?
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "external-secrets"
+  #     # automatically create replicated resources?
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "external-secrets"
+  dnsNames:
+    - bitwarden-sdk-server.external-secrets.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+    - ::1
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    encoding: PKCS8
+    rotationPolicy: Always
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: bitwarden-ca-issuer
+    kind: Issuer
+    group: cert-manager.io

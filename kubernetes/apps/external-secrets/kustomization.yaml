@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations
+  - ./bitwarden/ks.yaml
   - ./external-secrets/ks.yaml

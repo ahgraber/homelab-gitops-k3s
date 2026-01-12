@@ -69,12 +69,4 @@ spec:
           memory: 256Mi
 
     bitwarden-sdk-server:
-      enabled: true
-      resources:
-        requests:
-          cpu: 50m
-          memory: 128Mi
-        limits:
-          memory: 256Mi
-      serviceMonitor:
-        enabled: true
+      enabled: false
