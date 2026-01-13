@@ -57,6 +57,13 @@ Example:
 
 This ensures your commands work even if the Taskfile abstractions change.
 
+## Kubectl and Flux Operations
+
+- Informational queries (get, describe, logs, events, etc.) are permitted; avoid destructive actions unless explicitly requested.
+- Command ordering follows the prefix-based ruleset: `<command> <verb> <type> [output flags] [other flags] -n <namespace> [name]`. Keep the resource type immediately after the verb and put namespace flags last so output-format flags (`-o/--output`) stay adjacent to the type for secret-safety controls.
+- Examples with ordering: `kubectl get pods -n <namespace>`, `kubectl get pod <name> -n <namespace>`, `kubectl logs -n <namespace> <pod>`, `flux get hr -n <namespace>`.
+- Keep commands scoped and explicit; do not rely on default namespaces or contexts when fetching cluster state.
+
 ## Networking Architecture
 
 Understanding the networking stack is critical for configuring ingress correctly.
@@ -540,24 +547,24 @@ Refs #201
 
 1. **Split DNS is required** for k8s-gateway to work
 
-   - Home DNS server must forward `*.domain.com` to k8s-gateway IP
-   - Without this, internal services won't resolve
+  - Home DNS server must forward `*.domain.com` to k8s-gateway IP
+  - Without this, internal services won't resolve
 
 2. **Certificate staging vs production**
 
-   - Cluster starts with Let's Encrypt staging certificates
-   - Switch to production once stable to avoid rate limits
-   - Staging certs will show browser warnings
+  - Cluster starts with Let's Encrypt staging certificates
+  - Switch to production once stable to avoid rate limits
+  - Staging certs will show browser warnings
 
 3. **Cloudflare tunnel** must be configured for external ingress to work
 
-   - Check `kubernetes/apps/networking/cloudflared/` for configuration
+  - Check `kubernetes/apps/networking/cloudflared/` for configuration
 
 ### Flux & GitOps
 
 1. **Changes may take up to 30 minutes** to reconcile (default interval)
 
-   - Force reconciliation for immediate updates
+  - Force reconciliation for immediate updates
 
 2. **Flux ignores some paths** defined in `kubernetes/flux/config/cluster.yaml`
 
