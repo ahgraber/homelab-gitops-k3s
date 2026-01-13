@@ -7,7 +7,7 @@ Phase 1 foundation for migrating SOPS-managed secrets to Bitwarden Secrets Manag
 - **Namespace:** `external-secrets`
 - **Helm chart:** `external-secrets` (version 0.10.5) with Bitwarden provider and Bitwarden SDK server enabled.
 - **ServiceAccounts:** controller (`external-secrets-controller`), webhook (`external-secrets-webhook`), cert controller (`external-secrets-cert-controller`), and SDK server (`bitwarden-sdk-server`).
-- **ClusterSecretStore:** `bitwarden-cluster-store` using Bitwarden Secrets Manager credentials stored in the `bitwarden-credentials` Secret (SOPS-encrypted bootstrap).
+- **ClusterSecretStore:** `bitwarden-secret-manager` using Bitwarden Secrets Manager credentials stored in the `bitwarden-credentials` Secret (SOPS-encrypted bootstrap).
 - **Examples:** reusable `ExternalSecret` and `ClusterExternalSecret` manifests under `./examples/` (not applied by Flux).
 
 ## Bootstrap inputs
@@ -29,7 +29,7 @@ stringData:
 
 ## Usage notes
 
-- `ClusterSecretStore` target: `bitwarden-cluster-store`.
+- `ClusterSecretStore` target: `bitwarden-secret-manager`.
 - Bitwarden SDK server endpoint: `bitwarden-sdk-server.external-secrets.svc.cluster.local:9998` (HTTPS).
 - Add namespace-specific ExternalSecrets that point at Bitwarden items in the **Homelab** project; see `examples/` for patterns.
 - Monitor `ExternalSecret` and `ClusterSecretStore` conditions after bootstrapping credentials.

@@ -32,10 +32,10 @@ metadata:
   name: &app external-secrets-store
   namespace: flux-system
 spec:
-  targetNamespace: external-secrets
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  # targetNamespace: external-secrets
+  # commonMetadata:
+  #   labels:
+  #     app.kubernetes.io/name: *app
   path: ./kubernetes/apps/external-secrets/external-secrets/app
   dependsOn:
     - name: external-secrets-operator
@@ -44,12 +44,16 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  healthCheckExprs:
+  healthChecks:
     - apiVersion: external-secrets.io/v1
       kind: ClusterSecretStore
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      name: bitwarden-secret-manager
+  # healthCheckExprs:
+  #   - apiVersion: external-secrets.io/v1
+  #     kind: ClusterSecretStore
+  #     failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+  #     current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  wait: true
+  wait: false
