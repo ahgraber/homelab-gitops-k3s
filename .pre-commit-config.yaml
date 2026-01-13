@@ -69,7 +69,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=Lucas-C/pre-commit-hooks
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: "v1.5.5"
+    rev: "v1.5.6"
     hooks:
       - id: remove-crlf
         stages: [pre-commit]
