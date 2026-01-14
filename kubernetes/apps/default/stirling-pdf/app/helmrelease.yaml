@@ -32,7 +32,7 @@ spec:
           main:
             image:
               repository: ghcr.io/stirling-tools/stirling-pdf
-              tag: 2.1.5@sha256:e8b96ebd749ee6c087f853c31fbbb79dc35bb08792bdd5ef0e72e74f5b209ea1
+              tag: 2.2.1@sha256:bba1cf9fa7f6b298b7417fd39f5441552ddb815c5c7452ceaf3042fd963646e3
             env:
               TZ: ${TIMEZONE}
               MODE: BOTH
