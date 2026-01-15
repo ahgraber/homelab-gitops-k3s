@@ -5,10 +5,9 @@ metadata:
   name: cilium
   namespace: kube-system
 spec:
-  repo: https://helm.cilium.io/
-  chart: cilium
-  # renovate: datasource=helm depName=cilium repository=https://helm.cilium.io
-  version: 1.18.5
+  chart: oci://quay.io/cilium/cilium
+  # renovate: datasource=helm depName=cilium repository=oci://quay.io/cilium/charts/cilium
+  version: 1.18.6
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
