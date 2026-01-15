@@ -59,20 +59,26 @@ spec:
               tag: 0.30.0
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
+              LOG_LEVEL: "debug"
+              DISABLE_SIGNUPS: true
+              DISABLE_NEW_RELEASE_CHECK: true
+              CRAWLER_NUM_WORKERS: 2
               CRAWLER_DOMAIN_RATE_LIMIT_WINDOW_MS: 15000
               CRAWLER_DOMAIN_RATE_LIMIT_REQUESTS: 2
               CRAWLER_JOB_TIMEOUT_SEC: 90
-              CRAWLER_DOWNLOAD_BANNER_IMAGE: true
               CRAWLER_ENABLE_ADBLOCKER: true
+              CRAWLER_DOWNLOAD_BANNER_IMAGE: true
               CRAWLER_STORE_SCREENSHOT: true
               CRAWLER_FULL_PAGE_SCREENSHOT: true
               CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local"
               DATA_DIR: /data
-              DISABLE_SIGNUPS: true
               MAX_ASSET_SIZE_MB: 128
+              ASSET_PREPROCESSING_NUM_WORKERS: 2
+              ASSET_PREPROCESSING_JOB_TIMEOUT_SEC: 120
+              SEARCH_NUM_WORKERS: 4
+              SEARCH_JOB_TIMEOUT_SEC: 60
               MEILI_ADDR: http://karakeep-meilisearch.default.svc.cluster.local:7700
               NEXTAUTH_URL: https://karakeep.${SECRET_DOMAIN}
-              DISABLE_NEW_RELEASE_CHECK: true
               # OpenAI Config
               OPENAI_BASE_URL: https://openrouter.ai/api/v1
               INFERENCE_TEXT_MODEL: openai/gpt-5-mini
@@ -107,7 +113,7 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 100m
+                cpu: 250m
                 memory: 1Gi
               limits:
                 memory: 4Gi
