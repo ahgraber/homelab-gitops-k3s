@@ -11,5 +11,5 @@ spec:
     operation: copy
   ref:
     # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/bitwarden-sdk-server
-    tag: v0.5.1
+    tag: v0.5.2
   url: oci://ghcr.io/external-secrets/charts/bitwarden-sdk-server
