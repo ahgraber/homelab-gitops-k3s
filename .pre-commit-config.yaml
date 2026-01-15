@@ -195,7 +195,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=adrienverge/yamllint
   - repo: https://github.com/adrienverge/yamllint
-    rev: "v1.37.1"
+    rev: "v1.38.0"
     hooks:
       - id: yamllint
         name: Lint yaml files
