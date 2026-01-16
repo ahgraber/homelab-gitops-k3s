@@ -1,5 +1,7 @@
 [shell_environment_policy]
 set = { KUBECONFIG = "./kubeconfig" }
+
+[shell_command_policy]
 # deny secret outputs
 prefix_rule(pattern = ["kubectl", "get", "secret", "-o"], decision = "deny")
 prefix_rule(pattern = ["kubectl", "get", "secrets", "-o"], decision = "deny")
