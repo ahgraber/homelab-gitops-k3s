@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app calibre-web-downloader
+  name: &app shelfmark
   namespace: flux-system
 spec:
   targetNamespace: default
@@ -14,7 +14,7 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
     - name: calibre-web-automated
-  path: ./kubernetes/apps/default/calibre-web-downloader/app
+  path: ./kubernetes/apps/default/shelfmark/app
   prune: true
   sourceRef:
     kind: GitRepository

@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app calibre-web-downloader
+  name: &app shelfmark
 spec:
   chartRef:
     kind: OCIRepository
@@ -30,15 +30,15 @@ spec:
         seccompProfile:
           type: RuntimeDefault
     controllers:
-      calibre-web-downloader:
+      shelfmark:
         annotations:
           reloader.stakater.com/search: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/calibrain/calibre-web-automated-book-downloader
-              # repository: ghcr.io/calibrain/calibre-web-automated-book-downloader-extbp # with flaresolverr
-              tag: v0.4.0
+              repository: ghcr.io/calibrain/shelfmark
+              # repository: ghcr.io/calibrain/shelfmark-extbp # with flaresolverr
+              tag: v1.0.1
             env:
               TZ: ${TIMEZONE}
               FLASK_PORT: &port 8084
@@ -48,13 +48,17 @@ spec:
               USE_BOOK_TITLE: "true"
               LOG_LEVEL: debug
               USE_CF_BYPASS: true
+              CALIBRE_WEB_URL: https://calibre.${SECRET_DOMAIN}
               CLOUDFLARE_PROXY_URL: http://localhost:8000
+
+              # USING_EXTERNAL_BYPASSER: true
               # EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
+              # BYPASS_WARMUP_ON_CONNECT: false
             # command:
             #   - /bin/sh
             #   - -c
             #   - |
-            #     gunicorn -t 300 -b 0.0.0.0:8084 app:app
+            #     gunicorn -t 300 -b 0.0.0.0:8084 shelfmark.main:app
             probes:
               liveness: &probes
                 enabled: true
@@ -77,16 +81,16 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-          bypass:
-            image:
-              repository: ghcr.io/sarperavci/cloudflarebypassforscraping
-              tag: latest@sha256:23a4b471954dd25917f44c29e2f6bd36615b7892b36b64d463c06d50cbc27d92
-            resources:
-              requests:
-                cpu: 25m
-                memory: 128Mi
-              limits:
-                memory: 512Mi
+          # bypass:
+          #   image:
+          #     repository: ghcr.io/sarperavci/cloudflarebypassforscraping
+          #     tag: latest@sha256:23a4b471954dd25917f44c29e2f6bd36615b7892b36b64d463c06d50cbc27d92
+          #   resources:
+          #     requests:
+          #       cpu: 25m
+          #       memory: 128Mi
+          #     limits:
+          #       memory: 512Mi
 
     service:
       app:
@@ -97,7 +101,7 @@ spec:
     route:
       app:
         hostnames:
-          - calibre-downloader.${SECRET_DOMAIN}
+          - shelfmark.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
             namespace: networking
