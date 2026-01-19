@@ -23,7 +23,7 @@ Draft a Conventional Commit message based on the currently staged Git changes.
    - What functionality was added, changed, or removed
    - The logical scope of the changes (e.g., module, component, or area affected)
 5. **Consider user input**: If the user provided arguments (`$ARGUMENTS`), incorporate their guidance, issue references, or context into the commit message.
-6. **Draft the commit message**: Follow the format and rules below.
+6. **Draft the commit message**: Follow the format and rules below. Always include the `AI-assistant: <AGENT>` footer since this is an AI-generated commit.
 7. **Output the commit message only**: Present the final commit message in a code block without explanations, commentary, or preamble.
 
 ## Format
@@ -87,26 +87,26 @@ Include a body if:
 - Use bullet points (`-` or `*`) for multiple items
 - Do not repeat the subject line
 
-### Footer (Optional)
+### Footer
 
-Include footers for:
+Include footers when applicable:
 
-- **Breaking changes**:
+- **Breaking changes** (if applicable):
 
   ```
   BREAKING CHANGE: <description of what broke and how to migrate>
   ```
 
-- **Issue references**:
+- **Issue references** (if applicable):
 
   - `Closes #123` (closes an issue)
   - `Fixes #456` (fixes a bug)
   - `Refs #789` (references without closing)
 
-- **Co-authorship** (REQUIRED for AI-generated commits):
+- **AI-assistant** (REQUIRED—always include for AI-generated commits):
 
   ```
-  Co-authored-by: GitHub Copilot <noreply@github.com>
+  AI-assistant: <GitHub Copilot/OpenAI Codex/Claude Code/etc.>
   ```
 
 ---
@@ -117,11 +117,9 @@ Include footers for:
 
 ```
 feat(cli): add verbose logging flag
-
-Co-authored-by: GitHub Copilot <noreply@github.com>
 ```
 
-## Bug fix with context
+## AI-assisted Bug fix with context
 
 ```
 fix(api): prevent race condition in token refresh
@@ -131,10 +129,10 @@ authentication failures under high load. Added a mutex lock around
 the refresh operation.
 
 Fixes #234
-Co-authored-by: GitHub Copilot <noreply@github.com>
+AI-assistant: GitHub Copilot
 ```
 
-## Breaking change
+## AI-assisted Breaking change
 
 ```
 feat(auth)!: migrate to OAuth 2.0
@@ -144,7 +142,7 @@ All clients must migrate to OAuth 2.0. See docs/migration-guide.md
 for detailed instructions.
 
 Closes #567
-Co-authored-by: GitHub Copilot <noreply@github.com>
+AI-assistant: OpenAI Codex
 ```
 
 ---
