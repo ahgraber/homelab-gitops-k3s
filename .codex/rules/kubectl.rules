@@ -1,7 +1,3 @@
-[shell_environment_policy]
-set = { KUBECONFIG = "./kubeconfig" }
-
-[shell_command_policy]
 # deny secret outputs
 prefix_rule(pattern = ["kubectl", "get", "secret", "-o"], decision = "forbidden", justification = "Agents should not access secrets content. Use non-secret kubectl commands instead.")
 prefix_rule(pattern = ["kubectl", "get", "secrets", "-o"], decision = "forbidden", justification = "Agents should not access secrets content. Use non-secret kubectl commands instead.")
