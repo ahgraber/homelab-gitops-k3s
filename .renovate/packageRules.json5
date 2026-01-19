@@ -30,8 +30,9 @@
       matchDatasources: ["docker"],
       matchPackageNames: ["aimlbling-about"],
       versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
-      minimumReleaseAge: "0 days",
-      minimumReleaseAgeBehaviour: "ignore"
+      minimumReleaseAge: null,
+      minimumReleaseAgeBehaviour: "timestamp-optional",
+      internalChecksFilter: "none"
     }
   ]
 }
