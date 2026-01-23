@@ -1,3 +1,18 @@
+[project]
+name = "homelab-gitops-k3s"
+version = "0.0.1"
+requires-python = ">=3.12"
+dependencies = [
+    "jinja2>=3.1.6",
+    "pydantic>=2.12.5",
+    "ruamel-yaml>=0.19.1",
+]
+
+# [dependency-groups]
+# dev = [
+#     "maturin>=1.11.5",
+# ]
+
 
 # --- pytest -----------------------------------------------------------------
 # ref: https://docs.pytest.org/en/7.3.x/reference/customize.html

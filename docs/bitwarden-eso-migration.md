@@ -1,13 +1,15 @@
 # Bitwarden Secrets Manager migration plan (ESO)
 
-This document outlines a phased migration from SOPS-managed secrets to Bitwarden Secrets Manager using External Secrets Operator (ESO). It is tailored for the current homelab context and assumes the Bitwarden account is a personal (free-tier) Secrets Manager instance.
+This document outlines a phased migration from SOPS-managed secrets to Bitwarden Secrets Manager using External Secrets Operator (ESO).
+It is tailored for the current homelab context and assumes the Bitwarden account is a personal (free-tier) Secrets Manager instance.
 
 ## Principles and constraints
 
 - Keep a minimal SOPS-encrypted bootstrap only for ESO/Bitwarden client credentials; everything else should transition to Bitwarden.
 - Prefer a shared `ClusterSecretStore` for Bitwarden to avoid duplicated configuration; scope access with ESO RBAC and namespaces.
 - Deploy ESO in `external-secrets` namespace.
-- Use a push-style migration: load secrets into Bitwarden first, then point ExternalSecrets at Bitwarden values. Do not rely on existing SOPS data being present in Bitwarden.
+- Use a push-style migration: load secrets into Bitwarden first, then point ExternalSecrets at Bitwarden values.
+  Do not rely on existing SOPS data being present in Bitwarden.
 - All ExternalSecrets should target Bitwarden items in the **Homelab** project of the Bitwarden Secrets Manager account to keep scope and access consistent.
 - Phase 3 cutovers are organized **namespace-by-namespace** (not app-by-app) to reduce coordination overhead.
 
@@ -89,16 +91,18 @@ Status checklist:
 ## Phase 2: Migration tooling and documentation
 
 - [x] Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
-  - Scripted push: decrypt SOPS locally (`sops --decrypt`) and stream values to Bitwarden via `bws` CLI or API without writing plaintext to disk.
+  - Crawl SOPS secrets into an inventory (metadata only; no plaintext persisted).
+  - Scripted push: decrypt SOPS locally (`sops --decrypt`) and stream values to Bitwarden via the CLI without writing plaintext to disk.
+  - Generate `ExternalSecret` manifests from the inventory to replace SOPS secrets.
   - Optional in-cluster `PushSecret` pattern: create a temporary K8s Secret, push to Bitwarden, then remove the temporary Secret.
-- [x] Define a mapping file format (YAML/JSON) for batch migrations with explicit Bitwarden item names and fields.
-- [x] Provide dry-run and idempotency checks (e.g., skip/confirm overwrites, verify item existence).
+- [x] Provide prompting and idempotency checks (list existing items, then apply/skip per choice).
 - [x] Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
 
 ### Phase 2 outputs (current repository state)
 
-- Migration helper: `scripts/bitwarden-eso-migrate.py` (dry-run by default, optional apply with command template).
-- Mapping template: `docs/bitwarden-eso-migration-map.example.json`.
+- Inventory crawler: `scripts/bws/crawl.py`.
+- Bitwarden push helper: `scripts/bws/push.py`.
+- ExternalSecret generator: `scripts/bws/externalsecrets.py`.
 - Tooling guide: `docs/bitwarden-eso-migration-tooling.md`.
 
 ## Phase 3: Namespace-by-namespace cutover
@@ -126,9 +130,10 @@ Status checklist:
 
 ## Naming conventions (Bitwarden + ESO)
 
-- Bitwarden items: `{namespace}-{app}-{purpose}` (e.g., `default-ghost-db`); shared items use `shared-{purpose}`.
+- Bitwarden items: `{namespace}/{app}-{purpose}` (e.g., `default/ghost-db`); shared items use `shared-{purpose}`.
 - Secret fields: prefer descriptive keys (`username`, `password`, `apiKey`, `token`, `certificate`, `privateKey`).
-- Kubernetes Secret names mirror Bitwarden items where possible; avoid generic names like `credentials` or `secret`.
+- Kubernetes Secret names are `app` or `app-<purpose>` within the namespace; avoid generic names like `credentials` or `secret`.
 - Collections/folders in Bitwarden map to Kubernetes namespaces for consistent access control.
 - ExternalSecret resource names follow `{namespace}-{app}-{source}` (e.g., `default-ghost-bitwarden`).
 - ClusterSecretStore name: `bitwarden-cluster-store`; ServiceAccount `external-secrets-controller` (in `external-secrets` namespace).
+- `remoteRef.key` should use the Bitwarden secret key path (`projects/<projectId>/secrets/<item_name>`); reference: <https://external-secrets.io/v0.4.2/guides-getting-started/#create-your-first-secretstore>
