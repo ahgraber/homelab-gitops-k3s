@@ -1,93 +1,106 @@
 # Bitwarden ESO migration tooling (Phase 2)
 
-This doc describes the Phase 2 migration tooling. It prepares and validates migrations without changing any secrets in Bitwarden or Kubernetes.
+This doc describes the Phase 2 migration tooling.
+It crawls SOPS secrets, pushes them to Bitwarden, and generates ExternalSecrets without persisting plaintext to disk.
 
 ## Goals
 
 - Translate SOPS-managed Kubernetes Secrets into Bitwarden items/fields.
-- Keep plaintext out of disk by streaming decrypted values in memory.
-- Provide dry-run output and optional idempotency checks.
+- Keep plaintext out of disk by decrypting only during the push step.
+- Persist an inventory that can be reused to generate ExternalSecrets.
 
 ## Requirements
 
 - `sops` installed locally.
-- A Bitwarden CLI/SDK command available when you are ready to apply (ex: `bws`).
+- Bitwarden Secrets Manager account exists.
+- A Bitwarden project exists in that account.
+- A Bitwarden machine account exists with read/write permissions.
+- `BWS_ACCESS_TOKEN` is available in the environment for the machine account.
+- `BWS_ORG_ID` is available to scope SDK requests.
+- Bitwarden Secrets Manager CLI (`bws`) installed and authenticated.
 
-## Mapping file format
+## Inventory format
 
-The migration helper reads a JSON mapping file. Each entry defines:
-
-- `name`: Bitwarden item name following `{namespace}-{app}-{purpose}`.
-- `namespace`: Kubernetes namespace for tracking and filtering.
-- `sops_path`: path to the SOPS-encrypted Secret manifest.
-- `fields`: mapping of Bitwarden field name to SOPS key (under `stringData` or `data`).
-- `project_id` (optional): overrides the default project ID.
+The crawler writes `inventory.json` to a chosen output directory.
+It is metadata-only and does not store plaintext values.
+`project_id` is stored at the top level; entries do not include it.
 
 Example:
 
 ```json
 {
-  "defaults": {
-    "project_id": "<bitwarden-project-id>"
-  },
+  "version": 1,
+  "root": "kubernetes/apps",
+  "project_id": "<bitwarden-project-id>",
   "entries": [
     {
-      "name": "default-homebox-app",
-      "namespace": "default",
       "sops_path": "kubernetes/apps/default/homebox/app/secret.sops.yaml",
-      "fields": {
-        "username": "HOMEB0X_USERNAME",
-        "password": "HOMEB0X_PASSWORD"
-      }
+      "namespace": "default",
+      "app": "homebox",
+      "purpose": "app",
+      "item_name": "default/homebox-app",
+      "fields": [
+        "HBOX_MAILER_USERNAME",
+        "HBOX_MAILER_PASSWORD"
+      ],
+      "secret_id": null,
+      "ks_path": "kubernetes/apps/default/homebox/ks.yaml",
+      "helmrelease_path": "kubernetes/apps/default/homebox/app/helmrelease.yaml"
     }
   ]
 }
 ```
 
-Template: `docs/bitwarden-eso-migration-map.example.json`.
+## Crawl workflow
 
-## Dry-run workflow (default)
-
-Run the helper to decrypt SOPS files and show a redacted plan:
+Crawl a directory and build the inventory:
 
 ```bash
-./scripts/bitwarden-eso-migrate.py \
-  --mapping docs/bitwarden-eso-migration-map.example.json
-```
-
-By default, values are redacted and no external commands are executed.
-
-## Apply workflow (explicit)
-
-When ready, provide a command template that pushes values to Bitwarden. The helper:
-
-- Formats the command using `{item_name}`, `{project_id}`, and `{namespace}` placeholders.
-- Passes the JSON payload to stdin when `--stdin` is set.
-- Optionally runs a check command to skip existing items unless `--force` is used.
-
-Example (confirm exact CLI flags for your `bws` version):
-
-```bash
-./scripts/bitwarden-eso-migrate.py \
-  --mapping docs/bitwarden-eso-migration-map.example.json \
-  --apply \
-  --command-template 'bws <create-command> --project-id {project_id} --name {item_name} --value @-' \
-  --stdin \
-  --check-template 'bws <check-command> --project-id {project_id} --name {item_name}'
+./scripts/bws/crawl.py \
+  --dir kubernetes/apps \
+  --output-dir ./migration-out \
+  --project-id <bitwarden-project-id>
 ```
 
 Notes:
 
-- `--check-template` provides idempotency: a zero exit code means "exists" and is skipped.
-- `--force` applies even if the check succeeds.
-- Use `--show-values` only when you explicitly need plaintext output.
+- The crawler infers namespace/app using the nearest `ks.yaml` and `helmrelease.yaml`.
+- Bitwarden keys are `{namespace}/{app}-{purpose}`; `secret.sops.yaml` maps to `purpose=app`.
+- The inventory is metadata only (no plaintext values).
+- Each SOPS file is pushed as a single Bitwarden secret with key `{namespace}/{app}-{purpose}` and a note of `{namespace}/{app}`.
+- `--output-dir` defaults to `--dir`; `BWS_PROJECT_ID` can supply the default project ID.
 
-## Optional in-cluster PushSecret pattern
+## Push workflow
 
-If you prefer to push from inside the cluster, use an ESO `PushSecret` with a temporary Secret:
+Push inventory entries to Bitwarden using `bws` (decrypts SOPS locally and streams values):
 
-1. Create a temporary Secret from decrypted values.
-2. Apply a `PushSecret` targeting Bitwarden.
-3. Verify the Bitwarden item, then delete the temporary Secret and `PushSecret`.
+```bash
+./scripts/bws/push.py \
+  --inventory ./migration-out/inventory.json
+```
 
-This path is optional and should only be used for controlled, short-lived operations.
+Notes:
+
+- The script lists existing secrets and asks whether to apply all, skip all, or prompt per secret.
+- Each entry is stored as a single key/value secret whose value is JSON for the SOPS fields.
+- Use `--no-write-inventory` to avoid modifying the inventory file.
+- `bws` is expected on PATH and authenticated via `BWS_ACCESS_TOKEN` or local config.
+
+## ExternalSecret generation
+
+Generate `ExternalSecret` manifests next to each SOPS file:
+
+```bash
+./scripts/bws/externalsecrets.py \
+  --inventory ./migration-out/inventory.json
+```
+
+Notes:
+
+- Requires `project_id` and the unique Bitwarden key to build `remoteRef.key`.
+- Output files are derived from the SOPS filename, e.g. `secret-oidc.sops.yaml` -> `secret-oidc.externalsecret.yaml`.
+- The target Secret name is `app` or `app-<purpose>` in the namespace.
+
+## Legacy tooling
+
+The previous mapping-based helper (`scripts/bws/migrate.py`) is still available but is not part of the default workflow above.
