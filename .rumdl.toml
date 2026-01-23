@@ -1,0 +1,118 @@
+### Global configuration options
+[global]
+
+### List of rules to enable exclusively (if provided, ONLY these rules will run)
+# enable = []
+
+### List of rules to disable (uncomment and modify as needed)
+# # Not implemented
+# "MD002", # replaced by MD041
+# "MD006", "MD008", "MD015", "MD016", "MD017",
+disable = [
+  # "MD013", # Line length
+  "MD014", # Dollar signs used before commands; commands show outputs
+  # "MD028", # Blank line inside blockquote
+  "MD033", # Inline HTML tags
+  "MD041", # Require title
+  "MD052", # Reference link # seems to not follow footnote links
+  "MD060", # Table spacing # Can interfere with mdformat
+]
+
+### List of file/directory patterns to include for linting (if provided, only these will be linted)
+# include = [
+#    "docs/*.md",
+#    "src/**/*.md",
+#    "README.md"
+# ]
+
+### List of file/directory patterns to exclude from linting
+exclude = [
+    # Common directories to exclude
+    ".git",
+    ".github",
+    "node_modules",
+    "vendor",
+    "dist",
+    "build",
+
+    # Specific files or patterns
+    "CHANGELOG.md",
+    "LICENSE.md",
+]
+
+### Respect .gitignore files when scanning directories (default: true)
+respect_gitignore = true
+
+### Markdown flavor/dialect (uncomment to enable)
+### Options: mkdocs, gfm, commonmark
+# flavor = "gfm"
+
+### Default line length for rules that check line length
+line_length = 119
+
+#-----------------------------------------------------------------------------
+### Rule-specific configurations
+#-----------------------------------------------------------------------------
+[MD003] # Heading style
+style = "atx"  # Use '#' Heading style
+
+[MD004] # Unordered list style
+style = "dash"  # asterisk, plus, dash, consistent
+
+[MD007] # (Unordered) list indentation
+indent = 2
+style = "text-aligned" # Align markers with start of parent text
+
+[MD009] # Trailing spaces
+br_spaces = 2 # Number of spaces for hard line breaks (default: 2)
+strict = false  # Remove all trailing spaces, even line breaks (default: false)
+
+[MD013] # Line length / wrap
+line_length = 119
+paragraphs = false  # Do not warn about long paragraphs
+headings = false  # Do not warn about long headings
+code-blocks = true # Warn on extended code blocks
+tables = false # Do not warn about wide tables
+reflow = true
+reflow-mode = "sentence-per-line"
+abbreviations = ["e.g.", "i.e.", "vs.", "U.S."]
+
+[MD024] # Avoid duplicate headings
+siblings_only = true
+
+[MD025] # Only one H1 / title per document
+level = 1
+front_matter_title = "title"
+
+[MD029] # Ordered list
+style = "consistent"
+# style = "one" # Use all 1's for ordered lists; let renderer number
+
+# [MD030] # Spacing after list markers
+# ul_single = 2  # Spaces after bullet for single-line items (default: 1)
+# ul_multi = 2   # Spaces after bullet for multi-line items (default: 1)
+# ol_single = 1  # Spaces after number for single-line items (default: 1)
+# ol_multi = 1   # Spaces after number for multi-line items (default: 1)
+
+[MD032] # Blank lines around lists
+allow-lazy-continuation = false
+
+[MD035] # Consistent breaks
+style = "---"
+
+[MD046] # Code block style
+style = "fenced"  # Options: "consistent", "fenced", "indented"
+
+[MD049] # Italic
+style = "underscore"  # Options: "consistent", "asterisk", "underscore"
+
+[MD050] # Bold
+style = "asterisk"  # Options: "consistent", "asterisk", "underscore"
+
+[MD055] # Table formatting (pipes)
+style = "leading-and-trailing"  # Options: see below
+
+# [MD060] # Table formatting (spacing)
+# enabled = true
+# style = "aligned"
+# max-width = 120  # Independent of MD013, use 120 char threshold

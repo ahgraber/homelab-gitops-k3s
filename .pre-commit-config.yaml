@@ -133,15 +133,13 @@ repos:
           - mdformat-ruff
           # - mdformat-shfmt # disable until can pass args (ref: https://github.com/hukkin/mdformat-shfmt/issues/7)
           - mdformat-simple-breaks
-  # renovate: datasource=github-tags depName=igorshubovych/markdownlint-cli
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: "v0.47.0"
+  # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.0.222  # Use the latest release tag
     hooks:
-      - id: markdownlint
-        name: Lint markdown files
-        args:
-          - --config=.markdownlint.yaml
-          - --fix
+      # - id: rumdl      # Lint only (fails on issues)
+      #   stages: [pre-commit]
+      - id: rumdl-fmt  # Auto-format (fixes what it can)
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=charliermarsh/ruff-pre-commit
   - repo: https://github.com/charliermarsh/ruff-pre-commit
