@@ -13,9 +13,8 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
     - name: volsync
-    - name: calibre-web-volume
   components:
-    - ../../../components/volsync
+    - ../../../../components/volsync
   path: ./kubernetes/apps/default/calibre-web-automated/app
   prune: true
   sourceRef:

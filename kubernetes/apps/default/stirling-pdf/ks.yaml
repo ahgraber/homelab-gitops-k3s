@@ -14,7 +14,7 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
   components:
-    - ../../../components/volsync
+    - ../../../../components/volsync
   path: ./kubernetes/apps/default/stirling-pdf/app
   prune: true
   sourceRef:

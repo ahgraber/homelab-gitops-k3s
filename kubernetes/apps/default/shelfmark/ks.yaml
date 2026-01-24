@@ -15,7 +15,7 @@ spec:
     - name: volsync
     - name: calibre-web-automated
   components:
-    - ../../../components/volsync
+    - ../../../../components/volsync
   path: ./kubernetes/apps/default/shelfmark/app
   prune: true
   sourceRef:
