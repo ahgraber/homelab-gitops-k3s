@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   # components:
-  #   - ../../../components/volsync
+  #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/db
   prune: true
   sourceRef:
@@ -41,7 +41,7 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
   # components:
-  #   - ../../../components/volsync
+  #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/app
   prune: true
   sourceRef:

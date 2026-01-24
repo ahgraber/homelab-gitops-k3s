@@ -11,7 +11,7 @@ If the specified PVC does not exist, VolSync will attempt to restore it from the
 ### Adding to new application
 
 1. Add the `/components/volsync/` directory into the application ks.yaml
-   (typically `../../../components/volsync/` -- use `task volsync:relpath` to confirm the relative path from the application fluxtomization file).
+   (typically `../../../../components/volsync/` -- use `task volsync:relpath` to confirm the relative path from the application helmrelease file).
 
 2. Ensure the application `ks.yaml` is configured with `postBuild` variables
 
@@ -38,7 +38,7 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
   components:
-    - ../../../components/volsync
+    - ../../../../components/volsync
   path: ./kubernetes/apps/<namespace>/<appname>/app
   ...
   postBuild:
