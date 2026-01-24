@@ -7,4 +7,3 @@ resources:
   - ./helmrelease.yaml
   - ./kyverno-policy.yaml
   - ./secret.sops.yaml
-  # - ../../../../templates/volsync/restore

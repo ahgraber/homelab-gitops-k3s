@@ -14,6 +14,8 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
   path: ./kubernetes/apps/default/opengist/app
+  components:
+    - ../../../../components/volsync
   prune: true
   sourceRef:
     kind: GitRepository

@@ -38,6 +38,8 @@ spec:
     - name: memos-db
     - name: rook-ceph-cluster
     - name: volsync
+  components:
+    - ../../../../components/volsync
   path: ./kubernetes/apps/default/memos/app
   prune: true
   sourceRef:

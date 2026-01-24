@@ -6,4 +6,3 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./configmap.yaml
-  - ../../../../templates/volsync/restore
