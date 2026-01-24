@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: cert-manager
   path: ./kubernetes/apps/database/cloudnative-pg/operator
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -37,7 +37,7 @@ spec:
     - name: cert-manager
     - name: cnpg-operator
   path: ./kubernetes/apps/database/cloudnative-pg/barman
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -63,7 +63,7 @@ spec:
     - name: local-path-provisioner
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -88,7 +88,7 @@ spec:
     - name: kube-prometheus-stack
     # - name: grafana
   path: ./kubernetes/apps/database/cloudnative-pg/addons
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

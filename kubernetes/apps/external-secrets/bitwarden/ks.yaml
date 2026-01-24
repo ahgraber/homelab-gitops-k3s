@@ -13,7 +13,7 @@ spec:
   path: ./kubernetes/apps/external-secrets/bitwarden/certs
   dependsOn:
     - name: cert-manager
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -37,7 +37,7 @@ spec:
   dependsOn:
     - name: bitwarden-certs
     # - name: external-secrets-operator
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

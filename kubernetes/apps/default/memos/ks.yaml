@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-default
     - name: ext-postgres-operator
   path: ./kubernetes/apps/default/memos/db
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -41,7 +41,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/default/memos/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

@@ -16,7 +16,7 @@ spec:
     - name: local-path-provisioner
     - name: kube-prometheus-stack
   path: ./kubernetes/apps/datasci/postgres/cloudnative-pg/cluster
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

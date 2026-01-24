@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: cnpg-cluster-default
   path: ./kubernetes/apps/database/ext-postgres-operator/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

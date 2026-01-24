@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/prefect/db
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -37,7 +37,7 @@ spec:
   dependsOn:
     - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/server
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -60,7 +60,7 @@ spec:
     - name: prefect-server
     - name: prefect-db
   path: ./kubernetes/apps/datasci/prefect/worker
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

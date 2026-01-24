@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: cert-manager-certificates
   path: ./kubernetes/apps/networking/envoy-gateway/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -36,7 +36,7 @@ spec:
   dependsOn:
     - name: envoy-system
   path: ./kubernetes/apps/networking/envoy-gateway/instance
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
