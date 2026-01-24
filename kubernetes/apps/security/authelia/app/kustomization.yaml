@@ -8,8 +8,7 @@ resources:
   - ./helmrelease.yaml
   - ./kyverno-policy.yaml
   - ./referencegrant.yaml
-  # - ../../../../templates/volsync/init
-  - ../../../../templates/volsync/restore
+
 configMapGenerator:
   - name: authelia
     files:

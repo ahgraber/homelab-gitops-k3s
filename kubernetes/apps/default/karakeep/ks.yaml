@@ -13,6 +13,8 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
     - name: volsync
+  components:
+    - ../../../../components/volsync
   path: ./kubernetes/apps/default/karakeep/app
   prune: true
   sourceRef:
@@ -25,7 +27,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 30Gi
+      VOLSYNC_CAPACITY: 32Gi
       VOLSYNC_STORAGECLASS: ceph-block # default
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
       VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
