@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/volsync.backube/replicationdestination_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationDestination
+metadata:
+  name: calibre-library-dst
+spec:
+  trigger:
+    manual: restore-once
+  restic:
+    copyMethod: Snapshot
+    ### Source (backup repository)
+    repository: calibre-library-volsync-backup
+    volumeSnapshotClassName: csi-ceph-fs # same as source
+    cacheCapacity: 2Gi
+    cacheStorageClassName: local-path
+    cacheAccessModes: ["ReadWriteOnce"]
+    ### Destination (PVC-to-be-restored)
+    storageClassName: ceph-fs
+    accessModes: ["ReadWriteMany"]
+    capacity: "10Gi"
+    # moverSecurityContext:
+    #   runAsUser: ${APP_UID:-568}
+    #   runAsGroup: ${APP_GID:-568}
+    #   fsGroup: ${APP_GID:-568}
