@@ -14,7 +14,8 @@ spec:
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
+    namespace: flux-system
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
@@ -43,7 +44,8 @@ spec:
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
+    namespace: flux-system
   healthChecks:
     # NOTE: if healtcheck continually fails BUT resource is available,
     # restart the kustomize-controller to refresh its cache

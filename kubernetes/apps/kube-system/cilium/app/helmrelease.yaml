@@ -37,7 +37,7 @@ spec:
       hostRoot: /sys/fs/cgroup
     cluster:
       id: 1
-      name: home-kubernetes
+      name: flux-system
     # NOTE: devices might need to be set if you have more than one active NIC on your hosts
     # devices: eno+ eth+
     endpointRoutes:

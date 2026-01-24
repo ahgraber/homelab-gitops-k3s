@@ -53,13 +53,15 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
    📍 _Using [SOPS](https://github.com/getsops/sops) with [Age](https://github.com/FiloSottile/age) allows us to encrypt secrets and use them in Ansible and Flux._
 
-   a. Create an Age private/public key (this file is gitignored)
+   a.
+   Create an Age private/public key (this file is gitignored)
 
    ```sh
    age-keygen -o age.key
    ```
 
-   b. Ensure that this key is available as an environment variable.
+   b.
+   Ensure that this key is available as an environment variable.
 
    Add the following to the `.envrc`:
 
@@ -75,51 +77,50 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
    📍 _To use `cert-manager` with the Cloudflare DNS challenge you will need to create an API token._
 
-   a. [Create a Cloudflare API Token here](https://dash.cloudflare.com/profile/api-tokens).
+   1. [Create a Cloudflare API Token here](https://dash.cloudflare.com/profile/api-tokens).
 
-   b. Under the `API Tokens` section click the blue `Create Token` button.
+   2. Under the `API Tokens` section click the blue `Create Token` button.
 
-   c. Click the blue `Use template` button for the `Edit zone DNS` template.
+   3. Click the blue `Use template` button for the `Edit zone DNS` template.
 
-   d. Name your token something like `home-kubernetes`
+   4. Name your token something like `flux-system`
 
-   e. Under `Permissions`, click `+ Add More` and add each permission below:
+   5. Under `Permissions`, click `+ Add More` and add each permission below:
 
-   ```text
-   Zone - DNS - Edit
-   Account - Cloudflare Tunnel - Read
-   ```
+      ```text
+      Zone - DNS - Edit
+      Account - Cloudflare Tunnel - Read
+      ```
 
-   f. Limit the permissions to a specific account and zone resources.
+   6. Limit the permissions to a specific account and zone resources.
 
-   g. Fill out the appropriate vars in `.env` file:
+   7. Fill out the appropriate vars in `.env` file:
 
-   ```sh
-   CLOUDFLARE_EMAIL=''
-   CLOUDFLARE_TOKEN=''
-   CLOUDFLARE_ACCOUNT=''
-   CLOUDFLARE_TUNNELID=''
-   CLOUDFLARE_TUNNEL_SECRET=''
-   ```
+      ```sh
+      CLOUDFLARE_EMAIL=''
+      CLOUDFLARE_TOKEN=''
+      CLOUDFLARE_ACCOUNT=''
+      CLOUDFLARE_TUNNELID=''
+      CLOUDFLARE_TUNNEL_SECRET=''
+      ```
 
 3. Create Cloudflare Tunnel
 
    📍 _To expose services to the internet you will need to create a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)._
 
-   a. Authenticate cloudflared to your domain
+   1. Authenticate cloudflared to your domain
 
-   ```sh
-   cloudflared tunnel login
-   ```
+      ```sh
+      cloudflared tunnel login
+      ```
 
-   b. Create the tunnel
+   2. Create the tunnel
 
-   ```sh
-   cloudflared tunnel create k8s
-   ```
+      ```sh
+      cloudflared tunnel create k8s
+      ```
 
-   c. Fill out the appropriate Cloudflare Tunnel vars in the `.env` file:
-   CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
+   3. Fill out the appropriate Cloudflare Tunnel vars in the `.env` file: CLOUDFLARE_ACCOUNT, CLOUDFLARE_TUNNELID, CLOUDFLARE_TUNNEL_SECRET
 
    > Cloudflare Tunnel info can be found with `cat ~/.cloudflared/*.json | jq -r`.
 
@@ -127,7 +128,8 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 📍 _Here we will be running an Ansible playbook to prepare your nodes for running a Kubernetes cluster._
 
-1. Ensure you are able to SSH into your nodes from your workstation using a private SSH key **without a passphrase** (for example using a SSH agent). This lets Ansible interact with your nodes.
+1. Ensure you are able to SSH into your nodes from your workstation using a private SSH key **without a passphrase** (for example using a SSH agent).
+   This lets Ansible interact with your nodes.
 
 2. Verify Ansible can view your config
 
@@ -149,7 +151,9 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 🛰️ Build your k3s cluster with Ansible
 
-📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role. If you run into problems, you can run `task k3s:nuke` to destroy the k3s cluster and start over from this point._
+📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role._
+
+> If you run into problems, you can run `task k3s:nuke` to destroy the k3s cluster and start over from this point.
 
 1. Verify Ansible can view your config
 
@@ -270,17 +274,21 @@ This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding)
 
 If you're having trouble with DNS be sure to check out these two GitHub discussions: [Internal DNS](https://github.com/onedr0p/flux-cluster-template/discussions/719) and [Pod DNS resolution broken](https://github.com/onedr0p/flux-cluster-template/discussions/635).
 
-... Nothing working? That is expected, this is DNS after all!
+...
+Nothing working?
+That is expected, this is DNS after all!
 
 #### 📜 Certificates
 
-By default this template will deploy a wildcard certificate using the Let's Encrypt **staging environment**, which prevents you from getting rate-limited by the Let's Encrypt production servers if your cluster doesn't deploy properly (for example, due to a misconfiguration). Once you are sure you will keep the cluster up for more than a few hours, be sure to switch to the production servers as outlined in `config.yaml`.
+By default this template will deploy a wildcard certificate using the Let's Encrypt **staging environment**, which prevents you from getting rate-limited by the Let's Encrypt production servers if your cluster doesn't deploy properly (for example, due to a misconfiguration).
+Once you are sure you will keep the cluster up for more than a few hours, be sure to switch to the production servers as outlined in `config.yaml`.
 
 📍 _You will need a production certificate to reach internet-exposed applications through `cloudflared`._
 
 #### 🪝 GitHub Webhook
 
-By default Flux will periodically check your git repository for changes. In order to have Flux reconcile on `git push` you must configure GitHub to send `push` events.
+By default Flux will periodically check your git repository for changes.
+In order to have Flux reconcile on `git push` you must configure GitHub to send `push` events.
 
 1. Follow [FluxCD instructions](https://fluxcd.io/flux/guides/webhook-receivers/#define-a-git-repository-receiver) to generate a token.
 
@@ -298,19 +306,27 @@ By default Flux will periodically check your git repository for changes. In orde
    https://flux-webhook.${bootstrap_cloudflare_domain}/hook/123abc123abc...
    ```
 
-4. Navigate to the settings of your repository on GitHub, under "Settings/Webhooks" press the "Add webhook" button. Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
+4. Navigate to the settings of your repository on GitHub, under "Settings/Webhooks" press the "Add webhook" button.
+   Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
 
 ### 🤖 Renovate
 
-[Renovate](https://www.mend.io/renovate) is a tool that automates dependency management. It is designed to scan your repository around the clock and open PRs for out-of-date dependencies it finds. Common dependencies it can discover are Helm charts, container images, GitHub Actions, Ansible roles... even Flux itself! Merging a PR will cause Flux to apply the update to your cluster.
+[Renovate](https://www.mend.io/renovate) is a tool that automates dependency management.
+It is designed to scan your repository around the clock and open PRs for out-of-date dependencies it finds.
+Common dependencies it can discover are Helm charts, container images, GitHub Actions, Ansible roles... even Flux itself!
+Merging a PR will cause Flux to apply the update to your cluster.
 
-To enable Renovate, click the 'Configure' button over at their [GitHub app page](https://github.com/apps/renovate) and select your repository. Renovate creates a "Dependency Dashboard" as an issue in your repository, giving an overview of the status of all updates. The dashboard has interactive checkboxes that let you do things like advance scheduling or reattempt update PRs you closed without merging.
+To enable Renovate, click the 'Configure' button over at their [GitHub app page](https://github.com/apps/renovate) and select your repository.
+Renovate creates a "Dependency Dashboard" as an issue in your repository, giving an overview of the status of all updates.
+The dashboard has interactive checkboxes that let you do things like advance scheduling or reattempt update PRs you closed without merging.
 
-The base Renovate configuration in your repository can be viewed at [.github/renovate.json5](https://github.com/onedr0p/flux-cluster-template/blob/main/.github/renovate.json5). By default it is scheduled to be active with PRs every weekend, but you can [change the schedule to anything you want](https://docs.renovatebot.com/presets-schedule), or remove it if you want Renovate to open PRs right away.
+The base Renovate configuration in your repository can be viewed at [.github/renovate.json5](https://github.com/onedr0p/flux-cluster-template/blob/main/.github/renovate.json5).
+By default it is scheduled to be active with PRs every weekend, but you can [change the schedule to anything you want](https://docs.renovatebot.com/presets-schedule), or remove it if you want Renovate to open PRs right away.
 
 ## 🐛 Debugging
 
-Below is a general guide on trying to debug an issue with a resource or application. For example, if a workload/resource is not showing up or a pod has started but is in a `CrashLoopBackOff` or `Pending` state.
+Below is a general guide on trying to debug an issue with a resource or application.
+For example, if a workload/resource is not showing up or a pod has started but is in a `CrashLoopBackOff` or `Pending` state.
 
 1. Start by checking all Flux Kustomizations & Git Repository & OCI Repository and verify they are healthy.
 
@@ -352,7 +368,8 @@ Below is a general guide on trying to debug an issue with a resource or applicat
    kubectl -n <namespace> get events --sort-by='.metadata.creationTimestamp'
    ```
 
-Resolving problems that you have could take some tweaking of your YAML manifests in order to get things working, other times it could be an external factor like permissions on NFS. If you are unable to figure out your problem see the help section below.
+Resolving problems that you have could take some tweaking of your YAML manifests in order to get things working, other times it could be an external factor like permissions on NFS.
+If you are unable to figure out your problem see the help section below.
 
 ### Authenticate Flux over SSH
 
@@ -363,7 +380,8 @@ By default this template only works on a public GitHub repository, it is advised
 The benefits of a public repository include:
 
 - When debugging or asking for help, you can provide a link to a resource you are having issues with.
-- Adding a topic to your repository of `k8s-at-home` to be included in the [k8s-at-home-search](https://nanne.dev/k8s-at-home-search/). This search helps people discover different configurations of Helm charts across other Flux-based repositories.
+- Adding a topic to your repository of `k8s-at-home` to be included in the [k8s-at-home-search](https://nanne.dev/k8s-at-home-search/).
+  This search helps people discover different configurations of Helm charts across other Flux-based repositories.
 
 <!-- markdownlint-disable MD033 -->
 
@@ -418,7 +436,7 @@ The benefits of a public repository include:
     apiVersion: source.toolkit.fluxcd.io/v1beta2
     kind: GitRepository
     metadata:
-    name: home-kubernetes
+    name: flux-system
     namespace: flux-system
     spec:
     interval: 10m

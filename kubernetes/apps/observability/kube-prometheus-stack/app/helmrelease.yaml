@@ -267,7 +267,7 @@ spec:
         scrapeInterval: 30s # Must match interval in Grafana Helm chart
         enableAdminAPI: true
         externalLabels:
-          cluster: home-kubernetes
+          cluster: flux-system
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false

@@ -126,7 +126,7 @@ for ks_file in kss:
             {
                 "sourceRef": {
                     "kind": "GitRepository",
-                    "name": "home-kubernetes",
+                    "name": "flux-system",
                 },
                 "interval": "30m",
                 "retryInterval": "1m",

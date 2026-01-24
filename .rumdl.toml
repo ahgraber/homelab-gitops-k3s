@@ -60,7 +60,7 @@ style = "atx"  # Use '#' Heading style
 style = "dash"  # asterisk, plus, dash, consistent
 
 [MD007] # (Unordered) list indentation
-indent = 2
+# indent = 2
 style = "text-aligned" # Align markers with start of parent text
 
 [MD009] # Trailing spaces
