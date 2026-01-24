@@ -13,7 +13,8 @@ spec:
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
+    namespace: flux-system
   interval: 30m
   retryInterval: 1m
   timeout: 5m
@@ -35,7 +36,8 @@ spec:
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
+    namespace: flux-system
   interval: 30m
   retryInterval: 1m
   timeout: 5m

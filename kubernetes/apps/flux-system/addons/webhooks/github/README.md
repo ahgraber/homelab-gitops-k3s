@@ -4,7 +4,8 @@ This directory contains manifests for configuring GitHub webhooks to trigger Flu
 
 ## Overview
 
-When you push changes to your GitHub repository, the webhook delivers a notification to the Flux webhook receiver. The receiver then triggers a reconciliation of the configured GitRepository and Kustomization resources, pulling in your changes without delay.
+When you push changes to your GitHub repository, the webhook delivers a notification to the Flux webhook receiver.
+The receiver then triggers a reconciliation of the configured GitRepository and Kustomization resources, pulling in your changes without delay.
 
 ## Components
 
@@ -33,7 +34,8 @@ On your GitHub repository, go to **Settings → Webhooks** and either:
 
 ### 2. Create the Secret
 
-The webhook token should be stored in `secret.sops.yaml`. Use `secret.sops.yaml.tmpl` as a template:
+The webhook token should be stored in `secret.sops.yaml`.
+Use `secret.sops.yaml.tmpl` as a template:
 
 ```bash
 # Copy the template
@@ -47,7 +49,8 @@ envsubst < secret.sops.yaml.tmpl > secret.sops.yaml.tmp && mv secret.sops.yaml.t
 sops -e secret.sops.yaml > secret.sops.yaml.tmp && mv secret.sops.yaml.tmp secret.sops.yaml
 ```
 
-⚠️ **Important**: The secret file must be encrypted before pushing to git. Unencrypted secrets will be rejected.
+⚠️ **Important**: The secret file must be encrypted before pushing to git.
+Unencrypted secrets will be rejected.
 
 ```bash
 # Verify the file is encrypted (should contain "ENC[" at the top)
@@ -59,7 +62,7 @@ git commit -m "chore: add github webhook secret"
 git push
 ```
 
-For more details on SOPS and Age setup, see the [root README](../../../README.md).
+For more details on SOPS and Age setup, see the [root README](../../../../../../README.md).
 
 ### 3. Configure the GitHub Repository Webhook
 
@@ -96,7 +99,8 @@ spec:
     - flux-webhook.${SECRET_DOMAIN}        # Will be substituted by your environment
 ```
 
-The domain uses the `${SECRET_DOMAIN}` placeholder which should be replaced via your kustomization build process or environment. Ensure your DNS (via Cloudflare external-dns) points to your Ingress external IP.
+The domain uses the `${SECRET_DOMAIN}` placeholder which should be replaced via your kustomization build process or environment.
+Ensure your DNS (via Cloudflare external-dns) points to your Ingress external IP.
 
 **For Gateway API routing** (HTTPRoute in `httproute.yaml`):
 
@@ -107,7 +111,7 @@ The domain uses the `${SECRET_DOMAIN}` placeholder which should be replaced via 
 
 The `receiver.yaml` currently reconciles:
 
-- `GitRepository`: `home-kubernetes` (flux-system namespace)
+- `GitRepository`: `flux-system` (flux-system namespace)
 - `Kustomization`: `cluster` and `apps` (flux-system namespace)
 
 Update the `resources` list if your repository or Kustomization names differ:
@@ -117,7 +121,7 @@ spec:
   resources:
     - apiVersion: source.toolkit.fluxcd.io/v1
       kind: GitRepository
-      name: YOUR_GIT_REPO_NAME # defined in kubernetes/flux/config/cluster.yaml
+      name: flux-system # defined in kubernetes/flux/config/cluster.yaml
       namespace: flux-system
     - apiVersion: kustomize.toolkit.fluxcd.io/v1
       kind: Kustomization
@@ -167,10 +171,10 @@ kubectl -n flux-system describe receiver github-webhook
 
 ```bash
 # GitRepository pull status
-kubectl -n flux-system describe gitrepository home-kubernetes
+kubectl -n flux-system describe gitrepository flux-system
 
 # Check if git pull was triggered recently
-kubectl -n flux-system get gitrepository home-kubernetes -o jsonpath='{.status.lastUpdateTime}'
+kubectl -n flux-system get gitrepository flux-system -o jsonpath='{.status.lastUpdateTime}'
 
 # Kustomization reconciliation status (should show recent timestamps)
 kubectl -n flux-system describe kustomization cluster
@@ -289,7 +293,7 @@ kubectl -n flux-system describe kustomization apps
 
 ## References
 
-- [Root README](../../../README.md) — Cluster setup, SOPS/Age configuration, and initial Flux bootstrap instructions
+- [Root README](../../../../../../README.md) — Cluster setup, SOPS/Age configuration, and initial Flux bootstrap instructions
 - [Flux Notification Webhook Receiver docs](https://fluxcd.io/flux/components/notification/receiver/)
 - [Flux GitHub webhook guide](https://fluxcd.io/flux/guides/webhook-receivers/#define-a-git-repository-receiver)
 - [GitHub Webhooks docs](https://docs.github.com/en/developers/webhooks-and-events/webhooks)
