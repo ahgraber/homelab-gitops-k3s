@@ -29,7 +29,7 @@ tasks:
       vars: ["start"]
     vars:
       # start:
-      end: '{{ .end | default "./kubernetes/templates/volsync" }}'
+      end: '{{ .end | default "./kubernetes/components/volsync" }}'
     preconditions:
       - { msg: "Start file not found", sh: "test -f {{ .start }}" }
       - { msg: "End file not found", sh: "test -d {{ .end }}" }
