@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: envoy-system
   path: ./kubernetes/apps/networking/external-services/services
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

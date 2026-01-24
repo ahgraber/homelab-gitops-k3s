@@ -16,7 +16,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/observability/scrutiny/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -47,7 +47,7 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/observability/scrutiny/collector
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

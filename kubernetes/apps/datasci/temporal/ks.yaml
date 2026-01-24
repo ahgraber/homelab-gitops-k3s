@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
   path: ./kubernetes/apps/datasci/temporal/db
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -37,7 +37,7 @@ spec:
   dependsOn:
     - name: temporal-db
   path: ./kubernetes/apps/datasci/temporal/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

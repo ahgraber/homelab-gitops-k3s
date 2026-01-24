@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-default
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/database/pgadmin/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

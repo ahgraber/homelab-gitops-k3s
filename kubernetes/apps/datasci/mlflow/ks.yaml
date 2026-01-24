@@ -16,7 +16,7 @@ spec:
   # components:
   #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/db
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -43,7 +43,7 @@ spec:
   # components:
   #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

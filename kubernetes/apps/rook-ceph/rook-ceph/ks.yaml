@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   path: ./kubernetes/apps/rook-ceph/rook-ceph/operator
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -36,7 +36,7 @@ spec:
     - name: snapshot-controller
     # - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

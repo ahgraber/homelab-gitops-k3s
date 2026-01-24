@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   path: ./kubernetes/apps/cert-manager/cert-manager/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -34,7 +34,7 @@ spec:
   dependsOn:
     - name: cert-manager
   path: ./kubernetes/apps/cert-manager/cert-manager/issuers
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -58,7 +58,7 @@ spec:
     - name: cert-manager-issuers
     # - name: kube-system-reflector
   path: ./kubernetes/apps/cert-manager/cert-manager/certificates
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

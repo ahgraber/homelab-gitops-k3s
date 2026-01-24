@@ -13,7 +13,7 @@ spec:
   dependsOn:
     - name: kyverno
   path: ./kubernetes/apps/security/authelia/rbac
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -40,7 +40,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/security/authelia/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

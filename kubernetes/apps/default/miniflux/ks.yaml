@@ -14,7 +14,7 @@ spec:
     - name: cnpg-cluster-default
     - name: ext-postgres-operator
   path: ./kubernetes/apps/default/miniflux/db
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -38,7 +38,7 @@ spec:
     - name: miniflux-db
     - name: rook-ceph-cluster
   path: ./kubernetes/apps/default/miniflux/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

@@ -11,7 +11,7 @@ spec:
     labels:
       app.kubernetes.io/name: grafana-operator
   path: ./kubernetes/apps/observability/grafana/operator
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
@@ -34,7 +34,7 @@ spec:
   dependsOn:
     - name: grafana-operator
   path: ./kubernetes/apps/observability/grafana/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes

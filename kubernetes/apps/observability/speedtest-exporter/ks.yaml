@@ -14,7 +14,7 @@ spec:
     - name: kube-prometheus-stack
     # - name: grafana
   path: ./kubernetes/apps/observability/speedtest-exporter/app
-  prune: true
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
