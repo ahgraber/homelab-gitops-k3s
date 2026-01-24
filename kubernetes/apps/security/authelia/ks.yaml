@@ -37,6 +37,8 @@ spec:
     - name: rook-ceph-cluster
     - name: volsync
     - name: authelia-rbac
+  components:
+    - ../../../../components/volsync
   path: ./kubernetes/apps/security/authelia/app
   prune: true
   sourceRef:
