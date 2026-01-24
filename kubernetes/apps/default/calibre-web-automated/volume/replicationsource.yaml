@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: calibre-library
+spec:
+  sourcePVC: calibre-library
+  trigger:
+    schedule: "0 * * * *"
+  restic:
+    repository: calibre-library-volsync-backup # secret name
+    pruneIntervalDays: 10
+    retain:
+      daily: 5
+      weekly: 4
+      monthly: 3
+    copyMethod: Snapshot
+    ### Source (PVC-to-be-backed-up and its snapshot)
+    storageClassName: ceph-fs
+    accessModes: ["ReadWriteMany"]
+    volumeSnapshotClassName: csi-ceph-fs # same as source
+    cacheCapacity: 2Gi
+    cacheStorageClassName: local-path
+    cacheAccessModes: ["ReadWriteOnce"]
+    moverSecurityContext:
+      runAsUser: 0
+      runAsGroup: 1000
+      fsGroup: 1000
