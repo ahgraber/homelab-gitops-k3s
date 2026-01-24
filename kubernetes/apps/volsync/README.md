@@ -7,4 +7,4 @@ Additionally, it can replicate across different types (and vendors) of storage.
 
 ## Use
 
-See [volsync templates readme](../../templates/volsync/README.md) for use.
+See [volsync components readme](../../components/volsync/README.md) for use.

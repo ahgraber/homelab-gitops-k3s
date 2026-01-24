@@ -10,6 +10,11 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+  components:
+    - ../../../components/volsync
   path: ./kubernetes/apps/default/stirling-pdf/app
   prune: true
   sourceRef:
@@ -22,7 +27,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 256Mi
       VOLSYNC_STORAGECLASS: ceph-block # default
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
       VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path

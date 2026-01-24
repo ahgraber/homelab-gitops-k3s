@@ -13,6 +13,8 @@ spec:
   dependsOn:
     - name: cnpg-cluster-datasci
     - name: ext-postgres-operator-datasci
+  # components:
+  #   - ../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/db
   prune: true
   sourceRef:
@@ -38,6 +40,8 @@ spec:
     - name: mlflow-db
     - name: rook-ceph-cluster
     - name: volsync
+  # components:
+  #   - ../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/app
   prune: true
   sourceRef:
@@ -47,10 +51,10 @@ spec:
   retryInterval: 1m
   timeout: 5m
   wait: true
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_STORAGECLASS: ceph-block # default
-      VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
-      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
+  # postBuild:
+  #   substitute:
+  #     APP: *app
+  #     VOLSYNC_CAPACITY: 2Gi
+  #     VOLSYNC_STORAGECLASS: ceph-block # default
+  #     VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
+  #     VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path

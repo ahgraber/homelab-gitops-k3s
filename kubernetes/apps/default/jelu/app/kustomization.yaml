@@ -8,5 +8,3 @@ resources:
   - ./helmrelease.yaml
   - ./secret-oidc.sops.yaml
   # - ./securitypolicy.yaml
-  # - ../../../../templates/volsync/init
-  - ../../../../templates/volsync/restore
