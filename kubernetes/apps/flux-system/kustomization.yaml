@@ -12,4 +12,5 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   - ./flux-operator/ks.yaml
+  - ./flux-instance/ks.yaml
   - ./addons/ks.yaml
