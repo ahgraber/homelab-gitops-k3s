@@ -65,7 +65,7 @@
             # freelens # Kubernetes IDE
             fluxcd # flux CLI for gitops
             hadolint # Dockerfile Linter JavaScript API
-            # helm           # A package manager for kubernetes
+            helmfile # Helmfile is a declarative spec for deploying helm charts
             # kopia          # Cross-platform backup tool
             krew # Package manager for kubectl plugins
             kubectl # Kubernetes CLI
@@ -78,6 +78,7 @@
             openldap # Open source implementation of the Lightweight Directory Access Protocol
             restic # A backup program that is fast, efficient and secure
             # velero         # Kubernetes disaster recovery
+            yq-go # Lightweight and portable command-line YAML processor
             #--- containers ---
             docker # Pack, ship and run any application as a lightweight container
             # podman
