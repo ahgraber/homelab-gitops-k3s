@@ -4,19 +4,24 @@ kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN/./-}-staging"
 spec:
-  secretName: "${SECRET_DOMAIN/./-}-staging-tls"
-  secretTemplate:
-    # annotations:
-    #   # allow replication?
-    #   reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-    #   reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "network"
-    #   # automatically create replicated resources?
-    #   reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-    #   reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "network"
-  issuerRef:
-    name: letsencrypt-staging
-    kind: ClusterIssuer
   commonName: "${SECRET_DOMAIN}"
   dnsNames:
     - "${SECRET_DOMAIN}"
     - "*.${SECRET_DOMAIN}"
+  duration: 160h
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+  secretName: "${SECRET_DOMAIN/./-}-staging-tls"
+  # secretTemplate:
+  #   annotations:
+  #     # allow replication?
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "network"
+  #     # automatically create replicated resources?
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+  #     reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "network"
+  usages:
+    - digital signature

@@ -128,6 +128,7 @@ function load_bootstrap_env() {
         local secret_string_entries
         if secret_string_entries=$(sops --decrypt "${secret}" | yq -r '.stringData // {} | to_entries | .[] | "\(.key)=\(.value)"'); then
             while IFS='=' read -r key value; do
+                [[ -z "${key}" ]] && continue
                 export "${key}=${value}"
                 loaded_keys+=("${key}")
             done <<< "${secret_string_entries}"
@@ -138,6 +139,7 @@ function load_bootstrap_env() {
         local secret_data_entries
         if secret_data_entries=$(sops --decrypt "${secret}" | yq -r '.data // {} | to_entries | .[] | "\(.key)=\(.value | @base64d)"'); then
             while IFS='=' read -r key value; do
+                [[ -z "${key}" ]] && continue
                 export "${key}=${value}"
                 loaded_keys+=("${key}")
             done <<< "${secret_data_entries}"
