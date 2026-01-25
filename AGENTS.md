@@ -11,7 +11,8 @@ This is a GitOps-managed homelab Kubernetes cluster using:
 - **Ansible**: Node preparation and cluster installation
 - **SOPS + Age**: Secrets encryption
 
-The repository is the single source of truth. Changes committed here are automatically applied to the cluster by Flux.
+The repository is the single source of truth.
+Changes committed here are automatically applied to the cluster by Flux.
 
 ## Repository Structure
 
@@ -34,7 +35,8 @@ The repository is the single source of truth. Changes committed here are automat
 
 ## Command Execution Patterns
 
-**IMPORTANT**: Do NOT use `task` commands directly. Task is a convenience tool for humans.
+**IMPORTANT**: Do NOT use `task` commands directly.
+Task is a convenience tool for humans.
 
 Instead:
 
@@ -60,7 +62,8 @@ This ensures your commands work even if the Taskfile abstractions change.
 ## Kubectl and Flux Operations
 
 - Informational queries (get, describe, logs, events, etc.) are permitted; avoid destructive actions unless explicitly requested.
-- Command ordering follows the prefix-based ruleset: `<command> <verb> <type> [output flags] [other flags] -n <namespace> [name]`. Keep the resource type immediately after the verb and put namespace flags last so output-format flags (`-o/--output`) stay adjacent to the type for secret-safety controls.
+- Command ordering follows the prefix-based ruleset: `<command> <verb> <type> [output flags] [other flags] -n <namespace> [name]`.
+  Keep the resource type immediately after the verb and put namespace flags last so output-format flags (`-o/--output`) stay adjacent to the type for secret-safety controls.
 - Examples with ordering: `kubectl get pods -n <namespace>`, `kubectl get pod <name> -n <namespace>`, `kubectl logs -n <namespace> <pod>`, `flux get hr -n <namespace>`.
 - Keep commands scoped and explicit; do not rely on default namespaces or contexts when fetching cluster state.
 
@@ -404,7 +407,8 @@ Kubeconform validation:
 
 Pre-commit hooks:
 
-The repository has pre-commit hooks. Reference `.taskfiles/repository/taskfile.yaml` to see what runs:
+The repository has pre-commit hooks.
+Reference `.taskfiles/repository/taskfile.yaml` to see what runs:
 
 ```bash
 pre-commit run --all-files
@@ -421,7 +425,8 @@ pre-commit run --all-files
 ## Secrets Management Naming Conventions (ESO vs SOPS)
 
 - Prefer Bitwarden/ESO as the primary secrets path; SOPS stays only for minimal bootstrap credentials.
-- Bitwarden project: **Homelab**. Keep all ExternalSecret targets in this project for consistency and access control.
+- Bitwarden project: **Homelab**.
+  Keep all ExternalSecret targets in this project for consistency and access control.
 - Bitwarden item names: `{namespace}-{app}-{purpose}` (e.g., `default-ghost-db`); shared items use `shared-{purpose}`.
 - Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey` (avoid generic keys like `value`).
 - Kubernetes Secret names mirror Bitwarden items where possible; avoid ambiguous names like `credentials` or `secret`.
@@ -547,24 +552,24 @@ Refs #201
 
 1. **Split DNS is required** for k8s-gateway to work
 
-  - Home DNS server must forward `*.domain.com` to k8s-gateway IP
-  - Without this, internal services won't resolve
+- Home DNS server must forward `*.domain.com` to k8s-gateway IP
+- Without this, internal services won't resolve
 
 2. **Certificate staging vs production**
 
-  - Cluster starts with Let's Encrypt staging certificates
-  - Switch to production once stable to avoid rate limits
-  - Staging certs will show browser warnings
+- Cluster starts with Let's Encrypt staging certificates
+- Switch to production once stable to avoid rate limits
+- Staging certs will show browser warnings
 
 3. **Cloudflare tunnel** must be configured for external ingress to work
 
-  - Check `kubernetes/apps/networking/cloudflared/` for configuration
+- Check `kubernetes/apps/network/cloudflared/` for configuration
 
 ### Flux & GitOps
 
 1. **Changes may take up to 30 minutes** to reconcile (default interval)
 
-  - Force reconciliation for immediate updates
+- Force reconciliation for immediate updates
 
 2. **Flux ignores some paths** defined in `kubernetes/flux/config/cluster.yaml`
 
@@ -580,7 +585,8 @@ Refs #201
 
 2. **Node operations** require Ansible and SSH access to nodes
 
-3. **Rook-Ceph operations** need special care - reference `.taskfiles/rook/taskfile.yaml` before making changes. YOU MUST CHECK WITH THE HUMAN BEFORE OPERATING DIRECTLY ON ROOK-CEPH.
+3. **Rook-Ceph operations** need special care - reference `.taskfiles/rook/taskfile.yaml` before making changes.
+   YOU MUST CHECK WITH THE HUMAN BEFORE OPERATING DIRECTLY ON ROOK-CEPH.
 
 ### Kubeconfig
 
@@ -638,4 +644,5 @@ ansible-playbook -i ansible/inventory/hosts.yaml ansible/playbooks/<playbook>.ya
 
 ---
 
-Remember: This repository manages real infrastructure. Always test changes carefully, verify SOPS encryption, and understand the impact before committing.
+Remember: This repository manages real infrastructure.
+Always test changes carefully, verify SOPS encryption, and understand the impact before committing.

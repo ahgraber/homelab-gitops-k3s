@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app mlflow-db
-  namespace: flux-system
 spec:
   targetNamespace: datasci
   commonMetadata:
@@ -12,7 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-cluster-datasci
+      namespace: datasci
     - name: ext-postgres-operator-datasci
+      namespace: datasci
   # components:
   #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/db
@@ -31,7 +32,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app mlflow
-  namespace: flux-system
 spec:
   targetNamespace: datasci
   commonMetadata:
@@ -39,8 +39,11 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: mlflow-db
+      namespace: datasci
     - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: volsync
+      namespace: volsync-system
   # components:
   #   - ../../../../components/volsync
   path: ./kubernetes/apps/datasci/mlflow/app

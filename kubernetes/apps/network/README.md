@@ -46,8 +46,7 @@
 ## 🌎 Public Applications
 
 The `external-dns` application will create public DNS records.
-External-facing application access relies on a `cloudflared` tunnel to access the external `envoy-gateway`,
-which acts as a reverse proxy to the application.
+External-facing application access relies on a `cloudflared` tunnel to access the external `envoy-gateway`, which acts as a reverse proxy to the application.
 
 By default, `echo-server` and the `flux-webhook` are the only subdomains reachable from the public internet.
 In order to make additional applications public you must set set the correct ingress/gateway name and annotations (see the `echo-server` HelmRelease).

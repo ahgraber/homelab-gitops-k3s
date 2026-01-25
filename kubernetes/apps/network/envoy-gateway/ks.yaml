@@ -4,15 +4,15 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app envoy-system
-  namespace: flux-system
 spec:
-  targetNamespace: networking
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: envoy-gateway
   dependsOn:
     - name: cert-manager-certificates
-  path: ./kubernetes/apps/networking/envoy-gateway/app
+      namespace: cert-manager
+  path: ./kubernetes/apps/network/envoy-gateway/app
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
@@ -28,15 +28,15 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app envoy-gateway
-  namespace: flux-system
 spec:
-  targetNamespace: networking
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: envoy-system
-  path: ./kubernetes/apps/networking/envoy-gateway/instance
+      namespace: network
+  path: ./kubernetes/apps/network/envoy-gateway/instance
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository

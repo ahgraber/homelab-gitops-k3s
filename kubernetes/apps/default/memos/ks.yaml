@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app memos-db
-  namespace: flux-system
 spec:
   targetNamespace: default
   commonMetadata:
@@ -12,7 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-cluster-default
+      namespace: database
     - name: ext-postgres-operator
+      namespace: database
   path: ./kubernetes/apps/default/memos/db
   prune: false # flux-operator-prep
   sourceRef:
@@ -29,7 +30,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app memos
-  namespace: flux-system
 spec:
   targetNamespace: default
   commonMetadata:
@@ -37,8 +37,11 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: memos-db
+      namespace: default
     - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: volsync
+      namespace: volsync-system
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/default/memos/app

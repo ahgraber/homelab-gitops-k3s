@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app prefect-db
-  namespace: flux-system
 spec:
   targetNamespace: datasci
   commonMetadata:
@@ -12,7 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-cluster-datasci
+      namespace: datasci
     - name: ext-postgres-operator-datasci
+      namespace: datasci
   path: ./kubernetes/apps/datasci/prefect/db
   prune: false # flux-operator-prep
   sourceRef:
@@ -29,7 +30,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app prefect-server
-  namespace: flux-system
 spec:
   targetNamespace: datasci
   commonMetadata:
@@ -37,6 +37,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: prefect-db
+      namespace: datasci
   path: ./kubernetes/apps/datasci/prefect/server
   prune: false # flux-operator-prep
   sourceRef:
@@ -52,7 +53,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app prefect-worker
-  namespace: flux-system
 spec:
   targetNamespace: datasci
   commonMetadata:
@@ -60,7 +60,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: prefect-server
+      namespace: datasci
     - name: prefect-db
+      namespace: datasci
   path: ./kubernetes/apps/datasci/prefect/worker
   prune: false # flux-operator-prep
   sourceRef:

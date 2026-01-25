@@ -3,16 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app volsync
-  namespace: flux-system
+  name: &app cloudflared
 spec:
-  targetNamespace: volsync
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: snapshot-controller
-  path: ./kubernetes/apps/volsync/volsync/app
+    - name: external-dns
+      namespace: network
+  path: ./kubernetes/apps/network/cloudflared/app
   prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository

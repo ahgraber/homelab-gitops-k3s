@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: hugo-rbac
-  namespace: flux-system
 spec:
   targetNamespace: blog
   commonMetadata:
@@ -12,6 +11,7 @@ spec:
       app.kubernetes.io/name: hugo-rbac
   dependsOn:
     - name: kyverno
+      namespace: kyverno
   path: ./kubernetes/apps/blog/hugo/rbac
   prune: false # flux-operator-prep
   sourceRef:
@@ -28,7 +28,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app hugo
-  namespace: flux-system
 spec:
   targetNamespace: blog
   commonMetadata:
@@ -36,6 +35,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: hugo-rbac
+      namespace: blog
   path: ./kubernetes/apps/blog/hugo/app
   prune: false # flux-operator-prep
   sourceRef:

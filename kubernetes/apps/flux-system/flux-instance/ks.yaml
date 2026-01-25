@@ -3,17 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app external-services
-  namespace: flux-system
+  name: flux-instance
 spec:
-  targetNamespace: networking
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  targetNamespace: flux-system
   dependsOn:
-    - name: envoy-system
-  path: ./kubernetes/apps/networking/external-services/services
-  prune: false # flux-operator-prep
+    - name: flux-operator
+      namespace: flux-system
+  path: ./kubernetes/apps/flux-system/flux-instance/app
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,4 +18,4 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  wait: false
+  wait: true

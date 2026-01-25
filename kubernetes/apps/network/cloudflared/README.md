@@ -9,10 +9,8 @@
 
 ## Argo Tunnel
 
-Cloudflare Tunnel provides you with a secure way to connect your resources to Cloudflare
-without a publicly routable IP address. With Tunnel, you do not send traffic to an external IP —
-instead, a lightweight daemon in your infrastructure (cloudflared) creates outbound-only
-connections to Cloudflare's edge.
+Cloudflare Tunnel provides you with a secure way to connect your resources to Cloudflare without a publicly routable IP address.
+With Tunnel, you do not send traffic to an external IP — instead, a lightweight daemon in your infrastructure (cloudflared) creates outbound-only connections to Cloudflare's edge.
 
 ### Prerequisites
 
@@ -20,9 +18,7 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
 ### Setup
 
-[github example docs](https://github.com/cloudflare/argo-tunnel-examples/tree/master/named-tunnel-k8s)
-[documentation](https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel#deploy-cloudflared)
-[config](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/local-management/configuration-file/)
+[github example docs](https://github.com/cloudflare/argo-tunnel-examples/tree/master/named-tunnel-k8s) [documentation](https://developers.cloudflare.com/cloudflare-one/tutorials/many-cfd-one-tunnel#deploy-cloudflared) [config](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/local-management/configuration-file/)
 
 1. If you haven't, login to you Cloudflare account to obtain a certificate.
 
@@ -77,8 +73,7 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
 2. Deploy cloudflared by applying its manifest (managed by Flux kustomization).
 
-   When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step,
-   it will send that traffic to the cloudflareds running in this deployment.
+   When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step, it will send that traffic to the cloudflareds running in this deployment.
    Those cloudflared instances will proxy the request to your app's Service.
 
 ## Terraform
