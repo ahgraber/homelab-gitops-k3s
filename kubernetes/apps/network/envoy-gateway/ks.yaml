@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: envoy-gateway
   dependsOn:
-    - name: cert-manager-certificates
+    - name: cert-manager
       namespace: cert-manager
   path: ./kubernetes/apps/network/envoy-gateway/app
   prune: false # flux-operator-prep

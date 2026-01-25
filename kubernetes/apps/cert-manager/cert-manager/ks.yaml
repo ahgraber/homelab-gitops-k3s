@@ -43,28 +43,3 @@ spec:
   retryInterval: 1m
   timeout: 5m
   wait: true
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app cert-manager-certificates
-spec:
-  targetNamespace: cert-manager
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  dependsOn:
-    - name: cert-manager-issuers
-      namespace: cert-manager
-    # - name: kube-system-reflector
-  path: ./kubernetes/apps/cert-manager/cert-manager/certificates
-  prune: false # flux-operator-prep
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
-  wait: true
