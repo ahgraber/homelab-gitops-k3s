@@ -40,7 +40,7 @@ spec:
               repository: ghcr.io/lldap/lldap
               tag: stable-alpine-rootless
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               LLDAP_HTTP_PORT: &port 17170
               LLDAP_HTTP_URL: https://lldap.${SECRET_DOMAIN}
               LLDAP_LDAP_PORT: &ldapPort 3890

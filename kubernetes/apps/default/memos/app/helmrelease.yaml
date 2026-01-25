@@ -40,7 +40,7 @@ spec:
               repository: ghcr.io/usememos/memos
               tag: 0.25.3@sha256:40db300a188ede0c2cf1fc0c49741a03077478d6891fd3ace05c16d702b536a6
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               MEMOS_PORT: "5230" # https://github.com/usememos/memos/issues/1782
               MEMOS_DRIVER: postgres
               MEMOS_DSN:

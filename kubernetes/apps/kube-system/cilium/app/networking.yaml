@@ -20,4 +20,4 @@ metadata:
 spec:
   allowFirstLastIPs: "No"
   blocks:
-    - cidr: "${NODE_CIDR}"
+    - cidr: "10.2.118.0/24" # defined in ansible group_vars/kubernetes/supplemental.yaml

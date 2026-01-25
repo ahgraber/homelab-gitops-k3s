@@ -37,7 +37,7 @@ spec:
               repository: ghcr.io/umami-software/umami
               tag: postgresql-v2.11.3
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               DATABASE_TYPE: postgresql
               DATABASE_URL:
                 valueFrom:

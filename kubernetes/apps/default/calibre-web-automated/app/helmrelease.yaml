@@ -39,7 +39,7 @@ spec:
               repository: ghcr.io/crocodilestick/calibre-web-automated
               tag: V3.1.4@sha256:577e846f104fd21453ef306eefb4a95dd95b3b9ddd2463a150944494284da0fd
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               PUID: 1000
               PGID: 1000
               CACHE_DIR: /cache

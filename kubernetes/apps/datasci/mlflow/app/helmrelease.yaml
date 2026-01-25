@@ -105,7 +105,7 @@ spec:
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3:${SECRET_S3_ENDPOINT}/mlflow # s3://mlflow/
               # To connect the MLflow AI Gateway with the MLflow Tracking Server
               MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
             envFrom:
               - secretRef:
                   name: mlflow-s3
@@ -159,7 +159,7 @@ spec:
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &gport 5001
               MLFLOW_GATEWAY_CONFIG: "/config/config.yaml"
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
             probes:
               liveness: &gprobes
                 enabled: true

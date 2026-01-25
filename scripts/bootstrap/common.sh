@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+export ROOT_DIR
+
 # Log messages with different levels
 function log() {
     local level="${1:-info}"
@@ -106,4 +109,94 @@ function check_cli() {
     fi
 
     log debug "Deps are installed" "deps=${deps[*]}"
+}
+
+# Load Flux-style substitution variables for bootstrap Helmfile runs.
+function load_bootstrap_env() {
+    local -a secrets=(
+        "${ROOT_DIR}/kubernetes/components/sops/cluster-secrets.sops.yaml"
+        "${ROOT_DIR}/kubernetes/components/sops/custom-secrets.sops.yaml"
+    )
+    local -a loaded_keys=()
+
+    for secret in "${secrets[@]}"; do
+        if [[ ! -f "${secret}" ]]; then
+            log warn "Secret file is missing" "file=${secret}"
+            continue
+        fi
+
+        local secret_string_entries
+        if secret_string_entries=$(sops --decrypt "${secret}" | yq -r '.stringData // {} | to_entries | .[] | "\(.key)=\(.value)"'); then
+            while IFS='=' read -r key value; do
+                export "${key}=${value}"
+                loaded_keys+=("${key}")
+            done <<< "${secret_string_entries}"
+        else
+            log error "Failed to read secret stringData" "file=${secret}"
+        fi
+
+        local secret_data_entries
+        if secret_data_entries=$(sops --decrypt "${secret}" | yq -r '.data // {} | to_entries | .[] | "\(.key)=\(.value | @base64d)"'); then
+            while IFS='=' read -r key value; do
+                export "${key}=${value}"
+                loaded_keys+=("${key}")
+            done <<< "${secret_data_entries}"
+        else
+            log error "Failed to read secret data" "file=${secret}"
+        fi
+    done
+
+    if [[ ${#loaded_keys[@]} -gt 0 ]]; then
+        log debug "Bootstrap substitution variables loaded" "keys=${loaded_keys[*]}"
+    else
+        log warn "No bootstrap substitution variables were loaded"
+    fi
+}
+
+# Ensure any ${VAR} placeholders used by bootstrap HelmReleases have values.
+function check_bootstrap_placeholders() {
+    local -r helmfile_file="${1}"
+    local -r apps_dir="${ROOT_DIR}/kubernetes/apps"
+    local -a missing=()
+
+    if [[ ! -f "${helmfile_file}" ]]; then
+        log error "File does not exist" "file=${helmfile_file}"
+    fi
+
+    if [[ ! -d "${apps_dir}" ]]; then
+        log error "Apps directory does not exist" "directory=${apps_dir}"
+    fi
+
+    local releases
+    if ! releases=$(yq -r '.releases[] | "\(.namespace) \(.name)"' "${helmfile_file}"); then
+        log error "Failed to read Helmfile releases" "file=${helmfile_file}"
+    fi
+
+    while IFS=' ' read -r namespace name; do
+        local hr_file="${apps_dir}/${namespace}/${name}/app/helmrelease.yaml"
+        if [[ ! -f "${hr_file}" ]]; then
+            log warn "HelmRelease file is missing" "file=${hr_file}"
+            continue
+        fi
+
+        local placeholders
+        placeholders=$(grep -Eo '\$\{[A-Za-z0-9_]+\}' "${hr_file}" | sort -u) || true
+        if [[ -z "${placeholders}" ]]; then
+            continue
+        fi
+
+        while IFS= read -r placeholder; do
+            [[ -z "${placeholder}" ]] && continue
+            local key="${placeholder#\${}"
+            key="${key%\}}"
+            if [[ -z "${!key-}" ]]; then
+                missing+=("${key} (in ${hr_file})")
+            fi
+        done <<< "${placeholders}"
+    done <<< "${releases}"
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        log error "Missing substitution variables for bootstrap HelmReleases" \
+            "missing=${missing[*]}"
+    fi
 }

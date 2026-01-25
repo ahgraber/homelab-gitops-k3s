@@ -60,7 +60,7 @@ spec:
                     key: ADMIN_PASSWORD
               DEBUG: "1"
               LOG_DATE_TIME: "1"
-              METRICS_ALLOWED_NETWORKS: ${CLUSTER_CIDR}
+              METRICS_ALLOWED_NETWORKS: "10.42.0.0/16" # defined in ansible group_vars/kubernetes/supplemental.yaml"
               METRICS_COLLECTOR: "1"
               POLLING_SCHEDULER: entry_frequency
               POLLING_FREQUENCY: "15"

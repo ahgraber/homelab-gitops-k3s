@@ -40,7 +40,7 @@ spec:
               repository: ghcr.io/mealie-recipes/mealie
               tag: v3.9.2@sha256:57713693dceca9a124f00f165eaf8f5c41de757e7f63f8a7b80625488605dc61
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               ALLOW_SIGNUP: "false"
               BASE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}
               OPENAI_MODEL: gpt-5-mini
