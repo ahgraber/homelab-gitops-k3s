@@ -6,6 +6,7 @@ namespace: kyverno
 
 components:
   - ../../components/alerts
+  - ../../components/sops
 
 resources:
   - ./namespace.yaml
