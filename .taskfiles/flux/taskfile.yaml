@@ -3,11 +3,11 @@
 version: "3"
 
 vars:
+  AGE_KEY_SOPS_FILE: "{{ .BOOTSTRAP_DIR }}/age-key.sops.yaml"
+  GITHUB_DEPLOY_KEY_FILE: "{{ .BOOTSTRAP_DIR }}/github-deploy-key.sops.yaml"
   CLUSTER_SECRET_SOPS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/cluster-secrets.sops.yaml"
   CUSTOM_SECRET_SOPS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/custom-secrets.sops.yaml"
   CLUSTER_SETTINGS_FILE: "{{ .KUBERNETES_DIR }}/flux/vars/cluster-settings.yaml"
-  AGE_KEY_SOPS_FILE: "{{ .KUBERNETES_DIR }}/bootstrap/age-key.sops.yaml"
-  GITHUB_DEPLOY_KEY_FILE: "{{ .KUBERNETES_DIR }}/bootstrap/github-deploy-key.sops.yaml"
 
 tasks:
 
@@ -18,14 +18,10 @@ tasks:
   bootstrap:
     desc: Bootstrap Flux into a Kubernetes cluster
     cmds:
-      # Install CRDs
-      - task: crds
-      # Install Flux
-      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/bootstrap  # /flux
-      # Install secrets & configs
-      - task: _deploy_secrets
-      # Install Flux Kustomization resources
-      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/flux/config
+      - "{{ .SCRIPTS_DIR }}/bootstrap/apply_namespaces.sh"
+      - "{{ .SCRIPTS_DIR }}/bootstrap/apply_sops_secrets.sh"
+      - "{{ .SCRIPTS_DIR }}/bootstrap/apply_crds.sh"
+      - "{{ .SCRIPTS_DIR }}/bootstrap/sync_hrs.sh"
     preconditions:
       - { msg: "Missing kubeconfig", sh: "test -f {{ .KUBECONFIG_FILE }}" }
       - { msg: "Missing Sops Age key file", sh: "test -f {{ .AGE_FILE }}" }
@@ -34,34 +30,6 @@ tasks:
       # check that encrypted files can be successfully decrypted
       - sops --decrypt {{ .AGE_KEY_SOPS_FILE }}
       - sops --decrypt {{ .GITHUB_DEPLOY_KEY_FILE }}
-
-  crds:
-    desc: Install required CRDs for the cluster
-    cmds:
-      - for:
-          # renovate: datasource=github-releases depName=kubernetes-sigs/external-dns
-          - https://raw.githubusercontent.com/kubernetes-sigs/external-dns/refs/tags/v0.20.0/config/crd/standard/dnsendpoints.externaldns.k8s.io.yaml
-          # renovate: datasource=github-releases depName=external-secrets/external-secrets
-          - https://raw.githubusercontent.com/external-secrets/external-secrets/refs/tags/v1.2.1/deploy/crds/bundle.yaml
-          # renovate: datasource=github-releases depName=prometheus-operator/prometheus-operator
-          - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.88.0/stripped-down-crds.yaml
-        cmd: kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename {{ .ITEM }}
-
-  _deploy_secrets:
-    desc: Install secrets and configs
-    internal: true
-    cmds:
-      - kubectl delete secret sops-age -n flux-system --ignore-not-found
-      - cat {{ .SOPS_AGE_KEY_FILE }} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
-      - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
-      - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
-      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename {{ .CLUSTER_SETTINGS_FILE }}
-    preconditions:
-      - test -f {{ .CLUSTER_SECRET_SOPS_FILE }}
-      - test -f {{ .CUSTOM_SECRET_SOPS_FILE }}
-      - test -f {{ .CLUSTER_SETTINGS_FILE }}
-      - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }}
-      - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }}
 
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository

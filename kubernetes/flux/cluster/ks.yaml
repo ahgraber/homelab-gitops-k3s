@@ -36,14 +36,6 @@ spec:
           decryption:
             provider: sops
           deletionPolicy: WaitForTermination
-          postBuild:
-            substituteFrom:
-              - kind: ConfigMap
-                name: cluster-settings
-              - kind: Secret
-                name: cluster-secrets
-              - kind: Secret
-                name: custom-secrets
           patches:
             - patch: |-
                 apiVersion: helm.toolkit.fluxcd.io/v2
