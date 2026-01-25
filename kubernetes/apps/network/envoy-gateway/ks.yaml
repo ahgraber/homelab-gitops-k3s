@@ -13,7 +13,7 @@ spec:
     - name: cert-manager
       namespace: cert-manager
   path: ./kubernetes/apps/network/envoy-gateway/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -37,7 +37,7 @@ spec:
     - name: envoy-system
       namespace: network
   path: ./kubernetes/apps/network/envoy-gateway/instance
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

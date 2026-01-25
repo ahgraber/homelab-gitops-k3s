@@ -13,7 +13,7 @@ spec:
     - name: kyverno
       namespace: kyverno
   path: ./kubernetes/apps/blog/hugo/rbac
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -37,7 +37,7 @@ spec:
     - name: hugo-rbac
       namespace: blog
   path: ./kubernetes/apps/blog/hugo/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

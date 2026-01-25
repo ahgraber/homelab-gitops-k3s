@@ -13,7 +13,7 @@ spec:
     - name: external-dns
       namespace: network
   path: ./kubernetes/apps/network/cloudflared/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -17,7 +17,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/default/homebox/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

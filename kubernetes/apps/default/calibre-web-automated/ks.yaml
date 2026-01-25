@@ -15,7 +15,7 @@ spec:
     - name: volsync
       namespace: volsync-system
   path: ./kubernetes/apps/default/calibre-web-automated/volume
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -46,7 +46,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/default/calibre-web-automated/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

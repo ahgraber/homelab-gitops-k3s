@@ -14,7 +14,7 @@ spec:
       namespace: observability
     # - name: grafana
   path: ./kubernetes/apps/observability/speedtest-exporter/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
