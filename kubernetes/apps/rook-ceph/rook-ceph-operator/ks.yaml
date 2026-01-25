@@ -3,11 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: flux-operator
+  name: &app rook-ceph-operator
 spec:
-  targetNamespace: flux-system
-  path: ./kubernetes/apps/flux-system/flux-operator/app
-  prune: true
+  targetNamespace: rook-ceph
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/rook-ceph/rook-ceph-operator/app
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: flux-system

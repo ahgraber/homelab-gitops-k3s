@@ -3,39 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app external-secrets-operator
-spec:
-  targetNamespace: external-secrets
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/external-secrets/external-secrets/operator
-  prune: false # flux-operator-prep
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: external-secrets
-      namespace: external-secrets
-  interval: 30m
-  retryInterval: 1m
-  timeout: 5m
-  wait: true
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
   name: &app external-secrets-store
 spec:
   # targetNamespace: external-secrets # TODO
   # commonMetadata:
   #   labels:
   #     app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/external-secrets/external-secrets/app
+  path: ./kubernetes/apps/external-secrets/external-secrets-store/app
   dependsOn:
     - name: external-secrets-operator
       namespace: external-secrets

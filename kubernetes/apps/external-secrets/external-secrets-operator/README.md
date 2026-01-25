@@ -12,7 +12,9 @@ Phase 1 foundation for migrating SOPS-managed secrets to Bitwarden Secrets Manag
 
 ## Bootstrap inputs
 
-Create `bitwarden-credentials` in the `external-secrets` namespace before enabling reconcilers. The Secret should be SOPS-encrypted and supplied via bootstrap (e.g., `kubernetes/bootstrap/`). Expected keys:
+Create `bitwarden-credentials` in the `external-secrets` namespace before enabling reconcilers.
+The Secret should be SOPS-encrypted and supplied via bootstrap (e.g., `kubernetes/bootstrap/`).
+Expected keys:
 
 ```yaml
 apiVersion: v1

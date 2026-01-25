@@ -11,4 +11,5 @@ components:
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./rook-ceph/ks.yaml
+  - ./rook-ceph-operator/ks.yaml
+  - ./rook-ceph-cluster/ks.yaml
