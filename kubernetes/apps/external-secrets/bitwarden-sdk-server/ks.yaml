@@ -3,11 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: flux-operator
+  name: &app bitwarden-sdk-server
 spec:
-  targetNamespace: flux-system
-  path: ./kubernetes/apps/flux-system/flux-operator/app
-  prune: true
+  targetNamespace: external-secrets
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/external-secrets/bitwarden-sdk-server/app
+  dependsOn:
+    - name: cert-manager
+      namespace: cert-manager
+  prune: false # flux-operator-prep
   sourceRef:
     kind: GitRepository
     name: flux-system

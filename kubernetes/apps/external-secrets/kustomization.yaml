@@ -11,5 +11,6 @@ components:
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./bitwarden/ks.yaml
-  - ./external-secrets/ks.yaml
+  - ./bitwarden-sdk-server/ks.yaml
+  - ./external-secrets-operator/ks.yaml
+  - ./external-secrets-store/ks.yaml

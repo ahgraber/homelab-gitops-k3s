@@ -15,4 +15,4 @@ Deploys the Bitwarden SDK Server used by External Secrets Operator (ESO) Bitward
 
 ## References
 
-- Chart values: https://github.com/external-secrets/bitwarden-sdk-server/blob/main/deploy/charts/bitwarden-sdk-server/values.yaml
+- [bitwarden-sdk-server chart values](https://github.com/external-secrets/bitwarden-sdk-server/blob/main/deploy/charts/bitwarden-sdk-server/values.yaml)
