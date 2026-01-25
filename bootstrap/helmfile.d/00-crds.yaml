@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+# This helmfile installs Custom Resource Definitions (CRDs) from Helm charts.
+# It is intended for template/apply only (not helmfile sync).
+
+helmDefaults:
+  args:
+    - --include-crds
+    - --no-hooks
+
+repositories:
+  - name: external-dns
+    url: https://kubernetes-sigs.github.io/external-dns
+
+releases:
+  - name: external-dns
+    namespace: networking
+    chart: external-dns/external-dns
+    # renovate: datasource=helm depName=external-dns repository=https://kubernetes-sigs.github.io/external-dns
+    version: 1.20.0
+
+  - name: external-secrets-operator
+    namespace: external-secrets
+    chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/external-secrets
+    version: 1.2.1
+
+  - name: envoy-gateway
+    namespace: networking
+    chart: oci://mirror.gcr.io/envoyproxy/gateway-helm
+    # renovate: datasource=docker depName=mirror.gcr.io/envoyproxy/gateway-helm
+    version: v1.6.2
+
+  - name: grafana-operator
+    namespace: observability
+    chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
+    # renovate: datasource=docker depName=ghcr.io/grafana/helm-charts/grafana-operator
+    version: 5.21.4
+
+  - name: kube-prometheus-stack
+    namespace: observability
+    chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+    # renovate: datasource=docker depName=ghcr.io/prometheus-community/charts/kube-prometheus-stack
+    version: 80.14.4

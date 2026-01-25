@@ -19,6 +19,9 @@ vars:
 
 includes:
   ansible: .taskfiles/ansible/taskfile.yaml
+  bootstrap:
+    taskfile: .taskfiles/bootstrap/taskfile.yaml
+    aliases: ["bs"]
   flux:
     taskfile: .taskfiles/flux/taskfile.yaml
     aliases: ["f"]
@@ -56,14 +59,5 @@ tasks:
     cmd: pre-commit run --all-files
 
   bootstrap:
-    vars: &vars
-      cephnodes: optiplex3 optiplex4 optiplex5 # optiplex0 optiplex1 optiplex2
-      cephdisk: /dev/sda
     cmds:
-      - task: :rook:reset
-        vars: *vars
-      - task: :flux:bootstrap
-        vars: *vars
-    preconditions:
-      - msg: "k3s cluster not found."
-        sh: kubectl get nodes
+      - task: :bootstrap:all

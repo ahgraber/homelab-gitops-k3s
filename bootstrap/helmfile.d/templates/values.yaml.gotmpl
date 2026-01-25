@@ -1,0 +1,10 @@
+{{- $default := printf "../../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name -}}
+{{- $overrides := dict
+      "bitwarden-sdk-server" "../../../kubernetes/apps/external-secrets/bitwarden/app/helmrelease.yaml"
+      "external-secrets-operator" "../../../kubernetes/apps/external-secrets/external-secrets/operator/helmrelease.yaml"
+  -}}
+{{- $path := (get $overrides .Release.Name | default $default) -}}
+{{- if not (fileExists $path) -}}
+{{- fail (printf "Missing HelmRelease values at %s" $path) -}}
+{{- end -}}
+{{ (fromYaml (readFile $path)).spec.values | toYaml }}

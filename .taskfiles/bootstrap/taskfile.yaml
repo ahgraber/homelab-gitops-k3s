@@ -1,0 +1,102 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+vars:
+  BOOTSTRAP_DIR: "{{.ROOT_DIR}}/bootstrap"
+  KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
+  KUBECONFIG_FILE: "{{.ROOT_DIR}}/kubeconfig"
+  AGE_FILE: "{{.ROOT_DIR}}/age.key"
+  CLUSTER_SETTINGS_FILE: "{{.KUBERNETES_DIR}}/flux/vars/cluster-settings.yaml"
+  CLUSTER_SECRET_SOPS_FILE: "{{.KUBERNETES_DIR}}/flux/vars/cluster-secrets.sops.yaml"
+  CUSTOM_SECRET_SOPS_FILE: "{{.KUBERNETES_DIR}}/flux/vars/custom-secrets.sops.yaml"
+
+
+tasks:
+  all:
+    desc: Bootstrap the cluster using the onedr0p-style flow (Task-based).
+    cmds:
+      - task: wait
+      - task: namespaces
+      - task: bws-token
+      - task: resources
+      - task: crds
+      - task: apps
+      - task: flux
+    preconditions:
+      - { msg: "Missing kubeconfig", sh: "test -f {{ .KUBECONFIG_FILE }}" }
+      - { msg: "Missing age.key", sh: "test -f {{ .AGE_FILE }}" }
+      - { msg: "Missing BWS_ACCESS_TOKEN", sh: "test -n \"${BWS_ACCESS_TOKEN:-}\"" }
+
+  wait:
+    desc: Wait for nodes to be ready
+    cmd: |
+      if ! kubectl wait nodes --for=condition=Ready=True --all --timeout=10s &>/dev/null; then
+        until kubectl wait nodes --for=condition=Ready=True --all --timeout=10s &>/dev/null; do
+          echo "Nodes not ready yet, retrying in 5 seconds..."
+          sleep 5
+        done
+      fi
+
+  namespaces:
+    desc: Apply namespaces from app kustomizations
+    cmd: |
+      find "{{ .KUBERNETES_DIR }}/apps" -mindepth 1 -maxdepth 1 -type d | while IFS= read -r dir; do
+        kustomize build "$dir" | yq ea -e 'select(.kind == "Namespace")' | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -
+      done
+
+  resources:
+    desc: Apply bootstrap-only resources (if any)
+    cmd: |
+      if grep -qE '^[[:space:]]*kind:' "{{ .BOOTSTRAP_DIR }}/resources.yaml.j2"; then
+        kubectl apply --server-side --field-manager bootstrap --force-conflicts --filename "{{ .BOOTSTRAP_DIR }}/resources.yaml.j2"
+      else
+        echo "No bootstrap resources to apply."
+      fi
+
+  crds:
+    desc: Install CRDs via helmfile
+    cmd: |
+      helmfile -f "{{ .BOOTSTRAP_DIR }}/helmfile.d/00-crds.yaml" template -q \
+        | yq ea -e 'select(.kind == "CustomResourceDefinition")' \
+        | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -
+
+  apps:
+    desc: Install core apps via helmfile
+    cmd: |
+      helmfile -f "{{ .BOOTSTRAP_DIR }}/helmfile.d/01-apps.yaml" sync --hide-notes
+
+  flux:
+    desc: Install Flux controllers and configuration
+    cmds:
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/bootstrap
+      - kubectl delete secret sops-age -n flux-system --ignore-not-found
+      - cat {{ .AGE_FILE }} | kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/dev/stdin
+      - sops --decrypt {{ .CLUSTER_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
+      - sops --decrypt {{ .CUSTOM_SECRET_SOPS_FILE }} | kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename -
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --filename {{ .CLUSTER_SETTINGS_FILE }}
+      - kubectl apply --kubeconfig {{ .KUBECONFIG_FILE }} --server-side --kustomize {{ .KUBERNETES_DIR }}/flux/config
+    preconditions:
+      - { msg: "Missing cluster settings", sh: "test -f {{ .CLUSTER_SETTINGS_FILE }}" }
+      - { msg: "Missing cluster secrets", sh: "test -f {{ .CLUSTER_SECRET_SOPS_FILE }}" }
+      - { msg: "Missing custom secrets", sh: "test -f {{ .CUSTOM_SECRET_SOPS_FILE }}" }
+      - { msg: "Missing bootstrap directory", sh: "test -d {{ .KUBERNETES_DIR }}/bootstrap" }
+
+  bws-token:
+    desc: Create or update the Bitwarden Secrets Manager token secret
+    preconditions:
+      - { msg: "Missing BWS_ACCESS_TOKEN", sh: "test -n \"${BWS_ACCESS_TOKEN:-}\"" }
+    cmd: |
+      if [[ -z "${BWS_ACCESS_TOKEN:-}" ]]; then
+        echo "BWS_ACCESS_TOKEN is required to create the Bitwarden token secret." >&2
+        exit 1
+      fi
+      cat <<EOF | kubectl apply --server-side --field-manager bootstrap --force-conflicts -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bitwarden-credentials
+  namespace: external-secrets
+stringData:
+  token: ${BWS_ACCESS_TOKEN}
+EOF

@@ -5,6 +5,7 @@
       customType: "regex",
       description: ["Process annotated dependencies"],
       managerFilePatterns: [
+        "/(^|/)bootstrap/.+\\.ya?ml$/",
         "/(^|/)\\.taskfiles/.+\\.ya?ml$/",
         "/(^|/)ansible/.+\\.ya?ml(\\.j2)?$/",
         "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
@@ -23,6 +24,7 @@
       customType: "regex",
       description: "Process OCI dependencies",
       managerFilePatterns: [
+        "/(^|/)bootstrap/.+\\.ya?ml(\\.j2)?$/",
         "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
       ],
       matchStrings: [
@@ -34,6 +36,7 @@
       customType: "regex",
       description: ["Process CloudnativePG Postgresql version"],
       managerFilePatterns: [
+        "/(^|/)bootstrap/.+\\.ya?ml(\\.j2)?$/",
         "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
       ],
       matchStrings: [

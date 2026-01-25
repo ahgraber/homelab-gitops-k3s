@@ -211,7 +211,8 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 3. Install Flux and sync the cluster to the Git repository
 
    ```sh
-   task flux:bootstrap
+   export BWS_ACCESS_TOKEN="your-bitwarden-token"
+   task bootstrap:all
    # namespace/flux-system configured
    # customresourcedefinition.apiextensions.k8s.io/alerts.notification.toolkit.fluxcd.io created
    # ...

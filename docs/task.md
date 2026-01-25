@@ -29,3 +29,13 @@ If allowed, additional arbitrary strings (i.e., cli flags, etc) can be passed fo
 ```sh
 task <namespace>:<taskname> var='value' -- '--quiet'
 ```
+
+## Bootstrap
+
+The cluster bootstrap flow is Task-based and expects a Bitwarden Secrets
+Manager token in the environment:
+
+```sh
+export BWS_ACCESS_TOKEN="your-bitwarden-token"
+task bootstrap:all
+```

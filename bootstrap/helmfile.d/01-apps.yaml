@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+helmDefaults:
+  cleanupOnFail: true
+  wait: true
+  waitForJobs: true
+
+repositories:
+  - name: external-dns
+    url: https://kubernetes-sigs.github.io/external-dns
+
+releases:
+  - name: cilium
+    namespace: kube-system
+    chart: oci://quay.io/cilium/charts/cilium
+    # renovate: datasource=docker depName=quay.io/cilium/charts/cilium
+    version: 1.18.6
+    values:
+      - ./templates/values.yaml.gotmpl
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: oci://quay.io/jetstack/charts/cert-manager
+    # renovate: datasource=docker depName=quay.io/jetstack/charts/cert-manager
+    version: v1.19.2
+    values:
+      - ./templates/values.yaml.gotmpl
+    needs:
+      - kube-system/cilium
+
+  - name: external-secrets-operator
+    namespace: external-secrets
+    chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/external-secrets
+    version: 1.2.1
+    values:
+      - ./templates/values.yaml.gotmpl
+    needs:
+      - cert-manager/cert-manager
+
+  - name: bitwarden-sdk-server
+    namespace: external-secrets
+    chart: oci://ghcr.io/external-secrets/charts/bitwarden-sdk-server
+    # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/bitwarden-sdk-server
+    version: v0.5.2
+    values:
+      - ./templates/values.yaml.gotmpl
+    needs:
+      - external-secrets/external-secrets-operator
+
+  - name: external-dns
+    namespace: networking
+    chart: external-dns/external-dns
+    # renovate: datasource=helm depName=external-dns repository=https://kubernetes-sigs.github.io/external-dns
+    version: 1.20.0
+    values:
+      - ./templates/values.yaml.gotmpl
+
+  - name: envoy-gateway
+    namespace: networking
+    chart: oci://mirror.gcr.io/envoyproxy/gateway-helm
+    # renovate: datasource=docker depName=mirror.gcr.io/envoyproxy/gateway-helm
+    version: v1.6.2
+    values:
+      - ./templates/values.yaml.gotmpl
