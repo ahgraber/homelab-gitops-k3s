@@ -58,7 +58,7 @@ spec:
       main:
         parentRefs:
           - name: envoy-external
-            namespace: networking
+            namespace: network
             sectionName: https
         hostnames:
           - whoami.${SECRET_DOMAIN}

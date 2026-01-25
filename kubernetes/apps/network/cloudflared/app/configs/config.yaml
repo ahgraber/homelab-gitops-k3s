@@ -6,7 +6,7 @@ originRequest:
 ingress:
   ### Traffic coming in thru cloudflare should go to `external` gateway
   - hostname: "${SECRET_DOMAIN}"
-    service: &svc https://envoy-external.networking.svc.cluster.local:443
+    service: &svc https://envoy-external.network.svc.cluster.local:443
   - hostname: "*.${SECRET_DOMAIN}"
     service: *svc
 

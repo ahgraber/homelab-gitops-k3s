@@ -207,7 +207,7 @@ spec:
           - &host mlflow.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
-            namespace: networking
+            namespace: network
             sectionName: https
         rules:
           - matches:
@@ -222,7 +222,7 @@ spec:
           - &gateway mlflow-gateway.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
-            namespace: networking
+            namespace: network
             sectionName: https
         rules:
           - matches:

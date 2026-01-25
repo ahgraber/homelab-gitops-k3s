@@ -54,8 +54,8 @@ It is tailored for the current homelab context and assumes the Bitwarden account
 | flux          | flux vars             | `kubernetes/flux/vars/cluster-secrets.sops.yaml`                                                   | Shared bootstrap variables.         |
 | flux          | flux vars             | `kubernetes/flux/vars/custom-secrets.sops.yaml`                                                    | Shared customization variables.     |
 | flux-system   | flux-system           | `kubernetes/apps/flux-system/addons/webhooks/github/secret.sops.yaml`                              | GitHub webhook secret.              |
-| networking    | cloudflared           | `kubernetes/apps/network/cloudflared/app/secret.sops.yaml`                                         | Tunnel credentials.                 |
-| networking    | external-dns          | `kubernetes/apps/network/external-dns/app/secret.sops.yaml`                                        | DNS provider credentials.           |
+| network       | cloudflared           | `kubernetes/apps/network/cloudflared/app/secret.sops.yaml`                                         | Tunnel credentials.                 |
+| network       | external-dns          | `kubernetes/apps/network/external-dns/app/secret.sops.yaml`                                        | DNS provider credentials.           |
 | observability | grafana operator      | `kubernetes/apps/observability/grafana/operator/secret.sops.yaml`                                  | App-specific credentials.           |
 | observability | grafana operator      | `kubernetes/apps/observability/grafana/operator/secret-oidc.sops.yaml`                             | OIDC client credentials.            |
 | observability | kube-prometheus-stack | `kubernetes/apps/observability/kube-prometheus-stack/app/secret-additionalScrapeConfigs.sops.yaml` | Additional scrape configs.          |

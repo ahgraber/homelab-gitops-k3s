@@ -8,7 +8,7 @@ metadata:
 spec:
   parentRefs:
     - name: envoy-internal
-      namespace: networking
+      namespace: network
       sectionName: https
   hostnames:
     - temporal.${SECRET_DOMAIN}
