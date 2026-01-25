@@ -10,6 +10,7 @@ components:
 
 resources:
   - ./namespace.yaml
+  - ./certificates/
   # Flux-Kustomizations
   - ./cloudflared/ks.yaml
   - ./envoy-gateway/ks.yaml
