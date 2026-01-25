@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph-operator
-  namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
@@ -26,7 +25,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app rook-ceph-cluster
-  namespace: flux-system
 spec:
   targetNamespace: rook-ceph
   commonMetadata:
@@ -34,7 +32,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: rook-ceph-operator
+      namespace: rook-ceph
     - name: snapshot-controller
+      namespace: kube-system
     # - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: false # flux-operator-prep

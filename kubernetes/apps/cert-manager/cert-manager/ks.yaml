@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cert-manager
-  namespace: flux-system
 spec:
   targetNamespace: cert-manager
   commonMetadata:
@@ -26,7 +25,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cert-manager-issuers
-  namespace: flux-system
 spec:
   targetNamespace: cert-manager
   commonMetadata:
@@ -34,6 +32,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager
+      namespace: cert-manager
   path: ./kubernetes/apps/cert-manager/cert-manager/issuers
   prune: false # flux-operator-prep
   sourceRef:
@@ -50,7 +49,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cert-manager-certificates
-  namespace: flux-system
 spec:
   targetNamespace: cert-manager
   commonMetadata:
@@ -58,6 +56,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager-issuers
+      namespace: cert-manager
     # - name: kube-system-reflector
   path: ./kubernetes/apps/cert-manager/cert-manager/certificates
   prune: false # flux-operator-prep

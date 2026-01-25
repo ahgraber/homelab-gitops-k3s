@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app pgadmin
-  namespace: flux-system
 spec:
   targetNamespace: database
   commonMetadata:
@@ -12,7 +11,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-cluster-default
+      namespace: database
     - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/database/pgadmin/app
   prune: false # flux-operator-prep
   sourceRef:

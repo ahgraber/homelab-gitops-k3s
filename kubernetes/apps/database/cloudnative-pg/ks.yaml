@@ -4,7 +4,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cnpg-operator
-  namespace: flux-system
 spec:
   targetNamespace: database
   commonMetadata:
@@ -12,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager
+      namespace: cert-manager
   path: ./kubernetes/apps/database/cloudnative-pg/operator
   prune: false # flux-operator-prep
   sourceRef:
@@ -28,7 +28,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cnpg-barman-cloud
-  namespace: flux-system
 spec:
   targetNamespace: database
   commonMetadata:
@@ -36,7 +35,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager
+      namespace: cert-manager
     - name: cnpg-operator
+      namespace: database
   path: ./kubernetes/apps/database/cloudnative-pg/barman
   prune: false # flux-operator-prep
   sourceRef:
@@ -53,7 +54,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cnpg-cluster-default
-  namespace: flux-system
 spec:
   targetNamespace: database
   commonMetadata:
@@ -61,9 +61,13 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-operator
+      namespace: database
     - name: cnpg-barman-cloud
+      namespace: database
     - name: local-path-provisioner
+      namespace: kube-system
     - name: kube-prometheus-stack
+      namespace: observability
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   prune: false # flux-operator-prep
   sourceRef:
@@ -80,7 +84,6 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cnpg-addons
-  namespace: flux-system
 spec:
   targetNamespace: database
   commonMetadata:
@@ -88,7 +91,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cnpg-operator
+      namespace: database
     - name: kube-prometheus-stack
+      namespace: observability
     # - name: grafana
   path: ./kubernetes/apps/database/cloudnative-pg/addons
   prune: false # flux-operator-prep
