@@ -11,7 +11,7 @@ spec:
       sourceRef:
         kind: GitRepository
         name: *app
-  interval: 15m
+  interval: 1h
   install:
     remediation:
       retries: -1

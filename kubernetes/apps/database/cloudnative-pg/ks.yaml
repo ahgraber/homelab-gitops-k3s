@@ -18,7 +18,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
   wait: true
@@ -44,7 +44,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
   wait: true
@@ -74,7 +74,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
   wait: true
@@ -101,7 +101,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
   wait: false

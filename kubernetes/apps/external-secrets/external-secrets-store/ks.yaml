@@ -31,7 +31,7 @@ spec:
   #     kind: ClusterSecretStore
   #     failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
   #     current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
-  interval: 30m
+  interval: 1h
   retryInterval: 1m
   timeout: 5m
   wait: true
