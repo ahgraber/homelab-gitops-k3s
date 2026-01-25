@@ -4,13 +4,9 @@ data:
 kind: Secret
 metadata:
     creationTimestamp: null
-    name: sops-age2
+    name: sops-age
     namespace: flux-system
 sops:
-    kms: []
-    gcp_kms: []
-    azure_kv: []
-    hc_vault: []
     age:
         - recipient: age1a7nyvwztvzudynvx92z6tegdxcmudhdh7fh6ty6sqs8n4gh2lelqkqk9aa
           enc: |
@@ -21,8 +17,7 @@ sops:
             bysvd2x6b0tWWU8xY0VnUTc2TTk2b28KGT0+rcJ+ZVaNzZy1xKplFk2uE94bhQLI
             GeATZjkNRzZL+vEy0z0ZYxT3uQ6eypzgFvXw8ceMnYdNYzashP+msg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-01-07T01:52:37Z"
-    mac: ENC[AES256_GCM,data:iZN29vxZtEnXjBZZW5sdh84U/L5U5OTdQJDmuAyZhbNs+jCXsuuN+Es6lXFX1wWjU4K6ZXLYk1fyn1WONx7kUEeGtFj4iqHuc38qmTYWyDRt/oPL+lEt5WZ2q0kYeBfS9obkxPZ7mHfLAzJKcbdpHOBbQYDBRyjaBM+T48W/FMk=,iv:gUEX/LEXpgan9ErCLszAlMwh9DwR8EfkRoPZ3Yv7/CE=,tag:SG+0IbZA4JV7ARdU+KU57A==,type:str]
-    pgp: []
+    lastmodified: "2026-01-25T00:15:28Z"
+    mac: ENC[AES256_GCM,data:UGau4BKknU74aL8p31wPXnDKUnKwa64eS0sOv2U2h8WYweqGJrimq5JjgKQGSXtPsqOq5i7GDneTMP8Vx4h/45GCbtB443mKiK7K2FSU4hw9xEeMeLogHeJ4LOtigKwRuYJwsZFM5F/u9NehhjqfO6/tsi+6X/HHINV7Chs6RvU=,iv:bpa14blpvigWgc69q2kRoPY7dt8/x1dFkSmJx3nfKic=,tag:k7Gd+3AfxU31GfguopVn0g==,type:str]
     encrypted_regex: ^(data|stringData)$
-    version: 3.7.3
+    version: 3.11.0
