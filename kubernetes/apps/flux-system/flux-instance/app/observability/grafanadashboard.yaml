@@ -8,7 +8,7 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      dashboard: grafana
+      dashboards: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
@@ -23,7 +23,7 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      dashboard: grafana
+      dashboards: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
@@ -38,7 +38,7 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      dashboard: grafana
+      dashboards: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
@@ -53,8 +53,23 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      dashboard: grafana
+      dashboards: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
   url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/control-plane.json
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: flux-logs
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - inputName: DS_LOKI
+      datasourceName: Loki
+  url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/main/monitoring/configs/dashboards/logs.json
