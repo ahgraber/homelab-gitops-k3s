@@ -134,7 +134,7 @@ metadata:
 spec:
   parentRefs:
     - name: internal
-      namespace: networking
+      namespace: network
       sectionName: https
 ```
 
@@ -150,7 +150,7 @@ metadata:
 spec:
   parentRefs:
     - name: external
-      namespace: networking
+      namespace: network
       sectionName: https
 ```
 

@@ -16,12 +16,12 @@ We can test this by using the **staging** `Issuer` to provision a test certifica
 kubectl apply -f ./certificate-test.yaml
 
 # review k8s objects
-kubectl get CertificateRequest -n networking
-kubectl get Order -n networking
-kubectl get Challenge -n networking
+kubectl get CertificateRequest -n network
+kubectl get Order -n network
+kubectl get Challenge -n network
 
 # once the DNS challenge has propagated
-kubectl get Certificate -n networking
+kubectl get Certificate -n network
 ```
 
 ## ⚠️ Rate Limits
@@ -32,8 +32,8 @@ kubectl get Certificate -n networking
 
 ## 🔀 Cross-namespace certs
 
-Cluster can use `reflector` to copy secrets across namespaces. In particular, this can share the tls
-certificates from `networking` to `security`.
+Cluster can use `reflector` to copy secrets across namespaces.
+In particular, this can share the tls certificates from `network` to `security`.
 
 - Cert-manager's [faq](https://cert-manager.io/docs/tutorials/syncing-secrets-across-namespaces/)
 - [Emberstack Reflector](https://github.com/emberstack/kubernetes-reflector)
@@ -49,10 +49,10 @@ certificates from `networking` to `security`.
      name: <SECRET_NAME>
      namespace: <SECRET_NAMESPACE>
      annotations:
-       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-       reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "ns1,ns2,..." # "" (empty) == all namespaces
+       reflector.v1.k8s.emberstack.com/reflection-allowed: 'true'
+       reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: ns1,ns2,...   # "" (empty) == all namespaces
        # automatically create mirrored resources
-       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "ns1, ns2"
+       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: 'true'
+       reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ns1, ns2
        #
    ```

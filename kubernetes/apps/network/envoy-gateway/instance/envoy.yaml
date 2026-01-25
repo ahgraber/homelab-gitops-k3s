@@ -42,4 +42,4 @@ spec:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: envoy
-    namespace: networking
+    namespace: network

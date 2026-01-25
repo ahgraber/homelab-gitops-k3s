@@ -35,7 +35,6 @@ spec:
       namespace: rook-ceph
     - name: snapshot-controller
       namespace: kube-system
-    # - name: networking-ingress-nginx-internal
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
   prune: false # flux-operator-prep
   sourceRef:

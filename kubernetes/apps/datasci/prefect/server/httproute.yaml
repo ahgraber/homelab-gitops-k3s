@@ -7,7 +7,7 @@ metadata:
 spec:
   parentRefs:
     - name: envoy-internal
-      namespace: networking
+      namespace: network
       sectionName: https
   hostnames:
     - &host prefect.${SECRET_DOMAIN}
