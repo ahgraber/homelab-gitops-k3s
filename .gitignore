@@ -26,6 +26,7 @@ kubeconfig
 # .decrypted~*.yaml
 .env
 .envrc
+cloudflare-tunnel.json
 
 # terraform
 .terraform/

@@ -5,18 +5,16 @@ metadata:
   name: letsencrypt-production
 spec:
   acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    email: "${SECRET_ACME_EMAIL}"
     privateKeySecretRef:
       name: letsencrypt-production
+    profile: shortlived
+    server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
       - dns01:
           cloudflare:
-            ### api-key requires email; token does not
-            # email: "${SECRET_ACME_EMAIL}"
             apiTokenSecretRef:
-              name: cloudflare-api
-              key: CF_API_TOKEN
+              name: cert-manager-cloudflare-secret
+              key: api-token
         selector:
           dnsZones:
             - "${SECRET_DOMAIN}"

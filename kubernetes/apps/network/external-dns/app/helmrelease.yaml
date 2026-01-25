@@ -37,7 +37,7 @@ spec:
       - name: &token CF_API_TOKEN
         valueFrom:
           secretKeyRef:
-            name: &secret cloudflare-api
+            name: &secret cloudflare-dns
             key: *token
     extraArgs:
       - --cloudflare-dns-records-per-page=1000
