@@ -15,7 +15,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   path: ./kubernetes/apps/observability/kube-prometheus-stack/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -40,7 +40,7 @@ spec:
     - name: kube-prometheus-stack
       namespace: observability
   path: ./kubernetes/apps/observability/kube-prometheus-stack/addons
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

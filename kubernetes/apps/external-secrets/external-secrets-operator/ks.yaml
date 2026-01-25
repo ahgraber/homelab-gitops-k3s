@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   path: ./kubernetes/apps/external-secrets/external-secrets-operator/apps
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -15,7 +15,7 @@ spec:
     - name: ext-postgres-operator
       namespace: database
   path: ./kubernetes/apps/default/mealie/db
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -45,7 +45,7 @@ spec:
   components:
     - ../../../../components/volsync
   path: ./kubernetes/apps/default/mealie/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

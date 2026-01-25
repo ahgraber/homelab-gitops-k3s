@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   path: ./kubernetes/apps/system-upgrade/controller/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -32,7 +32,7 @@ spec:
     - name: system-upgrade-controller
       namespace: system-upgrade
   path: ./kubernetes/apps/system-upgrade/controller/plans
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

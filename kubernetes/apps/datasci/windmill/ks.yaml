@@ -15,7 +15,7 @@ spec:
     - name: ext-postgres-operator-datasci
       namespace: datasci
   path: ./kubernetes/apps/datasci/windmill/db
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -39,7 +39,7 @@ spec:
     - name: windmill-db
       namespace: datasci
   path: ./kubernetes/apps/datasci/windmill/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -17,7 +17,7 @@ spec:
   path: ./kubernetes/apps/default/opengist/app
   components:
     - ../../../../components/volsync
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

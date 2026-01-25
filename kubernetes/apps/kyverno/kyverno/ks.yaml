@@ -14,7 +14,7 @@ spec:
       kind: CustomResourceDefinition
       name: clusterpolicies.kyverno.io
   path: ./kubernetes/apps/kyverno/kyverno/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -38,7 +38,7 @@ spec:
     - name: *app
       namespace: *app
   path: ./kubernetes/apps/kyverno/kyverno/policies
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -15,7 +15,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   path: ./kubernetes/apps/database/pgadmin/app
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -13,7 +13,7 @@ spec:
     - name: envoy-system
       namespace: network
   path: ./kubernetes/apps/network/external-services/services
-  prune: false # flux-operator-prep
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
