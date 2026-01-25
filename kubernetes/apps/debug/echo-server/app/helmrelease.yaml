@@ -8,7 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: *app
-  interval: 15m
+  interval: 1h
   install:
     remediation:
       retries: -1

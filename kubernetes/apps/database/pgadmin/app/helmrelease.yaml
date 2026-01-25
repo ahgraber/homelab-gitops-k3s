@@ -12,7 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: runix
-  interval: 15m
+  interval: 1h
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

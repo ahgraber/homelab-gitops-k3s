@@ -8,7 +8,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: external-secrets
-  interval: 15m
+  interval: 1h
   dependsOn:
     - name: cert-manager
       namespace: cert-manager
