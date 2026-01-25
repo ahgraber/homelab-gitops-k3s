@@ -6,6 +6,7 @@ namespace: volsync-system
 
 components:
   - ../../components/alerts
+  - ../../components/sops
 
 resources:
   - ./namespace.yaml

@@ -6,6 +6,7 @@ namespace: datasci
 
 components:
   - ../../components/alerts
+  - ../../components/sops
 
 resources:
   - ./namespace.yaml

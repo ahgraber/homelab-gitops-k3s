@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+data:
+  TIMEZONE: "America/New_York"
+  COREDNS_ADDR: "10.43.0.10"
+  KUBE_VIP_ADDR: "10.2.118.1"
+  CLUSTER_CIDR: "10.42.0.0/16"
+  SERVICE_CIDR: "10.43.0.0/16"
+  NODE_CIDR: "10.2.118.0/24"
