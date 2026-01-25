@@ -34,7 +34,7 @@ spec:
               repository: ghcr.io/stirling-tools/stirling-pdf
               tag: 2.3.0@sha256:517101ebe52c7e7898e5c9b8bd1c81b5265d26a8f5787cc6d551a95316638339
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               MODE: BOTH
               DOCKER_ENABLE_SECURITY: "false"
               METRICS_ENABLED: "false"

@@ -40,7 +40,7 @@ spec:
               repository: docker.io/wabayang/jelu
               tag: 0.77.1@sha256:10c6b1c9eec7e5595dc4346a14a4d34528620e0bd4af07a541b40b29def4d2dd
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               SERVER_PORT: &port 11111
               JELU_DATABASE_PATH: /data/database
               JELU_FILES_IMAGES: /data/files/images

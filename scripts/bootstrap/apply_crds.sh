@@ -6,6 +6,8 @@ export LOG_LEVEL="debug"
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 export ROOT_DIR
 
+check_cli helmfile yq
+
 # CRDs to be applied before the helmfile charts are installed
 function apply_crds() {
     log debug "Applying CRDs"

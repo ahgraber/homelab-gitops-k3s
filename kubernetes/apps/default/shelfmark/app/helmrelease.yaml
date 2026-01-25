@@ -40,7 +40,7 @@ spec:
               # repository: ghcr.io/calibrain/shelfmark-extbp # with flaresolverr
               tag: v1.0.1
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               FLASK_PORT: &port 8084
               INGEST_DIR: &ingest /cwa-book-ingest
               BOOK_LANGUAGE: en

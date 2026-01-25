@@ -42,7 +42,7 @@ spec:
               repository: ghcr.io/authelia/authelia
               tag: 4.39.15
             env:
-              TZ: ${TIMEZONE}
+              TZ: "America/New_York"
               X_AUTHELIA_CONFIG: /config/configuration.yml
               X_AUTHELIA_CONFIG_FILTERS: template
             envFrom:

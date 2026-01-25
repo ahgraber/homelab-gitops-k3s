@@ -1,1 +1,4 @@
-{{ (fromYaml (readFile (printf "../../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name))).spec.values | toYaml }}
+{{- $values := (fromYaml (readFile (printf "../../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name))).spec.values -}}
+{{- $valuesYaml := toYaml $values -}}
+{{- $expanded := $valuesYaml | expandenv -}}
+{{- $expanded | fromYaml | toYaml -}}

@@ -46,7 +46,7 @@ releases:
     # renovate: datasource=docker depName=ghcr.io/external-secrets/charts/external-secrets
     version: 1.2.1
     values: ['./templates/values.yaml.gotmpl']
-    # needs: ['cert-manager/cert-manager']
+    needs: ['cert-manager/cert-manager']
 
   - name: bitwarden-sdk-server
     namespace: external-secrets
@@ -59,7 +59,7 @@ releases:
       - external-secrets/external-secrets-operator
     hooks:
       - # Apply Bitwarden Cert Resources
-        command: bash
+        command: kubectl
         args:
           - apply
           - --server-side

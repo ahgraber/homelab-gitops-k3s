@@ -5,10 +5,15 @@ export LOG_LEVEL="debug"
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 export ROOT_DIR
 
+check_cli helmfile yq sops
+
 function sync_helm_releases() {
     log debug "Syncing Helm releases"
 
     local -r helmfile_file="${ROOT_DIR}/bootstrap/helmfile.d/01-apps.yaml"
+
+    load_bootstrap_env
+    check_bootstrap_placeholders "${helmfile_file}"
 
     if [[ ! -f "${helmfile_file}" ]]; then
         log error "File does not exist" "file=${helmfile_file}"
