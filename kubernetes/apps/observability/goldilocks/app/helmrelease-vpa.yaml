@@ -12,24 +12,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds
-  interval: 15m
-  install:
-    createNamespace: true
-    crds: CreateReplace
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    crds: CreateReplace
-    remediation:
-      retries: 3
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
+  interval: 1h
   values:
     # monitors the current and past resource consumption and
     # provides recommended values containers' cpu and memory requests

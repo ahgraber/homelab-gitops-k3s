@@ -9,27 +9,6 @@ spec:
     kind: OCIRepository
     name: external-secrets
   interval: 1h
-  dependsOn:
-    - name: cert-manager
-      namespace: cert-manager
-  install:
-    crds: CreateReplace
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    crds: CreateReplace
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 5m
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
   values:
     # replicaCount: 2
     # leaderElect: true

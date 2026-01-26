@@ -10,24 +10,6 @@ spec:
     kind: OCIRepository
     name: *app
   interval: 1h
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
-  # dependsOn:
-  #   - name: scrutiny-influxdb
-  #     namespace: observability
   values:
     defaultPodOptions:
       securityContext:

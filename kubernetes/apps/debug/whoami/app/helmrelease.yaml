@@ -5,17 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app whoami
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
-    name: whoami
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
+    name: *app
+  interval: 1h
   values:
     controllers:
       whoami:

@@ -9,22 +9,6 @@ spec:
     kind: OCIRepository
     name: rook-ceph
   interval: 1h
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 15m
-  # driftDetection:
-  #   mode: enabled
-  #   ignore:
-  #     - paths:
-  #         - /spec/containers/resources/limits
-  #       target:
-  #         kind: Pod
   values:
     crds:
       enabled: true

@@ -9,16 +9,6 @@ spec:
     kind: OCIRepository
     name: *app
   interval: 1h
-  install:
-    crds: CreateReplace
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    crds: CreateReplace
-    remediation:
-      retries: 3
-  timeout: 5m
   values:
     crds:
       install: true
