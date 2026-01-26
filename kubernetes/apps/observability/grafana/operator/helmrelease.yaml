@@ -9,21 +9,8 @@ spec:
     kind: OCIRepository
     name: grafana-operator
   interval: 1h
-  install:
-    crds: CreateReplace
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    crds: CreateReplace
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 5m
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
+  values:
+    dashboard:
+      enabled: true
+    serviceMonitor:
+      enabled: true

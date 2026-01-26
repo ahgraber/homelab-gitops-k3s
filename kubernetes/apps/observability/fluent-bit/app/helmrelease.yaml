@@ -13,15 +13,6 @@ spec:
         kind: HelmRepository
         name: fluent
   interval: 1h
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 5m
   values:
     tolerations:
       - key: node-role.kubernetes.io/control-plane

@@ -9,25 +9,6 @@ spec:
     kind: OCIRepository
     name: *app
   interval: 1h
-  dependsOn:
-    - name: rook-ceph-operator
-      namespace: rook-ceph
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 15m
-  # driftDetection:
-  #   mode: warn
-  #   ignore:
-  #     - paths:
-  #         - /spec/containers/resources/limits
-  #       target:
-  #         kind: Pod
   values:
     annotations:
       all:

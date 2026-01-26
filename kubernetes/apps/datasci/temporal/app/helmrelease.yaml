@@ -13,55 +13,6 @@ spec:
         kind: HelmRepository
         name: *app
   interval: 1h
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 10m
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
-  valuesFrom:
-    - kind: Secret
-      name: database-temporal
-      valuesKey: HOST
-      targetPath: server.config.persistence.default.sql.host
-    - kind: Secret
-      name: database-temporal
-      valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.default.sql.database
-    - kind: Secret
-      name: database-temporal
-      valuesKey: LOGIN
-      targetPath: server.config.persistence.default.sql.user
-    - kind: Secret
-      name: database-temporal
-      valuesKey: PASSWORD
-      targetPath: server.config.persistence.default.sql.password
-    - kind: Secret
-      name: database-temporal-visibility
-      valuesKey: HOST
-      targetPath: server.config.persistence.visibility.sql.host
-    - kind: Secret
-      name: database-temporal-visibility
-      valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.visibility.sql.database
-    - kind: Secret
-      name: database-temporal-visibility
-      valuesKey: LOGIN
-      targetPath: server.config.persistence.visibility.sql.user
-    - kind: Secret
-      name: database-temporal-visibility
-      valuesKey: PASSWORD
-      targetPath: server.config.persistence.visibility.sql.password
   values:
     server:
       config:

@@ -9,17 +9,6 @@ spec:
     kind: OCIRepository
     name: plugin-barman-cloud
   interval: 1h
-  install:
-    crds: CreateReplace
-    remediation:
-      retries: -1
-  upgrade:
-    crds: CreateReplace
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 5m
   values:
     crds:
       create: true

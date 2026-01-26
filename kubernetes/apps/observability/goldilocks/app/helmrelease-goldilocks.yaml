@@ -12,25 +12,10 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fairwinds
-  interval: 15m
+  interval: 1h
   dependsOn:
     - name: vpa
       namespace: observability
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  driftDetection:
-    mode: enabled
-    ignore:
-      - paths:
-          - /spec/containers/resources/limits
-        target:
-          kind: Pod
   values:
     image:
       repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks

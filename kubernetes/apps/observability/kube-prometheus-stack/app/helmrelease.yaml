@@ -9,29 +9,6 @@ spec:
     kind: OCIRepository
     name: *app
   interval: 1h
-  dependsOn:
-    # - name: prometheus-operator-crds
-    #   namespace: observability
-    # - name: local-path-provisioner
-    #   namespace: kube-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
-  timeout: 5m
-  # driftDetection:
-  #   mode: enabled
-  #   ignore:
-  #     - paths:
-  #         - /spec/containers/resources/limits
-  #       target:
-  #         kind: Pod
   values:
     ## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
     crds:
