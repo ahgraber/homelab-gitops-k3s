@@ -31,6 +31,8 @@ spec:
   dependsOn:
     - name: grafana-operator
       namespace: observability
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   path: ./kubernetes/apps/observability/grafana/app
   prune: true
   sourceRef:
