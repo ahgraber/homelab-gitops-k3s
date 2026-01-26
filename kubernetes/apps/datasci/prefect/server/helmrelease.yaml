@@ -63,6 +63,12 @@ spec:
 
     ingress:
       enabled: false
+    gateway:
+      enabled: true
+      className: "envoy-internal"  # Replace with your GatewayClass name
+    httproute:
+      hostnames:
+        - prefect.${SECRET_DOMAIN}
 
     # Database migrations configuration
     migrations:
@@ -83,6 +89,25 @@ spec:
       enabled: false
 
     secret:
-      create: true
-      # ... filled with valuesFrom below
-      port: 5432
+      create: true # map ext-postgres-operator secret to prefect secret
+  valuesFrom:
+    - kind: Secret
+      name: database-prefect
+      valuesKey: HOST
+      targetPath: secret.host
+    - kind: Secret
+      name: database-prefect
+      valuesKey: LOGIN
+      targetPath: secret.username
+    - kind: Secret
+      name: database-prefect
+      valuesKey: PASSWORD
+      targetPath: secret.password
+    - kind: Secret
+      name: database-prefect
+      valuesKey: DATABASE_NAME
+      targetPath: secret.database
+    - kind: Secret
+      name: database-prefect
+      valuesKey: PORT
+      targetPath: secret.port
