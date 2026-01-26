@@ -116,3 +116,9 @@ spec:
 
     serviceAccount:
       create: true
+
+  valuesFrom:
+    - kind: Secret
+      name: database-windmill
+      valuesKey: POSTGRES_URL
+      targetPath: windmill.databaseUrl
