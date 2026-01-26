@@ -5,7 +5,6 @@
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
   - [Deploy tunnel for app (**START HERE IF TUNNEL ALREADY DEPLOYED**)](#deploy-tunnel-for-app-start-here-if-tunnel-already-deployed)
-  - [Terraform](#terraform)
 
 ## Argo Tunnel
 
@@ -55,19 +54,23 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    ```sh
    # substitute
-   envsubst < ./cluster/apps/networking/cloudflared/secret.sops.yaml.tmpl >! ./cluster/apps/networking/cloudflared/secret.sops.yaml
+   envsubst < ./path/to/cloudflared/secret.sops.yaml.tmpl >! ./path/to/cloudflared/secret.sops.yaml
 
    # encrypt
-   sops --encrypt --in-place ./cluster/apps/networking/cloudflared/secret.sops.yaml
+   sops --encrypt --in-place ./path/to/cloudflared/secret.sops.yaml
    ```
 
 ## Deploy tunnel for app (**START HERE IF TUNNEL ALREADY DEPLOYED**)
 
 1. Associate your Tunnel with a DNS record.
 
+   Via CLI:
+
    ```sh
-   cloudflared tunnel route dns k8s-argo-tunnel "<hostname>.${SECRET_DOMAIN}"
+   cloudflared tunnel route dns k8s-argo-tunnel "<SUBDOMAIN>.${SECRET_DOMAIN}"
    ```
+
+   Via WebUI: Log into Cloudflare portal and create a CNAME record for `<SUBDOMAIN>` with target `<TUNNEL_ID>.cfargotunnel.com`
 
    > Repeat this process for all (sub)domains to be proxied over Cloudflared Tunnel
 
@@ -75,7 +78,3 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step, it will send that traffic to the cloudflareds running in this deployment.
    Those cloudflared instances will proxy the request to your app's Service.
-
-## Terraform
-
-TBD
