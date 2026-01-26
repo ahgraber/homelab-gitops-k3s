@@ -45,7 +45,9 @@ spec:
       #     memory: 128M
 
     cephClusterSpec:
-      # https://rook.io/docs/rook/v1.10/Storage-Configuration/Advanced/ceph-configuration/#custom-cephconf-settings
+      dataDirHostPath: /var/lib/rook
+
+      # https://rook.io/docs/rook/v1.19/Storage-Configuration/Advanced/ceph-configuration/#example
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote
@@ -58,25 +60,38 @@ spec:
           mon_compact_on_start: "true" # quote
         osd:
           rocksdb_perf: "true"
-      cleanupPolicy:
-        wipeDevicesFromOtherClusters: true
-      crashCollector:
-        disable: false
-        daysToRetain: 14
+
       csi:
         readAffinity:
           enabled: true
+
+      # automate [data cleanup process](https://github.com/rook/rook/blob/master/Documentation/Storage-Configuration/ceph-teardown.md#delete-the-data-on-hosts) in cluster destruction.
+      cleanupPolicy:
+        # Set confirmation="yes-really-destroy-data" only when deleting.
+        # Once set, rook stops managing the cluster and awaits deletion.
+        confirmation: ""
+        sanitizeDisks:
+          method: quick
+          dataSource: zero
+          iteration: 1
+        wipeDevicesFromOtherClusters: true
+
+      crashCollector:
+        disable: false
+        daysToRetain: 14
+
       logCollector:
         enabled: true
         periodicity: daily # one of: hourly, daily, weekly, monthly
         maxLogSize: 500M # SUFFIX may be 'M' or 'G'. Must be at least 1M.
-      dataDirHostPath: /var/lib/rook
+
       dashboard:
         enabled: true
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
         prometheusEndpointSSLVerify: false
+
       mgr:
         modules:
           - name: diskprediction_local
@@ -87,10 +102,12 @@ spec:
             enabled: true
           - name: rook
             enabled: true
+
       network:
         provider: host
         connections:
           requireMsgr2: true
+
       placement:
         mgr: &placement
           nodeAffinity:
@@ -111,6 +128,7 @@ spec:
             memory: 1Gi
           limits:
             memory: 8Gi
+
       storage:
         useAllNodes: false
         useAllDevices: false
@@ -132,6 +150,7 @@ spec:
       - name: ceph-blockpool
         spec:
           failureDomain: host
+          deviceClass: ssd
           replicated:
             size: 3
         storageClass:
@@ -170,10 +189,12 @@ spec:
       - name: &cephFileSystemName ceph-filesystem
         spec:
           metadataPool:
+            deviceClass: ssd
             replicated:
               size: 3
           dataPools:
             - failureDomain: host
+              deviceClass: ssd
               replicated:
                 size: 3
               name: data0
