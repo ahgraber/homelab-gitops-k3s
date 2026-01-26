@@ -60,18 +60,34 @@ data:
   services.yaml: |
     ---
     - Apps & Services:
+        - Blog:
+            href: https://aimlbling-about.${SECRET_DOMAIN}
+            icon: https://raw.githubusercontent.com/ahgraber/homelab-gitops-k3s/main/kubernetes/apps/default/homepage/app/icons/favicon.png
+            description: AI/MLbling About
+        - Calibre:
+            href: https://calibre.${SECRET_DOMAIN}
+            icon: calibre.png
+            description: A web-based eBook manager
+        - CyberChef:
+            href: https://cyberchef.${SECRET_DOMAIN}
+            icon: cyberchef.png
+            description: A web-based eBook manager
         - HomeAssistant:
             href: https://homeassistant.${SECRET_DOMAIN}
             icon: home-assistant.png
             description: Smart Home Automation
-        - Karakeep:
-            href: https://karakeep.${SECRET_DOMAIN}
-            icon: karakeep.png
-            description: Bookmark and link archiving
         - Homebox:
             href: https://homebox.${SECRET_DOMAIN}
             icon: homebox.png
             description: A simple home inventory system
+        - Jelu:
+            href: https://jelu.${SECRET_DOMAIN}
+            icon: jelu.png
+            description: A self-hosted read and to-read book list tracker
+        - Karakeep:
+            href: https://karakeep.${SECRET_DOMAIN}
+            icon: karakeep.png
+            description: Bookmark and link archiving
         - Mealie:
             href: https://mealie.${SECRET_DOMAIN}
             icon: mealie.png
@@ -96,6 +112,10 @@ data:
             href: https://share.${SECRET_DOMAIN}
             icon: https://github.com/mtlynch/picoshare/blob/215f4487a1cc3378d91ac43a2b84cd79935e708b/handlers/static/mstile-150x150.png?raw=true
             description: A minimalist service for sharing images and other files
+        - Shelfmark:
+            href: https://shelfmark.${SECRET_DOMAIN}
+            icon: shelfmark.png
+            description: Search & download books
         - Stirling-PDF:
             href: https://pdf.${SECRET_DOMAIN}
             icon: stirling-pdf.png
@@ -142,6 +162,10 @@ data:
             href: https://grafana.${SECRET_DOMAIN}
             icon: grafana.png
             # description: This is my service
+        - Scrutiny:
+            href: https://scrutiny.${SECRET_DOMAIN}
+            icon: scrutiny.png
+            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
         - Goldilocks:
             href: https://goldilocks.${SECRET_DOMAIN}
             icon: https://raw.githubusercontent.com/FairwindsOps/goldilocks/master/img/goldilocks.svg
@@ -169,18 +193,14 @@ data:
                 # username:
                 # password:
                 key: {{HOMEPAGE_VAR_TRUENAS_KEY}}
-        - MinIO:
-            href: https://truenas.${SECRET_INT_DOMAIN}:9001
-            icon: minio.png
+        - Garage:
+            href: https://garage.${SECRET_DOMAIN}
+            icon: garage.png
             # description: This is my service
         - Rook-Ceph:
             href: https://ceph.${SECRET_DOMAIN}
             icon: ceph.png
             # description: This is my service
-        - Scrutiny:
-            href: https://scrutiny.${SECRET_DOMAIN}
-            icon: scrutiny.png
-            description: Provides storage drive S.M.A.R.T monitoring, historic trends, and real-world failure thresholds
     - Databases:
         - pgAdmin:
             href: https://pgadmin.${SECRET_DOMAIN}
@@ -201,3 +221,4 @@ data:
     ---
     mode: cluster
     ingress: false # manually configure services (above)
+    gateway: false # enable gateway-api
