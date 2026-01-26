@@ -65,12 +65,6 @@ spec:
 
     enableDiscoveryDaemon: true
     discover:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
