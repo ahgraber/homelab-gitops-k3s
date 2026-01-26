@@ -13,9 +13,6 @@ spec:
         kind: HelmRepository
         name: fairwinds
   interval: 1h
-  dependsOn:
-    - name: vpa
-      namespace: observability
   values:
     image:
       repository: us-docker.pkg.dev/fairwinds-ops/oss/goldilocks

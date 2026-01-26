@@ -21,3 +21,4 @@ resources:
   - ./scrutiny/ks.yaml
   - ./speedtest-exporter/ks.yaml
   - ./victoria-logs/ks.yaml
+  - ./vpa/ks.yaml
