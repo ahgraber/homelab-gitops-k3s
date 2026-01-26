@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-  - ./secret.sops.yaml
   - ./httproute.yaml
   - ./receiver.yaml
   - ./observability/
+  - ./secret.sops.yaml
