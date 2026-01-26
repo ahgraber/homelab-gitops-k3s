@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-  - ./httproute.yaml
+  # - ./httproute.yaml # TODO: remove if prefect chart works
