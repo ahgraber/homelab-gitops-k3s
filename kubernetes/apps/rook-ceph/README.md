@@ -23,9 +23,7 @@
 
 ## Intro
 
-[Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/)
-[Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples)
-[eli5](https://koor.tech/blog/2022/kubernetes-deserves-more-than-ephemeral-data-persist-it-with-rook/)
+[Quickstart](https://rook.io/docs/rook/latest/Getting-Started/quickstart/) [Deployment examples](https://github.com/rook/rook/tree/master/deploy/examples) [eli5](https://koor.tech/blog/2022/kubernetes-deserves-more-than-ephemeral-data-persist-it-with-rook/)
 
 _Rook_ is an open source cloud-native storage orchestrator, providing the platform, framework, and support
 for running ceph on kubernetes.
@@ -38,17 +36,17 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 2. Nodes with dedicated local storage
    - Storage can be allocated directly via cluster definition (`storage.config.node`)
      or provided via local pvc using `local-path` storageClass or `spec.local.path` natively in pvc definition
-   - If provisioning local disks, the disks must be raw/unformatted ([ref](https://rook.io/docs/rook/v1.9/pre-reqs.html))
+   - If provisioning local disks, the disks must be raw/unformatted
 
 ## Updating
 
-[Health verification](https://rook.github.io/docs/rook/v1.10/Upgrade/health-verification/)
-[Rook upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/rook-upgrade/)
-[Ceph upgrade](https://rook.github.io/docs/rook/v1.10/Upgrade/ceph-upgrade/)
+- [Health verification](https://rook.github.io/docs/rook/v1.19/Upgrade/health-verification/)
+- [Rook upgrade](https://rook.github.io/docs/rook/v1.19/Upgrade/rook-upgrade/)
+- [Ceph upgrade](https://rook.github.io/docs/rook/v1.19/Upgrade/ceph-upgrade/)
 
 ## Teardown and Cleanup
 
-> Order of operations is critical! See [documentation](https://rook.io/docs/rook/v1.11/Getting-Started/ceph-teardown)
+> Order of operations is critical! See [documentation](https://rook.io/docs/rook/v1.19/Getting-Started/ceph-teardown)
 
 Run `task rook:decommission`
 
@@ -60,9 +58,9 @@ Run `task rook:decommission`
 >
 > access with
 >
->  ```sh
+> ```sh
 > kubectl -n rook-ceph exec -it \
->   $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') -- bash
+> $(kubectl -n rook-ceph get pod -l "app=rook-ceph-tools" -o jsonpath='{.items[0].metadata.name}') -- bash
 > ```
 
 ```sh
@@ -172,18 +170,28 @@ Show current PGs/OSD:
 ceph pg dump | awk '
 BEGIN { IGNORECASE = 1 }
  /^PG_STAT/ { col=1; while($col!="UP") {col++}; col++ }
- /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;
- up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
- for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}
+ /^[0-9a-f]+\.[0-9a-f]+/ {
+   match($0,/^[0-9a-f]+/);
+   pool=substr($0, RSTART, RLENGTH);
+   poollist[pool]=0;
+   up=$col; i=0; RSTART=0; RLENGTH=0; delete osds;
+   while (match(up,/[0-9]+/)>0) {
+     osds[++i]=substr(up,RSTART,RLENGTH);
+     up=substr(up, RSTART+RLENGTH)
+   }
+   for (i in osds) { array[osds[i],pool]++; osdlist[osds[i]] }
 }
 END {
- printf("\n");
- printf("pool :\t"); for (i in poollist) printf("%s\t",i); printf("| SUM \n");
- for (i in poollist) printf("--------"); printf("----------------\n");
- for (i in osdlist) { printf("osd.%i\t", i); sum=0;
-   for (j in poollist) { printf("%i\t", array[i,j]); sum+=array[i,j]; sumpool[j]+=array[i,j] }; printf("| %i\n",sum) }
- for (i in poollist) printf("--------"); printf("----------------\n");
- printf("SUM :\t"); for (i in poollist) printf("%s\t",sumpool[i]); printf("|\n");
+  printf("\n");
+  printf("pool :\t"); for (i in poollist) printf("%s\t",i); printf("| SUM \n");
+  for (i in poollist) printf("--------"); printf("----------------\n");
+  for (i in osdlist) {
+    printf("osd.%i\t", i); sum=0;
+    for (j in poollist) { printf("%i\t", array[i,j]); sum+=array[i,j]; sumpool[j]+=array[i,j] }
+    printf("| %i\n",sum)
+  }
+  for (i in poollist) printf("--------"); printf("----------------\n");
+  printf("SUM :\t"); for (i in poollist) printf("%s\t",sumpool[i]); printf("|\n");
 }'
 ```
 
@@ -218,18 +226,33 @@ ceph osd pool set ceph-objectstore.rgw.log pg_num 16
 ceph osd pool set ceph-objectstore.rgw.meta pg_num 16
 ``` -->
 
-[docs - configuring pools](https://rook.io/docs/rook/v1.9/Storage-Configuration/Advanced/ceph-configuration/#configuring-pools)
-[docs - monitoring osds & pgs](https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/)
-[docs - placement groups](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#a-preselection-of-pg-num)
-[stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
-[cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
-[pgcalc](https://old.ceph.com/pgcalc/)
+- [docs - configuring pools](https://rook.io/docs/rook/v1.19/Storage-Configuration/Advanced/ceph-configuration/#configuring-pools)
+- [docs - monitoring osds & pgs](https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/)
+- [docs - placement groups](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#a-preselection-of-pg-num)
+- [stackoverflow](https://stackoverflow.com/questions/39589696/ceph-too-many-pgs-per-osd-all-you-need-to-know)
+- [cephnotes](http://cephnotes.ksperis.com/blog/2015/02/23/get-the-number-of-placement-groups-per-osd)
+- [pgcalc](https://old.ceph.com/pgcalc/)
 
 ### BlueStore slow operations
 
-> Run the following commands from the ceph-toolbox pod
+When you see `BLUESTORE_SLOW_OP_ALERT`, it is triggered by `log_latency_fn` messages in OSD logs.
+A common example is `_txc_committed_kv` stalls (KV commit latency).
+A single slow-op within the default 24h lifetime can keep the alert active.
 
-When OSDs report slow operations in BlueStore, this is typically caused by RocksDB compaction backlogs or slow disk I/O.
+Identify the slow-op line (example from OSD logs):
+
+```sh
+kubectl -n rook-ceph logs deploy/rook-ceph-osd-0 --since=24h | grep -i 'log_latency.*slow operation'
+```
+
+If the alert is noisy but workloads are healthy, adjust the slow-op threshold in Ceph config.
+This repo manages it via `cephClusterSpec.cephConfig.global` in the rook-ceph-cluster HelmRelease.
+To change live from toolbox instead:
+
+```sh
+ceph config set global bluestore_slow_ops_warn_threshold 5 # 5 ops
+ceph config set global bluestore_slow_ops_warn_lifetime 86400 # in 24h
+```
 
 #### Diagnose the issue
 
@@ -267,8 +290,7 @@ kubectl -n rook-ceph logs deploy/rook-ceph-osd-0 --tail=100 | grep -i 'rocksdb\|
 
 The warning should clear automatically once the slow-op counter stops incrementing.
 
-[docs - bluestore config](https://docs.ceph.com/en/latest/rados/configuration/bluestore-config-ref/)
-[docs - perf counters](https://docs.ceph.com/en/latest/dev/perf_counters/)
+[docs - bluestore config](https://docs.ceph.com/en/latest/rados/configuration/bluestore-config-ref/) [docs - perf counters](https://docs.ceph.com/en/latest/dev/perf_counters/)
 
 ### Ceph Mon Low Space warning
 
