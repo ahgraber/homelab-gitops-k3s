@@ -72,7 +72,11 @@
       automerge: true,
       // automergeType: "branch",
       matchUpdateTypes: ["major", "minor", "patch", "digest"],
-      matchPackageNames: ["ghcr.io/ahgraber/aimlbling-about"]
+      matchPackageNames: ["ghcr.io/ahgraber/aimlbling-about"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+      minimumReleaseAge: null,
+      minimumReleaseAgeBehaviour: "timestamp-optional",
+      internalChecksFilter: "none"
     }
   ]
 }
