@@ -30,6 +30,14 @@ tasks:
       - sops --decrypt {{ .AGE_KEY_SOPS_FILE }}
       - sops --decrypt {{ .GITHUB_DEPLOY_KEY_FILE }}
 
+  check:
+    desc: Run flux-local tests against kubernetes manifests
+    cmd: flux-local test --path {{ .path }}
+    vars:
+      path: '{{ .path | default .KUBERNETES_DIR }}'
+    preconditions:
+      - { msg: "Missing flux-local, install with 'uv tool install flux-local'", sh: "command -v flux-local" }
+
   reconcile:
     desc: Force update Flux to pull in changes from your Git repository
     cmds:
