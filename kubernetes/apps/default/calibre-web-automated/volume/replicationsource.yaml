@@ -21,7 +21,7 @@ spec:
     accessModes: ["ReadWriteMany"]
     volumeSnapshotClassName: csi-ceph-fs # same as source
     cacheCapacity: 2Gi
-    cacheStorageClassName: local-path
+    cacheStorageClassName: openebs-hostpath
     cacheAccessModes: ["ReadWriteOnce"]
     moverSecurityContext:
       runAsUser: 0

@@ -13,7 +13,7 @@ spec:
     repository: calibre-library-volsync-backup
     volumeSnapshotClassName: csi-ceph-fs # same as source
     cacheCapacity: 2Gi
-    cacheStorageClassName: local-path
+    cacheStorageClassName: openebs-hostpath
     cacheAccessModes: ["ReadWriteOnce"]
     ### Destination (PVC-to-be-restored)
     storageClassName: ceph-fs

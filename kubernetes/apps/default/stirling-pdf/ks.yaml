@@ -30,4 +30,4 @@ spec:
       VOLSYNC_CAPACITY: 256Mi
       VOLSYNC_STORAGECLASS: ceph-block # default
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
-      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
+      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for openebs-hostpath

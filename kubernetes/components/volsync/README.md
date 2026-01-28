@@ -47,7 +47,7 @@ spec:
       VOLSYNC_CAPACITY: 2Gi
       VOLSYNC_STORAGECLASS: ceph-block # default
       VOLSYNC_SNAPSHOTCLASS: csi-ceph-block # update with storageclass
-      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for local-path
+      VOLSYNC_COPY_METHOD: Snapshot # default; change to "Clone" for openebs-hostpath
 ```
 
 ### Available Variables
@@ -62,7 +62,7 @@ For defining a replication source/destination:
 
 - APP_GID - default: 568; for moverSecurityContext
 
-- VOLSYNC_COPY_METHOD - 'Snapshot' (rook-ceph) or 'Clone' (local-path)
+- VOLSYNC_COPY_METHOD - 'Snapshot' (rook-ceph) or 'Clone' (openebs-hostpath)
 
 - VOLSYNC_CACHE_CAPACITY - default: 1Gi; must be large enough to hold non-pruned repository metadata
 

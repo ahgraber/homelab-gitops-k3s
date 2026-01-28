@@ -1,7 +1,6 @@
 # CloudNative Postgres
 
-CloudNative Postgres uses an Operator to watch for new database cluster- and backup- definitions
-as provided by CRDs.
+CloudNative Postgres uses an Operator to watch for new database cluster- and backup- definitions as provided by CRDs.
 
 ## Operator
 
@@ -10,7 +9,7 @@ The operator is deployed via helm release
 ## Cluster & Backups
 
 S3-compatible storage can be used as a live WAL backup.
-Since the native PVC/PV is using k8s-local local-path, the backup should use NAS-based s3.
+CNPG now uses a [plugin system](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/).
 
 ## Restore
 

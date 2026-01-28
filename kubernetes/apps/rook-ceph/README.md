@@ -35,7 +35,7 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 1. Nodes with `amd64`/`arm64` architecture
 2. Nodes with dedicated local storage
    - Storage can be allocated directly via cluster definition (`storage.config.node`)
-     or provided via local pvc using `local-path` storageClass or `spec.local.path` natively in pvc definition
+     or provided via local pvc using `openebs-hostpath` storageClass or `spec.local.path` natively in pvc definition
    - If provisioning local disks, the disks must be raw/unformatted
 
 ## Updating
