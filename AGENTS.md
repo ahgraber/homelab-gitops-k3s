@@ -522,9 +522,9 @@ and performance improvements.
 ```
 
 ```text
-feat(storage)!: migrate from local-path to rook-ceph
+feat(storage)!: migrate from openebs-hostpath to rook-ceph
 
-BREAKING CHANGE: All PVCs must be migrated manually. Local-path storage
+BREAKING CHANGE: All PVCs must be migrated manually. openebs-hostpath storage
 class is deprecated and will be removed in the next release.
 
 Migration guide: docs/storage-migration.md

@@ -14,8 +14,10 @@ spec:
       namespace: database
     - name: cnpg-barman-cloud
       namespace: database
-    - name: local-path-provisioner
-      namespace: kube-system
+    # - name: openebs-system
+    #   namespace: openebs
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: kube-prometheus-stack
       namespace: observability
   path: ./kubernetes/apps/datasci/postgres/cloudnative-pg/cluster
