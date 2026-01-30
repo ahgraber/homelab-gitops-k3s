@@ -22,6 +22,8 @@ spec:
       hugo:
         annotations:
           reloader.stakater.com/search: "true"
+          # renovate: datasource=docker image=ghcr.io/ahgraber/aimlbling-about
+          cache.cloudflare.com/tag: &cacheTag "2026.01.280111"
         replicas: 2
         strategy: RollingUpdate
         containers:
@@ -73,8 +75,9 @@ spec:
                   add:
                     - name: Content-Security-Policy
                       value: "default-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN};connect-src 'self' ${SECRET_DOMAIN} *.${SECRET_DOMAIN};img-src * data:;font-src 'self';frame-ancestors 'self';object-src 'none';script-src 'self' 'unsafe-inline' 'unsafe-eval' ${SECRET_DOMAIN} *.${SECRET_DOMAIN} https://cdn.plot.ly;style-src 'self' 'unsafe-inline'"
-                    - name: Cache-Control
-                      value: "public, max-age=86400"
+                    # cache control set in nginx; cache tag for cdn cachebust here
+                    - name: Cache-Tag
+                      value: *cacheTag
             backendRefs:
               - identifier: app
                 port: *port

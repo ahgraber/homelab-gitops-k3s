@@ -29,6 +29,9 @@ spec:
           - key: "{{ request.object.metadata.generation }}"
             operator: NotEquals
             value: "{{ request.oldObject.metadata.generation }}"
+          - key: "{{ request.object.metadata.annotations.\"cache.cloudflare.com/tag\" || '' }}"
+            operator: NotEquals
+            value: ""
       generate:
         generateExisting: false
         synchronize: false
@@ -50,7 +53,10 @@ spec:
                         curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
                           -H "Authorization: Bearer ${CF_API_TOKEN}" \
                           -H "Content-Type: application/json" \
-                          --data '{"purge_everything":true}'
+                          --data "{\"tags\":[\"${CF_CACHE_TAG}\"]}"
+                    env:
+                      - name: CF_CACHE_TAG
+                        value: "{{ request.object.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
                     envFrom:
                       - secretRef:
                           name: cloudflare-api
