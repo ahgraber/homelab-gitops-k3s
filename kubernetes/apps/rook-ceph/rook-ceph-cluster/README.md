@@ -155,11 +155,19 @@ ceph osd df
 ceph -s
 ```
 
-Important cautions:
+> [!CAUTION]
+> Do not remove a second OSD until the first swap is fully recovered!
+> With size=3 and only 3 OSDs, one OSD out reduces redundancy to 2.
 
-- Do not remove a second OSD until the first swap is fully recovered.
-- With size=3 and only 3 OSDs, one OSD out reduces redundancy to 2.
-- If already nearfull, rebalancing may stall due to lack of space.
+8. Remove old OSD from CRUSH and OSD map.
+
+> [!CAUTION]
+> Do not remove the old OSD until the swap is fully recovered!
+
+```bash
+ceph osd out osd.X
+ceph osd purge osd.X --yes-i-really-mean-it
+```
 
 ## Mapping OSDs to Nodes/Devices
 
