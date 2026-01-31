@@ -139,7 +139,7 @@ spec:
         nodes:
           - name: optiplex3
             devices:
-              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000052
+              - name: /dev/disk/by-id/ata-SATA_SSD_24112608500030
           - name: optiplex4
             devices:
               - name: /dev/disk/by-id/ata-SATA_SSD_22010312000015
