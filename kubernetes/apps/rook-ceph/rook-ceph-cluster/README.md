@@ -81,6 +81,16 @@ Reasons to avoid control-plane OSDs:
 
 Mixing sizes is supported, but large skews increase nearfull risk on smaller drives.
 
+## Mapping OSDs to Nodes/Devices
+
+Use these to identify which OSD is on which node/device:
+
+```bash
+ceph osd tree
+ceph osd find <id>
+ceph device ls-by-osd osd.<id>
+```
+
 ## Swap-In-Place (No Extra Ports)
 
 If you cannot keep the old disk connected while adding a new one, use this workflow.
@@ -169,18 +179,20 @@ ceph osd out osd.X
 ceph osd purge osd.X --yes-i-really-mean-it
 ```
 
-## Mapping OSDs to Nodes/Devices
+## Slow/Stalled recovery
 
-Use these to identify which OSD is on which node/device:
+If `ceph -s` reports PG's stuck in `active+clean+remapped` for a prolonged period of time, it may be possible to force the recovery.
 
 ```bash
-ceph osd tree
-ceph osd find <id>
-ceph device ls-by-osd osd.<id>
+# in ceph toolbox
+cd /tmp
+ceph osd getcrushmap -o crush.map
+crushtool -d crush.map -o crush.txt
 ```
 
-## Notes for This Repo
+Edit crush.txt: set "tunable choose_total_tries 100"
 
-- Rook-Ceph device paths are defined in:
-  `kubernetes/apps/rook-ceph/rook-ceph-cluster/app/helmrelease.yaml`
-- Update README if you change the storage layout or procedure.
+```bash
+crushtool -c crush.txt -o crush.map2
+ceph osd setcrushmap -i crush.map2
+```
