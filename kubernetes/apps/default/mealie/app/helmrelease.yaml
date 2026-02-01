@@ -26,28 +26,8 @@ spec:
               BASE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}
               OPENAI_MODEL: gpt-5-mini
               # database settings
-              DB_ENGINE: postgres
-              POSTGRES_DB:
-                valueFrom:
-                  secretKeyRef:
-                    name: &db_secret database-mealie
-                    key: DATABASE_NAME
-              POSTGRES_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: LOGIN
-              POSTGRES_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: PASSWORD
-              POSTGRES_SERVER:
-                valueFrom:
-                  secretKeyRef:
-                    name: *db_secret
-                    key: HOST
-              POSTGRES_PORT: 5432
+              DB_ENGINE: sqlite
+              SQLITE_MIGRATE_JOURNAL_WAL: "true"
               OIDC_AUTH_ENABLED: true
               OIDC_SIGNUP_ENABLED: true
               OIDC_CONFIGURATION_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
@@ -75,6 +55,38 @@ spec:
             # securityContext:
             #   allowPrivilegeEscalation: false
             #   capabilities: { drop: ["ALL"] }
+          litestream:
+            image:
+              repository: litestream/litestream
+              tag: 0.5.2
+            args:
+              - replicate
+              - -config
+              - /etc/litestream.yml
+            envFrom:
+              - secretRef:
+                  name: litestream-s3
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+        initContainers:
+          litestream-restore:
+            image:
+              repository: litestream/litestream
+              tag: 0.5.2
+            args:
+              - restore
+              - -config
+              - /etc/litestream.yml
+              - -if-db-not-exists
+              - -if-replica-exists
+              - /app/data/mealie.db
+            envFrom:
+              - secretRef:
+                  name: litestream-s3
 
     # defaultPodOptions:
     #   securityContext:
@@ -116,6 +128,13 @@ spec:
                 port: *port
 
     persistence:
+      config:
+        type: configMap
+        name: mealie-litestream
+        globalMounts:
+          - path: /etc/litestream.yml
+            subPath: litestream.yml
+            readOnly: true
       data:
         existingClaim: *app
         globalMounts:

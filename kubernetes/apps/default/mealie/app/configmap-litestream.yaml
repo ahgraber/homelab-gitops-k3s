@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mealie-litestream
+data:
+  litestream.yml: |
+    dbs:
+      - dir: /app/data
+        pattern: "*.db"
+        replica:
+          url: s3://${LITESTREAM_S3_BUCKET}/mealie
+          access-key-id: ${AWS_ACCESS_KEY_ID}
+          secret-access-key: ${AWS_SECRET_ACCESS_KEY}
