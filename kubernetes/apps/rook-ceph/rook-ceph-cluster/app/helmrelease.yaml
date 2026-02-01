@@ -145,7 +145,7 @@ spec:
               - name: /dev/disk/by-id/ata-SATA_SSD_24112608500064
           - name: optiplex5
             devices:
-              - name: /dev/disk/by-id/ata-SATA_SSD_22010312000028
+              - name: /dev/disk/by-id/ata-SATA_SSD_24112608500031
 
     # https://github.com/rook/rook/blob/HEAD/deploy/examples/csi/rbd/storageclass.yaml
     cephBlockPools:
