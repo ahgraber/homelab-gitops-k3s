@@ -33,6 +33,28 @@ Changes committed here are automatically applied to the cluster by Flux.
 └── .taskfiles/         # Task definitions (reference only - see Command Execution)
 ```
 
+## Nix Development Environment
+
+This repository uses Nix flakes to provide a consistent development environment with all required tools (kubectl, flux, helm, sops, etc.).
+
+### Running Commands with Nix
+
+Use the `nix develop` wrapper to run commands with the correct tools and kubeconfig:
+
+```bash
+nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>
+```
+
+Examples:
+
+```bash
+# kubectl commands
+nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n network
+
+# flux commands
+nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
+```
+
 ## Command Execution Patterns
 
 **IMPORTANT**: Do NOT use `task` commands directly.
@@ -41,7 +63,7 @@ Task is a convenience tool for humans.
 Instead:
 
 1. **Reference the Taskfiles** (`.taskfiles/`) to understand what commands should be run
-2. **Execute the underlying commands directly** using `kubectl`, `flux`, `ansible`, `sops`, etc.
+2. **Execute the underlying commands** using the nix develop wrapper with `kubectl`, `flux`, `ansible`, `sops`, etc.
 
 Example:
 
@@ -50,7 +72,8 @@ Example:
 - ✅ Do: Look at `.taskfiles/flux/taskfile.yaml` to see the actual command, then run:
 
   ```bash
-  flux bootstrap github \
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' \
+    flux bootstrap github \
     --owner=ahgraber \
     --repository=homelab-gitops-k3s \
     --branch=main \
@@ -61,10 +84,55 @@ This ensures your commands work even if the Taskfile abstractions change.
 
 ## Kubectl and Flux Operations
 
+- **Use nix develop wrapper**: All kubectl/flux commands should use the nix develop pattern:
+
+  ```bash
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>
+  ```
+
+  For additional usage directives and security constraints, see [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules).
+
+### Security Rules
+
+**CRITICAL**: Agents must never access secret contents.
+Listing secret names is allowed, but retrieving secret data is forbidden:
+
+- ✅ `kubectl get secret` or `kubectl get secrets` (without output flags) - lists secret names
+- ❌ `kubectl get secret/secrets` with any output flags (`-o`, `--output`, `-ojson`, `-oyaml`, etc.)
+- ❌ `kubectl get externalsecret/clustersecretstore/secretstore` with output flags
+- ❌ Any template or jsonpath queries on secret resources
+
+**Allowed kubectl operations** (read-only, informational):
+
+- ✅ `kubectl get` (without output flags)
+- ✅ `kubectl describe`
+- ✅ `kubectl logs`
+- ✅ `kubectl top`
+- ✅ `kubectl events`
+- ✅ `kubectl api-resources`, `kubectl api-versions`
+- ✅ `kubectl cluster-info`, `kubectl version`, `kubectl explain`
+
+**Allowed flux operations**:
+
+- ✅ `flux get` (sources, kustomizations, helmreleases)
+- ✅ `flux logs`, `flux check`, `flux tree`, `flux trace`
+
+### Command Syntax
+
 - Informational queries (get, describe, logs, events, etc.) are permitted; avoid destructive actions unless explicitly requested.
+
 - Command ordering follows the prefix-based ruleset: `<command> <verb> <type> [output flags] [other flags] -n <namespace> [name]`.
   Keep the resource type immediately after the verb and put namespace flags last so output-format flags (`-o/--output`) stay adjacent to the type for secret-safety controls.
-- Examples with ordering: `kubectl get pods -n <namespace>`, `kubectl get pod <name> -n <namespace>`, `kubectl logs -n <namespace> <pod>`, `flux get hr -n <namespace>`.
+
+- Examples with ordering:
+
+  ```bash
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n <namespace>
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pod <name> -n <namespace>
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl logs -n <namespace> <pod>
+  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -n <namespace>
+  ```
+
 - Keep commands scoped and explicit; do not rely on default namespaces or contexts when fetching cluster state.
 
 ## Networking Architecture
@@ -593,6 +661,7 @@ Refs #201
 - Located at `./kubeconfig` in repository root
 - Created by Ansible during k3s installation
 - Required for all `kubectl` and `flux` commands
+- **Passed via nix develop wrapper**: `nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>`
 
 ## Ansible Operations
 
@@ -636,6 +705,7 @@ ansible-playbook -i ansible/inventory/hosts.yaml ansible/playbooks/<playbook>.ya
 ## References
 
 - [README.md](./README.md) - Comprehensive setup and user documentation
+- [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules) - Security rules for kubectl/flux commands
 - [docs/ansible.md](./docs/ansible.md) - Ansible usage details
 - [docs/task.md](./docs/task.md) - Task command reference (for humans)
 - [Flux Documentation](https://fluxcd.io/flux/) - Flux CD official docs
