@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: envoy-external-ingress-from-cloudflared
+  name: external-ingress-from-cloudflared
   namespace: network
 spec:
   podSelector:
@@ -33,6 +33,11 @@ spec:
         # QUIC/HTTP3 on Envoy data plane (UDP 443)
         - protocol: UDP
           port: 10443
-        # Prometheus scrape endpoint exposed by Envoy
+    # Allow Prometheus scraping from the observability namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: observability
+      ports:
         - protocol: TCP
           port: 19001
