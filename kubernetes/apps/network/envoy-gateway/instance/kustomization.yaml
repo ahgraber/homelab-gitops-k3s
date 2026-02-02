@@ -7,3 +7,4 @@ resources:
   - ./gateway-external.yaml
   - ./gateway-internal.yaml
   - ./gateway-policies.yaml
+  - ./networkpolicy-external.yaml

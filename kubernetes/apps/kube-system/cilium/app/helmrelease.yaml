@@ -75,6 +75,10 @@ spec:
                     port: 80
     ipam:
       mode: kubernetes
+    ipv4:
+      enabled: true
+    ipv6:
+      enabled: false
     ipv4NativeRoutingCIDR: "10.42.0.0/16" # defined in ansible group_vars/kubernetes/supplemental.yaml"
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444

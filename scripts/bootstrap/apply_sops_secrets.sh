@@ -14,6 +14,7 @@ function apply_sops_secrets() {
         "${ROOT_DIR}/bootstrap/age-key.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/sops/cluster-secrets.sops.yaml"
         "${ROOT_DIR}/kubernetes/components/sops/custom-secrets.sops.yaml"
+        "${ROOT_DIR}/kubernetes/apps/network/cloudflared/app/secret.sops.yaml"
     )
 
 

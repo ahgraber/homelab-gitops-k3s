@@ -13,6 +13,11 @@ spec:
     - name: external-dns
       namespace: network
   path: ./kubernetes/apps/network/cloudflared/app
+  # NOTE: cloudflared-credentials secret must exist before applying this kustomization!
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: cloudflared-credentials
   prune: true
   sourceRef:
     kind: GitRepository
