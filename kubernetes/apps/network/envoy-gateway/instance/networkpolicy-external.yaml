@@ -24,9 +24,15 @@ spec:
         - ipBlock:
             cidr: 192.168.0.0/16
       ports:
+        # HTTP listener on Envoy data plane (maps from Service port 80)
         - protocol: TCP
           port: 10080
+        # HTTPS listener on Envoy data plane (maps from Service port 443)
         - protocol: TCP
           port: 10443
+        # QUIC/HTTP3 on Envoy data plane (UDP 443)
         - protocol: UDP
           port: 10443
+        # Prometheus scrape endpoint exposed by Envoy
+        - protocol: TCP
+          port: 19001
