@@ -35,9 +35,6 @@ includes:
     aliases: ["ceph"]
   sops: .taskfiles/sops/taskfile.yaml
   volsync: .taskfiles/volsync/taskfile.yaml
-  workstation:
-    taskfile: .taskfiles/workstation/taskfile.yaml
-    aliases: ["ws"]
 
 dotenv: [".env"]
 

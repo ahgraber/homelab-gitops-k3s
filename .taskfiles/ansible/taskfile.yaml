@@ -22,7 +22,6 @@ tasks:
       - |
         bash -eu -o pipefail <<'EOF'
         # Reinstall the ansible tool including any extra Python libs from requirements.txt
-        # This replaces the previous pipx runpip invocation.
         reqs_file="{{ .ANSIBLE_PIP_REQUIREMENTS_FILE }}"
         extra_args=()
         while IFS= read -r line; do
@@ -61,7 +60,6 @@ tasks:
 
   # deps:
   #   desc: Set up Ansible dependencies
-  #   deps: [":workstation:deps"] #, ":workstation:venv"]
   #   cmds:
   #     - '{{ .VIRTUAL_ENV }}/bin/python3 -m pip install --upgrade pip setuptools wheel'
   #     - '{{ .VIRTUAL_ENV }}/bin/python3 -m pip install --upgrade --requirement "{{ .ANSIBLE_PIP_REQUIREMENTS_FILE }}"'

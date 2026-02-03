@@ -25,27 +25,28 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 📍 Set up your local environment
 
-1. Install [task](https://taskfile.dev/).
+1. Ensure [task](https://taskfile.dev/), [direnv](https://direnv.net/), and [uv](https://docs.astral.sh/uv/) are available.
 
-2. Install [direnv](https://direnv.net/).
+2. This repository is configured with a nix flake to create a devshell with the necessary tools.
+   Use `nix develop` to enter it manually, or configure direnv to activate it automatically.
 
-3. Install [pipx](https://pipx.pypa.io/stable/), then ensure hooks are set with:
-
-   ```sh
-   pipx ensurepath
-   pipx completions
-   ```
-
-4. Finish configuring the workstation.\
-   Conveniently, we can use a `task` that has been defined for this.
+   **Manual activation:**
 
    ```sh
-   task workstation:setup
+   nix --extra-experimental-features 'nix-command flakes' develop
    ```
 
-   > This command will install ansible in a pipx environment, then use brew to install other necessary binaries like
-   > [age](https://github.com/FiloSottile/age), [flux](https://toolkit.fluxcd.io/), [cloudflared](https://github.com/cloudflare/cloudflared),
-   > [kubectl](https://kubernetes.io/docs/tasks/tools/), and [sops](https://github.com/getsops/sops)
+   **Automatic activation with direnv:**
+
+   Add the following to `.envrc` (or update it if it already exists):
+
+   ```sh
+   use flake
+   ```
+
+   Then run `direnv allow .` to enable auto-activation.
+
+   > The devshell provides the required CLI tools (kubectl, flux, sops, age, cloudflared, etc.) and keeps versions consistent.
 
 ### 🔧 Initial configuration
 
