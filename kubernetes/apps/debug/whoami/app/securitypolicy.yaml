@@ -11,6 +11,9 @@ spec:
   oidc:
     provider:
       issuer: "https://auth.${SECRET_DOMAIN}"
+      authorizationEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/authorization"
+      tokenEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/token"
+      endSessionEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/logout"
     clientID: *route
     clientSecret:
       name: *name
