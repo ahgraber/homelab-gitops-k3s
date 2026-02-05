@@ -54,7 +54,7 @@ spec:
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
               CRAWLER_STORE_SCREENSHOT: true
               CRAWLER_FULL_PAGE_SCREENSHOT: true
-              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local"
+              CRAWLER_ALLOWED_INTERNAL_HOSTNAMES: ".local,.${SECRET_DOMAIN}"
               DATA_DIR: /data
               MAX_ASSET_SIZE_MB: 128
               ASSET_PREPROCESSING_NUM_WORKERS: 2
