@@ -33,7 +33,13 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
    **Manual activation:**
 
    ```sh
-   nix --extra-experimental-features 'nix-command flakes' develop
+   nix develop ...
+   ```
+
+   If running with `nix develop` fails, add `--extra-experimental-features` flags:
+
+   ```sh
+   nix --extra-experimental-features 'nix-command flakes' develop ...
    ```
 
    **Automatic activation with direnv:**

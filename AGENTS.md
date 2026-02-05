@@ -42,6 +42,12 @@ This repository uses Nix flakes to provide a consistent development environment 
 Use the `nix develop` wrapper to run commands with the correct tools and kubeconfig:
 
 ```bash
+nix develop -c env 'KUBECONFIG=./kubeconfig' <command>
+```
+
+If running with `nix develop` fails, add `--extra-experimental-features` flags:
+
+```bash
 nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>
 ```
 
@@ -49,10 +55,10 @@ Examples:
 
 ```bash
 # kubectl commands
-nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n network
+nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n network
 
 # flux commands
-nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
+nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
 ```
 
 ## Command Execution Patterns
@@ -72,7 +78,7 @@ Example:
 - ✅ Do: Look at `.taskfiles/flux/taskfile.yaml` to see the actual command, then run:
 
   ```bash
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' \
+  nix develop -c env 'KUBECONFIG=./kubeconfig' \
     flux bootstrap github \
     --owner=ahgraber \
     --repository=homelab-gitops-k3s \
@@ -87,7 +93,7 @@ This ensures your commands work even if the Taskfile abstractions change.
 - **Use nix develop wrapper**: All kubectl/flux commands should use the nix develop pattern:
 
   ```bash
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>
+  nix develop -c env 'KUBECONFIG=./kubeconfig' <command>
   ```
 
   For additional usage directives and security constraints, see [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules).
@@ -127,10 +133,10 @@ Listing secret names is allowed, but retrieving secret data is forbidden:
 - Examples with ordering:
 
   ```bash
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n <namespace>
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pod <name> -n <namespace>
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' kubectl logs -n <namespace> <pod>
-  nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -n <namespace>
+  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n <namespace>
+  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pod <name> -n <namespace>
+  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl logs -n <namespace> <pod>
+  nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -n <namespace>
   ```
 
 - Keep commands scoped and explicit; do not rely on default namespaces or contexts when fetching cluster state.
@@ -661,7 +667,7 @@ Refs #201
 - Located at `./kubeconfig` in repository root
 - Created by Ansible during k3s installation
 - Required for all `kubectl` and `flux` commands
-- **Passed via nix develop wrapper**: `nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>`
+- **Passed via nix develop wrapper**: `nix develop -c env 'KUBECONFIG=./kubeconfig' <command>`
 
 ## Ansible Operations
 
