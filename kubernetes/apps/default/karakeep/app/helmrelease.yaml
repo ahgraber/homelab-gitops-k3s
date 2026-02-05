@@ -43,7 +43,7 @@ spec:
               tag: 0.30.0
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
-              LOG_LEVEL: "notice" # "debug"
+              LOG_LEVEL: "debug" # "notice"
               DISABLE_SIGNUPS: true
               DISABLE_NEW_RELEASE_CHECK: true
               CRAWLER_NUM_WORKERS: 2
