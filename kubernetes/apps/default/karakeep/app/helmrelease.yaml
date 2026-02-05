@@ -10,8 +10,13 @@ spec:
     name: *app
   interval: 1h
   values:
-    # NOTE: if db migrations fail, disable for the migration, then reenable
     defaultPodOptions:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 1.1.1.1
+          - 1.0.0.1
+      # NOTE: if db migrations fail, disable for the migration, then reenable
       securityContext:
         runAsUser: 568
         runAsGroup: 568
