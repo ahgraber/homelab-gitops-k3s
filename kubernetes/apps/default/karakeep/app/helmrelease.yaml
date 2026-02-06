@@ -156,7 +156,7 @@ spec:
                 cpu: 100m
                 memory: 1Gi
               limits:
-                memory: 3Gi
+                memory: 4Gi
 
       meilisearch:
         pod:
