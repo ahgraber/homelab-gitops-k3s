@@ -53,7 +53,7 @@ spec:
           bdev_enable_discard: "true" # quote
           bdev_async_discard_threads: "1" # quote
           osd_class_update_on_start: "false" # quote
-          device_failure_prediction_mode: local # requires mgr module
+          # device_failure_prediction_mode: local # requires mgr module
           bluestore_slow_ops_warn_threshold: "5" # quote
           bluestore_slow_ops_warn_lifetime: "86400" # quote (24h)
         mgr:
@@ -96,8 +96,11 @@ spec:
 
       mgr:
         modules:
-          - name: diskprediction_local
-            enabled: true
+          # disable disk prediction due to sklearn bug:
+          # https://tracker.ceph.com/issues/71527
+          # https://tracker.ceph.com/issues/72123
+          # - name: diskprediction_local
+          #   enabled: true
           - name: insights
             enabled: true
           - name: pg_autoscaler
