@@ -135,7 +135,7 @@ repos:
           - mdformat-simple-breaks
   # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.1.10  # Use the latest release tag
+    rev: v0.1.11  # Use the latest release tag
     hooks:
       # - id: rumdl      # Lint only (fails on issues)
       #   stages: [pre-commit]
