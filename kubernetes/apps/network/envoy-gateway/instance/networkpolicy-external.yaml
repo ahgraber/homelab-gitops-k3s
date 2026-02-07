@@ -29,32 +29,6 @@ spec:
         # QUIC/HTTP3 on Envoy data plane (UDP 443)
         - protocol: UDP
           port: 10443
-    - # permit from internal K8S networks
-      from:
-        - ipBlock:
-            cidr: 10.42.0.0/16
-        - ipBlock:
-            cidr: 10.43.0.0/16
-      ports:
-        - protocol: TCP
-          port: 10080
-        - protocol: TCP
-          port: 10443
-        - protocol: UDP
-          port: 10443
-    - # permit from internal LAN networks
-      from:
-        - ipBlock:
-            cidr: 10.0.0.0/8
-        - ipBlock:
-            cidr: 192.168.0.0/16
-      ports:
-        - protocol: TCP
-          port: 10080
-        - protocol: TCP
-          port: 10443
-        - protocol: UDP
-          port: 10443
     # Allow Prometheus scraping from the observability namespace
     - from:
         - namespaceSelector:

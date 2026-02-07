@@ -50,6 +50,9 @@ spec:
       # FIXME: AUTH
       main:
         parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
           - name: envoy-external
             namespace: network
             sectionName: https
