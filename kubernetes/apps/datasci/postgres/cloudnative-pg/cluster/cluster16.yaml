@@ -17,6 +17,8 @@ spec:
     parameters:
       max_connections: "300"
       shared_buffers: 256MB
+      wal_level: replica
+      max_slot_wal_keep_size: 4GB
 
   enableSuperuserAccess: true
   superuserSecret:
