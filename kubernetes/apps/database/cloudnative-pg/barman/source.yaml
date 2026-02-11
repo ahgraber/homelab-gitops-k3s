@@ -11,5 +11,5 @@ spec:
     operation: copy
   ref:
     # Chart version (Chart.yaml: version)
-    tag: 0.4.0
+    tag: 0.5.0
   url: oci://ghcr.io/cloudnative-pg/charts/plugin-barman-cloud
