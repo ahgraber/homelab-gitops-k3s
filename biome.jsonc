@@ -1,0 +1,75 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+  "root": true,
+
+  "files": {
+    "includes": ["**/*.{js,ts,jsx,tsx,json,jsonc,css,html}", "!!**/node_modules", "!!**/dist", "!!**/build"],
+    "ignoreUnknown": true
+  },
+
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "assist": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": true,
+    // Biome's global formatter settings
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 119,
+    "lineEnding": "lf",
+    "attributePosition": "auto",
+    "bracketSpacing": true,
+    "expand": "auto"
+  },
+
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double", // closest to singleQuote: false
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "preserve",
+      "trailingCommas": "all", // matches Prettier trailingComma: "all"
+      "semicolons": "asNeeded" // Biome uses `"asNeeded"` for no semis
+    }
+  },
+
+  "json": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true
+    },
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+
+  "css": {
+    "parser": {
+      "cssModules": true
+    },
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "parser": {
+      "interpolation": true
+    },
+    "formatter": {
+      "enabled": true
+    }
+  }
+}
