@@ -26,7 +26,7 @@ spec:
             image:
               repository: ghcr.io/calibrain/shelfmark
               # repository: ghcr.io/calibrain/shelfmark-extbp # with flaresolverr
-              tag: v1.0.1
+              tag: v1.0.4
             env:
               TZ: "America/New_York"
               FLASK_PORT: &port 8084
