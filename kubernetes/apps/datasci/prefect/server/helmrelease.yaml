@@ -63,12 +63,6 @@ spec:
 
     ingress:
       enabled: false
-    gateway:
-      enabled: true
-      className: "envoy-internal"  # Replace with your GatewayClass name
-    httproute:
-      hostnames:
-        - prefect.${SECRET_DOMAIN}
 
     # Database migrations configuration
     migrations:
