@@ -2,6 +2,12 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
+      description: "Use timestamp-optional stability checks for GHCR docker images",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/^ghcr\\.io\\//"],
+      minimumReleaseAgeBehaviour: "timestamp-optional"
+    },
+    {
       description: "Use custom versioning for k3s",
       matchDatasources: ["github-releases"],
       matchPackagePatterns: ["k3s"],
