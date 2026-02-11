@@ -58,7 +58,7 @@ spec:
             env:
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
-              MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.${SECRET_DOMAIN},mlflow.datasci.svc.cluster.local,localhost,127.0.0.1"
+              MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.${SECRET_DOMAIN},mlflow.datasci.svc.cluster.local,localhost:*,127.0.0.1:*"
               MLFLOW_DISABLE_TELEMETRY: "true"
               POSTGRES_URL:
                 valueFrom:
