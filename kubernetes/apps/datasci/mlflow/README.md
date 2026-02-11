@@ -9,8 +9,7 @@ including tracking experiments, packaging code into reproducible runs, and shari
 
 ## Tracking Server
 
-[MLflow](https://mlflow.org) provides for diverse [tracking server configurations](https://mlflow.org/docs/latest/tracking.html#common-setups);
-among them are:
+[MLflow](https://mlflow.org) provides for diverse [tracking server configurations](https://mlflow.org/docs/latest/tracking.html#common-setups); among them are:
 
 - MLflow as remote Tracking Server, providing tracking backend and proxied access to artifact stores
 - MLflow as Artifact Server only, providing proxied access to artifacts but no tracking
@@ -18,10 +17,8 @@ among them are:
   In this configuration, the user must manage their direct connection to the artifact store
 
 MLflow uses two components for storage: backend store and artifact store.
-The **backend store** persists MLflow entities (_runs_, parameters, metrics, tags, notes, metadata, etc), and
-these data can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server
-The **artifact store** persists _artifacts_ (files, models, images, in-memory objects, or model summary, etc)
-to local files or a variety of remote file storage solutions.
+The **backend store** persists MLflow entities (_runs_, parameters, metrics, tags, notes, metadata, etc), and these data can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server.
+The **artifact store** persists _artifacts_ (files, models, images, in-memory objects, or model summary, etc) to local files or a variety of remote file storage solutions.
 
 > IMPORTANT
 > See notes in MLFlow docs regarding the differences between options 4 and 5
