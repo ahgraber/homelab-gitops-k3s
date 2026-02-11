@@ -18,5 +18,5 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: windmill
+        - name: windmill-app
           port: 8000
