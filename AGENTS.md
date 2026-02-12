@@ -108,6 +108,20 @@ Listing secret names is allowed, but retrieving secret data is forbidden:
 - ❌ `kubectl get externalsecret/clustersecretstore/secretstore` with output flags
 - ❌ Any template or jsonpath queries on secret resources
 
+**CRITICAL**: Agents must not change cluster state without explicit human approval.
+
+"Change cluster state" means any action that creates, updates, deletes, scales, restarts, or otherwise mutates Kubernetes or node resources (including triggering a reconciliation that could apply changes).
+
+Examples that require explicit approval (non-exhaustive):
+
+- `kubectl apply`, `kubectl delete`, `kubectl edit`, `kubectl patch`
+- `kubectl rollout restart`, `kubectl scale`, `kubectl cordon/drain/uncordon`
+- `helm install/upgrade/uninstall`
+- `flux reconcile`, `flux suspend`, `flux resume`
+- `ansible-playbook` (anything that changes nodes/cluster)
+
+If a request appears to require a mutating action, stop and ask the user to confirm the exact command(s) to run.
+
 **Allowed kubectl operations** (read-only, informational):
 
 - ✅ `kubectl get` (without output flags)

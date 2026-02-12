@@ -1,13 +1,9 @@
 # [descheduler](https://github.com/kubernetes-sigs/descheduler)
 
-Scheduling in Kubernetes is the process of binding pending pods to nodes,
-and is performed by a component of Kubernetes called kube-scheduler.
-The scheduler's decisions, whether or where a pod can or can not be scheduled,
-are guided by its configurable policy which comprises of set of rules, called predicates and priorities.
-The scheduler's decisions are influenced by its view of a Kubernetes cluster
-at that point of time when a new pod appears for scheduling.
-As Kubernetes clusters are very dynamic and their state changes over time,
-there may be desire to move already running pods to some other nodes for various reasons:
+Scheduling in Kubernetes is the process of binding pending pods to nodes, and is performed by a component of Kubernetes called kube-scheduler.
+The scheduler's decisions, whether or where a pod can or can not be scheduled, are guided by its configurable policy which comprises of set of rules, called predicates and priorities.
+The scheduler's decisions are influenced by its view of a Kubernetes cluster at that point of time when a new pod appears for scheduling.
+As Kubernetes clusters are very dynamic and their state changes over time, there may be desire to move already running pods to some other nodes for various reasons:
 
 - Some nodes are under or over utilized.
 - The original scheduling decision does not hold true any more,

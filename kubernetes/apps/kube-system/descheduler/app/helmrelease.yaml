@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes-sigs/descheduler/master/charts/descheduler/values.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -25,6 +25,8 @@ spec:
       resourceName: descheduler
       resourceNamescape: default
     deschedulerPolicy:
+      maxNoOfPodsToEvictPerNode: 2
+      maxNoOfPodsToEvictTotal: 10
       profiles:
         - name: Default
           pluginConfig:
@@ -34,6 +36,20 @@ spec:
                 evictLocalStoragePods: true
                 evictSystemCriticalPods: true
                 nodeFit: true
+            - name: LowNodeUtilization
+              args:
+                thresholds:
+                  memory: 30
+                targetThresholds:
+                  memory: 70
+                evictionLimits:
+                  node: 1
+                evictableNamespaces:
+                  exclude:
+                    - kube-system
+                    - flux-system
+                    - rook-ceph
+                    - openebs-system
             # - name: RemoveFailedPods
             #   args:
             #     reasons:
@@ -60,6 +76,7 @@ spec:
           plugins:
             balance:
               enabled:
+                - LowNodeUtilization
                 - RemovePodsViolatingTopologySpreadConstraint
             deschedule:
               enabled:
