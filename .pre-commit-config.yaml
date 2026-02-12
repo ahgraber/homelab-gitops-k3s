@@ -197,7 +197,7 @@ repos:
   ### In this case, comment out this block until ".typos.toml" has been committed successfully
   # renovate: datasource=github-tags depName=crate-ci/typos
   - repo: https://github.com/crate-ci/typos
-    rev: "v1.43.3"
+    rev: "v1.43.4"
     hooks:
       - id: typos
         name: Spellcheck with Typos
