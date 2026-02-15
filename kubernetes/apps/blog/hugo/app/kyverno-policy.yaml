@@ -29,7 +29,7 @@ spec:
           - key: "{{ request.object.metadata.generation }}"
             operator: NotEquals
             value: "{{ request.oldObject.metadata.generation }}"
-          - key: "{{ request.object.metadata.annotations.\"cache.cloudflare.com/tag\" || '' }}"
+          - key: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" || '' }}"
             operator: NotEquals
             value: ""
       generate:
@@ -56,7 +56,7 @@ spec:
                           --data "{\"tags\":[\"${CF_CACHE_TAG}\"]}"
                     env:
                       - name: CF_CACHE_TAG
-                        value: "{{ request.object.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
+                        value: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
                     envFrom:
                       - secretRef:
                           name: cloudflare-api
