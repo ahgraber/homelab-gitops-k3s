@@ -11,7 +11,7 @@
     {
       description: "Process Grafana dashboards",
       customType: "regex",
-      managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml$/"],
+      managerFilePatterns: ["/(^|/)kubernetes/.+/[^/]*grafanadashboard[^/]*\\.ya?ml$/"],
       matchStrings: [
         'depName="(?<depName>.*)"\\n(?<indentation>\\s+)gnetId: (?<packageName>\\d+)\\n.+revision: (?<currentValue>\\d+)'
       ],

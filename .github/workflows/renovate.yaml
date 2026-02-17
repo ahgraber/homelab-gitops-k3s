@@ -67,6 +67,8 @@ jobs:
           RENOVATE_PLATFORM: github
           RENOVATE_PLATFORM_COMMIT: true
         with:
-          configurationFile: .renovaterc.json5
+          ## Intentionally rely on repository config discovery for .renovaterc.json5.
+          ## Setting configurationFile here can cause the same config to be loaded twice.
+          # configurationFile: .renovaterc.json5
           token: "${{ steps.app-token.outputs.token }}"
           renovate-version: "${{ inputs.version || 'latest' }}"

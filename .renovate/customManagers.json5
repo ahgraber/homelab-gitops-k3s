@@ -23,7 +23,8 @@
       customType: "regex",
       description: "Process OCI dependencies",
       managerFilePatterns: [
-        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
+        "/(^|/)kubernetes/.+/[^/]*source[^/]*\\.ya?ml(\\.j2)?$/",
+        "/(^|/)kubernetes/.+/[^/]*helmrelease[^/]*\\.ya?ml(\\.j2)?$/"
       ],
       matchStrings: [
         "oci://(?<depName>[^:]+):(?<currentValue>\\S+)",
@@ -34,7 +35,7 @@
       customType: "regex",
       description: ["Process CloudnativePG Postgresql version"],
       managerFilePatterns: [
-        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
+        "/(^|/)kubernetes/apps/.+/cloudnative-pg/cluster/[^/]*cluster\\d+[^/]*\\.ya?ml$/"
       ],
       matchStrings: [
         ": (?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>[\\w.-]+)"
@@ -46,7 +47,7 @@
       customType: "regex",
       description: "Process Cloudflare cache tag for Hugo",
       managerFilePatterns: [
-        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
+        "/(^|/)kubernetes/apps/blog/hugo/app/[^/]*helmrelease[^/]*\\.ya?ml$/"
       ],
       matchStrings: [
         "(?m:^\\s*cache\\.cloudflare\\.com/tag:\\s*(?:&\\S+\\s*)?\"?(?<currentValue>\\d+\\.\\d+\\.\\d+)\"?\\s*$)"

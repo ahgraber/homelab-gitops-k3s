@@ -39,6 +39,8 @@ It is both an introduction and a normative specification.
 
 - MUST exist for dependency patterns not handled correctly by built-in managers.
 - MUST constrain `managerFilePatterns` to repo paths that actually contain the target pattern.
+- SHOULD prefer path-specific `managerFilePatterns` (for example `*source*.yaml`, `*helmrelease*.yaml`, `*grafanadashboard*.yaml`) over repo-wide Kubernetes YAML globs to reduce no-op extraction work.
+- MAY use constrained token matching in filenames (prefix/suffix around a canonical token) when resource names vary by app conventions.
 - MUST include a deterministic `datasourceTemplate`.
 - SHOULD include explicit versioning templates when upstream tags are non-standard.
 - MUST include enough context in regex to avoid accidental cross-line or unrelated matches.
