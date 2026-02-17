@@ -12,6 +12,39 @@ spec:
   values:
     controllers:
       syncthing:
+        initContainers:
+          config-local-only:
+            image:
+              repository: alpine
+              tag: 3.22.1
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                config_file=/var/syncthing/config.xml
+
+                if [ ! -f "${config_file}" ]; then
+                  echo "Syncthing config not found yet; skipping local-only patch on this start."
+                  exit 0
+                fi
+
+                set_option() {
+                  key="$1"
+                  value="$2"
+
+                  if grep -q "<${key}>.*</${key}>" "${config_file}"; then
+                    sed -i "s#<${key}>[^<]*</${key}>#<${key}>${value}</${key}>#g" "${config_file}"
+                  elif grep -q "</options>" "${config_file}"; then
+                    sed -i "s#</options>#  <${key}>${value}</${key}>\n</options>#g" "${config_file}"
+                  fi
+                }
+
+                set_option globalAnnounceEnabled false
+                set_option relaysEnabled false
+                set_option natEnabled false
+                set_option localAnnounceEnabled true
+
+                echo "Applied Syncthing local-only discovery options."
         containers:
           app:
             image:
