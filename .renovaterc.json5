@@ -17,6 +17,7 @@
     ":separateMultipleMinorReleases",
     ":separatePatchReleases",
     ":timezone(America/New_York)",
+    "mergeConfidence:age-confidence-badges",
     "github>ahgraber/homelab-gitops-k3s//.renovate/allowedVersions.json5",
     "github>ahgraber/homelab-gitops-k3s//.renovate/autoMerge.json5",
     "github>ahgraber/homelab-gitops-k3s//.renovate/customManagers.json5",
