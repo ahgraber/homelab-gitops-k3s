@@ -29,7 +29,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 3.8.1
+              tag: 3.9.0
             env:
               MLFLOW_BACKEND_STORE_URI:
                 valueFrom:
@@ -43,7 +43,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 3.8.1
+              tag: 3.9.0
             # -- Override the command(s) for the default container
             command:
               - "/bin/bash"
@@ -133,7 +133,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
               repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 3.8.1
+              tag: 3.9.0
             command: [mlflow, gateway, start]
             args:
               - "--host=0.0.0.0"
