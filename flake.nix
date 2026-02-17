@@ -14,8 +14,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -25,7 +25,7 @@
     devshell,
     flake-utils,
     nixpkgs,
-    # nixpkgs-unstable
+    nixpkgs-unstable
   }:
     flake-utils.lib.eachDefaultSystem (system: {
       devShells.default =
@@ -34,13 +34,13 @@
             inherit system;
             overlays = [
               devshell.overlays.default
-              # # When applied, the unstable nixpkgs set (declared in the flake inputs) will be accessible through 'pkgs.unstable'
-              # (final: prev: {
-              #   unstable = import nixpkgs-unstable {
-              #     system = final.system;
-              #     config = { allowUnfree = true; };
-              #   };
-              # })
+              # When applied, the unstable nixpkgs set (declared in the flake inputs) will be accessible through 'pkgs.unstable'
+              (final: prev: {
+                unstable = import nixpkgs-unstable {
+                  system = final.system;
+                  config = { allowUnfree = true; };
+                };
+              })
               # (final: prev: {
               #   ansible = prev.python311.pkgs.ansible;
               #   ansible-lint = (prev.ansible-lint.override {
@@ -78,6 +78,7 @@
             # nerdctl        # A Docker-compatible CLI for containerd
             openldap # Open source implementation of the Lightweight Directory Access Protocol
             restic # A backup program that is fast, efficient and secure
+            # unstable.renovate # Cross-platform Dependency Automation # TODO: update renovate when it works; remove brew renovate
             # velero         # Kubernetes disaster recovery
             yq-go # Lightweight and portable command-line YAML processor
             #--- containers ---

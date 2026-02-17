@@ -1,2 +1,48 @@
 # Add bootstrap-only resources here (optional, e.g., external secrets).
 # If you add resources, ensure they are safe to apply before Flux reconciles.
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bitwarden-credentials
+  namespace: external-secrets
+stringData:
+  token: {{...}} # TODO: inject using bws
+
+---
+#
+# TODO: do I need this or can I proxy it by pointing to kubernetes/apps/external-secrets/external-secrets-store/app/cluster.clusterexternalsecret.yaml?
+#
+apiVersion: external-secrets.io/v1
+kind: ClusterExternalSecret
+# The ClusterExternalSecret creates an ExternalSecret in each namespace
+# that does not have the label "clustersecret.external-secrets.io/disable" set to "true".
+# The ExternalSecret will sync the secret data from the external secret store
+# into an actual Kubernetes Secret in the namespace.
+metadata:
+  name: &secretname "cluster-secrets"
+spec:
+  externalSecretName: *secretname
+  namespaceSelectors:
+  - matchExpressions:
+      # Exclude namespaces with this label set to "true"
+      - key: clustersecret.external-secrets.io/disable
+        operator: NotIn
+        values:
+          - "true"
+  externalSecretSpec:
+    refreshInterval: 1h
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: "bitwarden-secret-manager"
+    target:
+      creationPolicy: Owner
+      deletionPolicy: Retain
+      name: *secretname
+    dataFrom:
+      - extract:
+          # all available properties from the key will be synced
+          key: "kubernetes/cluster-secrets"
+
+---
+# TODO: add cloudflare credentials from kubernetes/apps/network/cloudflared/app/secret.sops.yaml

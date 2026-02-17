@@ -14,15 +14,21 @@
       matchDatasources: ["github-tags"],
       automerge: true,
       // automergeType: "branch",
-      matchUpdateTypes: ["patch"],
-      matchPackagePatterns: [
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      matchPackageNames: [
         "pre-commit/pre-commit-hooks",
         "Lucas-C/pre-commit-hooks",
         "sirosen/texthooks",
-        "zricethezav/gitleaks",
+        "gitleaks/gitleaks",
         "stefmolin/exif-stripper",
+        "commitizen-tools/commitizen",
+        // "editorconfig-checker/editorconfig-checker.python",
+        "hukkin/mdformat",
+        "rvben/rumdl-pre-commit",
         "charliermarsh/ruff-pre-commit",
-        "igorshubovych/markdownlint-cli",
+        // "kynan/nbstripout",
+        "scop/pre-commit-shfmt",
+        "biomejs/pre-commit",
         "adrienverge/yamllint",
         "crate-ci/typos",
       ]
@@ -34,19 +40,23 @@
       // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch", "digest"],
       minimumReleaseAge: "3 days",
-      ignoreTests: true,
+      minimumReleaseAgeBehaviour: "timestamp-optional",
+      ignoreTests: false,
     },
     {
-      description: "Auto-merge trusted GitHub Actions",
+      description: "Auto-merge explicitly trusted GitHub Actions",
       matchManagers: ["github-actions"],
       matchPackageNames: [
-        "/^actions\//",
-        "/^renovatebot\//",
+        "actions/create-github-app-token",
+        "actions/checkout",
+        "actions/labeler",
+        "renovatebot/github-action",
       ],
       automerge: true,
       // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch", "digest"],
       minimumReleaseAge: "1 minute",
+      minimumReleaseAgeBehaviour: "timestamp-optional",
       ignoreTests: true,
     },
     {
@@ -55,7 +65,11 @@
       automerge: true,
       // automergeType: "branch",
       matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: ["/external-dns/", "/gateway-api/", "/prometheus-operator/"],
+      matchPackageNames: [
+        "kubernetes-sigs/external-dns",
+        "kubernetes-sigs/gateway-api",
+        // "prometheus-operator/prometheus-operator",
+      ],
       ignoreTests: true,
     },
     {
@@ -64,7 +78,13 @@
       automerge: true,
       // automergeType: "branch",
       matchUpdateTypes: ["patch"],
-      matchPackagePatterns: ["kube-prometheus-stack", "grafana", "prefect", "reloader", "windmill"]
+      matchPackagePatterns: [
+        "kube-prometheus-stack",
+        "grafana",
+        "prefect",
+        "reloader",
+        "windmill",
+      ]
     },
     {
       description: ["Auto-merge container updates for hugo blog"],
