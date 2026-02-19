@@ -1,8 +1,8 @@
-"""Pydantic models for Bitwarden ESO migration inventory."""
+"""Pydantic models for 1Password ESO migration inventory."""
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -14,11 +14,12 @@ class InventoryEntry(BaseModel):
     namespace: str
     app: str
     purpose: str
+    section: Optional[str] = None
     item_name: str
     fields: List[str] = Field(default_factory=list)
     ks_path: Optional[str] = None
     helmrelease_path: Optional[str] = None
-    secret_id: Optional[str] = None
+    item_id: Optional[str] = None
 
 
 class Inventory(BaseModel):
@@ -26,6 +27,5 @@ class Inventory(BaseModel):
 
     version: int = 1
     root: str
-    project_id: Optional[str] = None
-    org_id: Optional[str] = None
+    vault: Optional[str] = None
     entries: List[InventoryEntry] = Field(default_factory=list)

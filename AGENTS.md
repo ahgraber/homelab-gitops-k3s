@@ -512,14 +512,15 @@ pre-commit run --all-files
 
 ## Secrets Management Naming Conventions (ESO vs SOPS)
 
-- Prefer Bitwarden/ESO as the primary secrets path; SOPS stays only for minimal bootstrap credentials.
-- Bitwarden project: **Homelab**.
-  Keep all ExternalSecret targets in this project for consistency and access control.
-- Bitwarden item names: `{namespace}-{app}-{purpose}` (e.g., `default-ghost-db`); shared items use `shared-{purpose}`.
+- Prefer 1Password/ESO as the primary secrets path; SOPS stays only for minimal bootstrap credentials.
+- 1Password vault: **homelab**.
+  Keep all ExternalSecret targets in this vault for consistency and access control.
+- 1Password item titles: `{namespace}.{app}` (e.g., `default.ghost`); shared items use `shared.{purpose}`.
+- `op` references follow `op://homelab/<namespace>.<appname>/[section]/<field>`.
 - Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey` (avoid generic keys like `value`).
-- Kubernetes Secret names mirror Bitwarden items where possible; avoid ambiguous names like `credentials` or `secret`.
-- ExternalSecret resource names: `{namespace}-{app}-{source}` (e.g., `default-ghost-bitwarden`).
-- ClusterSecretStore name: `bitwarden-cluster-store`; ESO controller ServiceAccount: `external-secrets-controller` in the `external-secrets` namespace.
+- Kubernetes Secret names mirror 1Password item purpose where possible; avoid ambiguous names like `credentials` or `secret`.
+- ExternalSecret resource names: `{namespace}-{app}-{source}` (e.g., `default-ghost-onepassword`).
+- ClusterSecretStore name: `onepassword`; ESO controller ServiceAccount: `external-secrets-controller` in the `external-secrets` namespace.
 
 ## Commit Message Convention
 

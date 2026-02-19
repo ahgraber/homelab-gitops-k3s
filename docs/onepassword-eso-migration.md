@@ -1,26 +1,22 @@
-# Bitwarden Secrets Manager migration plan (ESO)
+# 1Password Connect migration plan (ESO)
 
-This document outlines a phased migration from SOPS-managed secrets to Bitwarden Secrets Manager using External Secrets Operator (ESO).
-It is tailored for the current homelab context and assumes the Bitwarden account is a personal (free-tier) Secrets Manager instance.
+This document outlines the migration from SOPS-managed application secrets to
+1Password Connect with External Secrets Operator (ESO).
 
 ## Principles and constraints
 
-- Keep a minimal SOPS-encrypted bootstrap only for ESO/Bitwarden client credentials; everything else should transition to Bitwarden.
-- Prefer a shared `ClusterSecretStore` for Bitwarden to avoid duplicated configuration; scope access with ESO RBAC and namespaces.
-- Deploy ESO in `external-secrets` namespace.
-- Use a push-style migration: load secrets into Bitwarden first, then point ExternalSecrets at Bitwarden values.
-  Do not rely on existing SOPS data being present in Bitwarden.
-- All ExternalSecrets should target Bitwarden items in the **Homelab** project of the Bitwarden Secrets Manager account to keep scope and access consistent.
-- Phase 3 cutovers are organized **namespace-by-namespace** (not app-by-app) to reduce coordination overhead.
+- Keep a minimal SOPS-encrypted bootstrap for cluster bring-up and Flux decryption.
+- Use ESO with a shared `ClusterSecretStore` named `onepassword`.
+- Deploy ESO and 1Password Connect in `external-secrets` namespace.
+- Use a push-style migration: load secrets into 1Password first, then switch workloads to `ExternalSecret`.
+- Organize cutovers namespace-by-namespace to reduce coordination overhead.
 
 ## Phase 0: Discovery and design
 
-- Inventory current SOPS secrets (by namespace) and owners; classify shared vs per-app values.
-- Decide Bitwarden structure for the **Homelab** project: collections/folders per namespace, item ownership, and any cross-namespace sharing rules.
-- Finalize ESO install options: Helm chart values for Bitwarden provider and `bitwarden-sdk-server` enablement; decide on metrics/alerts.
-- Define `ClusterSecretStore` shape: name, target namespace (`external-secrets` if required), and `auth.secretRef` wiring to the SOPS-encrypted bootstrap secret.
-- Agree on secret naming scheme (see naming conventions) and key mapping for multi-key secrets; confirm how Bitwarden fields map to Kubernetes Secret keys.
-- Produce migration inputs: a namespace-scoped inventory (old SOPS path → Bitwarden item/field in Homelab project), and a list of secrets that must remain SOPS-bootstrapped.
+- Inventory current SOPS secrets by namespace and classify shared vs app-specific values.
+- Confirm 1Password vault strategy (default vault: `homelab`).
+- Confirm naming conventions and field mapping.
+- Prepare migration inputs: SOPS path -> 1Password item title/field labels.
 
 ### Phase 0 outputs (current repository state)
 
@@ -67,73 +63,67 @@ It is tailored for the current homelab context and assumes the Bitwarden account
 
 Notes:
 
-- All Bitwarden items should live in the **Homelab** project; map Bitwarden folders/collections to the namespaces above to simplify access control.
-- Bootstrap SOPS files (`kubernetes/bootstrap/`, `kubernetes/flux/vars/`) remain encrypted even after cutover to feed the `ClusterSecretStore` credentials and Flux variables.
-- Namespace inventories above should drive ExternalSecret mappings during Phase 3; use the naming conventions below to keep Bitwarden items aligned with Kubernetes Secret names.
+- Bootstrap SOPS files remain encrypted after cutover for bootstrap/Flux workflows.
+- Namespace inventories should drive `ExternalSecret` mappings during Phase 3.
 
 ## Phase 1: GitOps foundation in `kubernetes/apps/external-secrets`
 
 Status checklist:
 
-- [x] Add `kubernetes/apps/external-secrets/external-secrets/` (or `kubernetes/apps/external-secrets/`) with Flux Kustomization, HelmRelease, and README.
-- [x] Configure HelmRelease for External Secrets Operator with Bitwarden provider enabled and `bitwarden-sdk-server` turned on.
-- [ ] Create Namespace manifest (`external-secrets`), ServiceAccount, and RBAC to scope ESO controllers. (Namespace manifest currently defines `security`.)
-- [x] Add a `ClusterSecretStore` targeting Bitwarden with references to the bootstrap Secret for client credentials.
-- [x] Provide example `ExternalSecret` and `ClusterExternalSecret` manifests for validation.
+- [x] Deploy ESO via `external-secrets-operator` Flux Kustomization.
+- [x] Deploy 1Password Connect + `ClusterSecretStore/onepassword` via `onepassword` Flux Kustomization.
+- [x] Configure shared `ClusterExternalSecret` for `cluster-secrets` fan-out.
+- [x] Provide example `ExternalSecret` and `ClusterExternalSecret` manifests.
 
 ### Phase 1 outputs (current repository state)
 
-- Namespace, Flux Kustomization, HelmRepository, and HelmRelease for External Secrets Operator live at `kubernetes/apps/external-secrets/external-secrets/` and target the `external-secrets` namespace.
-- HelmRelease `external-secrets` (chart `external-secrets` v0.10.5) enables the Bitwarden provider, turns on the Bitwarden SDK server, and wires service accounts for the controller, webhook, cert-controller, and SDK server.
-- `ClusterSecretStore` `bitwarden-cluster-store` expects a SOPS-encrypted `bitwarden-credentials` Secret in the `external-secrets` namespace containing `clientId`, `clientSecret`, `organizationId`, and `projectId` keys for the Bitwarden Secrets Manager client.
-- Example manifests for namespace-scoped and cluster-scoped syncs are staged (not applied) under `kubernetes/apps/external-secrets/external-secrets/examples/`.
+- Namespace + app root kustomization: `kubernetes/apps/external-secrets/`.
+- ESO app: `kubernetes/apps/external-secrets/external-secrets-operator/`.
+- 1Password app: `kubernetes/apps/external-secrets/onepassword/`.
+- `ClusterSecretStore`: `onepassword`.
+- Bootstrap secret expected in `external-secrets` namespace: `onepassword-secret` with keys:
+  - `1password-credentials.json`
+  - `token`
 
 ## Phase 2: Migration tooling and documentation
 
-- [x] Author migration guide and automation to translate SOPS secrets to Bitwarden entries:
-  - Crawl SOPS secrets into an inventory (metadata only; no plaintext persisted).
-  - Scripted push: decrypt SOPS locally (`sops --decrypt`) and stream values to Bitwarden via the CLI without writing plaintext to disk.
-  - Generate `ExternalSecret` manifests from the inventory to replace SOPS secrets.
-  - Optional in-cluster `PushSecret` pattern: create a temporary K8s Secret, push to Bitwarden, then remove the temporary Secret.
-- [x] Provide prompting and idempotency checks (list existing items, then apply/skip per choice).
-- [x] Document operational workflows in `kubernetes/apps/external-secrets/external-secrets/README.md` (or equivalent): add/change/reference secret, rotate credentials, and troubleshoot sync issues.
-
-### Phase 2 outputs (current repository state)
-
-- Inventory crawler: `scripts/bws/crawl.py`.
-- Bitwarden push helper: `scripts/bws/push.py`.
-- ExternalSecret generator: `scripts/bws/externalsecrets.py`.
-- Tooling guide: `docs/bitwarden-eso-migration-tooling.md`.
+- [x] Inventory crawler: `scripts/onepassword/crawl.py`.
+- [x] Push helper (SOPS -> 1Password via `op`): `scripts/onepassword/push.py`.
+- [x] ExternalSecret generator: `scripts/onepassword/externalsecrets.py`.
+- [x] Tooling guide: `docs/onepassword-eso-migration-tooling.md`.
 
 ## Phase 3: Namespace-by-namespace cutover
 
 - [ ] For each namespace:
-  - Create/adjust `ExternalSecret` resources that map namespace secrets to Bitwarden items/fields via the shared `ClusterSecretStore`.
-  - Update namespace README/kustomizations to reference the new secrets and remove direct SOPS consumption.
-  - Validate reconciliation: ensure `ExternalSecret` conditions are healthy and secrets populate correctly before disabling SOPS references.
-  - Track completion per-namespace in a migration status matrix.
+  - Create/adjust `ExternalSecret` resources mapping K8s keys to 1Password fields.
+  - Update namespace app manifests to consume ESO-managed secrets.
+  - Validate reconciliation (`ExternalSecret`/`ClusterSecretStore` Ready conditions).
+  - Remove direct SOPS consumption once cutover is verified.
 
 ## Phase 4: Cleanup and legacy handling
 
-- [ ] Keep minimal SOPS bootstrap secrets and legacy Taskfiles for reference, but mark SOPS workflows as deprecated.
-- [ ] Update top-level docs to reference Bitwarden + ESO as the default secret management path.
-- [ ] Remove unused SOPS secrets from repos once namespaces have fully cut over.
-- [ ] Add monitoring/alerting for ESO sync errors and SecretStore readiness.
+- [ ] Keep minimal SOPS bootstrap only.
+- [ ] Remove unused SOPS app secrets after successful namespace cutovers.
+- [ ] Add monitoring/alerting for ESO sync errors and store readiness.
 
 ## Additional recommended milestones
 
-- RBAC hardening: ensure ESO service accounts have only namespace-scoped permissions where possible; restrict `ClusterExternalSecret` usage.
-- Reliability: enable PodDisruptionBudgets and resource requests/limits for ESO and the Bitwarden SDK server.
-- Observability: ship ESO metrics to the monitoring stack and add alerts for reconciliation failures.
-- Resilience drills: practice Bitwarden credential rotation and recover ESO connectivity without downtime.
-- Backups: document/export Bitwarden vault backups (as allowed by the free tier) and include recovery steps.
+- RBAC hardening: minimize ESO permissions and limit `ClusterExternalSecret` use where possible.
+- Reliability: set/verify resource requests and disruption budgets for ESO + Connect.
+- Observability: add dashboards/alerts for ESO reconciliation failures.
+- Resilience drills: practice 1Password credential rotation and ESO recovery.
 
-## Naming conventions (Bitwarden + ESO)
+## Naming conventions (1Password + ESO)
 
-- Bitwarden items: `{namespace}/{app}-{purpose}` (e.g., `default/ghost-db`); shared items use `shared-{purpose}`.
-- Secret fields: prefer descriptive keys (`username`, `password`, `apiKey`, `token`, `certificate`, `privateKey`).
-- Kubernetes Secret names are `app` or `app-<purpose>` within the namespace; avoid generic names like `credentials` or `secret`.
-- Collections/folders in Bitwarden map to Kubernetes namespaces for consistent access control.
-- ExternalSecret resource names follow `{namespace}-{app}-{source}` (e.g., `default-ghost-bitwarden`).
-- ClusterSecretStore name: `bitwarden-cluster-store`; ServiceAccount `external-secrets-controller` (in `external-secrets` namespace).
-- `remoteRef.key` should use the Bitwarden secret key path (`projects/<projectId>/secrets/<item_name>`); reference: <https://external-secrets.io/v0.4.2/guides-getting-started/#create-your-first-secretstore>
+- 1Password vault: `homelab` (use consistently for ESO and `op` references).
+- `op` reference pattern: `op://homelab/<namespace>.<appname>/[section]/<field>`.
+- 1Password item title: `{namespace}.{appname}` (example: `default.ghost`).
+- Use `section` for grouping by purpose (for example `app`, `oidc`, `db`) when needed.
+- Separator preference between namespace and app name: `.`, then `_`, then `-`.
+- ESO's 1Password provider matches by field label and ignores section names, so field labels must be unique per item.
+- Shared item titles: `shared.{purpose}`.
+- Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey`.
+- Kubernetes Secret names: `app` or `app-<purpose>` in the app namespace.
+- ExternalSecret resource names: `{namespace}-{app}-{source}` (example: `default-ghost-onepassword`).
+- ClusterSecretStore name: `onepassword`.
+- `remoteRef.key` maps to item title; `remoteRef.property` maps to field label.

@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Generate ExternalSecret manifests from a Bitwarden ESO inventory.
+"""Generate ExternalSecret manifests from a 1Password ESO inventory.
 
 Warnings
 --------
 - Best-effort parsing only; this script does not validate your intent.
-- Requires secret_ids plus project_id to build remoteRef keys.
 - Writes manifests next to each SOPS file; no kustomization updates.
 
 Usage:
-    ./scripts/bws/externalsecrets.py --inventory ./migration-out/inventory.json
+    ./scripts/onepassword/externalsecrets.py --inventory ./migration-out/inventory.json
 """
 
 from __future__ import annotations
@@ -16,10 +15,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import sys
-from typing import List
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from jinja2 import Environment, StrictUndefined
-from scripts.bws.models import Inventory, InventoryEntry
+from scripts.onepassword.models import Inventory, InventoryEntry
 
 _ENV = Environment(
     autoescape=False,  # NOQA: S701 # autoescape warning is for HTML
@@ -40,24 +41,18 @@ spec:
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
-    name: bitwarden-secret-manager
+    name: onepassword
   target:
     creationPolicy: Owner
     deletionPolicy: Retain
     name: {{ secret_name }}
-    template:
-      data:
-{% if fields %}
-{% for field in fields %}
-        {{ field }}: '{{ "{{" }} index (fromJson .value) "{{ field }}" {{ "}}" }}'
-{% endfor %}
-{% else %}
-        {}
-{% endif %}
   data:
-    - secretKey: value
+{% for field in fields %}
+    - secretKey: {{ field }}
       remoteRef:
         key: {{ remote_key }}
+        property: {{ field }}
+{% endfor %}
 """.strip()
 )
 
@@ -91,8 +86,8 @@ def externalsecret_name(entry: InventoryEntry) -> str:
     app = entry.app
     purpose = entry.purpose
     if purpose and purpose != "app":
-        return f"{namespace}-{app}-{purpose}-bitwarden"
-    return f"{namespace}-{app}-bitwarden"
+        return f"{namespace}-{app}-{purpose}-onepassword"
+    return f"{namespace}-{app}-onepassword"
 
 
 def secret_name(entry: InventoryEntry) -> str:
@@ -104,17 +99,14 @@ def secret_name(entry: InventoryEntry) -> str:
     return app
 
 
-def render_manifest(entry: InventoryEntry, project_id: str) -> str:
+def render_manifest(entry: InventoryEntry) -> str:
     """Render an ExternalSecret manifest for a single entry."""
-    namespace = entry.namespace
-    item_name = entry.item_name
-    remote_key = item_name
     return (
         _TEMPLATE.render(
             external_secret_name=externalsecret_name(entry),
-            namespace=namespace,
+            namespace=entry.namespace,
             secret_name=secret_name(entry),
-            remote_key=remote_key,
+            remote_key=entry.item_name,
             fields=entry.fields,
         )
         + "\n"
@@ -140,20 +132,16 @@ def main() -> int:
         print("No entries to process.")
         return 0
 
-    errors = 0
-    project_id = inventory.project_id
-    if not project_id:
-        print("WARNING: missing project_id in inventory", file=sys.stderr)
-        return 1
-
     for entry in entries:
         if not entry.fields:
             print(
-                f"WARNING: no fields found for {entry.sops_path}; template data will be empty",
+                f"WARNING: no fields found for {entry.sops_path}; skipping",
                 file=sys.stderr,
             )
+            continue
+
         sops_path = Path(entry.sops_path)
-        manifest = render_manifest(entry, project_id)
+        manifest = render_manifest(entry)
         target_path = output_path(sops_path)
 
         if args.dry_run:
@@ -165,8 +153,6 @@ def main() -> int:
         target_path.write_text(manifest)
         print(f"Wrote {target_path}")
 
-    if errors:
-        return 1
     return 0
 
 
