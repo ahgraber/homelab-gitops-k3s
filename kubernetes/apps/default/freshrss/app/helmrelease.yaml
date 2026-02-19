@@ -12,6 +12,8 @@ spec:
   values:
     controllers:
       freshrss:
+        annotations:
+          reloader.stakater.com/search: "true"
         strategy: Recreate
         containers:
           app:
@@ -23,6 +25,22 @@ spec:
               CRON_MIN: "18,48"
               DOMAIN: "freshrss.${SECRET_DOMAIN}"
               LISTEN: &port 8080
+              OIDC_ENABLED: "1"
+              OIDC_PROVIDER_METADATA_URL: "https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration"
+              OIDC_CLIENT_ID: "freshrss"
+              OIDC_REMOTE_USER_CLAIM: "preferred_username"
+              OIDC_SCOPES: "openid email profile groups"
+              OIDC_X_FORWARDED_HEADERS: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: freshrss-oidc
+                    key: client-secret
+              OIDC_CLIENT_CRYPTO_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: freshrss-oidc
+                    key: client-crypto-key
             probes:
               liveness:
                 enabled: true
