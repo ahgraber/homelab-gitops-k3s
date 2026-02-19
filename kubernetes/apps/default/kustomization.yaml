@@ -14,13 +14,13 @@ resources:
   - ./calibre-web-automated/ks.yaml
   - ./cyberchef/ks.yaml
   - ./flaresolverr/ks.yaml
+  - ./freshrss/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./jelu/ks.yaml
   - ./karakeep/ks.yaml
   - ./mealie/ks.yaml
   - ./memos/ks.yaml
-  - ./miniflux/ks.yaml
   - ./opengist/ks.yaml
   - ./pairdrop/ks.yaml
   - ./picoshare/ks.yaml
