@@ -28,7 +28,7 @@ spec:
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
-                    name: "{{ .Release.Name }}-secret"
+                    name: "{{ .Release.Name }}"
                     key: 1password-credentials.json
             probes:
               liveness:
@@ -74,7 +74,7 @@ spec:
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
-                    name: "{{ .Release.Name }}-secret"
+                    name: "{{ .Release.Name }}"
                     key: 1password-credentials.json
             probes:
               liveness:

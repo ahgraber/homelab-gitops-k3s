@@ -28,7 +28,11 @@
 3. Apply bootstrap-only secrets/resources.
 
    ```sh
+   # old
    bash ./scripts/bootstrap/apply_apply_sops_secrets.sh
+
+   # new
+   minijinja-cli "bootstrap/resources.yaml.j2" | op inject
    ```
 
 4. Install CRDs via Helmfile.

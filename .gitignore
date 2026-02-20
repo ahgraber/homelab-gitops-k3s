@@ -22,6 +22,7 @@ kubeconfig
 *.pgp
 *.pub
 .config.env
+*credentials*
 .decrypted~*
 # .decrypted~*.yaml
 .env
