@@ -4,45 +4,29 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bitwarden-credentials
+  name: onepassword
   namespace: external-secrets
 stringData:
-  token: {{...}} # TODO: inject using bws
+  TOKEN: op://homelab/external-secrets.1password/OP_CONNECT_TOKEN
+  1password-credentials.json: | # block pipe needed to render as string
+    op://homelab/external-secrets.1password/OP_CREDENTIALS_JSON
 
 ---
-#
-# TODO: do I need this or can I proxy it by pointing to kubernetes/apps/external-secrets/external-secrets-store/app/cluster.clusterexternalsecret.yaml?
-#
-apiVersion: external-secrets.io/v1
-kind: ClusterExternalSecret
-# The ClusterExternalSecret creates an ExternalSecret in each namespace
-# that does not have the label "clustersecret.external-secrets.io/disable" set to "true".
-# The ExternalSecret will sync the secret data from the external secret store
-# into an actual Kubernetes Secret in the namespace.
+apiVersion: v1
+kind: Secret
 metadata:
-  name: &secretname "cluster-secrets"
-spec:
-  externalSecretName: *secretname
-  namespaceSelectors:
-  - matchExpressions:
-      # Exclude namespaces with this label set to "true"
-      - key: clustersecret.external-secrets.io/disable
-        operator: NotIn
-        values:
-          - "true"
-  externalSecretSpec:
-    refreshInterval: 1h
-    secretStoreRef:
-      kind: ClusterSecretStore
-      name: "bitwarden-secret-manager"
-    target:
-      creationPolicy: Owner
-      deletionPolicy: Retain
-      name: *secretname
-    dataFrom:
-      - extract:
-          # all available properties from the key will be synced
-          key: "kubernetes/cluster-secrets"
+  name: cloudflared-credentials
+  namespace: network
+stringData:
+  TUNNEL_ID: op://homelab/network.cloudflared/TUNNEL_ID
+  credentials.json: | # block pipe needed to render as string
+    op://homelab/network.cloudflared/credentials.json
 
 ---
-# TODO: add cloudflare credentials from kubernetes/apps/network/cloudflared/app/secret.sops.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-secrets
+  namespace: cert-manager
+stringData:
+  SECRET_DOMAIN: op://homelab/shared.cluster-secrets/SECRET_DOMAIN

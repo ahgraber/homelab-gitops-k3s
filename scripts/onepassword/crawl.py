@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Crawl SOPS secrets and build a Bitwarden ESO inventory.
+"""Crawl SOPS secrets and build a 1Password ESO inventory.
 
 Warnings
 --------
@@ -8,7 +8,7 @@ Warnings
 - The inventory contains metadata only (no plaintext), but still review output.
 
 Usage:
-    ./scripts/bws/crawl.py --dir kubernetes/apps --output-dir ./migration-out --project-id <id>
+    ./scripts/onepassword/crawl.py --dir kubernetes/apps --output-dir ./migration-out --vault homelab
 """
 
 from __future__ import annotations
@@ -19,9 +19,15 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Iterable, List, Optional
+from typing import List, Optional
 
-from scripts.bws.models import Inventory, InventoryEntry
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.onepassword.models import Inventory, InventoryEntry
+
+_ITEM_NAME_ALLOWED = re.compile(r"[^a-zA-Z0-9._-]+")
+_SEPARATOR_PREFERENCE = (".", "_", "-")
 
 
 @dataclass(frozen=True)
@@ -35,7 +41,7 @@ class Item:
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="Crawl SOPS secrets and build an inventory for Bitwarden ESO.",
+        description="Crawl SOPS secrets and build an inventory for 1Password ESO.",
     )
     parser.add_argument(
         "--dir",
@@ -47,8 +53,8 @@ def parse_args() -> argparse.Namespace:
         help="Directory where inventory.json will be written (defaults to --dir).",
     )
     parser.add_argument(
-        "--project-id",
-        help="Bitwarden project ID to store in the inventory.",
+        "--vault",
+        help="Default 1Password vault name to store in the inventory.",
     )
     parser.add_argument(
         "--include-archived",
@@ -204,9 +210,40 @@ def infer_purpose(sops_path: Path) -> str:
     return alt
 
 
-def build_item_name(namespace: str, app: str, purpose: str) -> str:
-    """Build a Bitwarden item name from namespace/app/purpose."""
-    return f"{namespace}/{app}-{purpose}"
+def sanitize_component(value: str) -> str:
+    """Normalize a namespace/app component for 1Password references."""
+    normalized = _ITEM_NAME_ALLOWED.sub("_", value.strip().lower())
+    normalized = normalized.strip("._-")
+    if not normalized:
+        raise RuntimeError(f"Unable to normalize component: {value!r}")
+    return normalized
+
+
+def choose_separator(namespace: str, app: str) -> str:
+    """Choose separator with preference order: dot, underscore, hyphen."""
+    for separator in _SEPARATOR_PREFERENCE:
+        if separator not in namespace and separator not in app:
+            return separator
+    return _SEPARATOR_PREFERENCE[0]
+
+
+def infer_section(purpose: str) -> Optional[str]:
+    """Map filename purpose to optional 1Password section."""
+    if purpose == "app":
+        return None
+    return sanitize_component(purpose)
+
+
+def build_item_name(namespace: str, app: str) -> str:
+    """Build a 1Password item title from namespace/app.
+
+    Slashes are intentionally avoided to keep item names compatible with
+    `op://` secret reference syntax.
+    """
+    safe_namespace = sanitize_component(namespace)
+    safe_app = sanitize_component(app)
+    separator = choose_separator(safe_namespace, safe_app)
+    return f"{safe_namespace}{separator}{safe_app}"
 
 
 def main() -> int:
@@ -220,7 +257,7 @@ def main() -> int:
     output_dir = Path(args.output_dir) if args.output_dir else root
     output_dir.mkdir(parents=True, exist_ok=True)
     inventory_path = output_dir / "inventory.json"
-    project_id = args.project_id or os.environ.get("BWS_PROJECT_ID")
+    vault = args.vault or os.environ.get("OP_VAULT")
 
     entries = []
     errors = 0
@@ -239,7 +276,8 @@ def main() -> int:
             print(f"WARNING: No fields found in {sops_path}", file=sys.stderr)
 
         purpose = infer_purpose(sops_path)
-        item_name = build_item_name(inference.namespace, inference.app, purpose)
+        section = infer_section(purpose)
+        item_name = build_item_name(inference.namespace, inference.app)
 
         entries.append(
             {
@@ -247,6 +285,7 @@ def main() -> int:
                 "namespace": inference.namespace,
                 "app": inference.app,
                 "purpose": purpose,
+                "section": section,
                 "item_name": item_name,
                 "fields": fields,
                 "ks_path": str(inference.ks_path),
@@ -256,7 +295,7 @@ def main() -> int:
 
     inventory = Inventory(
         root=str(root),
-        project_id=project_id,
+        vault=vault,
         entries=[InventoryEntry(**entry) for entry in entries],
     )
     inventory_path.write_text(inventory.model_dump_json(indent=2, exclude_none=True))

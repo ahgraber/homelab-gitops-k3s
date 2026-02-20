@@ -24,8 +24,6 @@ spec:
       metrics:
         serviceMonitor:
           enabled: true
-      podAnnotations:
-        secret.reloader.stakater.com/reload: bitwarden-credentials
     grafanaDashboard:
       enabled: true
     webhook:
@@ -56,6 +54,3 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
-
-    bitwarden-sdk-server:
-      enabled: false # Deployed separately

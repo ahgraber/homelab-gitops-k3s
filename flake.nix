@@ -61,7 +61,8 @@
           packages = with pkgs; [
             # ansible       # Radically simple IT automation
             # ansible-lint  # Best practices checker for Ansible
-            bws # Bitwarden Secrets Manager
+            _1password-cli # 1Password CLI tool
+            # bws # Bitwarden Secrets Manager
             cloudflared # Client for various Cloudflare services
             # freelens # Kubernetes IDE
             fluxcd # flux CLI for gitops
@@ -74,6 +75,7 @@
             kubeconform # FAST Kubernetes manifests validator, with support for Custom Resources
             kubernetes-helm # helm CLI
             kustomize # Customization of kubernetes YAML configurations
+            minijinja # CLI to render MiniJinja/Jinja2 templates
             minio-client # CLI for minio, An S3-compatible object storage server
             # nerdctl        # A Docker-compatible CLI for containerd
             openldap # Open source implementation of the Lightweight Directory Access Protocol
