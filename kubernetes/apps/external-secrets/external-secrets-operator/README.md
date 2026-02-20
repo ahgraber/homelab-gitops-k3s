@@ -22,7 +22,7 @@ metadata:
   namespace: external-secrets
 stringData:
   1password-credentials.json: '...'
-  token: '...'
+  TOKEN: '...'
 ```
 
 ## Usage notes

@@ -32,7 +32,7 @@
    bash ./scripts/bootstrap/apply_apply_sops_secrets.sh
 
    # new
-   minijinja-cli "bootstrap/resources.yaml.j2" | op inject
+   minijinja-cli "bootstrap/resources.yaml.j2" | op inject | k apply --server-side -f -
    ```
 
 4. Install CRDs via Helmfile.
