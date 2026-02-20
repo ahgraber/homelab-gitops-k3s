@@ -42,10 +42,10 @@ spec:
           privileged: false
           resources:
             requests:
-              memory: 1028Mi
-              cpu: 500m
+              memory: 128Mi
+              cpu: 100m
             limits:
-              memory: 2048Mi
+              memory: 1Gi
               cpu: 1000m
 
         - name: gpu
@@ -55,17 +55,6 @@ spec:
           tolerations: []
           affinity: {}
           resources: {}
-
-        - name: native
-          replicas: 1
-          privileged: false
-          resources:
-            requests:
-              memory: 128Mi
-              cpu: 100m
-            limits:
-              memory: 256Mi
-              cpu: 200m
 
       # app configuration
       appReplicas: 1
