@@ -8,8 +8,7 @@ metadata:
   namespace: external-secrets
 stringData:
   TOKEN: op://homelab/external-secrets.1password/OP_CONNECT_TOKEN
-  1password-credentials.json: | # block pipe needed to render as string
-    op://homelab/external-secrets.1password/OP_CREDENTIALS_JSON
+  1password-credentials.json: op://homelab/external-secrets.1password/OP_CREDENTIALS_JSON_B64
 
 ---
 apiVersion: v1
