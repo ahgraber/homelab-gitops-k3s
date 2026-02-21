@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "jinja2>=3.1",
+#   "pydantic>=2",
+# ]
+# ///
 """Generate ExternalSecret manifests from a 1Password ESO inventory.
 
 Warnings
@@ -16,11 +23,12 @@ import argparse
 from pathlib import Path
 import sys
 
-if __package__ is None or __package__ == "":
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
 from jinja2 import Environment, StrictUndefined
-from scripts.onepassword.models import Inventory, InventoryEntry
+
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from onepassword.models import Inventory, InventoryEntry
 
 _ENV = Environment(
     autoescape=False,  # NOQA: S701 # autoescape warning is for HTML

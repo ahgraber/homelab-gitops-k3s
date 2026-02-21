@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "pydantic>=2",
+#   "ruamel.yaml>=0.18",
+# ]
+# ///
 """Crawl SOPS secrets and build a 1Password ESO inventory.
 
 Warnings
@@ -21,13 +28,16 @@ import re
 import sys
 from typing import List, Optional
 
-if __package__ is None or __package__ == "":
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from ruamel.yaml import YAML
 
-from scripts.onepassword.models import Inventory, InventoryEntry
+if __package__ is None or __package__ == "":
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from onepassword.models import Inventory, InventoryEntry
 
 _ITEM_NAME_ALLOWED = re.compile(r"[^a-zA-Z0-9._-]+")
 _SEPARATOR_PREFERENCE = (".", "_", "-")
+_YAML = YAML(typ="safe")
 
 
 @dataclass(frozen=True)
@@ -78,54 +88,58 @@ def find_sops_files(root: Path, include_archived: bool) -> List[Path]:
     return sorted(files)
 
 
-def strip_inline_comment(value: str) -> str:
-    """Remove inline comments from a scalar value."""
-    return value.split("#", 1)[0].strip()
-
-
-def parse_scalar(value: str) -> str:
-    """Extract a scalar string from a YAML value segment."""
-    value = strip_inline_comment(value)
-    if not value:
-        return ""
-    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
-        return value[1:-1]
-    tokens = value.split()
-    if tokens:
-        return tokens[-1]
-    return value
+def load_yaml_doc(path: Path) -> Optional[dict]:
+    """Load a YAML document safely as a dictionary."""
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            loaded = _YAML.load(handle)
+    except Exception:
+        return None
+    if isinstance(loaded, dict):
+        return loaded
+    return None
 
 
 def parse_yaml_value(path: Path, key: str) -> Optional[str]:
     """Find a top-level YAML scalar value for the given key."""
-    pattern = re.compile(rf"^\s*{re.escape(key)}:\s*(.+)?$")
-    for line in path.read_text().splitlines():
-        match = pattern.match(line)
-        if match:
-            raw = match.group(1) or ""
-            value = parse_scalar(raw)
-            if value:
-                return value
+    document = load_yaml_doc(path)
+    if document is None:
+        return None
+    value = document.get(key)
+    if isinstance(value, str) and value:
+        return value
+    if value is not None:
+        rendered = str(value).strip()
+        if rendered:
+            return rendered
     return None
 
 
-def find_nearest(start: Path, filename: str) -> Optional[Path]:
+def find_nearest(start: Path, filename: str, boundary: Path) -> Optional[Path]:
     """Find the nearest filename by walking up parent directories."""
-    current = start
+    current = start.resolve()
+    boundary = boundary.resolve()
+
+    def within_boundary(path: Path) -> bool:
+        return path == boundary or boundary in path.parents
+
+    if not within_boundary(current):
+        return None
+
     while True:
         candidate = current / filename
         if candidate.exists():
             return candidate
-        if current.parent == current:
+        if current == boundary or current.parent == current or not within_boundary(current.parent):
             return None
         current = current.parent
 
 
-def infer_namespace_app(sops_path: Path) -> Item:
+def infer_namespace_app(sops_path: Path, boundary: Path) -> Item:
     """Infer namespace and app from nearest ks.yaml/helmrelease.yaml or path."""
     sops_dir = sops_path.parent
-    ks_path = find_nearest(sops_dir, "ks.yaml")
-    helmrelease_path = find_nearest(sops_dir, "helmrelease.yaml")
+    ks_path = find_nearest(sops_dir, "ks.yaml", boundary)
+    helmrelease_path = find_nearest(sops_dir, "helmrelease.yaml", boundary)
 
     namespace = parse_yaml_value(ks_path, "targetNamespace") if ks_path else None
     app = parse_yaml_value(helmrelease_path, "name") if helmrelease_path else None
@@ -164,40 +178,19 @@ def infer_namespace_app(sops_path: Path) -> Item:
 
 def extract_keys_from_sops(path: Path) -> List[str]:
     """Extract secret keys from stringData/data sections without decrypting."""
+    document = load_yaml_doc(path)
+    if document is None:
+        return []
+
     keys: List[str] = []
-    lines = path.read_text().splitlines()
-    sections = {"stringData": None, "data": None}
-
-    idx = 0
-    while idx < len(lines):
-        line = lines[idx]
-        for section in sections:
-            match = re.match(rf"^(\s*){section}:\s*$", line)
-            if not match:
-                continue
-            indent = len(match.group(1))
-            idx += 1
-            while idx < len(lines):
-                inner = lines[idx]
-                if not inner.strip():
-                    idx += 1
-                    continue
-                current_indent = len(inner) - len(inner.lstrip())
-                if current_indent <= indent:
-                    break
-                if inner.lstrip().startswith("#"):
-                    idx += 1
-                    continue
-                key_match = re.match(r"^\s*([^:#\s][^:]*):", inner)
-                if key_match:
-                    key = key_match.group(1).strip().strip('"').strip("'")
-                    if key and key not in keys:
-                        keys.append(key)
-                idx += 1
-            continue
-        idx += 1
-
-    return keys
+    for section_name in ("stringData", "data"):
+        section = document.get(section_name)
+        if isinstance(section, dict):
+            for key in section:
+                key_text = str(key).strip()
+                if key_text and key_text not in keys:
+                    keys.append(key_text)
+    return sorted(keys)
 
 
 def infer_purpose(sops_path: Path) -> str:
@@ -248,6 +241,7 @@ def build_item_name(namespace: str, app: str) -> str:
 
 def main() -> int:
     """Run the crawler and write the inventory."""
+    os.umask(0o077)
     args = parse_args()
     root = Path(args.dir)
     if not root.exists():
@@ -265,7 +259,7 @@ def main() -> int:
 
     for sops_path in sops_files:
         try:
-            inference = infer_namespace_app(sops_path)
+            inference = infer_namespace_app(sops_path, root)
         except RuntimeError as exc:
             print(f"WARNING: {exc}", file=sys.stderr)
             errors += 1
@@ -299,6 +293,7 @@ def main() -> int:
         entries=[InventoryEntry(**entry) for entry in entries],
     )
     inventory_path.write_text(inventory.model_dump_json(indent=2, exclude_none=True))
+    os.chmod(inventory_path, 0o600)
     print(f"Wrote inventory to {inventory_path}")
 
     if errors:
