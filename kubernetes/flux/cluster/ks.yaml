@@ -13,8 +13,8 @@ spec:
     substituteFrom:
       - kind: Secret
         name: cluster-secrets
-      - kind: Secret
-        name: custom-secrets
+      # - kind: Secret
+      #   name: custom-secrets
   interval: 1h
   path: ./kubernetes/apps
   prune: true
@@ -38,8 +38,6 @@ spec:
             substituteFrom:
               - kind: Secret
                 name: cluster-secrets
-              - kind: Secret
-                name: custom-secrets
           patches:
             - patch: |-
                 apiVersion: helm.toolkit.fluxcd.io/v2
