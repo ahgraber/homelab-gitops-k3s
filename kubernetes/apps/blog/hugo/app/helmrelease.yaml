@@ -58,8 +58,6 @@ spec:
     route:
       app:
         hostnames: ["aimlbling-about.${SECRET_DOMAIN}"]
-        # annotations:
-        #   external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: network

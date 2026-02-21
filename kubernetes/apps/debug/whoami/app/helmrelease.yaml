@@ -53,8 +53,8 @@ spec:
           - name: envoy-internal
             namespace: network
             sectionName: https
-          - name: envoy-external
-            namespace: network
-            sectionName: https
+          # - name: envoy-external
+          #   namespace: network
+          #   sectionName: https
         hostnames:
           - whoami.${SECRET_DOMAIN}
