@@ -11,7 +11,7 @@ components:
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations
-  - ./dnsutils/ks.yaml
+  # - ./dnsutils/ks.yaml
   - ./echo-server/ks.yaml
   - ./httpbin/ks.yaml
   - ./whoami/ks.yaml
