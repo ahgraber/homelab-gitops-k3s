@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: redis/redisinsight
-              tag: 2.70.1@sha256:b7aa18e73329ebb2e3d9e949b8d35193bf5415ef35c16fd9a50e6f832922b296
+              tag: 3.0.3@sha256:4455c3304eafe1311d0a367022bad41520e307138b7272e1c0c308ce781f7162
             env:
               - name: RI_FILES_LOGGER
                 value: "false"
