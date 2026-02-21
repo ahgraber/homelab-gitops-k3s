@@ -170,7 +170,7 @@ tasks:
     desc: Reinstall k3s (install over current - no uninstall)
     prompt: This will reinstall k3s over the current version ... continue?
     cmds:
-      - task: _k3s_stop
+      # - task: _k3s_stop
       - task: _k3s_install
 
   list:
