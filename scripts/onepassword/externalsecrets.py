@@ -54,13 +54,15 @@ spec:
     creationPolicy: Owner
     deletionPolicy: Retain
     name: {{ secret_name }}
-  data:
+    template:
+      data:
 {% for field in fields %}
-    - secretKey: {{ field }}
-      remoteRef:
-        key: {{ remote_key }}
-        property: {{ field }}
+        {{ field }}: "{{ '{{' }} .{{ field }} {{ '}}' }}"
 {% endfor %}
+  dataFrom:
+    - extract:
+        # all available properties from the key will be synced
+        key: "{{ remote_key }}"
 """.strip()
 )
 
