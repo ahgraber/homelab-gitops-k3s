@@ -30,7 +30,7 @@ trim_trailing_whitespace = false
 indent_style = tab
 
 [*.{py, ipynb}]
-indent_size = 4
+indent_size = 2 # 4 is standard but templates and docstrings may use 2
 indent_style = space
 
 [*.tsv]

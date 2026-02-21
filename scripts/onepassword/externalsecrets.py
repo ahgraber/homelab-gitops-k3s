@@ -44,20 +44,17 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: {{ external_secret_name }}
-  namespace: {{ namespace }}
 spec:
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
     name: onepassword
   target:
-    creationPolicy: Owner
-    deletionPolicy: Retain
     name: {{ secret_name }}
     template:
       data:
 {% for field in fields %}
-        {{ field }}: "{{ '{{' }} .{{ field }} {{ '}}' }}"
+        {{ field }}: '{{ template_lookup(field) }}'
 {% endfor %}
   dataFrom:
     - extract:
@@ -65,6 +62,11 @@ spec:
         key: "{{ remote_key }}"
 """.strip()
 )
+
+
+def template_lookup(field: str) -> str:
+    """Return a Go template expression safe for arbitrary map keys."""
+    return f'{{{{ index . "{field}" }}}}'
 
 
 def parse_args() -> argparse.Namespace:
@@ -118,6 +120,7 @@ def render_manifest(entry: InventoryEntry) -> str:
             secret_name=secret_name(entry),
             remote_key=entry.item_name,
             fields=entry.fields,
+            template_lookup=template_lookup,
         )
         + "\n"
     )
