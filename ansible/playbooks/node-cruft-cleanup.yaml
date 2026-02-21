@@ -1,0 +1,66 @@
+---
+- name: Clean up node cruft
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  vars:
+    journal_vacuum_size: "50M"
+    cleanup_apt: true
+    cleanup_coredumps: true
+    coredump_max_age: "14d"
+
+  tasks:
+    - name: Journald | Rotate active journal files
+      ansible.builtin.command:
+        cmd: systemctl kill --kill-who=main --signal=SIGUSR2 systemd-journald.service
+      changed_when: false
+
+    - name: Journald | Vacuum logs
+      ansible.builtin.command:
+        cmd: journalctl --vacuum-size={{ journal_vacuum_size }}
+      register: journal_vacuum
+      changed_when: journal_vacuum.stdout is not search("Freed 0B")
+
+    - name: K3s | Check if k3s binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/k3s
+      register: k3s_bin
+
+    - name: K3s | Remove unused images
+      ansible.builtin.command:
+        cmd: /usr/local/bin/k3s crictl rmi --prune
+      when: k3s_bin.stat.exists
+      register: image_prune
+      changed_when: image_prune.stdout is not search("Deleted 0 images")
+
+    - name: Apt | Remove obsolete packages
+      ansible.builtin.apt:
+        autoremove: true
+      when:
+        - cleanup_apt
+        - ansible_os_family == "Debian"
+
+    - name: Apt | Clean package cache
+      ansible.builtin.apt:
+        autoclean: true
+      when:
+        - cleanup_apt
+        - ansible_os_family == "Debian"
+
+    - name: Core dumps | Find old dumps
+      ansible.builtin.find:
+        paths: /var/lib/systemd/coredump
+        age: "{{ coredump_max_age }}"
+        file_type: file
+      when: cleanup_coredumps
+      register: coredumps
+
+    - name: Core dumps | Remove old dumps
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      when: cleanup_coredumps
+      loop: "{{ coredumps.files }}"
+      loop_control:
+        label: "{{ item.path }}"

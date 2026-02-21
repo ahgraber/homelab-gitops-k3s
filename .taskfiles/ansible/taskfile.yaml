@@ -152,6 +152,27 @@ tasks:
       - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
       - test -f {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml
 
+  k3s-cleanup:
+    desc: Clean up node cruft on k3s nodes
+    aliases: ["node-cruft-cleanup"]
+    prompt: This will run node cleanup on selected nodes ... continue?
+    dir: "{{ .ANSIBLE_DIR }}"
+    cmd: ansible-playbook -i {{ .ANSIBLE_DIR }}/inventory -l {{ .group }} {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml --become
+    vars:
+      group: '{{ .group | default "kubernetes" }}'
+      playbook: 'node-cruft-cleanup'
+    preconditions:
+      - {msg: "Ansible not found", sh: "type ansible"}
+      - test -f {{ .ANSIBLE_DIR }}/inventory/hosts.yaml
+      - test -f {{ .ANSIBLE_DIR }}/playbooks/{{ .playbook }}.yaml
+
+  k3s-reinstall:
+    desc: Reinstall k3s (install over current - no uninstall)
+    prompt: This will reinstall k3s over the current version ... continue?
+    cmds:
+      - task: _k3s_stop
+      - task: _k3s_install
+
   list:
     desc: List all available Ansible playbooks
     dir: "{{ .ANSIBLE_DIR }}"

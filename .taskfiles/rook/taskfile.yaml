@@ -39,6 +39,12 @@ tasks:
           -o jsonpath="{.data.password}" | base64 --decode | pbcopy
       - echo "Token is in clipboard ready to paste!"
 
+  rbd-orphan-cleanup:
+    desc: Find and optionally cleanup orphan RBD images (defaults to dry-run)
+    cmd: bash {{ .ROOT_DIR }}/scripts/rook-rbd-orphan-cleanup.sh {{ .CLI_ARGS }}
+    vars:
+      CLI_ARGS: ""
+
   resume:
     desc: Resume rook ceph after halting
     cmds:

@@ -20,6 +20,7 @@
       - [Clean up unused images](#clean-up-unused-images)
       - [Restart pods](#restart-pods)
   - [Remove orphan rbd images](#remove-orphan-rbd-images)
+    - [Common usage](#common-usage)
 
 ## Intro
 
@@ -307,6 +308,14 @@ sudo du -a /var | sort -n -r | head -n 20
 
 #### Clean up logs
 
+Prefer running the Ansible playbook across all k8s nodes:
+
+```sh
+ansible-playbook -i ./ansible/inventory/hosts.yaml ./ansible/playbooks/node-cruft-cleanup.yaml --become
+```
+
+Manual cleanup commands:
+
 ```sh
 # if /var/lib/journal is the problem, rotate and vacuum
 sudo systemctl kill --kill-who=main --signal=SIGUSR2 systemd-journald.service
@@ -316,7 +325,6 @@ sudo journalctl --vacuum-size=50M
 #### Clean up unused images
 
 ```sh
-ssh ...
 sudo k3s crictl rmi --prune
 ```
 
@@ -326,51 +334,37 @@ Restart `mon`, `mds`, `rgw`, and `osd` pods
 
 ## Remove orphan rbd images
 
-1. With `kubectl`, list all currently-in-use PVs by storage class
+Use the helper script:
 
-   ```sh
-   # with add'l info
-   k get pv -o json \
-     | jq '.items[]
-     | select(.spec.storageClassName == "ceph-block")
-     | {name: .metadata.name, usedby: .spec.claimRef.name, imageName: .spec.csi.volumeAttributes.imageName}'
+```sh
+./scripts/rook-rbd-orphan-cleanup.sh
+```
 
-   # just the rook-ceph imageNames
-   k get pv -o json \
-     | jq '.items[]
-     | select(.spec.storageClassName == "ceph-block")
-     | .spec.csi.volumeAttributes.imageName'
-   ```
+Default behavior is `dry-run` and does not mutate cluster state.
 
-2. From `ceph toolbox` pod, list of existing ceph RBD images by storage class
+Task wrapper is available as `task rook:rbd-orphan-cleanup` (see [task docs](../../../docs/task.md)).
 
-   ```sh
-   rbd ls -p ceph-blockpool
-   ```
+### Common usage
 
-3. In `ceph toolbox` pod, create arrays
+```sh
+# dry-run only (default)
+task rook:rbd-orphan-cleanup
 
-   ```sh
-   # from kubectl command, copy list of imageNames
-   pvs=(<copy outputs from step 1>)
-   # pvs=("csi-vol-9918487c-718e-11ed-af1c-d608edb9ade0" \
-   # "csi-vol-7f05fdba-8847-11ed-af1c-d608edb9ade0" \
-   # "csi-vol-30448e88-74fd-11ed-af1c-d608edb9ade0" \
-   # )
-   echo "${pvs[0]}"
+# move safe candidates to RBD trash (recommended first destructive step)
+task rook:rbd-orphan-cleanup -- --mode trash
 
-   # create array from rbd command
-   imgs=($(rbd ls -p ceph-blockpool))
-   echo "${imgs[0]}"
-   ```
+# hard delete safe candidates
+task rook:rbd-orphan-cleanup -- --mode rm
 
-4. In `ceph toolbox` pod, compare arrays and remove trash
+# non-interactive run (for automation)
+task rook:rbd-orphan-cleanup -- --mode trash --yes
 
-   ```sh
-   toremove=($(echo ${imgs[@]} ${pvs[@]} | tr ' ' '\n' | sort | uniq -u))
-   echo "${toremove[@]}"
-   for img in "${toremove[@]}"; do
-     echo "Removing $img"
-     rbd rm "$img" -p ceph-blockpool
-   done
-   ```
+# include non-CSI image names in candidate list
+task rook:rbd-orphan-cleanup -- --include-non-csi
+```
+
+Show script options:
+
+```sh
+./scripts/rook-rbd-orphan-cleanup.sh --help
+```
