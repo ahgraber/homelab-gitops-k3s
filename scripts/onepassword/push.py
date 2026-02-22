@@ -3,6 +3,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #   "pydantic>=2",
+#   "ruamel.yaml>=0.18",
 # ]
 # ///
 """Push 1Password ESO inventory entries via the op CLI.
@@ -29,6 +30,8 @@ import subprocess
 import sys
 from typing import Any, Dict, List, Optional, TextIO, Tuple
 
+from ruamel.yaml import YAML
+
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -38,8 +41,8 @@ from onepassword.models import Inventory, InventoryEntry
 class DecryptedSecret:
     """Wrapper for decrypted secret content with redacted repr."""
 
-    def __init__(self, payload: Dict[str, Any]) -> None:
-        self.payload = payload
+    def __init__(self, payloads: List[Dict[str, Any]]) -> None:
+        self.payloads = payloads
 
     def __repr__(self) -> str:
         return "<DecryptedSecret redacted>"
@@ -84,31 +87,56 @@ def save_inventory(path: Path, payload: Inventory) -> None:
 
 
 def decrypt_sops(path: Path) -> DecryptedSecret:
-    """Decrypt a SOPS file and return parsed JSON."""
+    """Decrypt a SOPS file and return parsed YAML documents."""
     try:
         output = subprocess.check_output(  # NOQA: S603
-            ["sops", "--decrypt", "--output-type", "json", str(path)]
+            ["sops", "--decrypt", str(path)]
         )
     except FileNotFoundError as exc:
         raise RuntimeError("sops is required but was not found on PATH") from exc
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(f"sops failed to decrypt {path}") from exc
-    return DecryptedSecret(json.loads(output.decode("utf-8")))
+
+    yaml = YAML(typ="safe")
+    documents = list(yaml.load_all(output.decode("utf-8")))
+    payloads = [doc for doc in documents if isinstance(doc, dict)]
+    if not payloads:
+        raise RuntimeError(f"sops decrypt returned no YAML documents for {path}")
+    return DecryptedSecret(payloads)
+
+
+def iter_secret_payloads(secret: DecryptedSecret) -> List[Dict[str, Any]]:
+    """Return Secret-kind docs when present, otherwise all mapping docs."""
+    secret_docs = [payload for payload in secret.payloads if str(payload.get("kind") or "").lower() == "secret"]
+    return secret_docs or secret.payloads
+
+
+def discover_secret_fields(secret: DecryptedSecret) -> List[str]:
+    """Collect all candidate secret keys from stringData/data across documents."""
+    keys: set[str] = set()
+    for payload in iter_secret_payloads(secret):
+        string_data = payload.get("stringData", {})
+        if isinstance(string_data, dict):
+            keys.update(str(key) for key in string_data)
+        data = payload.get("data", {})
+        if isinstance(data, dict):
+            keys.update(str(key) for key in data)
+    return sorted(keys)
 
 
 def extract_secret_value(secret: DecryptedSecret, key: str) -> str:
     """Extract a secret value from stringData/data, decoding base64 when needed."""
-    payload = secret.payload
-    string_data = payload.get("stringData", {})
-    if key in string_data:
-        return str(string_data[key])
+    for payload in iter_secret_payloads(secret):
+        string_data = payload.get("stringData", {})
+        if isinstance(string_data, dict) and key in string_data:
+            return str(string_data[key])
 
-    data = payload.get("data", {})
-    if key in data:
-        try:
-            return base64.b64decode(data[key]).decode("utf-8")
-        except (ValueError, UnicodeDecodeError) as exc:
-            raise RuntimeError(f"Failed to base64 decode data[{key}]") from exc
+        data = payload.get("data", {})
+        if isinstance(data, dict) and key in data:
+            try:
+                return base64.b64decode(data[key]).decode("utf-8")
+            except (ValueError, UnicodeDecodeError) as exc:
+                raise RuntimeError(f"Failed to base64 decode data[{key}]") from exc
 
     raise KeyError(f"Key {key} not found in stringData or data")
 
@@ -337,8 +365,9 @@ def load_entry_fields(entry: InventoryEntry) -> Optional[Dict[str, str]]:
         return None
 
     field_values: Dict[str, str] = {}
+    candidate_fields = entry.fields or discover_secret_fields(secret)
     try:
-        for field in entry.fields:
+        for field in candidate_fields:
             try:
                 field_values[field] = extract_secret_value(secret, field)
             except (KeyError, RuntimeError) as exc:
@@ -346,7 +375,7 @@ def load_entry_fields(entry: InventoryEntry) -> Optional[Dict[str, str]]:
                 return None
         return field_values
     finally:
-        secret.payload.clear()
+        secret.payloads.clear()
         del secret
 
 
@@ -529,12 +558,21 @@ def apply_item_batches(
 
         empty_fields = sorted(name for name, value in field_values.items() if value == "")
         if empty_fields:
+            non_empty_count = sum(1 for value in field_values.values() if value != "")
+            if non_empty_count == 0:
+                joined = ", ".join(empty_fields)
+                print(
+                    f"WARNING: skipping {item_title} due to all secret values being empty: {joined}",
+                    file=sys.stderr,
+                )
+                continue
             joined = ", ".join(empty_fields)
             print(
-                f"WARNING: skipping {item_title} due to empty secret values: {joined}",
+                f"WARNING: ignoring empty secret values for {item_title}: {joined}",
                 file=sys.stderr,
             )
-            continue
+            for section_name, fields in section_fields.items():
+                section_fields[section_name] = {key: value for key, value in fields.items() if value != ""}
 
         item_id = existing_lookup.get(item_title) or next((entry.item_id for entry in entries if entry.item_id), None)
 

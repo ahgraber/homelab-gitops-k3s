@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-serverdefinitions
+  namespace: default
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "default": {
+          "Name": "default",
+          "Group": "Servers",
+          "Host": "postgres16-rw.database.svc.cluster.local",
+          "Port": 5432,
+          "Username": "${DEFAULT_DB_USERNAME}",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        },
+        "datasci": {
+          "Name": "datasci",
+          "Group": "Servers",
+          "Host": "datasci16-rw.datasci.svc.cluster.local",
+          "Port": 5432,
+          "Username": "${DATASCI_DB_USERNAME}",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }

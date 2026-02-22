@@ -20,12 +20,12 @@ spec:
     # set password in secret
     existingSecret: *app
     secretKeys:
-      pgadminPasswordKey: password
+      pgadminPasswordKey: PASSWORD
 
     serverDefinitions:
       enabled: true
-      resourceType: Secret
-      existingSecret: *app
+      resourceType: ConfigMap
+      existingConfigmap: pgadmin-serverdefinitions
 
     strategy:
       type: Recreate

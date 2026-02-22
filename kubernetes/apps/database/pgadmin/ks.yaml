@@ -22,3 +22,7 @@ spec:
     namespace: flux-system
   interval: 1h
   wait: false
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: pgadmin

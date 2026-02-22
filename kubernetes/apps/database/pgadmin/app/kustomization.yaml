@@ -7,4 +7,6 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./pvc.yaml
-  - ./secret.sops.yaml
+  - ./serverdefinitions-configmap.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
