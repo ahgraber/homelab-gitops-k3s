@@ -68,9 +68,9 @@ spec:
                     key: POSTGRES_URL
               S3_BUCKET: s3://mlflow/
             envFrom:
-              - secretRef:
-                  name: mlflow
-                  # contains MLFLOW_CRYPTO_KEK_PASSPHRASE, MLFLOW_CRYPTO_KEK_VERSION
+              # - secretRef:
+              #     name: mlflow
+              #     # contains MLFLOW_CRYPTO_KEK_PASSPHRASE, MLFLOW_CRYPTO_KEK_VERSION
               - secretRef:
                   name: mlflow-s3
                   # contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
