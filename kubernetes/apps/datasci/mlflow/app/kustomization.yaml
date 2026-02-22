@@ -5,6 +5,8 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
+  - ./secret.externalsecret.yaml
+  - ./secret-s3.externalsecret.yaml
   - ./secret-gateway.sops.yaml
-  - ./secret-s3.sops.yaml
+  # - ./secret-s3.sops.yaml
   # - ./secret.sops.yaml
