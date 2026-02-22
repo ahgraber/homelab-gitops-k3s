@@ -31,8 +31,8 @@ The **artifact store** persists _artifacts_ (files, models, images, in-memory ob
   See more: [[BUG] gc fails with postgres backend, violates foreign key constraint · Issue #13254 · mlflow/mlflow](https://github.com/mlflow/mlflow/issues/13254)
 - Run the python script `cleanup-experiments.py` to fully delete experiments from the database
 
-## Gateway Server
+## AI Gateway
 
-This container can also be used to deploy the [MLflow AI Gateway](https://mlflow.org/docs/latest/llms/deployments/index.html)
-Follow the instructions in the MLflow documentation to create a `config.yaml` file
-with the specifications for the AI API services that will be routed through the AI Gateway.
+As of MLflow v3.9, the [MLflow AI Gateway](https://mlflow.org/docs/latest/genai/governance/ai-gateway/) is now a part of the tracking server and does not require independent deployment.
+
+The standalone Gateway Server mode (`mlflow gateway start --config-path ...`) is still available as a legacy path, but is not used in this deployment.

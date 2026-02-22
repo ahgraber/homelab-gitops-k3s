@@ -87,8 +87,6 @@ spec:
               # MLFLOW_SERVE_ARTIFACTS: true
               # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow/
               # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3:${SECRET_S3_ENDPOINT}/mlflow # s3://mlflow/
-              # To connect the MLflow AI Gateway with the MLflow Tracking Server
-              MLFLOW_DEPLOYMENTS_TARGET: http://mlflow-gateway.datasci.svc.cluster.local:5001
               TZ: "America/New_York"
             envFrom:
               - secretRef:
@@ -124,68 +122,12 @@ spec:
                 memory: 105M
               # limits:
               #   memory: 105M
-      gateway:
-        annotations:
-          reloader.stakater.com/search: "true"
-        strategy: Recreate
-        containers:
-          app:
-            image:
-              # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
-              repository: ghcr.io/ninerealmlabs/mlflow-server
-              tag: 3.10.0
-            command: [mlflow, gateway, start]
-            args:
-              - "--host=0.0.0.0"
-              - "--port=5001"
-              # - "--config-path=/config/config.yaml"
-            env:
-              MLFLOW_HOST: 0.0.0.0
-              MLFLOW_PORT: &gport 5001
-              MLFLOW_GATEWAY_CONFIG: "/config/config.yaml"
-              MLFLOW_DISABLE_TELEMETRY: "true"
-              TZ: "America/New_York"
-            probes:
-              liveness: &gprobes
-                enabled: true
-                custom: true
-                spec:
-                  initialDelaySeconds: 15
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-                  httpGet:
-                    path: /health
-                    port: *gport
-              readiness: *gprobes
-              startup:
-                enabled: true
-                custom: true
-                spec:
-                  initialDelaySeconds: 0
-                  timeoutSeconds: 1
-                  periodSeconds: 5
-                  failureThreshold: 30
-                  httpGet:
-                    path: /health
-                    port: *gport
-            resources:
-              requests:
-                cpu: 25m
-                memory: 105M
-              # limits:
-
     service:
       mlflow:
         controller: mlflow
         ports:
           http:
             port: *port
-      gateway:
-        controller: gateway
-        ports:
-          http:
-            port: *gport
     route:
       main:
         hostnames:
@@ -202,28 +144,3 @@ spec:
             backendRefs:
               - identifier: mlflow
                 port: *port
-      gateway:
-        hostnames:
-          - &gateway mlflow-gateway.${SECRET_DOMAIN}
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
-        rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /
-            backendRefs:
-              - identifier: gateway
-                port: *gport
-    persistence:
-      config:
-        type: secret
-        name: mlflow-gateway
-        advancedMounts: # only attach to gateway container
-          gateway:
-            app:
-              - path: /config/config.yaml
-                readOnly: false
-                subPath: config.yaml
