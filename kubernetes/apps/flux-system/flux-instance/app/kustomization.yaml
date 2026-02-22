@@ -8,4 +8,5 @@ resources:
   - ./httproute.yaml
   - ./receiver.yaml
   - ./observability/
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
