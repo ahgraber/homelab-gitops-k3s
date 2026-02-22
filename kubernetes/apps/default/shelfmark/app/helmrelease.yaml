@@ -25,12 +25,15 @@ spec:
           app:
             image:
               repository: ghcr.io/calibrain/shelfmark
-              # repository: ghcr.io/calibrain/shelfmark-extbp # with flaresolverr
-              tag: v1.0.4
+              tag: dev@sha256:4bda4b7a9e6914dff882676ad804f0afe5deef121c21b2408ee512dee8c58cf9
+              # tag: v1.1.1
             env:
               TZ: "America/New_York"
               FLASK_PORT: &port 8084
               INGEST_DIR: &ingest /cwa-book-ingest
+              SESSION_COOKIE_SECURE: "true"
+              HIDE_LOCAL_AUTH: "false"
+              OIDC_AUTO_REDIRECT: "false"
               BOOK_LANGUAGE: en
               DEFAULT_SLEEP: "15"
               USE_BOOK_TITLE: "true"
