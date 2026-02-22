@@ -6,4 +6,5 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./configmap.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
