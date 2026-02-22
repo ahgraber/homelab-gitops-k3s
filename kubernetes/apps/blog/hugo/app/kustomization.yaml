@@ -6,4 +6,5 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./kyverno-policy.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
