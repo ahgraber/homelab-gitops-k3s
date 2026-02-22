@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/ansible/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/node-prep/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/nosleep-remote/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/observability-review/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/onepassword-eso-migration-tooling/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/onepassword-eso-migration/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/renovate/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ahgraber.github.io/homelab-gitops-k3s/task/</loc>
+         <lastmod>2026-02-22</lastmod>
+    </url>
+</urlset>
