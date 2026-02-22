@@ -7,7 +7,9 @@ resources:
   - ./helmrelease.yaml
   - ./dnsendpoint.yaml
   - ./grafanadashboard.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
+
 configMapGenerator:
   - name: cloudflared
     files:

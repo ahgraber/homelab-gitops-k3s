@@ -6,4 +6,5 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./grafanadashboard.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
