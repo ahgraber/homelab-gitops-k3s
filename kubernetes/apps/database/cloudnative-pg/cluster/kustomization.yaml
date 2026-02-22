@@ -6,4 +6,6 @@ resources:
   - ./cluster16.yaml
   - ./scheduledbackup16.yaml
   - ./objectstore.yaml
-  - ./secrets.sops.yaml
+  - ./secret.externalsecret.yaml
+  - ./secret-s3.externalsecret.yaml
+  # - ./secrets.sops.yaml
