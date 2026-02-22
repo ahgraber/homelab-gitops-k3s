@@ -6,7 +6,8 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
 
 configMapGenerator:
   - name: nut-exporter-dashboard

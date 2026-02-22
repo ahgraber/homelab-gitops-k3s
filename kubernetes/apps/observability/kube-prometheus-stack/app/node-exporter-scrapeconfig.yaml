@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: &name opnsense
+  labels:
+    prometheus: kube-prometheus-stack
+spec:
+  jobName: *name
+  honorTimestamps: true
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+  metricsPath: /metrics
+  scheme: http
+
+  staticConfigs:
+    - targets:
+        - opnsense.${SECRET_INT_DOMAIN}:9100
+      labels:
+        instance: opnsense

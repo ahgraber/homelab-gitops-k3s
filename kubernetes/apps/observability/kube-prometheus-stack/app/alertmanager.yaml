@@ -73,14 +73,14 @@ spec:
     - name: "null"
     # - name: "email"
     #   emailConfigs:
-    #     - to: "${SECRET_DEFAULT_EMAIL}"
-    #       from: "${SECRET_SMTP_ADDRESS}"
+    #     - to: "${SMTP_TO_EMAIL}"
+    #       from: "${SMTP_FROM_EMAIL}"
     #       # hello: "alertmanager.${SECRET_DOMAIN}"
-    #       authUsername: "${SECRET_SMTP_USER}"
+    #       authUsername: "${SMTP_USER}"
     #       authPassword:
-    #         name: alertmanager-notifiers
+    #         name: kube-prometheus-stack-alertmgrNotifiers
     #         key: SMTP_PASSWORD
-    #       smarthost: "${SECRET_SMTP_SRV}:${SECRET_SMTP_PORT}"
+    #       smarthost: "${SMTP_HOST}:${SMTP_PORT}"
     #       requireTLS: true
     #       # tlsConfig:
     #       #   insecureSkipVerify: true

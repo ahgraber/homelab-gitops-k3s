@@ -5,6 +5,9 @@ kind: Kustomization
 resources:
   - ./alertmanager.yaml
   - ./helmrelease.yaml
-  - ./secret-additionalScrapeConfigs.sops.yaml
-  - ./secret-alertmgrNotifiers.sops.yaml
   - ./source.yaml
+  - ./garage-scrapeconfig.yaml
+  - ./node-exporter-scrapeconfig.yaml
+  - ./secret-alertmgrNotifiers.externalsecret.yaml
+  # - ./secret-additionalScrapeConfigs.sops.yaml
+  # - ./secret-alertmgrNotifiers.sops.yaml

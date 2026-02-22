@@ -237,10 +237,16 @@ spec:
                 - name: prometheus
                   port: 9090
       prometheusSpec:
-        additionalScrapeConfigsSecret:
-          enabled: true
-          name: prometheus-additional-scrape-configs
-          key: additionalScrapeConfigs
+        # additionalScrapeConfigsSecret:
+        #   enabled: true
+        #   name: prometheus-additional-scrape-configs
+        #   key: additionalScrapeConfigs
+        scrapeConfigSelector:
+          matchLabels:
+            prometheus: kube-prometheus-stack
+        scrapeConfigNamespaceSelector:
+          matchNames:
+            - observability
         scrapeInterval: 30s # Must match interval in Grafana Helm chart
         enableAdminAPI: true
         externalLabels:

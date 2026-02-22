@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: &name truenas-garage
+  labels:
+    prometheus: kube-prometheus-stack
+spec:
+  jobName: *name
+  honorTimestamps: true
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+  metricsPath: /metrics
+  scheme: http
+
+  staticConfigs:
+    - targets:
+        - truenas.${SECRET_INT_DOMAIN}:30190
+      labels:
+        instance: garage
+      # authorization:
+      #   type: Bearer
+      #   credentials:
+      #     name: truenas-garage-token
+      #     key: token
