@@ -56,6 +56,7 @@ spec:
                 --serve-artifacts
                 --artifacts-destination=$S3_BUCKET
             env:
+              TZ: "America/New_York"
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
               MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.${SECRET_DOMAIN},mlflow.datasci.svc.cluster.local,localhost:*,127.0.0.1:*"
@@ -66,29 +67,10 @@ spec:
                     name: *db_secret
                     key: POSTGRES_URL
               S3_BUCKET: s3://mlflow/
-              # MLFLOW_S3_ENDPOINT_URL: # http://rook-ceph-rgw-ceph-objectstore.rook-ceph.svc/
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: mlflow-s3
-              #       key: MLFLOW_S3_ENDPOINT_URL
-              # AWS_ACCESS_KEY_ID:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: mlflow-s3
-              #       # name: mlflow-bucket
-              #       key: AWS_ACCESS_KEY_ID
-              # AWS_SECRET_ACCESS_KEY:
-              #   valueFrom:
-              #     secretKeyRef:
-              #       name: mlflow-s3
-              #       # name: mlflow-bucket
-              #       key: AWS_SECRET_ACCESS_KEY
-              # MLFLOW_S3_IGNORE_TLS: true
-              # MLFLOW_SERVE_ARTIFACTS: true
-              # MLFLOW_ARTIFACTS_DESTINATION: s3://mlflow/
-              # MLFLOW_DEFAULT_ARTIFACT_ROOT: s3:${SECRET_S3_ENDPOINT}/mlflow # s3://mlflow/
-              TZ: "America/New_York"
             envFrom:
+              - secretRef:
+                  name: mlflow
+                  # contains MLFLOW_CRYPTO_KEK_PASSPHRASE, MLFLOW_CRYPTO_KEK_VERSION
               - secretRef:
                   name: mlflow-s3
                   # contains AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
