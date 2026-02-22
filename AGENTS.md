@@ -519,7 +519,7 @@ pre-commit run --all-files
 - `op` references follow `op://homelab/<namespace>.<appname>/[section]/<field>`.
 - Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey` (avoid generic keys like `value`).
 - Kubernetes Secret names mirror 1Password item purpose where possible; avoid ambiguous names like `credentials` or `secret`.
-- ExternalSecret resource names: `{namespace}-{app}-{source}` (e.g., `default-ghost-onepassword`).
+- ExternalSecret resource names: `{namespace}-{app}-{source}` (e.g., `default-ghost`).
 - ClusterSecretStore name: `onepassword`; ESO controller ServiceAccount: `external-secrets-controller` in the `external-secrets` namespace.
 
 ## Commit Message Convention

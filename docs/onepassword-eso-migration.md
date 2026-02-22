@@ -124,6 +124,6 @@ Status checklist:
 - Shared item titles: `shared.{purpose}`.
 - Secret fields: `username`, `password`, `apiKey`, `token`, `certificate`, `privateKey`.
 - Kubernetes Secret names: `app` or `app-<purpose>` in the app namespace.
-- ExternalSecret resource names: `{namespace}-{app}-{source}` (example: `default-ghost-onepassword`).
+- ExternalSecret resource names: `{namespace}-{app}-{source}` (example: `default-ghost`).
 - ClusterSecretStore name: `onepassword`.
 - `remoteRef.key` maps to item title; `remoteRef.property` maps to field label.

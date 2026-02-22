@@ -98,8 +98,8 @@ def externalsecret_name(entry: InventoryEntry) -> str:
     app = entry.app
     purpose = entry.purpose
     if purpose and purpose != "app":
-        return f"{namespace}-{app}-{purpose}-onepassword"
-    return f"{namespace}-{app}-onepassword"
+        return f"{namespace}-{app}-{purpose}"
+    return f"{namespace}-{app}"
 
 
 def secret_name(entry: InventoryEntry) -> str:
