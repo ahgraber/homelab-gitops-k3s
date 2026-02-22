@@ -142,6 +142,9 @@ identity_providers:
     cors:
       endpoints: [userinfo, authorization, token, revocation, introspection]
       allowed_origins_from_client_redirect_uris: true
+    claims_policies:
+      karakeep:
+        id_token: [email]
     clients:
       ## ref: https://www.authelia.com/configuration/identity-providers/openid-connect/clients/
       # https://grafana.com/docs/grafana/latest/setup-grafana/configure-access/configure-authentication/generic-oauth/
@@ -195,6 +198,7 @@ identity_providers:
         client_secret: '{{ secret "/config/secrets/KARAKEEP_OAUTH_CLIENT_DIGEST" }}'
         public: false
         authorization_policy: two_factor
+        claims_policy: karakeep
         pre_configured_consent_duration: 1y
         require_pkce: true
         pkce_challenge_method: S256
