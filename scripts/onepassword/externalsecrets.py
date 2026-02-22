@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import re
 import sys
 
 from jinja2 import Environment, StrictUndefined
@@ -43,14 +44,14 @@ _TEMPLATE = _ENV.from_string(
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: {{ external_secret_name }}
+  name: &name {{ external_secret_name }}
 spec:
   refreshInterval: 1h
   secretStoreRef:
     kind: ClusterSecretStore
     name: onepassword
   target:
-    name: {{ secret_name }}
+    name: *name
     template:
       data:
 {% for field in fields %}
@@ -92,14 +93,13 @@ def load_inventory(path: Path) -> Inventory:
     return Inventory.model_validate_json(path.read_text())
 
 
-def externalsecret_name(entry: InventoryEntry) -> str:
-    """Build ExternalSecret resource name from inventory entry."""
-    namespace = entry.namespace
-    app = entry.app
-    purpose = entry.purpose
-    if purpose and purpose != "app":
-        return f"{namespace}-{app}-{purpose}"
-    return f"{namespace}-{app}"
+def normalize_rfc1123_name(value: str) -> str:
+    """Convert an arbitrary string to a Kubernetes RFC 1123 subdomain."""
+    # Split camelCase/PascalCase boundaries before lowercasing.
+    name = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", value)
+    name = re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+    name = name[:253].strip("-")
+    return name or "secret"
 
 
 def secret_name(entry: InventoryEntry) -> str:
@@ -107,17 +107,15 @@ def secret_name(entry: InventoryEntry) -> str:
     app = entry.app
     purpose = entry.purpose
     if purpose and purpose != "app":
-        return f"{app}-{purpose}"
-    return app
+        return normalize_rfc1123_name(f"{app}-{purpose}")
+    return normalize_rfc1123_name(app)
 
 
 def render_manifest(entry: InventoryEntry) -> str:
     """Render an ExternalSecret manifest for a single entry."""
     return (
         _TEMPLATE.render(
-            external_secret_name=externalsecret_name(entry),
-            namespace=entry.namespace,
-            secret_name=secret_name(entry),
+            external_secret_name=secret_name(entry),
             remote_key=entry.item_name,
             fields=entry.fields,
             template_lookup=template_lookup,
