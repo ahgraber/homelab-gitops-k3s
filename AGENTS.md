@@ -30,7 +30,7 @@ Changes committed here are automatically applied to the cluster by Flux.
 │   └── templates/      # Reusable templates (e.g., volsync)
 ├── scripts/            # Utility scripts (bash with shellcheck, python with uv/ruff)
 ├── docs/               # Human-readable documentation
-└── .taskfiles/         # Task definitions (reference only - see Command Execution)
+└── .just/              # Just modules (automation command definitions)
 ```
 
 ## Nix Development Environment
@@ -63,19 +63,18 @@ nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
 
 ## Command Execution Patterns
 
-**IMPORTANT**: Do NOT use `task` commands directly.
-Task is a convenience tool for humans.
+**IMPORTANT**: Use `just` as the repository command runner.
 
 Instead:
 
-1. **Reference the Taskfiles** (`.taskfiles/`) to understand what commands should be run
+1. **Reference the just modules** (`.just/`) to understand what commands should be run
 2. **Execute the underlying commands** using the nix develop wrapper with `kubectl`, `flux`, `ansible`, `sops`, etc.
 
 Example:
 
-- ❌ Don't run: `task flux:bootstrap`
+- ❌ Don't run: raw mutating commands without understanding module intent first
 
-- ✅ Do: Look at `.taskfiles/flux/taskfile.yaml` to see the actual command, then run:
+- ✅ Do: Look at `.just/flux/mod.just` to see the actual command, then run:
 
   ```bash
   nix develop -c env 'KUBECONFIG=./kubeconfig' \
@@ -86,7 +85,7 @@ Example:
     --path=kubernetes/flux
   ```
 
-This ensures your commands work even if the Taskfile abstractions change.
+This keeps command usage consistent and discoverable via `just`.
 
 ## Kubectl and Flux Operations
 
@@ -384,12 +383,34 @@ shellcheck scripts/my-script.sh
 
 Requirements:
 
+- Prefer scripts that are directly `uv` runnable (`uv run --script`) with:
+  - a `uv` shebang
+  - inline dependencies (PEP 723 metadata block)
 - Use `uv` for dependency management
 - Use `ruff` for linting and formatting
 - Include docstrings and type hints
 - Follow PEP 8 style guide
+- If `uv run --script` + inline dependencies is not practical (for example, shared package/module layout, tooling limits, or runtime constraints), use the repository/project dependency approach and add a short note in the script header explaining why.
 
-Setup with uv:
+Preferred standalone script pattern:
+
+```python
+#!/usr/bin/env -S uv run --script
+# /// script
+# dependencies = [
+#   "requests>=2.32.0",
+# ]
+# ///
+"""Brief description of what this script does."""
+```
+
+Run:
+
+```bash
+uv run scripts/my-script.py
+```
+
+Project-style setup with uv (fallback):
 
 ```bash
 uv venv
@@ -496,7 +517,7 @@ Kubeconform validation:
 Pre-commit hooks:
 
 The repository has pre-commit hooks.
-Reference `.taskfiles/repository/taskfile.yaml` to see what runs:
+Reference `.just/repository/mod.just` to see what runs:
 
 ```bash
 pre-commit run --all-files
@@ -674,7 +695,7 @@ Refs #201
 
 2. **Node operations** require Ansible and SSH access to nodes
 
-3. **Rook-Ceph operations** need special care - reference `.taskfiles/rook/taskfile.yaml` before making changes.
+3. **Rook-Ceph operations** need special care - reference `.just/rook/mod.just` before making changes.
    YOU MUST CHECK WITH THE HUMAN BEFORE OPERATING DIRECTLY ON ROOK-CEPH.
 
 ### Kubeconfig
@@ -728,7 +749,7 @@ ansible-playbook -i ansible/inventory/hosts.yaml ansible/playbooks/<playbook>.ya
 - [README.md](./README.md) - Comprehensive setup and user documentation
 - [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules) - Security rules for kubectl/flux commands
 - [docs/ansible.md](./docs/ansible.md) - Ansible usage details
-- [docs/task.md](./docs/task.md) - Task command reference (for humans)
+- [docs/just.md](./docs/just.md) - Just command reference (for humans)
 - [Flux Documentation](https://fluxcd.io/flux/) - Flux CD official docs
 - [k3s Documentation](https://docs.k3s.io/) - k3s official docs
 - [SOPS Documentation](https://github.com/getsops/sops) - SOPS usage and configuration

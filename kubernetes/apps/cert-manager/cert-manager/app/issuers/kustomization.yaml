@@ -6,4 +6,5 @@ resources:
   - ./ca-clusterissuer.yaml
   - ./letsencrypt-production.yaml
   - ./letsencrypt-staging.yaml
-  - ./secret.sops.yaml
+  - ./secret.externalsecret.yaml
+  # - ./secret.sops.yaml
