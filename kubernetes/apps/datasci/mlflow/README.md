@@ -31,6 +31,27 @@ The **artifact store** persists _artifacts_ (files, models, images, in-memory ob
   See more: [[BUG] gc fails with postgres backend, violates foreign key constraint · Issue #13254 · mlflow/mlflow](https://github.com/mlflow/mlflow/issues/13254)
 - Run the python script `cleanup-experiments.py` to fully delete experiments from the database
 
+### Deleting traces
+
+The repo includes a `just` module for MLflow trace deletion using `MlflowClient.delete_traces()`:
+
+```sh
+# delete traces older than 7 days
+just mlflow delete-traces-older 1 7
+
+# delete explicit trace IDs (comma-separated)
+just mlflow delete-traces-ids 1 trace_id_1,trace_id_2
+
+# delete trace IDs from a file (one ID per line)
+just mlflow delete-traces-file 1 ./trace_ids.txt
+```
+
+Use `tracking_uri` when deleting against a non-default endpoint:
+
+```sh
+just mlflow delete-traces-older 1 7 https://mlflow.example.com
+```
+
 ## AI Gateway
 
 As of MLflow v3.9, the [MLflow AI Gateway](https://mlflow.org/docs/latest/genai/governance/ai-gateway/) is now a part of the tracking server and does not require independent deployment.
