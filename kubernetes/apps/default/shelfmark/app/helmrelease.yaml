@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/calibrain/shelfmark
-              tag: dev@sha256:4bda4b7a9e6914dff882676ad804f0afe5deef121c21b2408ee512dee8c58cf9
+              tag: dev@sha256:89a254d0ac77d1afc748bdc37ceff3a5a2ba4df7eae10e08ddc747ebe50d9fb2
               # tag: v1.1.1
             env:
               TZ: "America/New_York"
