@@ -59,7 +59,7 @@ spec:
                         value: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
                     envFrom:
                       - secretRef:
-                          name: cloudflare-api
+                          name: hugo
                 restartPolicy: Never
             backoffLimit: 2
             ttlSecondsAfterFinished: 1800
