@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mealie-recipes/mealie
-              tag: v3.11.0@sha256:d99fc2844c04288526d6cbecc9ac1b6c32d8ea6054236d56857107bbaf70ea5c
+              tag: v3.11.0
             env:
               TZ: "America/New_York"
               ALLOW_SIGNUP: "false"
