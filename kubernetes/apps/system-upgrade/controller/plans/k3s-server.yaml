@@ -24,6 +24,6 @@ spec:
     deleteEmptydirData: true
     gracePeriod: 120
     skipWaitForDeleteTimeout: 60
-    timeout: 300
+    timeout: 300s
   upgrade:
     image: rancher/k3s-upgrade
