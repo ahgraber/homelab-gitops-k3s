@@ -23,7 +23,7 @@ spec:
         annotations:
           reloader.stakater.com/search: "true"
           # renovate: datasource=docker image=ghcr.io/ahgraber/aimlbling-about
-          cache.cloudflare.com/tag: &cacheTag "2026.02.230034"
+          cache.cloudflare.com/tag: &cacheTag "2026.02.240926"
         replicas: 2
         strategy: RollingUpdate
         containers:
