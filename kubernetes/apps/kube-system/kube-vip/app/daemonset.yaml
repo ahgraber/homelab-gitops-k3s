@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: *app
-          image: ghcr.io/kube-vip/kube-vip:v1.0.4
+          image: ghcr.io/kube-vip/kube-vip:v1.1.0
           imagePullPolicy: IfNotPresent
           args: ["manager"]
           env:
