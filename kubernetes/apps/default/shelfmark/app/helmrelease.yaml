@@ -25,8 +25,8 @@ spec:
           app:
             image:
               repository: ghcr.io/calibrain/shelfmark
-              tag: dev@sha256:4bda4b7a9e6914dff882676ad804f0afe5deef121c21b2408ee512dee8c58cf9
-              # tag: v1.1.1
+              # tag: dev@sha256:0e8952e2e30cacbb2dfa7bb68a70be62f6d993eb5953af43ed891f2cdee3231b
+              tag: v1.2.0
             env:
               TZ: "America/New_York"
               FLASK_PORT: &port 8084
