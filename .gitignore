@@ -1,12 +1,17 @@
 # gitignore
 !.devcontainer
 !.github
-!.taskfiles
+
+# dot-directories, unless explicitly kept
+.*/
+!.github/
+!.renovate/
 
 # Editors
 .vscode/
 .monokle
 *.profraw
+CLAUDE.md
 
 # Trash
 .DS_Store
@@ -68,6 +73,12 @@ report/
 # extras
 **/*pytest*/
 **/*cache*/
+
+# ai
+!.claude/settings.json
+!.codex/rules/kubectl.rules
+docs/superpowers
+
 
 # retain files
 !**.gitkeep

@@ -5,7 +5,7 @@ It is both an introduction and a normative specification.
 
 ## What Renovate Does Here
 
-- Detects dependency references in Kubernetes, Ansible, and Taskfile YAML.
+- Detects dependency references in Kubernetes, Ansible, and automation YAML.
 - Creates update PRs with consistent metadata (labels, semantic commits, dashboard tracking).
 - Applies safety controls (release-age delay and merge-confidence signals).
 - Auto-merges only explicitly trusted low-risk updates.
@@ -21,7 +21,7 @@ It is both an introduction and a normative specification.
 
 ### `kubernetes` manager
 
-- MUST scan YAML in `.taskfiles/`, `ansible/`, and `kubernetes/`.
+- MUST scan YAML in `.just/`, `ansible/`, and `kubernetes/`.
 - MUST detect container image references in Kubernetes-style manifests and related YAML.
 - SHOULD be the default manager for infrastructure YAML unless a narrower manager is more correct.
 

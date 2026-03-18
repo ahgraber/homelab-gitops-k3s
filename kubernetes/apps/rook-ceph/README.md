@@ -47,9 +47,10 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 
 ## Teardown and Cleanup
 
-> Order of operations is critical! See [documentation](https://rook.io/docs/rook/v1.19/Getting-Started/ceph-teardown)
+> Order of operations is critical!
+> See [documentation](https://rook.io/docs/rook/v1.19/Getting-Started/ceph-teardown)
 
-Run `task rook:decommission`
+Run `just rook decommission`
 
 ## Troubleshooting
 
@@ -70,7 +71,8 @@ ceph mgr module enable rook && ceph orch set backend rook && ceph orch status
 
 ### Dashboard not accessible thru ingress
 
-> ! If this happens, doublecheck the `cephClusterSpec.dashboard` section of the helm values
+> !
+> If this happens, doublecheck the `cephClusterSpec.dashboard` section of the helm values
 >
 > To fix manually, run the following commands against the ceph-toolbox pod:
 
@@ -94,8 +96,7 @@ dashboard set-prometheus-api-ssl-verify False
 
 ### Crash
 
-> run the following commands against the ceph-toolbox pod
-> hint `task rook:toolbox`
+> run the following commands against the ceph-toolbox pod hint `just rook toolbox`
 
 ```sh
 ceph health detail
@@ -342,25 +343,25 @@ Use the helper script:
 
 Default behavior is `dry-run` and does not mutate cluster state.
 
-Task wrapper is available as `task rook:rbd-orphan-cleanup` (see [task docs](../../../docs/task.md)).
+Just wrapper is available as `just rook rbd-orphan-cleanup` (see [just docs](../../../docs/just.md)).
 
 ### Common usage
 
 ```sh
 # dry-run only (default)
-task rook:rbd-orphan-cleanup
+just rook rbd-orphan-cleanup
 
 # move safe candidates to RBD trash (recommended first destructive step)
-task rook:rbd-orphan-cleanup -- --mode trash
+just rook rbd-orphan-cleanup -- --mode trash
 
 # hard delete safe candidates
-task rook:rbd-orphan-cleanup -- --mode rm
+just rook rbd-orphan-cleanup -- --mode rm
 
 # non-interactive run (for automation)
-task rook:rbd-orphan-cleanup -- --mode trash --yes
+just rook rbd-orphan-cleanup -- --mode trash --yes
 
 # include non-CSI image names in candidate list
-task rook:rbd-orphan-cleanup -- --include-non-csi
+just rook rbd-orphan-cleanup -- --include-non-csi
 ```
 
 Show script options:

@@ -11,17 +11,17 @@ If the specified PVC does not exist, VolSync will attempt to restore it from the
 ### Adding to new application
 
 1. Add the `/components/volsync/` directory into the application ks.yaml
-   (typically `../../../../components/volsync/` -- use `task volsync:relpath` to confirm the relative path from the application helmrelease file).
+   (typically `../../../../components/volsync/` -- use `just volsync relpath` to confirm the relative path from the application helmrelease file).
 
 2. Ensure the application `ks.yaml` is configured with `postBuild` variables
 
 3. Wait for at least one backup (_Note: data must be present in the PVC for a backup to occur_).
 
    > If data exists in the pvc, and is not detected during automatic backups/snapshots, try resolving with:
-   > 
-   > 1) Delete the app's ReplicationSource.
-   > 2) Suspend the app ks.
-   > 3) Resume the app ks.
+   >
+   > - Delete the app's ReplicationSource.
+   > - Suspend the app ks.
+   > - Resume the app ks.
 
 ## Configuration
 
@@ -57,15 +57,10 @@ spec:
 For defining a replication source/destination:
 
 - APP: \*app
-
 - APP_UID - default: 568; for moverSecurityContext
-
 - APP_GID - default: 568; for moverSecurityContext
-
 - VOLSYNC_COPY_METHOD - 'Snapshot' (rook-ceph) or 'Clone' (openebs-hostpath)
-
 - VOLSYNC_CACHE_CAPACITY - default: 1Gi; must be large enough to hold non-pruned repository metadata
-
 - VOLSYNC_SNAPSHOTCLASS - must be equivalent to source pvc (ceph-block -> csi-ceph-block; ceph-fs -> csi-ceph-fs)
 
 For defining a PVC for restoration:

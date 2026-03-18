@@ -25,7 +25,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 ### 📍 Set up your local environment
 
-1. Ensure [task](https://taskfile.dev/), [direnv](https://direnv.net/), and [uv](https://docs.astral.sh/uv/) are available.
+1. Ensure [just](https://github.com/casey/just), [direnv](https://direnv.net/), and [uv](https://docs.astral.sh/uv/) are available.
 
 2. This repository is configured with a nix flake to create a devshell with the necessary tools.
    Use `nix develop` to enter it manually, or configure direnv to activate it automatically.
@@ -141,43 +141,43 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 2. Verify Ansible can view your config
 
    ```sh
-   task ansible:hosts
+   just ansible hosts
    ```
 
 3. Verify Ansible can ping your nodes
 
    ```sh
-   task ansible:ping
+   just ansible ping
    ```
 
 4. Run the Ansible prepare playbook (nodes will reboot when done)
 
    ```sh
-   task ansible:prepare
+   just ansible prepare
    ```
 
 ### 🛰️ Build your k3s cluster with Ansible
 
 📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role._
 
-> If you run into problems, you can run `task k3s:nuke` to destroy the k3s cluster and start over from this point.
+> If you run into problems, you can run `just kubernetes nuke` to destroy the k3s cluster and start over from this point.
 
 1. Verify Ansible can view your config
 
    ```sh
-   task ansible:hosts
+   just ansible hosts
    ```
 
 2. Verify Ansible can ping your nodes
 
    ```sh
-   task ansible:ping
+   just ansible ping
    ```
 
 3. Install k3s (may need to run this twice to pass the k3s systemd restart)
 
    ```sh
-   task k3s:install
+   just kubernetes install
    ```
 
    > The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.
@@ -222,7 +222,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 3. Install Flux and sync the cluster to the Git repository
 
    ```sh
-   task flux:bootstrap
+   just flux bootstrap
    # namespace/flux-system configured
    # customresourcedefinition.apiextensions.k8s.io/alerts.notification.toolkit.fluxcd.io created
    # ...
@@ -243,10 +243,10 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Output all the common resources in your cluster.
 
-   📍 _Suggestion: Use the provided [tasks](.taskfiles/) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
+   📍 _Suggestion: Use the provided [just recipes](.just/) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
 
    ```sh
-   task k8s:resources
+   just kubernetes resources
    ```
 
 2. ⚠️ It might take `cert-manager` a while to generate certificates, this is normal so be patient.
@@ -266,7 +266,8 @@ For this to work, your home DNS server must be configured to forward DNS queries
 This is a form of **split DNS** (aka split-horizon DNS / conditional forwarding).
 
 > [!TIP]
-> Below is how to configure a Pi-hole for split DNS. Other platforms should be similar.
+> Below is how to configure a Pi-hole for split DNS.
+> Other platforms should be similar.
 >
 > 1. Apply this file on the server
 >

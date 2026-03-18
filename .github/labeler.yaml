@@ -13,7 +13,8 @@ area/github:
 area/kubernetes:
   - changed-files:
       - any-glob-to-any-file: kubernetes/**/*
-area/taskfile:
+area/automation:
   - changed-files:
-      - any-glob-to-any-file: .taskfiles/**/*
-      - any-glob-to-any-file: Taskfile*
+      - any-glob-to-any-file: .just/**/*
+      - any-glob-to-any-file: .justfile
+      - any-glob-to-any-file: "**/*.just"
