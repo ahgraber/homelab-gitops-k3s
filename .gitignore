@@ -1,6 +1,4 @@
 # gitignore
-!.devcontainer
-!.github
 
 # dot-directories, unless explicitly kept
 .*/

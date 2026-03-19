@@ -9,7 +9,7 @@ export KUBECONFIG := justfile_directory() + "/kubeconfig"
 mod ansible "ansible"
 mod kube "kubernetes"
 mod rook "kubernetes/apps/rook-ceph"
-mod mlflow ".just/mlflow"
+mod mlflow "kubernetes/apps/datasci/mlflow"
 
 [private]
 default:
@@ -65,7 +65,7 @@ sops-encrypt-all:
     test -f .sops.yaml
     test -f ./age.key
     if [ -d ./kubernetes ]; then \
-      find ./kubernetes -type f -name '*.sops.*' -exec grep -L 'ENC\[AES256_GCM' {} \; | while IFS= read -r file; do \
+      find ./kubernetes -type f -name '*.sops.*' ! -name '*.tmpl' -exec grep -L 'ENC\[AES256_GCM' {} \; | while IFS= read -r file; do \
         [ -z "$file" ] || sops --encrypt --in-place "$file"; \
       done; \
     fi

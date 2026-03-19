@@ -1,7 +1,7 @@
 set quiet := true
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-ansible_dir := justfile_directory()
+ansible_dir := source_directory()
 ansible_cfg := "ANSIBLE_CONFIG=" + ansible_dir + "/ansible.cfg"
 inventory := ansible_dir + "/inventory"
 
@@ -47,7 +47,7 @@ k3s-cleanup group="kubernetes":
 
 [doc("List all available Ansible playbooks")]
 list:
-    find '{{ ansible_dir }}/playbooks' -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.yml' \) -exec basename {} \; | sort
+    find '{{ ansible_dir }}/playbooks' -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.yml' \) -exec basename {} \; | sed 's/\.ya\?ml$//' | sort
 
 [doc("Run an Ansible playbook by name")]
 playbook playbook group="kubernetes" *args:

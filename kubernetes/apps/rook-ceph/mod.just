@@ -1,9 +1,8 @@
 set quiet := true
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-rook_dir := justfile_directory()
+rook_dir := source_directory()
 rook_scripts := rook_dir + "/scripts"
-root_dir := rook_dir + "/../../.."
 
 [private]
 default:
@@ -16,7 +15,7 @@ toolbox:
 
 [doc("Find and optionally cleanup orphan RBD images")]
 rbd-orphan-cleanup *args:
-    bash '{{ root_dir }}/scripts/rook-rbd-orphan-cleanup.sh' {{ args }}
+    bash '{{ rook_scripts }}/rook-rbd-orphan-cleanup.sh' {{ args }}
 
 [doc("Resume rook-ceph after halting")]
 resume:

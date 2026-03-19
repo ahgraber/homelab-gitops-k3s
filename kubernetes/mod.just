@@ -1,8 +1,8 @@
 set quiet := true
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-kubernetes_dir := justfile_directory()
-root_dir := kubernetes_dir + "/.."
+kubernetes_dir := source_directory()
+root_dir := shell('git -C "' + kubernetes_dir + '" rev-parse --show-toplevel')
 bootstrap_dir := root_dir + "/bootstrap"
 scripts_dir := root_dir + "/scripts"
 bootstrap_scripts_dir := scripts_dir + "/bootstrap"
@@ -128,12 +128,12 @@ resume-hr:
 
 [group("db")]
 [doc("Hibernate a CNPG database")]
-hibernate cnpg ns="default":
+db-hibernate cnpg ns="default":
     kubectl annotate cluster {{ cnpg }} -n {{ ns }} --overwrite cnpg.io/hibernation=on
 
 [group("db")]
 [doc("Hibernate all CNPG databases")]
-hibernate-all:
+db-hibernate-all:
     kubectl get cluster --all-namespaces --no-headers | while read -r ns name _; do \
       kubectl annotate cluster "$name" -n "$ns" --overwrite cnpg.io/hibernation=on; \
     done
