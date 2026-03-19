@@ -13,7 +13,7 @@ toolbox:
     pod=$(kubectl get pod -l 'app=rook-ceph-tools' -n rook-ceph --no-headers -o custom-columns=':metadata.name' | head -1); \
     kubectl exec -it "$pod" -n rook-ceph -- bash
 
-[doc("Find and optionally cleanup orphan RBD images")]
+[doc("Find and optionally cleanup orphan RBD images (args: --mode dry-run|trash|rm, --pool, --yes)")]
 rbd-orphan-cleanup *args:
     bash '{{ rook_scripts }}/rook-rbd-orphan-cleanup.sh' {{ args }}
 

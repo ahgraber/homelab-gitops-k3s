@@ -49,11 +49,11 @@ k3s-cleanup group="kubernetes":
 list:
     find '{{ ansible_dir }}/playbooks' -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.yml' \) -exec basename {} \; | sed 's/\.ya\?ml$//' | sort
 
-[doc("Run an Ansible playbook by name")]
+[doc("Run an Ansible playbook by name (use 'list' to see available; args: --become, --check, --diff, --tags=TAG, --limit=HOST)")]
 playbook playbook group="kubernetes" *args:
     {{ ansible_cfg }} ansible-playbook -i '{{ inventory }}' -l {{ group }} '{{ ansible_dir }}/playbooks/{{ playbook }}.yaml' {{ args }}
 
-[doc("Run an arbitrary command on hosts")]
+[doc("Run an arbitrary command on hosts (args: --become, --limit=HOST)")]
 cmd cmd group="kubernetes" *args:
     {{ ansible_cfg }} ansible -i '{{ inventory }}' {{ group }} -m ansible.builtin.shell -a "{{ cmd }}" {{ args }}
 

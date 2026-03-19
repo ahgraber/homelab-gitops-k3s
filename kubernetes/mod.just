@@ -54,7 +54,7 @@ uncordon node:
     kubectl uncordon {{ node }}
 
 [group("cluster")]
-[doc("Gather common resources across the cluster")]
+[doc("Gather common resources across the cluster (args: -n NAMESPACE; default: -A)")]
 resources *args:
     for r in nodes gitrepositories kustomizations helmrepositories helmreleases certificates certificaterequests ingresses pods; do \
       kubectl get "$r" {{ if args == '' { "-A" } else { args } }}; \
