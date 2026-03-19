@@ -3,10 +3,10 @@
 - [Ansible](#ansible)
   - [Call arbitrary playbooks](#call-arbitrary-playbooks)
     - [With ansible](#with-ansible)
-    - [With task](#with-task)
+    - [With just](#with-just)
   - [Send arbitrary commands](#send-arbitrary-commands)
     - [With ansible](#with-ansible-1)
-    - [With task](#with-task-1)
+    - [With just](#with-just-1)
 
 ## Call arbitrary playbooks
 
@@ -20,10 +20,10 @@ ansible-playbook -i <path/to/inventory> -l <groupname> <path/to/playbook> --beco
 # > ansible-playbook -i ./inventory -l ubuntu ./playbooks/cluster-reboot.yaml --become
 ```
 
-### With task
+### With just
 
 ```sh
-task ansible:run group='kubernetes' playbook='k3s-reboot' -- '--become'
+just ansible playbook k3s-reboot kubernetes -- --become
 ```
 
 ## Send arbitrary commands
@@ -38,8 +38,8 @@ ansible -i <path/to/inventory> -l <groupname> -m ansible.builtin.shell -a <shell
 # > ansible -i ./inventory -l <groupname> -m ansible.builtin.shell -a "apt upgrade -y" --become
 ```
 
-### With task
+### With just
 
 ```sh
-task ansible:cmd group='kubernetes' cmd='apt upgrade -y' -- '--become'
+just ansible cmd "apt upgrade -y" kubernetes -- --become
 ```

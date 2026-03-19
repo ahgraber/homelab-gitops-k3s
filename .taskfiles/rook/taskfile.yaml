@@ -14,9 +14,8 @@ includes:
     internal: true
 
 vars:
-  ROOK_TASK_DIR: "{{ .ROOT_DIR }}/.taskfiles/Rook"
-  ROOK_SCRIPTS_DIR: "{{ .ROOK_TASK_DIR }}/scripts"
-  ROOK_TEMPLATES_DIR: "{{ .ROOK_TASK_DIR }}/templates"
+  ROOK_SCRIPTS_DIR: "{{ .ROOT_DIR }}/kubernetes/apps/rook-ceph/scripts"
+  ROOK_TEMPLATES_DIR: "{{ .ROOT_DIR }}/.taskfiles/rook/templates"
 
   # cephnodes: ['optiplex3','optiplex4','optiplex5']
   # cephdisk: '/dev/sda'
@@ -41,7 +40,7 @@ tasks:
 
   rbd-orphan-cleanup:
     desc: Find and optionally cleanup orphan RBD images (defaults to dry-run)
-    cmd: bash {{ .ROOT_DIR }}/scripts/rook-rbd-orphan-cleanup.sh {{ .CLI_ARGS }}
+    cmd: bash {{ .ROOK_SCRIPTS_DIR }}/rook-rbd-orphan-cleanup.sh {{ .CLI_ARGS }}
     vars:
       CLI_ARGS: ""
 

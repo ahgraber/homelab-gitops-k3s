@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+# shellcheck disable=SC2312
 
 scaledown_rook_ceph () {
 
@@ -14,13 +15,13 @@ for controller in "${controllers[@]}"; do
     # get appname for log
     app="$(kubectl get "${_controller[@]}" -o jsonpath='{.metadata.labels.app}')"
     # scale down
-    kubectl scale "${_controller[@]}" --replicas 1
+    kubectl scale "${_controller[@]}" --replicas 0
     kubectl wait pod -A --for delete --selector="app=${app}" --timeout=2m
-    echo "Scaled ${app}."
+    echo "Scaled ${app} to 0."
 done;
 }
 
 #--------------------------------------------------
-echo "Resuming rook-ceph..."
+echo "Scaling down rook-ceph..."
 scaledown_rook_ceph
 echo "Done."
