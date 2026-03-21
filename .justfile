@@ -42,6 +42,13 @@ force-reset branch="main":
     git clean -f -d
     git pull origin {{ branch }}
 
+# --- Secrets ---
+
+[group("secrets")]
+[doc("Generate OAuth client secret and store in 1Password (usage: just oauth-secret <namespace> <app>)")]
+oauth-secret namespace app *flags:
+    uv run scripts/oauth_client.py {{ namespace }} {{ app }} {{ flags }}
+
 # --- SOPS ---
 
 [group("sops")]
