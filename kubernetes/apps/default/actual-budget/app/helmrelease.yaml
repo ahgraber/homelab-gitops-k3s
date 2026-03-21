@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app actual-budget
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 1h
+  values:
+    controllers:
+      actual-budget:
+        annotations:
+          reloader.stakater.com/search: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/actualbudget/actual-server
+              tag: 26.3.0
+            env:
+              ACTUAL_PORT: &port 5006
+              # OIDC via Authelia
+              ACTUAL_LOGIN_METHOD: openid
+              ACTUAL_OPENID_ENFORCE: "true"
+              ACTUAL_OPENID_DISCOVERY_URL: https://auth.${SECRET_DOMAIN}/.well-known/openid-configuration
+              ACTUAL_OPENID_CLIENT_ID: actual-budget
+              ACTUAL_OPENID_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: actual-oidc
+                    key: client-secret
+              ACTUAL_OPENID_SERVER_HOSTNAME: https://budget.${SECRET_DOMAIN}
+              ACTUAL_TOKEN_EXPIRATION: openid-provider
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+              startup:
+                enabled: true
+            resources:
+              requests:
+                cpu: 12m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames:
+          - budget.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data
