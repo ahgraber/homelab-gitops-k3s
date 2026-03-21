@@ -23,13 +23,15 @@ Client integration requires configuration of Authelia and the client application
 1. Generate and store the OAuth client secret in 1Password:
 
    ```bash
-   just oauth-secret <namespace> <app>
+   just oauth secret <namespace> <app>
    ```
 
    This generates a random secret + PBKDF2 digest and stores both in 1Password:
 
    - `op://homelab/<namespace>.<app>/client-secret` (plaintext, for the app)
    - `op://homelab/security.authelia/Client Secrets/<APP>_OAUTH_CLIENT_DIGEST` (digest, for Authelia)
+
+   The command prints a reminder to complete the remaining Authelia wiring.
 
 2. Add the client to `identity_providers.oidc.clients` in Authelia's `configuration.yaml`,
    referencing the digest via `{{ secret "/config/secrets/<APP>_OAUTH_CLIENT_DIGEST" }}`.

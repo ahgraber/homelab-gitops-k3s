@@ -16,7 +16,7 @@ List recipes in a module:
 just --list <module>
 ```
 
-Available modules: `ansible`, `kube`, `rook`, `mlflow`
+Available modules: `ansible`, `kube`, `rook`, `mlflow`, `secrets`, `oauth`
 
 Root-level recipes are grouped under `repository` and `sops`.
 
@@ -42,12 +42,14 @@ just <module> <recipe> <required-arg> -- --flag --another-flag
 
 Modules are colocated with the directories they manage:
 
-| Module    | File                                 | Domain                            |
-| --------- | ------------------------------------ | --------------------------------- |
-| `ansible` | `ansible/mod.just`                   | Ansible operations                |
-| `kube`    | `kubernetes/mod.just`                | Cluster, Flux, DB, VolSync, Debug |
-| `rook`    | `kubernetes/apps/rook-ceph/mod.just` | Rook-Ceph operations              |
-| `mlflow`  | `.just/mlflow/mod.just`              | MLflow trace management           |
+| Module    | File                                        | Domain                            |
+| --------- | ------------------------------------------- | --------------------------------- |
+| `ansible` | `ansible/mod.just`                          | Ansible operations                |
+| `kube`    | `kubernetes/mod.just`                       | Cluster, Flux, DB, VolSync, Debug |
+| `rook`    | `kubernetes/apps/rook-ceph/mod.just`        | Rook-Ceph operations              |
+| `mlflow`  | `kubernetes/apps/datasci/mlflow/mod.just`   | MLflow trace management           |
+| `secrets` | `kubernetes/apps/external-secrets/mod.just` | ExternalSecret maintenance        |
+| `oauth`   | `kubernetes/apps/security/mod.just`         | Authelia OAuth client setup       |
 
 The `kube` module uses groups to organize recipes.
 Run `just --list kube` to see recipes organized by: cluster, flux, db, volsync, debug.

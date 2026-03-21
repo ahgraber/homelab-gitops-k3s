@@ -10,6 +10,8 @@ mod ansible "ansible"
 mod kube "kubernetes"
 mod rook "kubernetes/apps/rook-ceph"
 mod mlflow "kubernetes/apps/datasci/mlflow"
+mod secrets "kubernetes/apps/external-secrets"
+mod oauth "kubernetes/apps/security"
 
 [private]
 default:
@@ -41,13 +43,6 @@ force-reset branch="main":
     git reset --hard HEAD
     git clean -f -d
     git pull origin {{ branch }}
-
-# --- Secrets ---
-
-[group("secrets")]
-[doc("Generate OAuth client secret and store in 1Password (usage: just oauth-secret <namespace> <app>)")]
-oauth-secret namespace app *flags:
-    uv run scripts/oauth_client.py {{ namespace }} {{ app }} {{ flags }}
 
 # --- SOPS ---
 
