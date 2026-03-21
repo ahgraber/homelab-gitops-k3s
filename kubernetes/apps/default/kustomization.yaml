@@ -11,6 +11,7 @@ components:
 resources:
   - ./namespace.yaml
   # Flux-Kustomizations | Apps
+  - ./actual-budget/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./cyberchef/ks.yaml
   - ./flaresolverr/ks.yaml
