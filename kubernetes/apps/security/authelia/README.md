@@ -20,9 +20,24 @@ Refer to [lldap/example_configs/authelia.md at main · lldap/lldap](https://gith
 
 Client integration requires configuration of Authelia and the client application (and perhaps also LLDAP if additional roles are required).
 
-1. Update `identity_providers.oidc.clients` in Authelia's `configuration.yml`
-   1. Authelia will use the hash of the client secret (`uv run scripts/authelia_hash.py`).
-2. Update the application to point to Authelia as the auth provider and ensure the application knows the actual secret that we hashed for Authelia.
+1. Generate and store the OAuth client secret in 1Password:
+
+   ```bash
+   just oauth-secret <namespace> <app>
+   ```
+
+   This generates a random secret + PBKDF2 digest and stores both in 1Password:
+
+   - `op://homelab/<namespace>.<app>/client-secret` (plaintext, for the app)
+   - `op://homelab/security.authelia/Client Secrets/<APP>_OAUTH_CLIENT_DIGEST` (digest, for Authelia)
+
+2. Add the client to `identity_providers.oidc.clients` in Authelia's `configuration.yaml`,
+   referencing the digest via `{{ secret "/config/secrets/<APP>_OAUTH_CLIENT_DIGEST" }}`.
+
+3. Add a `data` entry to Authelia's ExternalSecret (`secret.externalsecret.yaml`) to pull
+   `<APP>_OAUTH_CLIENT_DIGEST` from the `security.authelia` 1Password item.
+
+4. Update the application to point to Authelia as the OIDC provider with the plaintext secret.
 
 ### Envoy-Gateway Integration
 

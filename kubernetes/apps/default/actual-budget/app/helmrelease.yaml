@@ -31,7 +31,7 @@ spec:
                   secretKeyRef:
                     name: actual-oidc
                     key: client-secret
-              ACTUAL_OPENID_SERVER_HOSTNAME: https://actual-budget.${SECRET_DOMAIN}
+              ACTUAL_OPENID_SERVER_HOSTNAME: https://budget.${SECRET_DOMAIN}
               ACTUAL_TOKEN_EXPIRATION: openid-provider
             probes:
               liveness:
@@ -74,7 +74,7 @@ spec:
     route:
       app:
         hostnames:
-          - actual-budget.${SECRET_DOMAIN}
+          - budget.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
             namespace: network
