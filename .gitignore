@@ -2,6 +2,7 @@
 
 # dot-directories, unless explicitly kept
 .*/
+!.claude/
 !.github/
 !.renovate/
 !.taskfiles
@@ -74,6 +75,7 @@ report/
 **/*cache*/
 
 # ai
+!.claude/block-k8s-ops.py
 !.claude/settings.json
 !.codex/rules/kubectl.rules
 docs/superpowers

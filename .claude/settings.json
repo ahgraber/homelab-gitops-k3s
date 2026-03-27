@@ -1,76 +1,15 @@
 {
-  "permissions": {
-    "deny": [
-      "Bash(kubectl get secret -o*)",
-      "Bash(kubectl get secret --output*)",
-      "Bash(kubectl get secrets -o*)",
-      "Bash(kubectl get secrets --output*)",
-      "Bash(kubectl get externalsecret -o*)",
-      "Bash(kubectl get externalsecret --output*)",
-      "Bash(kubectl get externalsecrets -o*)",
-      "Bash(kubectl get externalsecrets --output*)",
-      "Bash(kubectl get secretstore -o*)",
-      "Bash(kubectl get secretstore --output*)",
-      "Bash(kubectl get secretstores -o*)",
-      "Bash(kubectl get secretstores --output*)",
-      "Bash(kubectl get clustersecretstore -o*)",
-      "Bash(kubectl get clustersecretstore --output*)",
-      "Bash(kubectl get clustersecretstores -o*)",
-      "Bash(kubectl get clustersecretstores --output*)",
-
-      "Bash(nix * kubectl get secret -o*)",
-      "Bash(nix * kubectl get secret --output*)",
-      "Bash(nix * kubectl get secrets -o*)",
-      "Bash(nix * kubectl get secrets --output*)",
-      "Bash(nix * kubectl get externalsecret -o*)",
-      "Bash(nix * kubectl get externalsecret --output*)",
-      "Bash(nix * kubectl get externalsecrets -o*)",
-      "Bash(nix * kubectl get externalsecrets --output*)",
-      "Bash(nix * kubectl get secretstore -o*)",
-      "Bash(nix * kubectl get secretstore --output*)",
-      "Bash(nix * kubectl get secretstores -o*)",
-      "Bash(nix * kubectl get secretstores --output*)",
-      "Bash(nix * kubectl get clustersecretstore -o*)",
-      "Bash(nix * kubectl get clustersecretstore --output*)",
-      "Bash(nix * kubectl get clustersecretstores -o*)",
-      "Bash(nix * kubectl get clustersecretstores --output*)"
-    ],
-    "ask": [
-      "Bash(kubectl apply*)",
-      "Bash(kubectl delete*)",
-      "Bash(kubectl edit*)",
-      "Bash(kubectl patch*)",
-      "Bash(kubectl rollout restart*)",
-      "Bash(kubectl scale*)",
-      "Bash(kubectl cordon*)",
-      "Bash(kubectl drain*)",
-      "Bash(kubectl uncordon*)",
-
-      "Bash(nix * kubectl apply*)",
-      "Bash(nix * kubectl delete*)",
-      "Bash(nix * kubectl edit*)",
-      "Bash(nix * kubectl patch*)",
-      "Bash(nix * kubectl rollout restart*)",
-      "Bash(nix * kubectl scale*)",
-      "Bash(nix * kubectl cordon*)",
-      "Bash(nix * kubectl drain*)",
-      "Bash(nix * kubectl uncordon*)",
-
-      "Bash(helm install*)",
-      "Bash(helm upgrade*)",
-      "Bash(helm uninstall*)",
-      "Bash(nix * helm install*)",
-      "Bash(nix * helm upgrade*)",
-      "Bash(nix * helm uninstall*)",
-
-      "Bash(flux reconcile*)",
-      "Bash(flux suspend*)",
-      "Bash(flux resume*)",
-      "Bash(nix * flux reconcile*)",
-      "Bash(nix * flux suspend*)",
-      "Bash(nix * flux resume*)",
-
-      "Bash(ansible-playbook*)"
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/block-k8s-ops.py"
+          }
+        ]
+      }
     ]
   }
 }
