@@ -1,0 +1,144 @@
+# Block Kubernetes Operations — Pattern File
+#
+# Homelab-specific rules for Kubernetes, Flux CD, Ansible, and SOPS operations.
+# General destructive operations (git, filesystem, cloud, databases) are handled
+# by the global block-destructive-ops-patterns.toml.
+#
+# Each rule requires:
+#   pattern     - regex matched against the Bash command
+#   description - what the matched operation does and its effect
+#   reason      - why it is blocked or flagged (safety/security concern)
+#   mode        - "block" (exit 2) or "ask" (exit 0 + permission dialog)
+#
+# Optional:
+#   case_insensitive = true   (for patterns where case varies, e.g. k8s resource types)
+#
+# Rules are evaluated in order; the first match wins.
+# Structure: [[category.rules]] groups rules by concern for readability.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KUBERNETES SECRET EXFILTRATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+[k8s-secrets]
+description = "Prevents Kubernetes secret data from being dumped into Claude's context"
+
+[[k8s-secrets.rules]]
+pattern = '\bkubectl\s+get\s+(?:secrets?|externalsecrets?|secretstores?|clustersecretstores?)\b(?:\s+\S+)*\s+(?:-o(?:\s|=|\S)|--output(?:\s|=))'
+case_insensitive = true
+description = "Dumps Kubernetes secret resources in machine-readable format (kubectl get secret -o yaml/json)"
+reason = "Exfiltrates plaintext credentials, TLS private keys, or service-account tokens into Claude's context where they could be incorporated into a subsequent command or network call. Use `kubectl describe secret <name>` to inspect metadata without exposing values."
+mode = "block"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SHELL INDIRECTION (K8S GUARD BYPASS PREVENTION)
+# ─────────────────────────────────────────────────────────────────────────────
+
+[shell-indirection]
+description = "Blocks shell patterns that can bypass regex-based Kubernetes safety guards"
+
+[[shell-indirection.rules]]
+pattern = '\bxargs\s+.*\bkubectl\b'
+description = "Pipes arguments through xargs to kubectl, bypassing direct command-line regex matching"
+reason = "xargs-constructed kubectl commands are not visible to static pattern matching and could bypass secret exfiltration or mutation guards. Run the underlying kubectl command directly instead."
+mode = "block"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KUBERNETES CLUSTER MUTATIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+[k8s-mutations]
+description = "Cluster-mutating kubectl operations that require human confirmation"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+(?:apply|create|replace|delete|edit|patch)\b'
+description = "Creates, modifies, or deletes Kubernetes resources on the live cluster"
+reason = "This command changes live cluster state. Confirm this targets the intended cluster, namespace, and resources before proceeding."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+rollout\s+restart\b'
+description = "Restarts all pods in a deployment by triggering a rolling update"
+reason = "Restarting workloads causes temporary disruption and potential service downtime. Confirm the target deployment and namespace."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+scale\b'
+description = "Changes the replica count of a workload on the live cluster"
+reason = "Scaling affects resource allocation and availability. Scaling to zero removes all running pods. Confirm the target and replica count."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+(?:cordon|drain|uncordon)\b'
+description = "Cordons, drains, or uncordons a cluster node"
+reason = "Node operations affect all workloads scheduled on the node and may cause service disruption across multiple applications."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+(?:run|expose)\b'
+description = "Creates a new pod or exposes a service on the live cluster"
+reason = "This command creates new resources on the live cluster. Confirm the target namespace and resource configuration."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+(?:set\s+\S+|label|annotate|taint)\b'
+description = "Modifies resource metadata, labels, annotations, or node taints on the live cluster"
+reason = "Metadata changes can affect scheduling, service routing, and policy enforcement. Confirm the target resource and values."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+exec\b'
+description = "Executes a command inside a running pod"
+reason = "Interactive pod access can modify application state, read secrets from the pod's environment, or exfiltrate data. Confirm the target pod and command."
+mode = "ask"
+
+[[k8s-mutations.rules]]
+pattern = '\bkubectl\s+cp\b'
+description = "Copies files to or from a running pod"
+reason = "File transfer to/from pods can modify application state or exfiltrate data. Confirm the source, destination, and target pod."
+mode = "ask"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FLUX CD OPERATIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+[flux]
+description = "Flux CD operations that affect GitOps reconciliation on the live cluster"
+
+[[flux.rules]]
+pattern = '\bflux\s+(?:reconcile|suspend|resume)\b'
+description = "Triggers a Flux reconciliation, suspension, or resumption on the live cluster"
+reason = "Reconciliation forces the cluster to sync with the Git source immediately. Suspension pauses automatic sync, which can cause configuration drift. Confirm the target resource and namespace."
+mode = "ask"
+
+[[flux.rules]]
+pattern = '\bflux\s+(?:bootstrap|install|uninstall|delete)\b'
+description = "Installs, uninstalls, or bootstraps the Flux CD installation on the cluster"
+reason = "These operations modify the Flux installation itself, which controls all GitOps-managed workloads on the cluster. Confirm this is intentional."
+mode = "ask"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANSIBLE
+# ─────────────────────────────────────────────────────────────────────────────
+
+[ansible]
+description = "Ansible operations that modify cluster nodes and infrastructure"
+
+[[ansible.rules]]
+pattern = '\bansible-playbook\b'
+description = "Executes an Ansible playbook against one or more hosts"
+reason = "Ansible playbooks can modify system configuration, install or remove software, reboot nodes, or change cluster state. Confirm the inventory target and playbook contents before proceeding."
+mode = "ask"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SOPS
+# ─────────────────────────────────────────────────────────────────────────────
+
+[sops]
+description = "SOPS secret decryption operations"
+
+[[sops.rules]]
+pattern = '\bsops\s+(?:.*\s)?(?:--decrypt|-d)\b'
+description = "Decrypts a SOPS-encrypted file, exposing plaintext secret values"
+reason = "Decrypted secrets would enter Claude's context where they could be incorporated into subsequent commands or network calls without further confirmation. Confirm this is intentional."
+mode = "ask"
