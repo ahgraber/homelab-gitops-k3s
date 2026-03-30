@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: docker.io/wabayang/jelu
-              tag: 0.80.0@sha256:c419ea159c16d7267fe24b0310363f283cf140ef0057e2a4b4fbec8d1d3e8048
+              tag: 0.81.0@sha256:3a870b23330a3a571916d2b6f6c187d9ec95bf80d4d5f6cbaf8255380f3b2d73
             env:
               TZ: "America/New_York"
               SERVER_PORT: &port 11111
