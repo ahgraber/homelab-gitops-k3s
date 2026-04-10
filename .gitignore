@@ -1,27 +1,30 @@
-# gitignore
-
-# dot-directories, unless explicitly kept
+# -------------------------------------------------------
+# Dot-directories: ignore all, allowlist what we track
+# -------------------------------------------------------
 .*/
 !.claude/
+!.codex/rules/kubectl.rules
 !.github/
 !.renovate/
 !.taskfiles
 
-# Editors
-.vscode/
-.monokle
-*.profraw
-CLAUDE.md
-
-# Trash
+# -------------------------------------------------------
+# OS
+# -------------------------------------------------------
 .DS_Store
 Thumbs.db
 
-# secrets
+# -------------------------------------------------------
+# Editors
+# -------------------------------------------------------
+.vscode/
+.monokle
+*.profraw
+
+# -------------------------------------------------------
+# Secrets & environment
+# -------------------------------------------------------
 kubeconfig
-# *kubeconfig*
-# *.agekey
-# *.key
 *.*key
 *.pem
 *.pgp
@@ -29,33 +32,63 @@ kubeconfig
 .config.env
 *credentials*
 .decrypted~*
-# .decrypted~*.yaml
 .env
 .envrc
 cloudflare-tunnel.json
 
-# terraform
-.terraform/
-*.tfstate*
-*.lock.hcl
-*.ova
-# main.tf  # allowing because all secrets are in .envrc
-govcvars.sh
-modules/terraform-vsphere/
-
-# ansible
+# -------------------------------------------------------
+# Ansible
+# -------------------------------------------------------
 .venv*
 ansible/.facts_cache/
 ansible/galaxy
 ansible/tmp
 
+# -------------------------------------------------------
+# Terraform
+# -------------------------------------------------------
+.terraform/
+*.tfstate*
+*.lock.hcl
+*.ova
+govcvars.sh
+modules/terraform-vsphere/
+
+# -------------------------------------------------------
 # direnv
+# -------------------------------------------------------
 .direnv/*
 
-# tasks
-bootstrap/.latest-template.sha
+# -------------------------------------------------------
+# AI tooling (local/personal files only)
+# -------------------------------------------------------
+CLAUDE.md
+CLAUDE.local.md
+.claude/settings.local.json
+settings.local.json
+docs/superpowers/
 
-# temp / working files & dirs
+# -------------------------------------------------------
+# Python
+# -------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.coverage
+.coverage.*
+
+# -------------------------------------------------------
+# Dependencies & build output
+# -------------------------------------------------------
+node_modules/
+build/
+dist/
+site/
+**/cache/
+
+# -------------------------------------------------------
+# Temp, logs, & working files
+# -------------------------------------------------------
 *.bak
 *.iso
 *.log
@@ -70,18 +103,18 @@ bootstrap/.latest-template.sha
 TODO.md
 report/
 
-# extras
-**/*pytest*/
-**/*cache*/
+# -------------------------------------------------------
+# Tasks
+# -------------------------------------------------------
+bootstrap/.latest-template.sha
 
-# ai
-!.claude/block-k8s-ops.py
-!.claude/settings.json
-!.codex/rules/kubectl.rules
-docs/superpowers
-
-
-# retain files
+# -------------------------------------------------------
+# Retain (must be last — negations override above)
+# -------------------------------------------------------
+!.gitkeep
+!.gitignore
+!.env.example
+!.env.sample
 !**.gitkeep
 !**.gitignore
 !*.sops.*
