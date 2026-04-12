@@ -15,6 +15,8 @@ spec:
   interval: 1h
   values:
     server:
+      configMapsToMount: "sprig"
+      setConfigFilePath: true
       config:
         persistence:
           default:
