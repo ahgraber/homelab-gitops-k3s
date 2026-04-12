@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/authelia/authelia
-              tag: 4.39.16
+              tag: 4.39.19
             env:
               TZ: "America/New_York"
               X_AUTHELIA_CONFIG: /config/configuration.yml
