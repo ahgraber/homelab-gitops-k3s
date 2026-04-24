@@ -15,69 +15,51 @@ spec:
   interval: 1h
   values:
     server:
-      configMapsToMount: "sprig"
-      setConfigFilePath: true
       config:
         persistence:
-          default:
-            driver: sql
-            sql:
-              driver: postgres12
-              port: 5432
-          visibility:
-            driver: sql
-            sql:
-              driver: postgres12
-              port: 5432
-    cassandra:
-      enabled: false
-    mysql:
-      enabled: false
-    postgresql:
-      enabled: false
-    elasticsearch:
-      enabled: false
-    prometheus:
-      enabled: false
-    grafana:
-      enabled: false
+          defaultStore: default
+          visibilityStore: visibility
+          numHistoryShards: 512
+          datastores:
+            default:
+              sql:
+                pluginName: postgres12
+                port: 5432
+                existingSecret: database-temporal
+                secretKey: PASSWORD
+            visibility:
+              sql:
+                pluginName: postgres12
+                port: 5432
+                existingSecret: database-temporal-visibility
+                secretKey: PASSWORD
     schema:
-      createDatabase:
-        enabled: false
-      setup:
-        enabled: true
-      update:
-        enabled: true
+      useHelmHooks: false
+    shims:
+      dockerize: false
+      elasticsearchTool: false
   valuesFrom:
     - kind: Secret
       name: database-temporal
       valuesKey: HOST
-      targetPath: server.config.persistence.default.sql.host
+      targetPath: server.config.persistence.datastores.default.sql.host
     - kind: Secret
       name: database-temporal
       valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.default.sql.database
+      targetPath: server.config.persistence.datastores.default.sql.database
     - kind: Secret
       name: database-temporal
       valuesKey: LOGIN
-      targetPath: server.config.persistence.default.sql.user
-    - kind: Secret
-      name: database-temporal
-      valuesKey: PASSWORD
-      targetPath: server.config.persistence.default.sql.password
+      targetPath: server.config.persistence.datastores.default.sql.user
     - kind: Secret
       name: database-temporal-visibility
       valuesKey: HOST
-      targetPath: server.config.persistence.visibility.sql.host
+      targetPath: server.config.persistence.datastores.visibility.sql.host
     - kind: Secret
       name: database-temporal-visibility
       valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.visibility.sql.database
+      targetPath: server.config.persistence.datastores.visibility.sql.database
     - kind: Secret
       name: database-temporal-visibility
       valuesKey: LOGIN
-      targetPath: server.config.persistence.visibility.sql.user
-    - kind: Secret
-      name: database-temporal-visibility
-      valuesKey: PASSWORD
-      targetPath: server.config.persistence.visibility.sql.password
+      targetPath: server.config.persistence.datastores.visibility.sql.user
