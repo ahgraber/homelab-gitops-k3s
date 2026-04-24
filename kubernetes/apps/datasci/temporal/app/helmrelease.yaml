@@ -24,13 +24,15 @@ spec:
             default:
               sql:
                 pluginName: postgres12
-                port: 5432
+                connectAddr: &pgAddr "datasci16-rw.datasci.svc.cluster.local:5432"
+                connectProtocol: "tcp"
                 existingSecret: database-temporal
                 secretKey: PASSWORD
             visibility:
               sql:
                 pluginName: postgres12
-                port: 5432
+                connectAddr: *pgAddr
+                connectProtocol: "tcp"
                 existingSecret: database-temporal-visibility
                 secretKey: PASSWORD
     schema:
@@ -41,24 +43,16 @@ spec:
   valuesFrom:
     - kind: Secret
       name: database-temporal
-      valuesKey: HOST
-      targetPath: server.config.persistence.datastores.default.sql.host
-    - kind: Secret
-      name: database-temporal
       valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.datastores.default.sql.database
+      targetPath: server.config.persistence.datastores.default.sql.databaseName
     - kind: Secret
       name: database-temporal
       valuesKey: LOGIN
       targetPath: server.config.persistence.datastores.default.sql.user
     - kind: Secret
       name: database-temporal-visibility
-      valuesKey: HOST
-      targetPath: server.config.persistence.datastores.visibility.sql.host
-    - kind: Secret
-      name: database-temporal-visibility
       valuesKey: DATABASE_NAME
-      targetPath: server.config.persistence.datastores.visibility.sql.database
+      targetPath: server.config.persistence.datastores.visibility.sql.databaseName
     - kind: Secret
       name: database-temporal-visibility
       valuesKey: LOGIN
