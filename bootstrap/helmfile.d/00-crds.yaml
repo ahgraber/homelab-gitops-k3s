@@ -16,7 +16,7 @@ releases:
   - name: external-dns
     namespace: network
     chart: external-dns/external-dns
-    version: 1.20.0
+    version: 1.21.1
 
   - name: envoy-gateway
     namespace: network
