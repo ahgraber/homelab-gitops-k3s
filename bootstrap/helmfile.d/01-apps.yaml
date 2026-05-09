@@ -52,7 +52,7 @@ releases:
     namespace: external-secrets
     chart: oci://ghcr.io/bjw-s-labs/helm/app-template
     # renovate: datasource=docker depName=ghcr.io/bjw-s-labs/helm/app-template
-    version: 4.6.2
+    version: 5.0.0
     values: ['./templates/values.yaml.gotmpl']
     needs:
       - external-secrets/external-secrets-operator
