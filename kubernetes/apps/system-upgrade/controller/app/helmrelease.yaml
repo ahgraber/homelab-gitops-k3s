@@ -10,7 +10,11 @@ spec:
     name: *app
   interval: 1h
   values:
+    global:
+      createDefaultServiceAccount: false
+
     defaultPodOptions:
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsGroup: 65534
