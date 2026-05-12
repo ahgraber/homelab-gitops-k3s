@@ -126,5 +126,4 @@ spec:
       tmpfs:
         type: emptyDir
         globalMounts:
-          - path: /tmp
-          - path: /app/downloaded_files
+          - path: /tmp/shelfmark
