@@ -14,6 +14,10 @@ spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
@@ -26,7 +30,7 @@ spec:
             image:
               repository: ghcr.io/calibrain/shelfmark
               # tag: dev@sha256:0e8952e2e30cacbb2dfa7bb68a70be62f6d993eb5953af43ed891f2cdee3231b
-              tag: v1.2.1
+              tag: v1.2.3
             env:
               TZ: "America/New_York"
               FLASK_PORT: &port 8084
