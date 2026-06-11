@@ -12,7 +12,6 @@ spec:
   values:
     crds:
       enabled: true
-    pspEnable: false
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -30,49 +29,19 @@ spec:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
 
+    # NOTE (Rook v1.20): CSI drivers are no longer deployed by Rook. The operator
+    # chart only installs the ceph-csi-operator subchart (controller + CRDs) when
+    # `csi.installCsiOperator` is true (default). The actual RBD/CephFS driver pods
+    # and their tunables (tolerations, kubeletDirPath, mount options, etc.) are now
+    # managed by the separate `ceph-csi-drivers` HelmRelease in this namespace.
     csi:
-      cephFSKernelMountOptions: ms_mode=crc
-      enableLiveness: true
+      # Install the bundled ceph-csi-operator subchart (manages CSI driver CRs).
+      installCsiOperator: true
       serviceMonitor:
         enabled: true
-      # enableRbdDriver: true
-      # enableCephfsDriver: true
-      # enableGrpcMetrics: false
-      # enableCSIHostNetwork: true
-      # enableCephfsSnapshotter: true
-      # enableRBDSnapshotter: true
-      # enablePluginSelinuxHostMount: false
-      # enableCSIEncryption: false
-
-      kubeletDirPath: /var/lib/kubelet
-
-      # Set provisionerTolerations and provisionerNodeAffinity for provisioner pod.
-      # The CSI provisioner would be best to start on the same nodes as other ceph daemons.
-      provisionerTolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-      # provisionerNodeAffinity: node-role.kubernetes.io/control-plane=true
-      # Set pluginTolerations and pluginNodeAffinity for plugin daemonset pods.
-      # The CSI plugins need to be started on all the nodes where the clients need to mount the storage.
-      pluginTolerations:
-        - effect: NoExecute
-          operator: Exists
-        - effect: NoSchedule
-          operator: Exists
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-      # pluginNodeAffinity: node-role.kubernetes.io/control-plane=true
 
     enableDiscoveryDaemon: true
     discover:
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
-
-    disableAdmissionController: true
-    # admissionController:
-    #   tolerations:
-    #     - effect: NoSchedule
-    #       key: node-role.kubernetes.io/control-plane
-    #       operator: Exists
-    #   nodeAffinity: node-role.kubernetes.io/control-plane=true
