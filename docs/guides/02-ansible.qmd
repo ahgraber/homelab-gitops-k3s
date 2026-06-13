@@ -1,12 +1,6 @@
-# Ansible
-
-- [Ansible](#ansible)
-  - [Call arbitrary playbooks](#call-arbitrary-playbooks)
-    - [With ansible](#with-ansible)
-    - [With just](#with-just)
-  - [Send arbitrary commands](#send-arbitrary-commands)
-    - [With ansible](#with-ansible-1)
-    - [With just](#with-just-1)
+---
+title: "Ansible"
+---
 
 ## Call arbitrary playbooks
 

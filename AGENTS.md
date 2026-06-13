@@ -588,7 +588,7 @@ All commit messages must follow the [Conventional Commits](https://www.conventio
 **Footers:**
 
 - Use `BREAKING CHANGE:` footer for breaking changes
-- Coding assistants MUST indicate their assistance via a co-authored-by message: `Co-authored-by: <agent name><email>`
+- Coding assistants MUST indicate their assistance via a commit message attribution: `AI-assistant: <agent name>`
 - Reference issues/PRs: `Closes #123`, `Refs #456`, `Fixes #789`
 
 ### Type Guidance
@@ -748,8 +748,8 @@ ansible-playbook -i ansible/inventory/hosts.yaml ansible/playbooks/<playbook>.ya
 
 - [README.md](./README.md) - Comprehensive setup and user documentation
 - [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules) - Security rules for kubectl/flux commands
-- [docs/ansible.md](./docs/ansible.md) - Ansible usage details
-- [docs/just.md](./docs/just.md) - Just command reference (for humans)
+- [docs/guides/02-ansible.qmd](./docs/guides/02-ansible.qmd) - Ansible usage details
+- [docs/guides/03-just.qmd](./docs/guides/03-just.qmd) - Just command reference (for humans)
 - [Flux Documentation](https://fluxcd.io/flux/) - Flux CD official docs
 - [k3s Documentation](https://docs.k3s.io/) - k3s official docs
 - [SOPS Documentation](https://github.com/getsops/sops) - SOPS usage and configuration

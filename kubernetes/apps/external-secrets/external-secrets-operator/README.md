@@ -7,7 +7,6 @@ External Secrets Operator (ESO) deployment for the homelab cluster.
 - Namespace: `external-secrets`
 - Helm chart: `external-secrets`
 - Shared ClusterSecretStore: `onepassword` (managed by `../onepassword/`)
-- Example manifests: `../_examples/`
 
 ## Bootstrap inputs
 

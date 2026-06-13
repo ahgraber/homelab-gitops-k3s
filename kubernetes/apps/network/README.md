@@ -17,7 +17,7 @@
            │                    │
    ┌───────▼───────┐            ▼
    │  k8s_gateway  │          public
-   │  10.2.118.2   │       cloudflare IP
+   │   <gw-vip>    │       cloudflare IP
    └───────┬───────┘            │
            │                    │
            │                  ┌─▼─────────────┐
@@ -29,7 +29,7 @@
 │  ┌───────▼───────┐     ┌───────▼───────┐  │
 │  │   internal    │     │   external    │  │
 │  │ envoy-gateway │     │ envoy-gateway │  │
-│  │  10.2.118.5   │     │  10.2.118.4   │  │
+│  │  <int-vip>    │     │  <ext-vip>    │  │
 │  └───────┬─┬─────┘     └───────┬───────┘  │
 │          │ └─────────────────┐ │          │
 │          │                   │ │          │
@@ -65,8 +65,8 @@ Public access is intended to flow only through the Cloudflare Tunnel into the `e
 
 Risks that may bypass this design:
 
-- ISP or homelab router port forwards/DMZ rules to `10.2.118.4` (envoy-external),
-  `10.2.118.5` (envoy-internal), or any node IPs.
+- ISP or homelab router port forwards/DMZ rules to `<ext-vip>` (envoy-external),
+  `<int-vip>` (envoy-internal), or any node IPs.
 - UPnP/NAT-PMP automatically opening inbound ports.
 - Public IPv6 exposure on nodes or routers.
 

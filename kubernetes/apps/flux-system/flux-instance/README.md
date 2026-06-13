@@ -21,8 +21,8 @@ In order to have Flux reconcile on `git push` you must configure GitHub to send 
 3. Piece together the full URL with the webhook path appended
 
    ```text
-   https://flux-webhook.${bootstrap_cloudflare_domain}/hook/123abc123abc...
+   https://flux-webhook.${SECRET_DOMAIN}/hook/123abc123abc...
    ```
 
 4. Navigate to the settings of your repository on GitHub, under "Settings/Webhooks" press the "Add webhook" button.
-   Fill in the webhook url and your `bootstrap_flux_github_webhook_token` secret and save.
+   Fill in the webhook url and your `github-webhook-token` secret and save.

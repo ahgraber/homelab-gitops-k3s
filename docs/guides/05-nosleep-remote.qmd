@@ -1,4 +1,6 @@
-# Preventing Sleep on Debian When Network Connections Are Active
+---
+title: "Preventing Sleep on Debian When Network Connections Are Active"
+---
 
 When running remote servers or SSH-accessible systems, you don't want your linux (Debian) machine to suspend while you're connected or performing remote tasks. This approach blocks system suspend whenever an SSH session is open — without requiring root, sudo, or system-wide configuration.
 

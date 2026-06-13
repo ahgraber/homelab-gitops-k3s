@@ -1,4 +1,6 @@
-# Observability review and migration notes
+---
+title: "Observability review and migration notes"
+---
 
 ## Current layout (this repository)
 - Observability workloads live under `kubernetes/apps/observability/`, with Grafana, kube-prometheus-stack, VictoriaLogs, Fluent Bit, Karma, Goldilocks, node-problem-detector, nut-exporter, Scrutiny, and speedtest-exporter grouped together in a single namespace tree. Dashboards are bundled with Grafana rather than scoped per-app.
