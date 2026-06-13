@@ -1,4 +1,6 @@
-# Renovate Policy and Requirements
+---
+title: "Renovate Policy and Requirements"
+---
 
 This document defines how Renovate is expected to operate in this repository.
 It is both an introduction and a normative specification.

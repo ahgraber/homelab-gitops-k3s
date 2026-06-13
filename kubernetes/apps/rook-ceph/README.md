@@ -85,12 +85,13 @@ ceph mgr module enable dashboard
 ### Integrate with Prometheus/Alertmanager
 
 > run the following commands against the ceph-toolbox pod
+> (replace the placeholder host/namespace with your Prometheus and Alertmanager services)
 
 ```sh
 ceph
-dashboard set-alertmanager-api-host 'http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093'
+dashboard set-alertmanager-api-host 'http://<alertmanager-svc>.<namespace>.svc.cluster.local:9093'
 dashboard set-alertmanager-api-ssl-verify False
-dashboard set-prometheus-api-host 'http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090'
+dashboard set-prometheus-api-host 'http://<prometheus-svc>.<namespace>.svc.cluster.local:9090'
 dashboard set-prometheus-api-ssl-verify False
 ```
 
@@ -343,7 +344,7 @@ Use the helper script:
 
 Default behavior is `dry-run` and does not mutate cluster state.
 
-Just wrapper is available as `just rook rbd-orphan-cleanup` (see [just docs](../../../docs/just.md)).
+Just wrapper is available as `just rook rbd-orphan-cleanup` (see [just docs](../../../docs/guides/03-just.qmd)).
 
 ### Common usage
 

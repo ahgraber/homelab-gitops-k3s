@@ -14,8 +14,15 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # TODO(quarto): remove this pin once nixpkgs ships a matched quarto+pandoc
+    # pair again. nixpkgs quarto 1.9.x emits pandoc's renamed `syntax-highlighting`
+    # option (was `highlight-style`), but no *released* pandoc accepts it yet, so
+    # `quarto render` fails on current/unstable nixpkgs. nixos-25.05 predates the
+    # quarto-1.9 bump (nixpkgs#480694) and provides a matched quarto+pandoc pair.
+    # Ref: https://github.com/NixOS/nixpkgs/issues/519484
+    nixpkgs-docs.url = "github:NixOS/nixpkgs/nixos-25.05";
     devshell.url = "github:numtide/devshell";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -25,7 +32,8 @@
     devshell,
     flake-utils,
     nixpkgs,
-    nixpkgs-unstable
+    nixpkgs-unstable,
+    nixpkgs-docs
   }:
     flake-utils.lib.eachDefaultSystem (system: {
       devShells.default =
@@ -53,10 +61,27 @@
               allowUnfree = true;
             };
           };
+          # TODO(quarto): drop this pinned docs toolchain once nixpkgs quarto and
+          # pandoc are a compatible pair again (see nixpkgs-docs input above).
+          docsPkgs = import nixpkgs-docs {
+            inherit system;
+            config = { allowUnfree = true; };
+          };
+          quartoPinned = docsPkgs.quarto;
+          pandocPinned = docsPkgs.pandoc;
         in
         pkgs.devshell.mkShell {
           name = "k8s-devshell";
           # imports = [];
+          # Force the pinned quarto to use its matched (pinned) pandoc, so it
+          # never falls back to a newer profile/devshell pandoc.
+          # Ref: https://github.com/NixOS/nixpkgs/issues/519484
+          env = [
+            {
+              name = "QUARTO_PANDOC";
+              value = "${pandocPinned}/bin/pandoc";
+            }
+          ];
           # a list of packages to add to the shell environment
           packages = with pkgs; [
             # ansible       # Radically simple IT automation
@@ -77,6 +102,10 @@
             kustomize # Customization of kubernetes YAML configurations
             minijinja # CLI to render MiniJinja/Jinja2 templates
             minio-client # CLI for minio, An S3-compatible object storage server
+            #--- docs (Great Docs / Quarto) ---
+            # Pinned pre-1.9 pair via nixpkgs-docs; see TODO on the input above.
+            quartoPinned # Scientific and technical publishing system (Great Docs renderer)
+            pandocPinned # Document converter, matched to quartoPinned
             # nerdctl        # A Docker-compatible CLI for containerd
             openldap # Open source implementation of the Lightweight Directory Access Protocol
             restic # A backup program that is fast, efficient and secure

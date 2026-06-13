@@ -118,3 +118,7 @@ bootstrap/.latest-template.sha
 !**.gitkeep
 !**.gitignore
 !*.sops.*
+
+# Great Docs (generated)
+great-docs/
+docs/projects/

@@ -31,7 +31,8 @@ repos:
         files: \.yml$
         exclude: |
           (?x)^(
-            ^.*(copier-answers\.ya?ml)$
+            ^.*(copier-answers\.ya?ml)$ |
+            ^(great-docs\.yml)$
           )$
       - id: forbid-rej
         name: Forbid .rej file extensions from `copier update`
@@ -114,6 +115,7 @@ repos:
             # these file types may have nonstandard indents
             ^(LICENSE)$ |
             ^.*(\.md)$ |
+            ^.*(\.qmd)$ |
             ^.*(\.rst)$
           )$
         stages: [pre-commit]

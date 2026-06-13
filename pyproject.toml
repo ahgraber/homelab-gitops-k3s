@@ -8,7 +8,13 @@ dependencies = [
     "ruamel-yaml>=0.19.1",
 ]
 
-# [dependency-groups]
+[dependency-groups]
+# Docs toolchain (Great Docs). Installed on demand: `uv sync --group docs`.
+# Keeping great-docs here (not a global `uv tool`) ensures Quarto's post-render
+# runs under a Python that has great-docs + its deps (e.g. pygments).
+docs = [
+    "great-docs>=0.13",
+]
 # dev = [
 #     "maturin>=1.11.5",
 # ]

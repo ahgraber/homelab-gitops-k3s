@@ -10,11 +10,10 @@ manage the process of creating/managing the cert.
 For LetsEncrypt DNS-01 validation, the `Issuer` will create an `Order` and a `Challenge` to validate ownership
 of the domain associated with the cert.
 
-We can test this by using the **staging** `Issuer` to provision a test certificate:
+Staging and production are provided as two separate `ClusterIssuer` resources: `letsencrypt-staging` and `letsencrypt-production`.
+Point a `Certificate`'s `issuerRef` at the **staging** `ClusterIssuer` to provision a test certificate before switching to production:
 
 ```sh
-kubectl apply -f ./certificate-test.yaml
-
 # review k8s objects
 kubectl get CertificateRequest -n network
 kubectl get Order -n network
@@ -27,7 +26,7 @@ kubectl get Certificate -n network
 ## ⚠️ Rate Limits
 
 - [Let's Encrypt rate limits](https://letsencrypt.org/docs/rate-limits/) can be mitigated by testing
-  using the `STAGING: 'true'` environmental variable.
+  with the `letsencrypt-staging` `ClusterIssuer` before switching to `letsencrypt-production`.
 - Check on your requests count w/r/t rate limits here: <https://crt.sh/>
 
 ## 🔀 Cross-namespace certs

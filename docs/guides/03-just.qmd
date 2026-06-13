@@ -1,6 +1,8 @@
-# [Just](https://github.com/casey/just)
+---
+title: "Just"
+---
 
-`just` is the command runner used by this repository.
+[`just`](https://github.com/casey/just) is the command runner used by this repository.
 
 ## Use
 

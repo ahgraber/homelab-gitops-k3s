@@ -1,4 +1,6 @@
-# 💻 Machine Preparation
+---
+title: "💻 Machine Preparation"
+---
 
 ## System requirements
 

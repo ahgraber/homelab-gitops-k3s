@@ -1,6 +1,6 @@
-# [Calibre Web Downloader](https://github.com/calibrain/calibre-web-automated-book-downloader)
+# [Shelfmark](https://github.com/calibrain/shelfmark)
 
-Automates discovery and downloading of ebooks for Calibre Web Automated.
+Shelfmark (image `ghcr.io/calibrain/shelfmark`) automates discovery and downloading of ebooks for Calibre Web Automated.
 Downloads are pushed into the shared `calibre-library` PVC so the main Calibre instance can ingest them automatically.
 
 ## Notes

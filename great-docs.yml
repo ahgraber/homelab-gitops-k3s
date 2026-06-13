@@ -1,0 +1,39 @@
+# Great Docs Configuration
+# https://posit-dev.github.io/great-docs/user-guide/configuration.html
+#
+# This repo is NOT a Python package, so there is no API `reference:` section.
+# Great Docs is used here purely as a narrative documentation generator:
+#   - landing page  <- root README.md
+#   - User Guide    <- docs/guides/*.qmd   (hand-authored, ordered by prefix)
+#   - Apps section  <- docs/projects/**    (GENERATED, gitignored)
+#                      run `uv run scripts/docs/gen_app_pages.py` before build.
+
+display_name: "k3s gitops homelab"
+
+# GitHub integration / source links
+github_style: widget
+source:
+  enabled: true
+  branch: main
+
+# Not a real PyPI package — drop the PyPI link from the landing sidebar.
+pypi: false
+
+# Theme
+dark_mode_toggle: true
+site:
+  toc: true
+  toc-depth: 3
+
+# --- Narrative guides -------------------------------------------------------
+# Directory of hand-authored .qmd files. Ordering is by numeric filename prefix.
+user_guide: docs/guides
+
+# --- Generated content sections ---------------------------------------------
+# The Apps section is built from per-app READMEs by scripts/docs/gen_app_pages.py.
+# `index: true` renders a card-grid landing page; the sidebar nests by namespace.
+sections:
+  - title: Apps
+    dir: docs/projects
+    index: true
+    index_columns: 2

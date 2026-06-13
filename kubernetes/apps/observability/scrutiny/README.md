@@ -11,11 +11,11 @@ See [supported OSes](https://github.com/AnalogJ/scrutiny/blob/master/docs/SUPPOR
 
 ## Application
 
-Scrutiny is deployed as 3 distinct components:
+Scrutiny is deployed as 2 HelmReleases:
 
-1. `helmrelease-scrutiny` is the web application front end and data collection endpoint
-2. `helmrelease-influxdb` stores the data
-3. `helmrelease-collector` deploys a daemonset so that each k8s node can log SMART data to Scrutiny
+1. `scrutiny` runs the web application front end / data collection endpoint and its InfluxDB
+   data store as two containers in a single release
+2. `scrutiny-collector` deploys a daemonset so that each k8s node can log SMART data to Scrutiny
 
 ## [TrueNAS setup](https://github.com/AnalogJ/scrutiny/blob/master/docs/INSTALL_HUB_SPOKE.md)
 
@@ -26,7 +26,8 @@ Scrutiny is deployed as 3 distinct components:
 >
 > NOTE: Scrutiny collector may need to be installed after every TrueNAS update!
 
-1. Scrutiny needs Smartmontools version 7+. Check on the TrueNAS terminal that version 7 is installed.
+1. Scrutiny needs Smartmontools version 7+.
+   Check on the TrueNAS terminal that version 7 is installed.
 
    ```sh
    sudo su  # must be run as root!
@@ -34,7 +35,8 @@ Scrutiny is deployed as 3 distinct components:
    ```
 
 2. Download the Collector agent binary (below link is for version 0.3.13 - the latest as of January 2022).
-   Then copy it to `/usr/local` and make it executable. In short, execute the following as root:
+   Then copy it to `/usr/local` and make it executable.
+   In short, execute the following as root:
 
    ```sh
    mkdir -p /mnt/ssdpool/Users/admin/scrutiny
