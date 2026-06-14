@@ -103,7 +103,7 @@ jobs:
 
       # Deploy
       - name: Create Github Deployment
-        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # v1.2.0
+        uses: bobheadxi/deployments@9d4477fdaa4120020cd10ab7e97f68c801422e73 # v1.3.0
         id: deployment
         if: ${{ !github.event.pull_request.head.repo.fork }}
         with:
