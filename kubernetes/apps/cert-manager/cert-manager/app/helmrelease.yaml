@@ -10,7 +10,9 @@ spec:
     name: *app
   interval: 1h
   values:
-    installCRDs: true
+    crds:
+      enabled: true
+      keep: true
 
     # Comma separated list of feature gates that should be enabled on the controller pod.
     featureGates: ""
