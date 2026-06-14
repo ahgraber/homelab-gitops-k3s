@@ -25,7 +25,7 @@ jobs:
           uv sync --group docs
 
       - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+        uses: quarto-dev/quarto-actions/setup@d1d44ffb885dabd878c341ba7116a603843bb14c # v2.0.3
 
       - name: Generate app pages
         # Rebuilds docs/projects/ from per-app READMEs (gitignored output).
