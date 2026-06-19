@@ -12,4 +12,5 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   - ./rook-ceph-operator/ks.yaml
+  - ./rook-ceph-csi-drivers/ks.yaml
   - ./rook-ceph-cluster/ks.yaml

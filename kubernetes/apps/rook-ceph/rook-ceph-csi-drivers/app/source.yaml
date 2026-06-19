@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/helmrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ceph-csi-operator
+spec:
+  interval: 1h
+  # The ceph-csi-drivers chart is published only via the gh-pages Helm repo
+  # (no OCI registry). Versions track the ceph-csi-operator subchart bundled
+  # by the rook-ceph operator chart (v1.0.1 ships with Rook v1.20.0).
+  url: https://ceph.github.io/ceph-csi-operator

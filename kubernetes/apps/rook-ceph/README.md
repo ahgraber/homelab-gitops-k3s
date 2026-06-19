@@ -41,9 +41,21 @@ _Ceph_ is a highly scalable distributed storage solution, providing object, bloc
 
 ## Updating
 
-- [Health verification](https://rook.github.io/docs/rook/v1.19/Upgrade/health-verification/)
-- [Rook upgrade](https://rook.github.io/docs/rook/v1.19/Upgrade/rook-upgrade/)
-- [Ceph upgrade](https://rook.github.io/docs/rook/v1.19/Upgrade/ceph-upgrade/)
+- [Health verification](https://rook.github.io/docs/rook/v1.20/Upgrade/health-verification/)
+- [Rook upgrade](https://rook.github.io/docs/rook/v1.20/Upgrade/rook-upgrade/)
+- [Ceph upgrade](https://rook.github.io/docs/rook/v1.20/Upgrade/ceph-upgrade/)
+
+> **Rook v1.20 — CSI driver management moved out of Rook.**
+> As of v1.20 the operator no longer deploys the Ceph-CSI drivers. The operator
+> chart installs the `ceph-csi-operator` subchart (controller + CRDs); the actual
+> driver pods are deployed by the separate `rook-ceph-csi-drivers` HelmRelease
+> (chart `ceph-csi-drivers`). Per-driver tunables that used to live under the
+> operator chart's `csi:` block (tolerations, `kubeletDirPath`,
+> `cephFSKernelMountOptions`) and `cephClusterSpec.csi.readAffinity` now live there
+> instead. Driver names keep the `rook-ceph.` prefix so existing PVs still resolve.
+>
+> Reconcile order is enforced via Flux `dependsOn`:
+> `rook-ceph-operator` → `rook-ceph-csi-drivers` → `rook-ceph-cluster`.
 
 ## Teardown and Cleanup
 
