@@ -16,7 +16,7 @@ spec:
           config-local-only:
             image:
               repository: alpine
-              tag: 3.24.0
+              tag: 3.24.1
             command:
               - /bin/sh
               - -ec
