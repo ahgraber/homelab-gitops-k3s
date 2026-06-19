@@ -26,6 +26,10 @@ Values mirror Rook's recommended defaults plus this cluster's customizations:
 - `drivers.cephfs.kernelMountOptions.ms_mode: crc` — migrated from the old operator
   `csi.cephFSKernelMountOptions: ms_mode=crc`; required because the cluster enforces
   msgr2 (`requireMsgr2: true`).
+- `drivers.rbd.snapshotPolicy: volumeSnapshot` — the chart defaults the RBD driver's `snapshotPolicy` to `none`, which omits the `csi-snapshotter` sidecar from the RBD `controllerPlugin` (5/5 containers instead of 6/6).
+  The old Rook-operator-managed CSI enabled the snapshotter by default, so the v1.20 split silently broke RBD `VolumeSnapshot` creation — every RBD-backed VolSync `ReplicationSource` hung at `readyToUse: false`.
+  Setting this restores parity with the `cephfs` driver (which the chart already defaults to `volumeSnapshot`).
+  **Gotcha:** when adding new RBD-backed apps that need snapshots, this must stay set.
 
 ### Dropped during the v1.20 migration
 

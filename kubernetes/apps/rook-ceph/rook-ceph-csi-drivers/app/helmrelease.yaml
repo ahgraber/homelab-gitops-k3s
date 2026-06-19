@@ -51,6 +51,13 @@ spec:
         # matches existing PV `spec.csi.driver` values and the StorageClass
         # provisioner names. Changing this orphans all existing volumes.
         name: rook-ceph.rbd.csi.ceph.com
+        # The ceph-csi-drivers chart defaults `drivers.rbd.snapshotPolicy` to
+        # `none`, which omits the csi-snapshotter sidecar from the RBD
+        # controllerPlugin. The old Rook-operator-managed CSI enabled the
+        # snapshotter by default, so the v1.20 split silently broke RBD
+        # VolumeSnapshots (VolSync backups hang at readyToUse: false forever).
+        # Restore parity with the cephfs driver (which defaults to volumeSnapshot).
+        snapshotPolicy: volumeSnapshot
       cephfs:
         enabled: true
         name: rook-ceph.cephfs.csi.ceph.com
