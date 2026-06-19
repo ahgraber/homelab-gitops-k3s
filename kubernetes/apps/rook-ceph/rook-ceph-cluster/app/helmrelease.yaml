@@ -10,6 +10,11 @@ spec:
     name: *app
   interval: 1h
   values:
+    # Prefix for the cephfs/rbd/nfs StorageClass provisioner names. Defaults to the
+    # operator namespace, but set explicitly so it keeps matching existing PVs and
+    # the driver names declared in the rook-ceph-csi-drivers HelmRelease (Rook v1.20).
+    csiDriverNamePrefix: rook-ceph
+
     annotations:
       all:
         reloader.stakater.com/search: "true"
@@ -47,7 +52,7 @@ spec:
     cephClusterSpec:
       dataDirHostPath: /var/lib/rook
 
-      # https://rook.io/docs/rook/v1.19/Storage-Configuration/Advanced/ceph-configuration/#example
+      # https://rook.io/docs/rook/v1.20/Storage-Configuration/Advanced/ceph-configuration/#example
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote
@@ -62,10 +67,6 @@ spec:
           mon_compact_on_start: "true" # quote
         osd:
           rocksdb_perf: "true"
-
-      csi:
-        readAffinity:
-          enabled: true
 
       # automate [data cleanup process](https://github.com/rook/rook/blob/master/Documentation/Storage-Configuration/ceph-teardown.md#delete-the-data-on-hosts) in cluster destruction.
       cleanupPolicy:
