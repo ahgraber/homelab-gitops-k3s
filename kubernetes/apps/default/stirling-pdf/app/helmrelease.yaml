@@ -16,7 +16,7 @@ spec:
           main:
             image:
               repository: ghcr.io/stirling-tools/stirling-pdf
-              tag: 2.12.0@sha256:2bb9b67f3edbca7ecc80f6e851a02cd04a10d5ea1d69b3e80b1e1f615e97b7a2
+              tag: 2.13.2@sha256:976dfa581b6cb1fb91e9b0b90284a92febe8ba6a4519e28f95c4e8e550d6d70d
             env:
               TZ: "America/New_York"
               MODE: BOTH
