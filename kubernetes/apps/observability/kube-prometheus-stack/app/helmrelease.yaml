@@ -267,7 +267,7 @@ spec:
           limits:
             memory: 4Gi
         retention: 5d
-        retentionSize: 18GiB
+        retentionSize: 20GiB # ~80% of the 25Gi PVC; leaves headroom for WAL + compaction
         walCompression: true
         persistentVolumeClaimRetentionPolicy:
           whenDeleted: Delete
@@ -277,4 +277,4 @@ spec:
               storageClassName: ceph-block
               resources:
                 requests:
-                  storage: 20Gi
+                  storage: 25Gi
