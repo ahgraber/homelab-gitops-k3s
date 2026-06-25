@@ -36,10 +36,37 @@ Changes committed here are automatically applied to the cluster by Flux.
 ## Nix Development Environment
 
 This repository uses Nix flakes to provide a consistent development environment with all required tools (kubectl, flux, helm, sops, etc.).
+The environment is loaded automatically via **direnv** (`.envrc` → `use flake`, cached by nix-direnv).
 
-### Running Commands with Nix
+### Running Commands (direnv — preferred)
 
-Use the `nix develop` wrapper to run commands with the correct tools and kubeconfig:
+Use `direnv exec .` to run any command with the devshell loaded:
+
+```bash
+direnv exec . <command>
+```
+
+This sources the cached devshell (`.direnv/flake-profile-*.rc`) and exports `KUBECONFIG`, `SOPS_AGE_KEY_FILE`, etc. for you — so you do **not** need to set `KUBECONFIG` manually.
+With a warm cache it does **not** contact the privileged nix daemon, so it works inside a restricted command sandbox.
+
+Examples:
+
+```bash
+# kubectl commands (KUBECONFIG is provided by direnv)
+direnv exec . kubectl get pods -n network
+
+# flux commands
+direnv exec . flux get hr -A
+```
+
+**Cache freshness**: `direnv exec` is daemon-free only while the cache is warm.
+After changing `flake.nix`/`flake.lock`, a human must re-warm the cache from a normal terminal (with nix daemon access) via `direnv reload` (or `cd` out and back into the repo).
+An agent in a sandbox that blocks the nix daemon socket cannot rebuild the cache itself — `direnv exec` will fail loudly until it is re-warmed.
+
+### Fallback: `nix develop`
+
+If direnv is unavailable, fall back to the `nix develop` wrapper.
+This talks to the nix daemon socket and will **not** work in a sandbox that blocks it:
 
 ```bash
 nix develop -c env 'KUBECONFIG=./kubeconfig' <command>
@@ -51,16 +78,6 @@ If running with `nix develop` fails, add `--extra-experimental-features` flags:
 nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFIG=./kubeconfig' <command>
 ```
 
-Examples:
-
-```bash
-# kubectl commands
-nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n network
-
-# flux commands
-nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
-```
-
 ## Command Execution Patterns
 
 **IMPORTANT**: Use `just` as the repository command runner.
@@ -68,7 +85,7 @@ nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -A
 Instead:
 
 1. **Reference the just modules** (`.just/`) to understand what commands should be run
-2. **Execute the underlying commands** using the nix develop wrapper with `kubectl`, `flux`, `ansible`, `sops`, etc.
+2. **Execute the underlying commands** using `direnv exec .` with `kubectl`, `flux`, `ansible`, `sops`, etc.
 
 Example:
 
@@ -77,7 +94,7 @@ Example:
 - ✅ Do: Look at `.just/flux/mod.just` to see the actual command, then run:
 
   ```bash
-  nix develop -c env 'KUBECONFIG=./kubeconfig' \
+  direnv exec . \
     flux bootstrap github \
     --owner=ahgraber \
     --repository=homelab-gitops-k3s \
@@ -89,10 +106,10 @@ This keeps command usage consistent and discoverable via `just`.
 
 ## Kubectl and Flux Operations
 
-- **Use nix develop wrapper**: All kubectl/flux commands should use the nix develop pattern:
+- **Use direnv**: All kubectl/flux commands should run via `direnv exec .` (which provides `KUBECONFIG`):
 
   ```bash
-  nix develop -c env 'KUBECONFIG=./kubeconfig' <command>
+  direnv exec . <command>
   ```
 
   For additional usage directives and security constraints, see [.codex/rules/kubectl.rules](.codex/rules/kubectl.rules).
@@ -146,10 +163,10 @@ If a request appears to require a mutating action, stop and ask the user to conf
 - Examples with ordering:
 
   ```bash
-  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pods -n <namespace>
-  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl get pod <name> -n <namespace>
-  nix develop -c env 'KUBECONFIG=./kubeconfig' kubectl logs -n <namespace> <pod>
-  nix develop -c env 'KUBECONFIG=./kubeconfig' flux get hr -n <namespace>
+  direnv exec . kubectl get pods -n <namespace>
+  direnv exec . kubectl get pod <name> -n <namespace>
+  direnv exec . kubectl logs -n <namespace> <pod>
+  direnv exec . flux get hr -n <namespace>
   ```
 
 - Keep commands scoped and explicit; do not rely on default namespaces or contexts when fetching cluster state.
@@ -703,7 +720,7 @@ Refs #201
 - Located at `./kubeconfig` in repository root
 - Created by Ansible during k3s installation
 - Required for all `kubectl` and `flux` commands
-- **Passed via nix develop wrapper**: `nix develop -c env 'KUBECONFIG=./kubeconfig' <command>`
+- **Provided automatically by direnv**: `direnv exec . <command>` exports `KUBECONFIG=./kubeconfig` from the devshell, so no manual `env` is needed
 
 ## Ansible Operations
 

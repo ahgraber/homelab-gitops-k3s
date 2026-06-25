@@ -100,6 +100,7 @@
             kubeconform # FAST Kubernetes manifests validator, with support for Custom Resources
             kubernetes-helm # helm CLI
             kustomize # Customization of kubernetes YAML configurations
+            stern # Multi-pod/container log tailing for Kubernetes
             minijinja # CLI to render MiniJinja/Jinja2 templates
             minio-client # CLI for minio, An S3-compatible object storage server
             #--- docs (Great Docs / Quarto) ---
