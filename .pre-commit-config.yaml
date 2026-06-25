@@ -98,7 +98,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=commitizen-tools/commitizen
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.16.3
+    rev: v4.16.4
     hooks:
       - id: commitizen
         language: python
