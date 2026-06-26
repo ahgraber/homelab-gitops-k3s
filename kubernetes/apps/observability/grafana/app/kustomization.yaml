@@ -6,4 +6,5 @@ resources:
   - ./grafana.yaml
   - ./datasource.yaml
   - ./servicemonitor.yaml
+  - ./dashboards
   # - ./securitypolicy.yaml # let grafana handle OIDC

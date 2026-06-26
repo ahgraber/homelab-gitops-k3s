@@ -5,16 +5,4 @@ kind: Kustomization
 resources:
   - ./source.yaml
   - ./helmrelease.yaml
-
-configMapGenerator:
-  - name: speedtest-dashboard
-    files:
-      - ./speedtest-exporter-dashboard.json
-      # - speedtest-dashboard.json=https://raw.githubusercontent.com/MiguelNdeCarvalho/speedtest-exporter/main/Dashboard/Speedtest-Exporter.json
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-    reloader.stakater.com/match: "true"
-  labels:
-    grafana_dashboard: "true"
+# Dashboard moved to a GrafanaDashboard CR: apps/observability/grafana/app/dashboards/exporters.yaml

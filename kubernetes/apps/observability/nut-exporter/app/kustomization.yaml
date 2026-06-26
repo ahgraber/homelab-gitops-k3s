@@ -8,16 +8,4 @@ resources:
   - ./prometheusrule.yaml
   - ./secret.externalsecret.yaml
   # - ./secret.sops.yaml
-
-configMapGenerator:
-  - name: nut-exporter-dashboard
-    files:
-      - ./nut-exporter-dashboard.json
-      # - nut-exporter.json=https://grafana.com/api/dashboards/15406/revisions/2/download
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
-    reloader.stakater.com/match: "true"
-  labels:
-    grafana_dashboard: "true"
+# Dashboard moved to a GrafanaDashboard CR: apps/observability/grafana/app/dashboards/exporters.yaml

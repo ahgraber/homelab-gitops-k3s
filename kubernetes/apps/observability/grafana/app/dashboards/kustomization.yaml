@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./kubernetes.yaml
+  - ./infrastructure.yaml
+  - ./exporters.yaml
+  - ./pod-resources-max.yaml
+# NOTE: pod-resources-max.json is fetched by GrafanaDashboard via its raw URL,
+# so it is intentionally NOT a kustomize resource.
