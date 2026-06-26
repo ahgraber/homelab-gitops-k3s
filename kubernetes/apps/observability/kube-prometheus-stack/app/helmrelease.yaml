@@ -58,7 +58,10 @@ spec:
 
     grafana:
       enabled: false # manage by itself
-      forceDeployDashboards: true
+      # forceDeployDashboards disabled: the chart ships dashboards as sidecar-labeled
+      # ConfigMaps, which grafana-operator does not load. Dashboards are managed as
+      # GrafanaDashboard CRs under apps/observability/grafana/app/dashboards.
+      forceDeployDashboards: false
     additionalPrometheusRulesMap:
       dockerhub-rules:
         groups:
@@ -98,6 +101,49 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+          # Drop rarely-used kubelet/storage latency histograms (/metrics endpoint)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (kubelet_.*|storage_operation)_duration_seconds_bucket
+        probesMetricRelabelings:
+          # Drop probe latency histogram buckets (/metrics/probes endpoint)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: prober_probe_duration_seconds_bucket
+        # Setting cAdvisorMetricRelabelings replaces the chart default entirely,
+        # so the chart's default drops are reproduced here first, then the
+        # high-cardinality / restart-churning labels are dropped LAST (after the
+        # default rules that still need `interface`/`id` to match).
+        cAdvisorMetricRelabelings:
+          # --- chart defaults (kube-prometheus-stack 87.2.1) ---
+          - action: drop
+            sourceLabels: [__name__]
+            regex: container_cpu_(cfs_throttled_seconds_total|load_average_10s|system_seconds_total|user_seconds_total)
+          - action: drop
+            sourceLabels: [__name__]
+            regex: container_fs_(io_current|io_time_seconds_total|io_time_weighted_seconds_total|reads_merged_total|sector_reads_total|sector_writes_total|writes_merged_total)
+          - action: drop
+            sourceLabels: [__name__]
+            regex: container_memory_(mapped_file|swap)
+          - action: drop
+            sourceLabels: [__name__]
+            regex: container_(file_descriptors|tasks_state|threads_max)
+          - action: drop
+            sourceLabels: [__name__, scope]
+            regex: container_memory_failures_total;hierarchy
+          - action: drop
+            sourceLabels: [__name__, interface]
+            regex: container_network_.*;(cali|cilium|cni|lxc|nodelocaldns|tunl).*
+          - action: drop
+            sourceLabels: [__name__]
+            regex: container_spec.*
+          - action: drop
+            sourceLabels: [id, pod]
+            regex: .+;
+          # --- custom: drop high-card / restart-churn labels on cadvisor ---
+          # Keep `image` — the DockerhubRateLimitRisk alert filters on it.
+          - action: labeldrop
+            regex: (id|name|interface)
     kubeApiServer:
       serviceMonitor:
         metricRelabelings:
@@ -127,12 +173,15 @@ spec:
         - 10.2.118.25
       serviceMonitor: &sm
         metricRelabelings:
+          # k3s re-exposes the apiserver/etcd metric registry on the scheduler &
+          # controller-manager ports; drop the redundant high-cardinality histograms
+          # (already dropped on kubeApiServer — keeps _sum/_count for rates).
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver|etcd|rest_client)_.*_bucket
           - action: drop
             sourceLabels: ["__name__"]
             regex: workqueue_(work|queue)_duration_seconds_bucket
-          - action: drop
-            sourceLabels: ["__name__"]
-            regex: rest_client_request_duration_seconds_bucket
       # service:
       #   selector:
       #     k8s-app: kube-controller-manager
@@ -158,12 +207,20 @@ spec:
       # config specified in kube-state-metrics.yaml configmap
       fullnameOverride: kube-state-metrics
       metricLabelsAllowlist:
-        - pods=[*]
-        - deployments=[*]
-        - persistentvolumeclaims=[*]
+        # Narrowed from [*]: excludes churny labels (pod-template-hash,
+        # controller-revision-hash, job-name) that mint new kube_*_labels series
+        # on every rollout.
+        - pods=[app,app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component,app.kubernetes.io/part-of]
+        - deployments=[app.kubernetes.io/name,app.kubernetes.io/instance]
+        - persistentvolumeclaims=[app.kubernetes.io/name,app.kubernetes.io/instance]
       prometheus:
         monitor:
           enabled: true
+          metricRelabelings:
+            # Drop per-secret KSM series (high-cardinality 'secret' label, low value)
+            - action: drop
+              sourceLabels: ["__name__"]
+              regex: kube_secret_.*
           relabelings:
             - action: replace
               regex: (.*)
