@@ -52,3 +52,33 @@ tasks:
     preconditions:
       - { msg: "Missing Sops config file", sh: "test -f {{ .SOPS_CONFIG_FILE }}" }
       - { msg: "Missing Sops Age key file", sh: "test -f {{ .AGE_FILE }}" }
+
+  sops-updatekeys:
+    desc: Re-key every sops file to the current .sops.yaml recipients (keeps data key, minimal diff)
+    summary: |
+      Run after adding/removing a host or user recipient in .sops.yaml.
+      Re-wraps each file's data key for the current recipient set without changing
+      encrypted values. You must be a current recipient of each file to re-key it.
+      For a compromised/rotated key use `task nix:sops-rotate` instead.
+    cmds:
+      - cmd: |
+          find . -type f \( \
+            -name '*.sops.yaml' -o -name '*.sops.yml' -o \
+            -name '*.sops.json' -o -name '*.sops.env' -o -name '*.sops.ini' \
+          \) -exec sops updatekeys {} \;
+
+  sops-rotate:
+    desc: Re-key every sops file, then rotate data keys and re-encrypt all values
+    summary: |
+      First syncs each file's recipients to the current .sops.yaml, removing stale
+      recipients, then generates a fresh data key per file and re-encrypts every
+      value. Produces large diffs; only needed when a recipient key may have been
+      exposed or on a scheduled rotation. For routine recipient changes use
+      `task nix:sops-updatekeys`.
+    prompt: Rotate data keys for ALL sops files? This re-encrypts every value.
+    cmds:
+      - cmd: |
+          find . -type f \( \
+            -name '*.sops.yaml' -o -name '*.sops.yml' -o \
+            -name '*.sops.json' -o -name '*.sops.env' -o -name '*.sops.ini' \
+          \) -exec sops updatekeys -y {} \; -exec sops rotate -i {} \;
