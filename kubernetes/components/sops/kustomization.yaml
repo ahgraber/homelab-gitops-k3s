@@ -2,6 +2,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
+# Intentionally empty: cluster-secrets / custom-secrets are now provided by
+# 1Password via External Secrets (see external-secrets/onepassword). This
+# component is retained only because app namespaces still reference it; it can
+# be removed once those references are dropped.
 resources: []
-  # - ./cluster-secrets.sops.yaml
-  # - ./custom-secrets.sops.yaml
