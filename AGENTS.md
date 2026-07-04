@@ -702,6 +702,10 @@ Refs #201
 
 3. **Bootstrap secrets** must exist in `kubernetes/bootstrap/` before Flux can decrypt other secrets
 
+4. **Do NOT set `postBuild.substituteFrom` in an app `ks.yaml`.**
+   The parent `flux-cluster` Kustomization (`kubernetes/flux/cluster/ks.yaml`) replaces it on every child (kustomize treats the CRD list as atomic), so it is silently dropped and live edits are reverted.
+   Global vars (`SECRET_DOMAIN`, etc.) come from `cluster-secrets`; to add an app-specific secret, append it via a targeted JSON6902 patch in the parent's `spec.patches` (see `cloudflared` / `kube-prometheus-stack`), then reconcile the **parent** (`flux reconcile kustomization flux-cluster --with-source`), not the child.
+
 ### Cluster Operations
 
 1. **Don't assume cluster is accessible** - verify connection before running kubectl commands:

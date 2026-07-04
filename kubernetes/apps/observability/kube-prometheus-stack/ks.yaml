@@ -22,11 +22,9 @@ spec:
     namespace: flux-system
   interval: 1h
   wait: true
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: kube-prometheus-stack-alertmgrNotifiers
-        optional: true
+  # NOTE: postBuild.substituteFrom is owned by the flux-cluster parent patch,
+  # which appends `kube-prometheus-stack-alertmgrNotifiers` (optional) alongside
+  # cluster-secrets. Declaring it here would be overwritten and has no effect.
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1

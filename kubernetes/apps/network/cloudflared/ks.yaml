@@ -13,13 +13,9 @@ spec:
     - name: external-dns
       namespace: network
   path: ./kubernetes/apps/network/cloudflared/app
-  # NOTE: cloudflared secret must exist before applying this kustomization!
-  postBuild:
-    substituteFrom:
-      # - kind: Secret
-      #   name: cluster-secrets
-      - kind: Secret
-        name: cloudflared-tunnel
+  # NOTE: the `cloudflared-tunnel` bootstrap secret must exist before this
+  # kustomization reconciles — it provides ${TUNNEL_ID} for postBuild
+  # substitution (appended to substituteFrom by the flux-cluster parent patch).
   prune: true
   sourceRef:
     kind: GitRepository

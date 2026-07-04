@@ -70,3 +70,31 @@ spec:
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
+    - # Per-app substituteFrom additions.
+      # The wildcard patch above REPLACES each child's postBuild.substituteFrom
+      # with [cluster-secrets] (kustomize treats the CRD list as atomic). These
+      # targeted JSON6902 patches run afterwards and APPEND app-specific secrets,
+      # yielding a merged list (e.g. [cluster-secrets, cloudflared-tunnel]).
+      # cloudflared: needs ${TUNNEL_ID} for the DNSEndpoint + tunnel config.
+      patch: |-
+        - op: add
+          path: /spec/postBuild/substituteFrom/-
+          value:
+            kind: Secret
+            name: cloudflared-tunnel
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        name: cloudflared
+    - # kube-prometheus-stack: optional Alertmanager notifier secrets.
+      patch: |-
+        - op: add
+          path: /spec/postBuild/substituteFrom/-
+          value:
+            kind: Secret
+            name: kube-prometheus-stack-alertmgrNotifiers
+            optional: true
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        name: kube-prometheus-stack

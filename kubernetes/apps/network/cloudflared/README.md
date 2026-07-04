@@ -5,6 +5,7 @@
     - [Prerequisites](#prerequisites)
     - [Setup](#setup)
   - [Deploy tunnel for app (**START HERE IF TUNNEL ALREADY DEPLOYED**)](#deploy-tunnel-for-app-start-here-if-tunnel-already-deployed)
+  - [Secrets & substitution](#secrets--substitution)
 
 ## Argo Tunnel
 
@@ -78,3 +79,24 @@ Install the [cloudflared CLI](https://developers.cloudflare.com/cloudflare-one/c
 
    When Cloudflare receives traffic for the DNS or Load Balancing hostname you configured in the previous step, it will send that traffic to the cloudflareds running in this deployment.
    Those cloudflared instances will proxy the request to your app's Service.
+
+## Secrets & substitution
+
+`cloudflared` pulls its identity from three distinct sources — do not conflate them:
+
+| Name                     | Origin                                             | Provides              | Consumed by                                                                            |
+| ------------------------ | -------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------- |
+| `cloudflared-tunnel`     | bootstrap secret (SOPS, `kubernetes/bootstrap/`)   | `TUNNEL_ID`           | pod env `TUNNEL_ID`, **and** Flux `${TUNNEL_ID}` build-time substitution (DNSEndpoint) |
+| `cloudflared-credential` | ExternalSecret → 1Password (`network.cloudflared`) | `credentials.json`    | pod volume mounted at `/etc/cloudflared/creds/credentials.json`                        |
+| `cluster-secrets`        | ClusterExternalSecret → 1Password                  | `SECRET_DOMAIN`, etc. | Flux `${SECRET_DOMAIN}` substitution (config, HTTPRoutes)                              |
+
+`credentials.json` is rendered by ExternalSecrets from 1Password and is **no longer stored as a SOPS secret** in-repo.
+The legacy `secret.sops.yaml*` flow above is kept for historical reference.
+
+### `${TUNNEL_ID}` substitution (important)
+
+[`dnsendpoint.yaml`](./app/dnsendpoint.yaml) builds the tunnel CNAME `${TUNNEL_ID}.cfargotunnel.com` via Flux `postBuild` substitution.
+This app's `ks.yaml` intentionally does **not** set `postBuild.substituteFrom` — the parent `flux-cluster` Kustomization owns that field (see gotcha #4 in the repo-root `AGENTS.md`).
+`cloudflared-tunnel` is merged in via a targeted JSON6902 append in [`kubernetes/flux/cluster/ks.yaml`](../../../flux/cluster/ks.yaml), yielding `[cluster-secrets, cloudflared-tunnel]`.
+
+If `${TUNNEL_ID}` fails to resolve (strict-mode `variable not set`, blocking this Kustomization): confirm the `cloudflared-tunnel` secret exists in `network` with a `TUNNEL_ID` key and the parent's append patch is present, then reconcile the **parent** — `flux reconcile kustomization flux-cluster --with-source`.
