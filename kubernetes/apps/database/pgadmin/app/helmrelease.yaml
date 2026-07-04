@@ -24,8 +24,8 @@ spec:
 
     serverDefinitions:
       enabled: true
-      resourceType: ConfigMap
-      existingConfigmap: pgadmin-serverdefinitions
+      resourceType: Secret
+      existingSecret: *app
 
     strategy:
       type: Recreate

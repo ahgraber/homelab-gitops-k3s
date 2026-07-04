@@ -20,6 +20,6 @@ spec:
     accessModes: ["ReadWriteMany"]
     capacity: "10Gi"
     # moverSecurityContext:
-    #   runAsUser: ${APP_UID:-568}
-    #   runAsGroup: ${APP_GID:-568}
-    #   fsGroup: ${APP_GID:-568}
+    #   runAsUser: <app-uid>
+    #   runAsGroup: <app-gid>
+    #   fsGroup: <app-gid>

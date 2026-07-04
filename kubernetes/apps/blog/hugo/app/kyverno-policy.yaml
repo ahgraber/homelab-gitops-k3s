@@ -50,10 +50,10 @@ spec:
                     args:
                       - "-c"
                       - |
-                        curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
-                          -H "Authorization: Bearer ${CF_API_TOKEN}" \
+                        curl -X POST "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" \
+                          -H "Authorization: Bearer $CF_API_TOKEN" \
                           -H "Content-Type: application/json" \
-                          --data "{\"tags\":[\"${CF_CACHE_TAG}\"]}"
+                          --data "{\"tags\":[\"$CF_CACHE_TAG\"]}"
                     env:
                       - name: CF_CACHE_TAG
                         value: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
