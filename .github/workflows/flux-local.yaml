@@ -16,6 +16,8 @@ permissions:
 
 jobs:
   filter:
+    # Retained for comparison while Flate becomes the standard Flux validator.
+    if: ${{ false }}
     name: Flux Local - Filter
     runs-on: ubuntu-latest
     outputs:
@@ -28,7 +30,7 @@ jobs:
           patterns: kubernetes/**/*
 
   test:
-    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    if: ${{ false }}
     needs: filter
     name: Flux Local - Test
     runs-on: ubuntu-latest
@@ -59,7 +61,7 @@ jobs:
             --verbose
 
   diff:
-    if: ${{ needs.filter.outputs.changed-files != '[]' }}
+    if: ${{ false }}
     needs: filter
     name: Flux Local - Diff
     runs-on: ubuntu-latest
@@ -130,7 +132,7 @@ jobs:
             ```
 
   success:
-    if: ${{ !cancelled() }}
+    if: ${{ false }}
     needs:
       - test
       - diff
