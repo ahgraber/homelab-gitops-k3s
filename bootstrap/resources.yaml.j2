@@ -14,12 +14,12 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cloudflared-credentials
+  name: cloudflared-tunnel
   namespace: network
 stringData:
   TUNNEL_ID: op://homelab/network.cloudflared/TUNNEL_ID
-  credentials.json: | # block pipe needed to render as string
-    op://homelab/network.cloudflared/credentials.json
+  # credentials.json: | # block pipe needed to render as string
+  #   op://homelab/network.cloudflared/credentials.json
 
 ---
 apiVersion: v1
