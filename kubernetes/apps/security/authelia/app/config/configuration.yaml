@@ -90,7 +90,7 @@ access_control:
     #   policy: deny
     # # This just reduces logging noise in authelia
     # - domain:
-    #     - whoami.${CLUSTER_DOMAIN}
+    #     - whoami.${SECRET_DOMAIN}
     #   resources:
     #     - ^/health$
     #     - ^/health/

@@ -10,6 +10,8 @@ spec:
     provider: sops
   deletionPolicy: WaitForTermination
   postBuild:
+    substitute:
+      TIMEZONE: America/New_York
     substituteFrom:
       - kind: Secret
         name: cluster-secrets
@@ -35,6 +37,8 @@ spec:
             provider: sops
           deletionPolicy: WaitForTermination
           postBuild:
+            substitute:
+              TIMEZONE: America/New_York
             substituteFrom:
               - kind: Secret
                 name: cluster-secrets
