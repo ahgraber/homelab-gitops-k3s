@@ -160,7 +160,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 📍 _Here we will be running a Ansible Playbook to install [k3s](https://k3s.io/) with [this](https://galaxy.ansible.com/xanmanning/k3s) Ansible galaxy role._
 
-> If you run into problems, you can run `just kubernetes nuke` to destroy the k3s cluster and start over from this point.
+> If you run into problems, you can run `just kube nuke` to destroy the k3s cluster and start over from this point.
 
 1. Verify Ansible can view your config
 
@@ -177,7 +177,7 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 3. Install k3s (may need to run this twice to pass the k3s systemd restart)
 
    ```sh
-   just kubernetes install
+   just kube install
    ```
 
    > The `kubeconfig` for interacting with your cluster should have been created in the root of your repository.
@@ -243,10 +243,10 @@ This repo configures a single Kubernetes ([k3s](https://k3s.io)) cluster with [A
 
 1. Output all the common resources in your cluster.
 
-   📍 _Suggestion: Use the provided [just recipes](.just/) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
+   📍 _Suggestion: Use the provided [just recipes](.justfile) for validation of cluster resources or continue to get familiar with the `kubectl` and `flux` CLI tools._
 
    ```sh
-   just kubernetes resources
+   just kube resources
    ```
 
 2. ⚠️ It might take `cert-manager` a while to generate certificates, this is normal so be patient.
@@ -394,18 +394,23 @@ The benefits of a public repository include:
 <!-- markdownlint-disable MD033 -->
 
 <details>
-  <summary>Expand to read guide on adding Flux SSH authentication</summary>
+  <summary>Expand to read guide on adding Flux SSH authentication (private repos only)</summary>
 <!-- markdownlint-enable MD033 -->
 
-01. Generate new SSH key:
+> This cluster syncs a **public** repository over anonymous HTTPS, so **no git
+> credentials are needed** and no deploy key is applied during bootstrap. Follow
+> this section **only** if you make your repository private and want Flux to pull
+> it over SSH.
+
+01. Generate a new SSH key:
 
     ```sh
-    ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./kubernetes/bootstrap/github-deploy.key -q -P ""
+    ssh-keygen -t ecdsa -b 521 -C "github-deploy-key" -f ./bootstrap/github-deploy.key -q -P ""
     ```
 
-02. Paste public key in the deploy keys section of your repository settings
+02. Paste the public key into the **Deploy keys** section of your repository settings.
 
-03. Create sops secret in `./kubernetes/bootstrap/github-deploy-key.sops.yaml` with the contents of:
+03. Create a sops secret at `./bootstrap/github-deploy-key.sops.yaml`:
 
     ```yaml
     apiVersion: v1
@@ -414,57 +419,57 @@ The benefits of a public repository include:
       name: github-deploy-key
       namespace: flux-system
     stringData:
-      # 3a. Contents of github-deploy-key
+      # 3a. Contents of ./bootstrap/github-deploy.key (the private key)
       identity: |
         -----BEGIN OPENSSH ... -----
             ...
         -----END OPENSSH ... -----
-      # 3b. Output of curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]'
+      # 3b. Output of: curl --silent https://api.github.com/meta | jq --raw-output '"github.com "+.ssh_keys[]'
       known_hosts: |
         github.com ssh-ed25519 ...
         github.com ecdsa-sha2-nistp256 ...
         github.com ssh-rsa ...
     ```
 
-04. Encrypt secret:
+    (Alternatively, seed it from 1Password via `op inject` in
+    `bootstrap/resources.yaml.j2`, consistent with the rest of this repo.)
+
+04. Encrypt the secret:
 
     ```sh
-    sops --encrypt --in-place ./kubernetes/bootstrap/github-deploy-key.sops.yaml
+    sops --encrypt --in-place ./bootstrap/github-deploy-key.sops.yaml
     ```
 
-05. Apply secret to cluster:
+05. Re-add the secret to the bootstrap SOPS apply list in
+    `scripts/bootstrap/apply_sops_secrets.sh` so it is created in `flux-system`
+    (or apply it manually with `sops exec-file ... kubectl apply`).
 
-    ```sh
-    sops --decrypt ./kubernetes/bootstrap/github-deploy-key.sops.yaml | kubectl apply -f -
-    ```
-
-06. Update `./kubernetes/flux/config/cluster.yaml`:
+06. Point the FluxInstance sync at SSH and reference the secret in
+    `./kubernetes/apps/flux-system/flux-instance/app/helmrelease.yaml`:
 
     ```yaml
-    apiVersion: source.toolkit.fluxcd.io/v1beta2
-    kind: GitRepository
-    metadata:
-    name: flux-system
-    namespace: flux-system
     spec:
-    interval: 10m
-    # 6a: Change this to your user and repo names
-    url: ssh://git@github.com/$user/$repo
-    ref:
-      branch: main
-    secretRef:
-      name: github-deploy-key
+      values:
+        instance:
+          sync:
+            kind: GitRepository
+            # 6a. Change this to your user and repo names
+            url: ssh://git@github.com/$user/$repo
+            ref: refs/heads/main
+            path: kubernetes/flux/cluster
+            # 6b. Reference the deploy-key secret
+            pullSecret: github-deploy-key
     ```
 
-07. Commit and push changes
+07. Commit and push changes.
 
-08. Force flux to reconcile your changes
+08. Force flux to reconcile your changes:
 
     ```sh
-    flux reconcile -n flux-system kustomization cluster --with-source
+    flux reconcile -n flux-system kustomization flux-system --with-source
     ```
 
-09. Verify git repository is now using SSH:
+09. Verify the git repository is now using SSH:
 
     ```sh
     flux get sources git -A

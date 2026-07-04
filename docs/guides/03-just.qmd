@@ -18,7 +18,7 @@ List recipes in a module:
 just --list <module>
 ```
 
-Available modules: `ansible`, `kube`, `rook`, `mlflow`, `secrets`, `oauth`
+Available modules: `ansible`, `kube`, `flux`, `volsync`, `db`, `rook`, `mlflow`, `secrets`, `oauth`
 
 Root-level recipes are grouped under `repository` and `sops`.
 
@@ -44,14 +44,46 @@ just <module> <recipe> <required-arg> -- --flag --another-flag
 
 Modules are colocated with the directories they manage:
 
-| Module    | File                                        | Domain                            |
-| --------- | ------------------------------------------- | --------------------------------- |
-| `ansible` | `ansible/mod.just`                          | Ansible operations                |
-| `kube`    | `kubernetes/mod.just`                       | Cluster, Flux, DB, VolSync, Debug |
-| `rook`    | `kubernetes/apps/rook-ceph/mod.just`        | Rook-Ceph operations              |
-| `mlflow`  | `kubernetes/apps/datasci/mlflow/mod.just`   | MLflow trace management           |
-| `secrets` | `kubernetes/apps/external-secrets/mod.just` | ExternalSecret maintenance        |
-| `oauth`   | `kubernetes/apps/security/mod.just`         | Authelia OAuth client setup       |
+| Module    | File                                        | Domain                                  |
+| --------- | ------------------------------------------- | --------------------------------------- |
+| `ansible` | `ansible/mod.just`                          | Ansible operations                      |
+| `kube`    | `kubernetes/mod.just`                       | Cluster ops and local-deploy debug      |
+| `flux`    | `kubernetes/flux/mod.just`                  | Flux bootstrap/reconcile/suspend/resume |
+| `volsync` | `kubernetes/apps/volsync-system/mod.just`   | VolSync restic snapshots                |
+| `db`      | `kubernetes/apps/database/mod.just`         | CNPG hibernate/resume                   |
+| `rook`    | `kubernetes/apps/rook-ceph/mod.just`        | Rook-Ceph operations                    |
+| `mlflow`  | `kubernetes/apps/datasci/mlflow/mod.just`   | MLflow trace management                 |
+| `secrets` | `kubernetes/apps/external-secrets/mod.just` | ExternalSecret maintenance              |
+| `oauth`   | `kubernetes/apps/security/mod.just`         | Authelia OAuth client setup             |
 
 The `kube` module uses groups to organize recipes.
-Run `just --list kube` to see recipes organized by: cluster, flux, db, volsync, debug.
+Run `just --list kube` to see recipes organized by: cluster, debug.
+
+## Common Workflows
+
+```sh
+# Bootstrap a freshly-installed cluster (after k3s is up and secrets exist)
+just flux bootstrap
+
+# Force Flux to pull and reconcile the latest commit
+just flux reconcile
+
+# Validate manifests before committing
+just kube kubeconform
+just flux check
+
+# Suspend / resume all of Flux (e.g. before node maintenance)
+just flux suspend-ks && just flux suspend-hr
+just flux resume-ks && just flux resume-hr
+
+# VolSync: list snapshots and take a manual snapshot
+just volsync list <app> <namespace>
+just volsync snapshot <app> <namespace>
+
+# CNPG: hibernate / resume a database
+just db hibernate <cluster> <namespace>
+just db resume <cluster> <namespace>
+
+# Re-key all SOPS files after changing recipients in .sops.yaml
+just sops-updatekeys
+```

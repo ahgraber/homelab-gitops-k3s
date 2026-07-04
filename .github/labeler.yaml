@@ -15,6 +15,5 @@ area/kubernetes:
       - any-glob-to-any-file: kubernetes/**/*
 area/automation:
   - changed-files:
-      - any-glob-to-any-file: .just/**/*
       - any-glob-to-any-file: .justfile
       - any-glob-to-any-file: "**/*.just"

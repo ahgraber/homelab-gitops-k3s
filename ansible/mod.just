@@ -45,6 +45,11 @@ prepare group="kubernetes":
 k3s-cleanup group="kubernetes":
     {{ ansible_cfg }} ansible-playbook -i '{{ inventory }}' -l {{ group }} '{{ ansible_dir }}/playbooks/node-cruft-cleanup.yaml' --become
 
+[confirm("Reinstall k3s over the current version (no uninstall)?")]
+[doc("Reinstall k3s (install over current - no uninstall)")]
+k3s-reinstall group="kubernetes":
+    {{ ansible_cfg }} ansible-playbook -i '{{ inventory }}' -l {{ group }} '{{ ansible_dir }}/playbooks/k3s-install.yaml' --become
+
 [doc("List all available Ansible playbooks")]
 list:
     find '{{ ansible_dir }}/playbooks' -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.yml' \) -exec basename {} \; | sed 's/\.ya\?ml$//' | sort

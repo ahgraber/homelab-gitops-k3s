@@ -8,6 +8,9 @@ export KUBECONFIG := justfile_directory() + "/kubeconfig"
 
 mod ansible "ansible"
 mod kube "kubernetes"
+mod flux "kubernetes/flux"
+mod volsync "kubernetes/apps/volsync-system"
+mod db "kubernetes/apps/database"
 mod rook "kubernetes/apps/rook-ceph"
 mod mlflow "kubernetes/apps/datasci/mlflow"
 mod secrets "kubernetes/apps/external-secrets"
@@ -71,3 +74,22 @@ sops-encrypt-all:
         [ -z "$file" ] || sops --encrypt --in-place "$file"; \
       done; \
     fi
+
+[group("sops")]
+[doc("Re-key every sops file to the current .sops.yaml recipients (minimal diff)")]
+sops-updatekeys:
+    test -f .sops.yaml
+    find . -type f \( \
+      -name '*.sops.yaml' -o -name '*.sops.yml' -o \
+      -name '*.sops.json' -o -name '*.sops.env' -o -name '*.sops.ini' \
+    \) ! -name '*.tmpl' -exec sops updatekeys {} \;
+
+[group("sops")]
+[confirm("Rotate data keys for ALL sops files? This re-encrypts every value.")]
+[doc("Re-key every sops file, then rotate data keys and re-encrypt all values")]
+sops-rotate:
+    test -f .sops.yaml
+    find . -type f \( \
+      -name '*.sops.yaml' -o -name '*.sops.yml' -o \
+      -name '*.sops.json' -o -name '*.sops.env' -o -name '*.sops.ini' \
+    \) ! -name '*.tmpl' -exec sops updatekeys -y {} \; -exec sops rotate -i {} \;

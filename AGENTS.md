@@ -30,8 +30,25 @@ Changes committed here are automatically applied to the cluster by Flux.
 │   └── templates/      # Reusable templates (e.g., volsync)
 ├── scripts/            # Utility scripts (bash with shellcheck, python with uv/ruff)
 ├── docs/               # Human-readable documentation
-└── .just/              # Just modules (automation command definitions)
+└── .justfile           # Root just runner; per-domain `mod.just` files are colocated with their dirs
 ```
+
+> **Just module layout:** the root `.justfile` declares modules that point at colocated
+> `mod.just` files (there is **no** `.just/` directory). Modules and their files:
+>
+> | Module    | File                                        | Domain                                  |
+> | --------- | ------------------------------------------- | --------------------------------------- |
+> | `ansible` | `ansible/mod.just`                          | Ansible operations                      |
+> | `kube`    | `kubernetes/mod.just`                       | Cluster ops, local-deploy debug         |
+> | `flux`    | `kubernetes/flux/mod.just`                  | Flux bootstrap/reconcile/suspend/resume |
+> | `volsync` | `kubernetes/apps/volsync-system/mod.just`   | VolSync restic snapshots                |
+> | `db`      | `kubernetes/apps/database/mod.just`         | CNPG hibernate/resume                   |
+> | `rook`    | `kubernetes/apps/rook-ceph/mod.just`        | Rook-Ceph operations                    |
+> | `mlflow`  | `kubernetes/apps/datasci/mlflow/mod.just`   | MLflow trace management                 |
+> | `secrets` | `kubernetes/apps/external-secrets/mod.just` | ExternalSecret maintenance              |
+> | `oauth`   | `kubernetes/apps/security/mod.just`         | Authelia OAuth client setup             |
+>
+> Repository and `sops` recipes live directly in the root `.justfile`.
 
 ## Nix Development Environment
 
@@ -84,22 +101,18 @@ nix --extra-experimental-features 'nix-command flakes' develop -c env 'KUBECONFI
 
 Instead:
 
-1. **Reference the just modules** (`.just/`) to understand what commands should be run
+1. **Reference the colocated `mod.just` modules** (see the table above) to understand what commands should be run
 2. **Execute the underlying commands** using `direnv exec .` with `kubectl`, `flux`, `ansible`, `sops`, etc.
 
 Example:
 
 - ❌ Don't run: raw mutating commands without understanding module intent first
 
-- ✅ Do: Look at `.just/flux/mod.just` to see the actual command, then run:
+- ✅ Do: Look at `kubernetes/flux/mod.just` (the `flux reconcile` recipe) to see the actual command, then run:
 
   ```bash
   direnv exec . \
-    flux bootstrap github \
-    --owner=ahgraber \
-    --repository=homelab-gitops-k3s \
-    --branch=main \
-    --path=kubernetes/flux
+    flux reconcile kustomization flux-cluster -n flux-system --with-source
   ```
 
 This keeps command usage consistent and discoverable via `just`.
@@ -534,7 +547,7 @@ Kubeconform validation:
 Pre-commit hooks:
 
 The repository has pre-commit hooks.
-Reference `.just/repository/mod.just` to see what runs:
+Reference the `repository` recipes in the root `.justfile` to see what runs:
 
 ```bash
 pre-commit run --all-files
@@ -716,7 +729,7 @@ Refs #201
 
 2. **Node operations** require Ansible and SSH access to nodes
 
-3. **Rook-Ceph operations** need special care - reference `.just/rook/mod.just` before making changes.
+3. **Rook-Ceph operations** need special care - reference `kubernetes/apps/rook-ceph/mod.just` before making changes.
    YOU MUST CHECK WITH THE HUMAN BEFORE OPERATING DIRECTLY ON ROOK-CEPH.
 
 ### Kubeconfig
