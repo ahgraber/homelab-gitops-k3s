@@ -23,6 +23,7 @@ spec:
               TZ: "America/New_York"
               PUID: 1000
               PGID: 1000
+              UMASK: "002"
               CACHE_DIR: /cache
               NETWORK_SHARE_MODE: "true"
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
