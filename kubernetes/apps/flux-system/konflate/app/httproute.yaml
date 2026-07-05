@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.networking.k8s.io/httproute_v1.json
+# Webhook-only external route: exposes just POST /hooks so the GitHub App can
+# trigger immediate re-renders. The UI stays internal (chart httpRoute →
+# envoy-internal); external-dns publishes konflate-webhook.${SECRET_DOMAIN} as a
+# CNAME to external.${SECRET_DOMAIN} (the Cloudflare tunnel).
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: konflate-webhook
+spec:
+  hostnames:
+    - "konflate-webhook.${SECRET_DOMAIN}"
+  parentRefs:
+    - name: envoy-external
+      namespace: network
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /hooks
+      backendRefs:
+        - name: konflate
+          namespace: flux-system
+          port: 8080
