@@ -13,20 +13,40 @@ spec:
     controllers:
       syncthing:
         initContainers:
-          config-local-only:
+          # Seeds config.xml (creating it on first boot), sets GUI credentials, and
+          # enforces local-only discovery — all before the main container starts, so
+          # there is never an unauthenticated window. Uses the syncthing binary itself
+          # to hash the password (bcrypt), avoiding fragile XML surgery for auth.
+          config-init:
             image:
-              repository: alpine
-              tag: 3.24.1
+              repository: syncthing/syncthing
+              tag: 2.1.1@sha256:775c4aac486263ca8653055bba7d3061799281974b706695e17bc798da3f4e92
+            env:
+              SYNCTHING_GUI_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: syncthing-secret
+                    key: username
+              SYNCTHING_GUI_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: syncthing-secret
+                    key: password
             command:
               - /bin/sh
               - -ec
               - |
-                config_file=/var/syncthing/config.xml
+                # Must match the image's STHOMEDIR (/var/syncthing/config); the main
+                # container reads its config from here, not from /var/syncthing.
+                config_dir=/var/syncthing/config
+                config_file="$config_dir/config.xml"
 
-                if [ ! -f "$config_file" ]; then
-                  echo "Syncthing config not found yet; skipping local-only patch on this start."
-                  exit 0
-                fi
+                # Create/validate config, cert, and device ID, and (re)apply GUI auth.
+                # Idempotent: existing cert/device ID are preserved across restarts.
+                printf '%s' "$SYNCTHING_GUI_PASSWORD" | syncthing generate \
+                  --home="$config_dir" \
+                  --gui-user="$SYNCTHING_GUI_USER" \
+                  --gui-password=-
 
                 set_option() {
                   key="$1"
@@ -44,7 +64,7 @@ spec:
                 set_option natEnabled false
                 set_option localAnnounceEnabled true
 
-                echo "Applied Syncthing local-only discovery options."
+                echo "Seeded Syncthing config with GUI auth and local-only discovery options."
         containers:
           app:
             image:
@@ -53,6 +73,12 @@ spec:
             env:
               PUID: "1000"
               PGID: "1000"
+              # Deterministic REST/GUI API key (overrides config.xml at runtime)
+              STGUIAPIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: syncthing-secret
+                    key: apiKey
             probes:
               liveness: &probes
                 enabled: true

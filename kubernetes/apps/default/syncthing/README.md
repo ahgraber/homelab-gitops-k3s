@@ -10,10 +10,33 @@ Your data is your data alone and you deserve to choose where it is stored, wheth
 - [How to Set Up a Headless Syncthing Network](https://theselfhostingblog.com/posts/how-to-set-up-a-headless-syncthing-network/)
 - [Use Syncthing to Create a Cloud Without a Cloud](https://everyday.codes/tutorials/use-syncthing-to-create-a-cloud-without-a-cloud/)
 
-## Local-only Discovery Enforcement
+## Deterministic Config (init container)
 
-This deployment is GitOps-managed to prefer local/private network discovery only.
-On each pod start, an init container patches `/var/syncthing/config.xml` with:
+Syncthing is configured on every pod start by the `config-init` init container, before the main container runs (so there is never an unauthenticated window).
+It uses the syncthing binary itself — `syncthing generate --home=/var/syncthing/config` (the image's `STHOMEDIR`, where the main container reads its config) — to create the config, TLS cert, and device ID on first boot (idempotent afterwards), then applies the settings below.
+
+### GUI authentication
+
+Syncthing has no native OIDC/OAuth, so the GUI is protected by a static username + password (and a
+fixed REST API key), sourced from 1Password via ESO — never stored in Git.
+
+Required 1Password item `op://homelab/default.syncthing` with fields:
+
+| Field      | Purpose                                                 |
+| ---------- | ------------------------------------------------------- |
+| `username` | GUI login user (`--gui-user`)                           |
+| `password` | GUI login password (plaintext; bcrypt-hashed on apply)  |
+| `apiKey`   | REST/GUI API key, injected at runtime via `STGUIAPIKEY` |
+
+The `password` is stored in 1Password as plaintext; `syncthing generate` bcrypt-hashes it into `config.xml` each start (bcrypt salts randomly, so the on-disk hash differs run to run — the password itself is deterministic).
+Configured auth also satisfies Syncthing's Host-header check, which is what allows the GUI to be served over the `syncthing.${SECRET_DOMAIN}` hostname.
+
+> SSO via Authelia (the cluster's `SecurityPolicy.oidc` pattern) can be layered on top later if
+> desired; it would guard the browser path only, not the REST API or direct pod access.
+
+### Local-only discovery enforcement
+
+The same init container patches `/var/syncthing/config.xml` to prefer local/private discovery:
 
 - `globalAnnounceEnabled=false`
 - `relaysEnabled=false`
