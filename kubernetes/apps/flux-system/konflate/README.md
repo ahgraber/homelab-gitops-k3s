@@ -57,12 +57,28 @@ Go to the repo → Settings → Webhooks → **Add webhook** (the same page as t
 
 Create `flux-system.konflate` in the **homelab** vault with four fields:
 
-| Field           | Value                                    |
-| --------------- | ---------------------------------------- |
-| `token`         | a read-only PAT, or blank (see below)    |
-| `webhookSecret` | the HMAC secret (step 2)                 |
-| `appClientId`   | the App's Client ID (step 1)             |
-| `privateKey`    | the full contents of the `.pem` key file |
+| Field           | Type          | Value                                              |
+| --------------- | ------------- | -------------------------------------------------- |
+| `token`         | concealed     | a read-only PAT, or blank (see below)              |
+| `webhookSecret` | concealed     | the HMAC secret (step 2)                           |
+| `appClientId`   | text          | the App's Client ID (step 1)                       |
+| `privateKey`    | **concealed** | the `.pem` key file, **base64-encoded** (see note) |
+
+Store `privateKey` **base64-encoded in a concealed field**.
+A plain-text field would render the PEM in cleartext in the vault, and a concealed field is single-line — so it cannot hold the multi-line PEM directly.
+Base64 collapses the key to one line that a concealed field holds safely; the ExternalSecret runs it back through `b64dec` to the raw PEM konflate expects.
+Encode it with:
+
+```sh
+base64 -i <path-to>.private-key.pem | tr -d '\n'
+```
+
+Or set it directly with the `op` CLI:
+
+```sh
+op item edit "flux-system.konflate" --vault homelab \
+  "privateKey[password]=$(base64 -i <path-to>.private-key.pem | tr -d '\n')"
+```
 
 The ExternalSecret maps these to `KONFLATE_TOKEN`, `KONFLATE_WEBHOOK_SECRET`, `KONFLATE_APP_CLIENT_ID`, and `KONFLATE_APP_PRIVATE_KEY`; the chart consumes them via `secret.existingSecret`.
 Konflate auto-detects the App's installation, so no installation ID is needed.
