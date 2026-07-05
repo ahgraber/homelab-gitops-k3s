@@ -126,7 +126,9 @@ spec:
         annotations:
           lbipam.cilium.io/ips: 10.2.118.6
           external-dns.alpha.kubernetes.io/hostname: sync.${SECRET_DOMAIN}
-        externalTrafficPolicy: Local
+        # Keep Cluster: with Cilium L2, the ARP-responder node can differ from the
+        # pod node, so Local would blackhole traffic to the LB IP.
+        externalTrafficPolicy: Cluster
         ports:
           discovery:
             enabled: true
