@@ -49,10 +49,23 @@ spec:
           app:
             image:
               repository: syncthing/syncthing
-              tag: 1.30.0@sha256:74eeedb08d4912763055594f8bd98bfc039f3bc504b6cd2c2adc8294111c1251
+              tag: 2.1.1@sha256:775c4aac486263ca8653055bba7d3061799281974b706695e17bc798da3f4e92
             env:
               PUID: "1000"
               PGID: "1000"
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /rest/noauth/health
+                    port: 8384
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               # allowPrivilegeEscalation: false
               # readOnlyRootFilesystem: false
@@ -83,6 +96,11 @@ spec:
       discovery:
         enabled: true
         controller: *app
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 10.2.118.6
+          external-dns.alpha.kubernetes.io/hostname: sync.${SECRET_DOMAIN}
+        externalTrafficPolicy: Local
         ports:
           discovery:
             enabled: true
@@ -99,7 +117,7 @@ spec:
     route:
       app:
         hostnames:
-          - &host sync.${SECRET_DOMAIN}
+          - &host syncthing.${SECRET_DOMAIN}
         parentRefs:
           - name: envoy-internal
             namespace: network
