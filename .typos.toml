@@ -55,6 +55,7 @@ AKS = "AKS"
 ## When the correction is the key, the word is *always* valid.
 [default.extend-words]
 "arange" = "arange"  # e.g. `numpy.arange`
+flate = "flate"  # home-operations/flate, konflate's render engine
 keypair = "keypair"
 raison = "raison"
 ba = "ba"

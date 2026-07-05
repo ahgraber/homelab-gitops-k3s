@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app konflate
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 1h
+  values:
+    config:
+      repo: github://ahgraber/homelab-gitops-k3s
+      # clusterPath stays empty: Flux spec.path values here are root-relative
+      # (./kubernetes/...), which is exactly what flate resolves against
+      verifyImages: true
+      # write-back via the GitHub App in the konflate secret (client id +
+      # private key); post a Check Run and an in-place summary comment per PR
+      statusChecks: true
+      prComments: true
+      publicUrl: https://konflate.${SECRET_DOMAIN}
+
+    secret:
+      existingSecret: *app
+
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - name: envoy-internal
+          namespace: network
+          sectionName: https
+      hostnames:
+        - konflate.${SECRET_DOMAIN}
+
+    # keeps rendered diffs, the git mirror, and flate caches across restarts
+    persistence:
+      enabled: true
+      storageClass: ceph-block
+      size: 2Gi
+
+    monitoring:
+      serviceMonitor:
+        enabled: true
