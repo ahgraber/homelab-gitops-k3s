@@ -1,0 +1,60 @@
+---
+# Reusable gate: wait until Rook-Ceph is fully healthy.
+#
+# Deliberately does NOT gate on `HEALTH_OK`, because this file is used while the
+# `noout` flag is set (which makes Ceph report HEALTH_WARN). Instead it checks
+# the underlying invariants directly so it is safe to run before, during, and
+# after maintenance:
+#   - every PG is active+clean (scrub substates tolerated)
+#   - every OSD is up AND in
+#   - the mon quorum is complete
+#
+# Expects the following vars to be set by the caller:
+#   ceph_namespace, ceph_toolbox_deploy, kube_delegate
+#   ceph_wait_retries (optional, default 60), ceph_wait_delay (optional, default 15)
+
+- name: "Ceph | Wait for all OSDs to be up and in"
+  ansible.builtin.command: >-
+    k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+    ceph osd stat --format json
+  delegate_to: "{{ kube_delegate }}"
+  changed_when: false
+  register: ceph_osd_stat
+  retries: "{{ ceph_wait_retries | default(60) }}"
+  delay: "{{ ceph_wait_delay | default(15) }}"
+  until:
+    - ceph_osd_stat.rc == 0
+    - (ceph_osd_stat.stdout | from_json).num_osds | int > 0
+    - (ceph_osd_stat.stdout | from_json).num_osds == (ceph_osd_stat.stdout | from_json).num_up_osds
+    - (ceph_osd_stat.stdout | from_json).num_osds == (ceph_osd_stat.stdout | from_json).num_in_osds
+
+- name: "Ceph | Wait for a complete mon quorum"
+  ansible.builtin.command: >-
+    k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+    ceph quorum_status --format json
+  delegate_to: "{{ kube_delegate }}"
+  changed_when: false
+  register: ceph_quorum
+  retries: "{{ ceph_wait_retries | default(60) }}"
+  delay: "{{ ceph_wait_delay | default(15) }}"
+  until:
+    - ceph_quorum.rc == 0
+    - ((ceph_quorum.stdout | from_json).quorum | length) == ((ceph_quorum.stdout | from_json).monmap.mons | length)
+
+- name: "Ceph | Wait for all PGs to be active+clean"
+  ansible.builtin.command: >-
+    k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+    ceph status --format json
+  delegate_to: "{{ kube_delegate }}"
+  changed_when: false
+  register: ceph_status
+  retries: "{{ ceph_wait_retries | default(60) }}"
+  delay: "{{ ceph_wait_delay | default(15) }}"
+  until:
+    - ceph_status.rc == 0
+    - (ceph_status.stdout | from_json).pgmap.num_pgs | int > 0
+    - >-
+      (ceph_status.stdout | from_json).pgmap.num_pgs
+      == ((ceph_status.stdout | from_json).pgmap.pgs_by_state
+          | selectattr('state_name', 'match', '^active\+clean(\+scrubbing(\+deep)?)?$')
+          | map(attribute='count') | map('int') | sum)

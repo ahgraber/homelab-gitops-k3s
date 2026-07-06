@@ -1,37 +1,186 @@
 ---
+# Rolling OS update across the cluster, one node at a time.
+#
+# Idempotent: a node is only cordoned/drained/upgraded/rebooted if it actually
+# has pending package upgrades or a pending reboot (or force_reboot is set).
+# Re-running after a completed (or partially-failed) run is a no-op for nodes
+# that are already up to date -- it simply resumes with the nodes still needing
+# work.
+#
+# When a node does need work, the order is:
+#   pre-flight Ceph health gate -> set `noout` -> cordon -> drain ->
+#   apt dist-upgrade -> reboot (if required) -> wait service + Ready ->
+#   uncordon -> wait Ceph healthy -> unset `noout`.
+#
+# Safety model:
+#   - serial: 1 + any_errors_fatal keeps etcd (3 controllers) and mon (3 mons)
+#     quorum intact: only ever one member down at a time, and the run halts on
+#     the first failure rather than marching on through a degraded cluster.
+#   - OSD/mon pods are excluded from the drain (they are pinned to their node);
+#     the reboot takes them down instead. `noout` prevents Ceph from rebalancing
+#     during that window, and the post-reboot health gate blocks the next node
+#     until data is fully replicated again.
+#
+# Re-run safe: if a run halts mid-way it leaves the affected node cordoned and
+# `noout` set (the safe state). Re-running recovers it -- the health gate keys
+# on PG/OSD/mon state rather than HEALTH_OK, cordon is idempotent, and the node
+# is uncordoned and `noout` cleared at the end.
+#
+# Tunables (override with -e):
+#   force_reboot: reboot (and therefore cordon/drain) every node even when it
+#                 has no pending upgrades and no /var/run/reboot-required
+#   ceph_manage:  set/unset noout and gate on Ceph health (auto-skips if the
+#                 rook-ceph toolbox is not found)
+# A single-host play so the confirmation pause fires exactly once at the very
+# start of the run, rather than per node (serial:1 would repeat pre_tasks).
+- name: Confirm rollout
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+
 - name: Cluster rollout update
   hosts: kubernetes
   become: true
   gather_facts: true
   any_errors_fatal: true
   serial: 1
+  vars:
+    force_reboot: false
+    ceph_manage: true
+    ceph_namespace: rook-ceph
+    ceph_toolbox_deploy: deploy/rook-ceph-tools
+    # Draining is intentionally patient and PDB-respecting (never --disable-eviction).
+    # Cordon sets the node's unschedulable taint, which well-behaved operators watch
+    # to evacuate their workloads gracefully -- e.g. CloudNativePG switches a Postgres
+    # primary off a cordoned node before its PDB will allow eviction. We give them a
+    # moment to react, then retry the drain long enough for replicas/leaders to
+    # reschedule and rejoin (a Postgres pod reschedule + replication catch-up takes
+    # minutes), so the operator-managed PDBs clear on their own.
+    cordon_settle_seconds: 20
+    drain_timeout: 300 # per-attempt wait for graceful pod deletion
+    drain_retries: 15 # 15 x drain_retry_delay ~= 7.5 min of total patience
+    drain_retry_delay: 30
+    reboot_timeout: 900
   pre_tasks:
-    - name: Pausing for 5 seconds...
-      ansible.builtin.pause:
-        seconds: 5
-  tasks:
-    - name: Details
-      ansible.builtin.command: "k3s kubectl get node {{ inventory_hostname }} -o json"
-      register: kubectl_get_node
-      delegate_to: "{{ groups['controller'][0] }}"
+    # kubectl/ceph work must never be delegated to the node we are about to
+    # reboot, or the calls fail while that node is down. Pick any *other*
+    # control-plane host as the delegate for this iteration.
+    - name: Select a control-plane delegate that is not this host
+      ansible.builtin.set_fact:
+        kube_delegate: "{{ (groups['controller'] | difference([inventory_hostname]) | first) }}"
+
+    - name: Detect rook-ceph toolbox
+      ansible.builtin.command: >-
+        k3s kubectl -n {{ ceph_namespace }} get deploy rook-ceph-tools -o name
+      delegate_to: "{{ kube_delegate }}"
+      changed_when: false
       failed_when: false
+      register: ceph_toolbox_check
+
+    - name: Set ceph_enabled fact
+      ansible.builtin.set_fact:
+        ceph_enabled: "{{ (ceph_manage | bool) and (ceph_toolbox_check.rc == 0) }}"
+
+  tasks:
+    # --- Normalize: recover a node left cordoned by a previous failed run ---
+    # Runs for every node BEFORE the maintenance decision, so an already-updated
+    # node that crashed mid-run still gets uncordoned (and any leftover `noout`
+    # cleared). It also prevents a deadlock: a node that is both cordoned and
+    # due for maintenance would otherwise hang in the pre-flight Ceph wait, since
+    # its own cordon keeps its OSD from rescheduling.
+    - name: "Normalize | Check current cordon state"
+      ansible.builtin.command: >-
+        k3s kubectl get node {{ inventory_hostname }} -o jsonpath={.spec.unschedulable}
+      delegate_to: "{{ kube_delegate }}"
+      changed_when: false
+      register: cordon_state
+
+    - name: "Normalize | Restore a node left cordoned by a prior run"
+      when: (cordon_state.stdout | trim) == "true"
+      block:
+        - name: "Normalize | Uncordon"
+          kubernetes.core.k8s_drain:
+            name: "{{ inventory_hostname }}"
+            kubeconfig: /etc/rancher/k3s/k3s.yaml
+            state: uncordon
+          delegate_to: "{{ kube_delegate }}"
+
+        - name: "Normalize | Wait for Ceph to be healthy"
+          ansible.builtin.include_tasks: tasks/ceph-wait-healthy.yaml
+          when: ceph_enabled
+
+        - name: "Normalize | Unset any leftover noout flag"
+          ansible.builtin.command: >-
+            k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+            ceph osd unset noout
+          delegate_to: "{{ kube_delegate }}"
+          changed_when: true
+          when: ceph_enabled
+
+    # --- Idempotency gate: does this node actually need maintenance? ---
+    - name: "Check | Refresh apt cache"
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
       changed_when: false
 
-    - name: Update
-      when:
-        # When status.conditions[x].type == Ready then check stats.conditions[x].status for True|False
-        - kubectl_get_node['stdout'] | from_json | json_query("status.conditions[?type == 'Ready'].status")
-        # If spec.unschedulable is defined then the node is cordoned
-        - not (kubectl_get_node['stdout'] | from_json).spec.unschedulable is defined
+    - name: "Check | Simulate dist-upgrade to detect pending upgrades"
+      ansible.builtin.apt:
+        upgrade: dist
+      check_mode: true
+      register: apt_simulate
+
+    - name: "Check | Is a reboot already pending?"
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_checksum: false
+      register: reboot_required
+
+    - name: "Check | Decide whether this node needs maintenance"
+      ansible.builtin.set_fact:
+        node_needs_maintenance: >-
+          {{ (force_reboot | bool) or apt_simulate.changed or reboot_required.stat.exists }}
+
+    - name: "Node up to date -- skipping"
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} has no pending upgrades or reboot; skipping."
+      when: not node_needs_maintenance
+
+    # --- Maintenance: only runs when the node has work to do ---
+    - name: "Rollout update"
+      when: node_needs_maintenance
       block:
-        - name: Cordon
+        - name: "Pre-flight | Wait for Ceph to be healthy before starting"
+          ansible.builtin.include_tasks: tasks/ceph-wait-healthy.yaml
+          when: ceph_enabled
+
+        - name: "Ceph | Set noout to prevent rebalancing during the reboot"
+          ansible.builtin.command: >-
+            k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+            ceph osd set noout
+          delegate_to: "{{ kube_delegate }}"
+          changed_when: true
+          when: ceph_enabled
+
+        - name: "Node | Cordon"
           kubernetes.core.k8s_drain:
             name: "{{ inventory_hostname }}"
             kubeconfig: /etc/rancher/k3s/k3s.yaml
             state: cordon
-          delegate_to: "{{ groups['controller'][0] }}"
+          delegate_to: "{{ kube_delegate }}"
 
-        - name: Drain
+        # Give operators a head start to react to the cordon taint (e.g. CNPG
+        # switching a primary off this node) before the first eviction attempt,
+        # so the drain does not begin against a guaranteed-blocking PDB.
+        - name: "Node | Let operators react to the cordon"
+          ansible.builtin.pause:
+            seconds: "{{ cordon_settle_seconds }}"
+
+        - name: "Node | Drain"
           kubernetes.core.k8s_drain:
             name: "{{ inventory_hostname }}"
             kubeconfig: /etc/rancher/k3s/k3s.yaml
@@ -39,37 +188,131 @@
             delete_options:
               delete_emptydir_data: true
               ignore_daemonsets: true
+              # force: recreate bare/standalone pods; eviction still respects PDBs.
               force: true
               terminate_grace_period: 300
-              wait_timeout: 420
+              wait_timeout: "{{ drain_timeout }}"
             pod_selectors:
-              - app!=rook-ceph-osd # Rook Ceph
-              - app!=rook-ceph-mon # Rook Ceph
-          delegate_to: "{{ groups['controller'][0] }}"
+              - app!=rook-ceph-osd # Rook Ceph: node-local storage, taken down by reboot
+              - app!=rook-ceph-mon # Rook Ceph: node-local storage, taken down by reboot
+          delegate_to: "{{ kube_delegate }}"
+          register: node_drain
+          retries: "{{ drain_retries }}"
+          delay: "{{ drain_retry_delay }}"
+          until: node_drain is success
 
-        - name: Update
+        # --- OS update ---
+        - name: "OS | Repair any interrupted dpkg state"
+          ansible.builtin.command: dpkg --configure -a
+          register: dpkg_configure
+          changed_when: "'Setting up' in dpkg_configure.stdout"
+          failed_when: false
+
+        - name: "OS | Update and dist-upgrade"
           ansible.builtin.apt:
             upgrade: dist
             update_cache: true
             cache_valid_time: 3600
             autoclean: true
             autoremove: true
+            lock_timeout: 300 # wait out unattended-upgrades / apt-daily holding the lock
+          register: apt_upgrade
+          retries: 5
+          delay: 15
+          until: apt_upgrade is success
 
-        - name: Check if reboot is required
+        - name: "OS | Re-check whether a reboot is now required"
           ansible.builtin.stat:
             path: /var/run/reboot-required
+            get_checksum: false
           register: reboot_required
 
-        - name: Reboot
-          # when: reboot_required.stat.exists
-          ansible.builtin.reboot:
-            msg: Rebooting node
-            post_reboot_delay: 60
-            reboot_timeout: 300
+        - name: "OS | Decide whether to reboot this node"
+          ansible.builtin.set_fact:
+            perform_reboot: "{{ (force_reboot | bool) or reboot_required.stat.exists }}"
 
-        - name: Uncordon
+        # --- Reboot (only if needed) ---
+        - name: "OS | Reboot"
+          ansible.builtin.reboot:
+            msg: Rebooting node for rollout update
+            post_reboot_delay: 60
+            reboot_timeout: "{{ reboot_timeout }}"
+          when: perform_reboot
+
+        # --- Post-reboot recovery gate ---
+        # The k3s unit is named "k3s.service" on both servers and agents in this
+        # cluster (xanmanning.k3s installs the same unit name on every node).
+        - name: "K3s | Wait for the k3s service to be active"
+          ansible.builtin.systemd_service:
+            name: k3s
+          register: k3s_service
+          until: k3s_service.status.ActiveState == "active"
+          retries: 30
+          delay: 10
+          when: perform_reboot
+
+        - name: "K3s | Wait for the node to report Ready"
+          ansible.builtin.command: "k3s kubectl get node {{ inventory_hostname }} -o json"
+          delegate_to: "{{ kube_delegate }}"
+          changed_when: false
+          register: node_ready
+          retries: 30
+          delay: 10
+          until:
+            - node_ready.rc == 0
+            - >-
+              (node_ready.stdout | from_json).status.conditions
+              | selectattr('type', 'equalto', 'Ready')
+              | selectattr('status', 'equalto', 'True')
+              | list | length > 0
+
+        # Uncordon BEFORE waiting for Ceph: OSD/mon pods are pinned to this node
+        # and cannot be rescheduled (so PGs cannot return to active+clean) while
+        # it stays cordoned.
+        - name: "Node | Uncordon"
           kubernetes.core.k8s_drain:
             name: "{{ inventory_hostname }}"
             kubeconfig: /etc/rancher/k3s/k3s.yaml
             state: uncordon
-          delegate_to: "{{ groups['controller'][0] }}"
+          delegate_to: "{{ kube_delegate }}"
+
+        - name: "Ceph | Wait for Ceph to fully recover before the next node"
+          ansible.builtin.include_tasks: tasks/ceph-wait-healthy.yaml
+          when: ceph_enabled
+
+        - name: "Ceph | Unset noout"
+          ansible.builtin.command: >-
+            k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+            ceph osd unset noout
+          delegate_to: "{{ kube_delegate }}"
+          changed_when: true
+          when: ceph_enabled
+
+# Safety net: after a successful rollout, make sure no `noout` flag was left
+# set (e.g. by a prior run that halted after setting it). Runs once at the very
+# end as a single-host localhost play (avoids run_once). Only runs on success --
+# if the rollout play fails, any_errors_fatal stops here and `noout` is
+# intentionally left set for a human to investigate.
+- name: Finalize
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    ceph_namespace: rook-ceph
+    ceph_toolbox_deploy: deploy/rook-ceph-tools
+  tasks:
+    - name: "Ceph | Detect rook-ceph toolbox"
+      ansible.builtin.command: >-
+        k3s kubectl -n {{ ceph_namespace }} get deploy rook-ceph-tools -o name
+      delegate_to: "{{ groups['controller'][0] }}"
+      changed_when: false
+      failed_when: false
+      register: ceph_toolbox_check
+
+    - name: "Ceph | Ensure noout is cleared"
+      ansible.builtin.command: >-
+        k3s kubectl -n {{ ceph_namespace }} exec {{ ceph_toolbox_deploy }} --
+        ceph osd unset noout
+      delegate_to: "{{ groups['controller'][0] }}"
+      changed_when: true
+      when: ceph_toolbox_check.rc == 0
