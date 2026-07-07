@@ -5,13 +5,9 @@ kind: HelmRelease
 metadata:
   name: &app reflector
 spec:
-  chart:
-    spec:
-      chart: *app
-      version: 10.0.55
-      sourceRef:
-        kind: HelmRepository
-        name: emberstack
+  chartRef:
+    kind: OCIRepository
+    name: *app
   interval: 1h
   values:
     configuration:

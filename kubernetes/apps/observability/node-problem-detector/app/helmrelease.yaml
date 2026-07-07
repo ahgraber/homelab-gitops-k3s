@@ -5,13 +5,9 @@ kind: HelmRelease
 metadata:
   name: node-problem-detector
 spec:
-  chart:
-    spec:
-      chart: node-problem-detector
-      version: 2.3.14
-      sourceRef:
-        kind: HelmRepository
-        name: deliveryhero
+  chartRef:
+    kind: OCIRepository
+    name: node-problem-detector
   interval: 1h
   values:
     metrics:

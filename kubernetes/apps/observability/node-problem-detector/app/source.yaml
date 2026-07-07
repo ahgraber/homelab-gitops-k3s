@@ -1,9 +1,14 @@
 ---
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/helmrepository_v1.json
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
-  name: deliveryhero
+  name: node-problem-detector
 spec:
   interval: 1h
-  url: https://charts.deliveryhero.io/
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 2.3.14
+  url: oci://ghcr.io/deliveryhero/helm-charts/node-problem-detector

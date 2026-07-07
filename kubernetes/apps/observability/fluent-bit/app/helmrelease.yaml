@@ -5,13 +5,9 @@ kind: HelmRelease
 metadata:
   name: &app fluent-bit
 spec:
-  chart:
-    spec:
-      chart: *app
-      version: 0.57.8
-      sourceRef:
-        kind: HelmRepository
-        name: fluent
+  chartRef:
+    kind: OCIRepository
+    name: *app
   interval: 1h
   values:
     tolerations:
