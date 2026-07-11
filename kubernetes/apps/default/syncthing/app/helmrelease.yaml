@@ -20,7 +20,7 @@ spec:
           config-init:
             image:
               repository: syncthing/syncthing
-              tag: 2.1.1@sha256:775c4aac486263ca8653055bba7d3061799281974b706695e17bc798da3f4e92
+              tag: 2.1.2@sha256:4464f4161dd0251e20d46bb3aec83363db75d80cef1abdd5d5fd4054b04a004d
             env:
               SYNCTHING_GUI_USER:
                 valueFrom:
@@ -69,7 +69,7 @@ spec:
           app:
             image:
               repository: syncthing/syncthing
-              tag: 2.1.1@sha256:775c4aac486263ca8653055bba7d3061799281974b706695e17bc798da3f4e92
+              tag: 2.1.2@sha256:4464f4161dd0251e20d46bb3aec83363db75d80cef1abdd5d5fd4054b04a004d
             env:
               PUID: "1000"
               PGID: "1000"
