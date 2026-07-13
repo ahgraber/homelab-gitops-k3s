@@ -39,6 +39,19 @@ repos:
         entry: Forbid .rej file extensions from `copier update`
         language: fail
         files: \.rej$
+      - id: forbid-co-authored-by-trailer
+        name: Require AI-assistant attribution trailer
+        language: system
+        stages: [commit-msg]
+        entry: >-
+          bash -c '
+            if rg -qi "^Co-authored-by:" "$1"; then
+              printf "%s\\n" \
+                "Commit messages must not include a Co-authored-by trailer." \
+                "Use: 'AI-assistant:' trailer instead." >&2
+              exit 1
+            fi
+          ' --
   # renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v6.0.0"
