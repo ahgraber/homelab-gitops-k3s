@@ -32,6 +32,15 @@ spec:
                 enabled: true
               startup:
                 enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  # allow up to ~5min for Spring Boot + advanced-ops install to bind :8080
+                  failureThreshold: 30
             resources:
               requests:
                 cpu: 100m
