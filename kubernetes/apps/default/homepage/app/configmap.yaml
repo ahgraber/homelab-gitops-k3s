@@ -116,10 +116,10 @@ data:
             href: https://shelfmark.${SECRET_DOMAIN}
             icon: shelfmark.png
             description: Search & download books
-        - Stirling-PDF:
+        - BentoPDF:
             href: https://pdf.${SECRET_DOMAIN}
-            icon: stirling-pdf.png
-            description: A self-hosted PDF editing webapp
+            icon: bentopdf.png
+            description: Privacy-first self-hosted PDF toolkit
         - Syncthing:
             href: https://syncthing.${SECRET_DOMAIN}
             icon: syncthing.png

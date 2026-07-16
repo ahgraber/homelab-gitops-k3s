@@ -14,7 +14,7 @@ marketing hero/FAQ/footer).
 ## Configuration
 
 - **Image**: `ghcr.io/alam00000/bentopdf-simple`, pinned by tag + digest in `app/helmrelease.yaml`.
-- **Ingress**: internal only (`envoy-internal`) at `bentopdf.${SECRET_DOMAIN}`.
+- **Ingress**: internal only (`envoy-internal`) at `pdf.${SECRET_DOMAIN}`.
   To expose externally, add an `envoy-external` `parentRef` (and be deliberate — it's a public tool with no built-in auth; front it with Authelia if exposed).
 - **securityContext**: runs as the image's `nginx` user (uid/gid `101`) with dropped capabilities and no
   privilege escalation. `readOnlyRootFilesystem` is **disabled** — the bundled nginx entrypoint writes its

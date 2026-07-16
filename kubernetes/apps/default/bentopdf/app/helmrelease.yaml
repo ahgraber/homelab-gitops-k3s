@@ -53,7 +53,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - "pdf.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
