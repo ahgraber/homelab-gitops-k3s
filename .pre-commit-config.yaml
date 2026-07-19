@@ -158,7 +158,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=charliermarsh/ruff-pre-commit
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.15.21"
+    rev: "v0.15.22"
     hooks:
       - id: ruff
         name: Lint and Format with Ruff
