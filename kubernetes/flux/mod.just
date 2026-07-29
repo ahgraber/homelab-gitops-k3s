@@ -12,6 +12,10 @@ bootstrap_scripts_dir := scripts_dir + "/bootstrap"
 default:
     just --list flux
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [group("flux")]
 [doc("Verify flux prerequisites")]
 verify:

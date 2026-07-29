@@ -7,6 +7,10 @@ mlflow_scripts := source_directory() + "/scripts"
 default:
     just --list mlflow
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [doc("Delete traces older than N days")]
 delete-traces-older experiment_id days tracking_uri="":
     uv run --with mlflow '{{ mlflow_scripts }}/delete_traces.py' older-than-days --experiment-id {{ experiment_id }} --days {{ days }} {{ if tracking_uri != "" { "--tracking-uri " + tracking_uri } else { "" } }}

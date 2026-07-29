@@ -5,6 +5,10 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 default:
     just --list db
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [group("db")]
 [doc("Hibernate a CNPG database")]
 hibernate cnpg ns="default":

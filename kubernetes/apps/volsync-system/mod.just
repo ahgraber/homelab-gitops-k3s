@@ -9,6 +9,10 @@ volsync_templates_dir := volsync_scripts_dir + "/templates"
 default:
     just --list volsync
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [group("volsync")]
 [doc("Calculate relative path from one file to volsync components")]
 relpath start end="./kubernetes/components/volsync":
@@ -18,7 +22,7 @@ relpath start end="./kubernetes/components/volsync":
 
 [group("volsync")]
 [doc("List restic snapshots for a ReplicationSource")]
-list app ns="default":
+snapshots app ns="default":
     ts=$(date +%H%M%S); \
     export app='{{ app }}' ns='{{ ns }}' ts="$ts"; \
     envsubst < '{{ volsync_templates_dir }}/ListJob.tmpl.yaml' | kubectl apply -f -; \

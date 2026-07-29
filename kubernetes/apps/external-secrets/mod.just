@@ -5,6 +5,10 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 default:
     just --list secrets
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [group("secrets")]
 [confirm("Force a refresh for all ExternalSecrets across the cluster?")]
 [doc("Force all ExternalSecrets to refresh from their backing secret stores")]

@@ -9,6 +9,10 @@ scripts_dir := root_dir + "/scripts"
 default:
     just --list kube
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 # ── Cluster ────────────────────────────────────────────────────────
 
 [group("cluster")]

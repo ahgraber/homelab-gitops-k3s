@@ -16,6 +16,8 @@ List recipes in a module:
 
 ```sh
 just --list <module>
+# or, equivalently, from the module itself
+just <module> list
 ```
 
 Available modules: `ansible`, `kube`, `flux`, `volsync`, `db`, `rook`, `mlflow`, `secrets`, `oauth`
@@ -77,7 +79,7 @@ just flux suspend-ks && just flux suspend-hr
 just flux resume-ks && just flux resume-hr
 
 # VolSync: list snapshots and take a manual snapshot
-just volsync list <app> <namespace>
+just volsync snapshots <app> <namespace>
 just volsync snapshot <app> <namespace>
 
 # CNPG: hibernate / resume a database

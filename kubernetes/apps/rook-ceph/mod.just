@@ -8,6 +8,10 @@ rook_scripts := rook_dir + "/scripts"
 default:
     just --list rook
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [doc("Open a shell in rook-ceph toolbox")]
 toolbox:
     pod=$(kubectl get pod -l 'app=rook-ceph-tools' -n rook-ceph --no-headers -o custom-columns=':metadata.name' | head -1); \

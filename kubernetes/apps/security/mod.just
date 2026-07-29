@@ -8,6 +8,10 @@ root_dir := shell('git -C "' + security_dir + '" rev-parse --show-toplevel')
 default:
     just --list oauth
 
+[doc("List available recipes")]
+list:
+    just --justfile '{{ module_file() }}' --list
+
 [group("oauth")]
 [doc("Generate an OAuth client secret for an app and print the required Authelia follow-up steps")]
 secret namespace app *flags:
