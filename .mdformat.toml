@@ -12,7 +12,7 @@ validate = true       # options: {false, true}
 #     "footnote",
 #     "gfm",
 #     "gfm_alerts",
-#     "tables",
+#     # "tables", # now included in gfm
 #     "toc",
 # ]
 # options: a list of enabled code formatter languages (default: all installed are enabled)

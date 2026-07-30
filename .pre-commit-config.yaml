@@ -1,8 +1,8 @@
 ---
 # renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
 #
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
+# Run these hooks with `prek`: https://github.com/j178/prek
+# prek reads this file; see https://pre-commit.com/hooks.html for more hooks
 
 default_install_hook_types:
   - pre-commit
@@ -17,7 +17,7 @@ default_stages:
 
 exclude: |
   (?x)^(
-    ^.*(copier-answers\.ya?ml)$
+    ^.*(copier-answers\.ya?ml)$ |
     ^.*\.rej$
   )$
 
@@ -97,11 +97,29 @@ repos:
         stages: [pre-commit]
       - id: fix-ligatures
         stages: [pre-commit]
-  # renovate: datasource=github-tags depName=zricethezav/gitleaks
+  # renovate: datasource=github-tags depName=gitleaks/gitleaks
   - repo: https://github.com/gitleaks/gitleaks
     rev: "v8.30.1"
     hooks:
       - id: gitleaks
+  # # renovate: datasource=github-tags depName=betterleaks/betterleaks
+  # - repo: https://github.com/betterleaks/betterleaks
+  #   rev: "v1.1.0"
+  # renovate: datasource=github-tags depName=python-jsonschema/check-jsonschema
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: "0.37.4"
+    hooks:
+      - id: check-github-workflows
+      # check-github-workflows does not cover composite actions
+      - id: check-github-actions
+  # Lint: GitHub Actions security posture (unpinned actions, excessive
+  # permissions, credential persistence, template injection, cache poisoning).
+  # check-jsonschema above only validates shape, not security.
+  # renovate: datasource=github-tags depName=zizmorcore/zizmor-pre-commit
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: "v1.28.0"
+    hooks:
+      - id: zizmor
   # renovate: datasource=github-tags depName=stefmolin/exif-stripper
   - repo: https://github.com/stefmolin/exif-stripper
     rev: 1.2.0
@@ -145,24 +163,27 @@ repos:
           # - mdformat-tables # now included in mdformat-gfm
           - mdformat-toc
           - mdformat-config
-          - mdformat-ruff
           # - mdformat-shfmt # disable until can pass args (ref: https://github.com/hukkin/mdformat-shfmt/issues/7)
           - mdformat-simple-breaks
   # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.43  # Use the latest release tag
+    rev: v0.2.43
     hooks:
       # - id: rumdl      # Lint only (fails on issues)
       #   stages: [pre-commit]
       - id: rumdl-fmt  # Auto-format (fixes what it can)
         stages: [pre-commit]
-  # renovate: datasource=github-tags depName=charliermarsh/ruff-pre-commit
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  # renovate: datasource=github-tags depName=astral-sh/ruff-pre-commit
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.16.0"
     hooks:
-      - id: ruff
-        name: Lint and Format with Ruff
+      - id: ruff-check
+        name: Lint with Ruff
         args: [--fix]
+        stages: [pre-commit]
+      - id: ruff-format
+        name: Format with Ruff
+        types_or: [python, pyi, jupyter, markdown]  # also formats python blocks in md
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=kynan/nbstripout
   - repo: https://github.com/kynan/nbstripout
@@ -171,22 +192,33 @@ repos:
       - id: nbstripout
         name: Strip metadata and outputs from ipynb files
         stages: [pre-commit]
-  - repo: local
+  # renovate: datasource=github-tags depName=AleksaC/hadolint-py
+  - repo: https://github.com/AleksaC/hadolint-py
+    rev: "v2.14.0"
+    hooks:
+      - id: hadolint
+        name: Lint Dockerfiles
+        stages: [pre-commit]
+  # renovate: datasource=github-tags depName=shellcheck-py/shellcheck-py versioning=loose
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: "v0.11.0.1"
     hooks:
       - id: shellcheck
         name: Lint shell scripts
-        language: system
-        entry: shellcheck
-        types: ["shell"]
         exclude: "^.*zsh$" # ignore '*.zsh" scripts'
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=scop/pre-commit-shfmt versioning=loose
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: "v3.12.0-2"
+    rev: "v3.13.1-1"
     hooks:
       - id: shfmt
         name: Format shell scripts
+        # shfmt-py's sdist build only supports CPython <= 3.13
+        language_version: python3.13
+        # `args` replaces the hook's default `[--write]` rather than appending to it, so `--write` must be
+        # repeated here; without it shfmt prints to stdout, changes nothing, and always exits 0.
         args:
+          - "--write"
           - "--binary-next-line"
           - "--case-indent"
           - "--space-redirects"
@@ -216,7 +248,9 @@ repos:
     hooks:
       - id: typos
         name: Spellcheck with Typos
-        args: ["--config", ".typos.toml"]
+        # `args` replaces the hook's default `[--write-changes, --force-exclude]` rather than appending to it.
+        # `--force-exclude` is repeated so `.typos.toml`'s exclusions still apply to explicitly-passed files.
+        args: ["--force-exclude", "--config", ".typos.toml"]
         exclude: |
           (?x)^(
             ^.*(typos\.toml)$ |

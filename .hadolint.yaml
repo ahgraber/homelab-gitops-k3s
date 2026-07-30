@@ -1,0 +1,39 @@
+---
+failure-threshold: warning # name of threshold level (error | warning | info | style | ignore | none)
+format: tty
+
+label-schema:
+  # Use OCI standard labels for better compatibility
+  org.opencontainers.image.source: url
+  org.opencontainers.image.description: text
+  org.opencontainers.image.version: semver
+  org.opencontainers.image.created: rfc3339
+  org.opencontainers.image.revision: hash
+
+strict-labels: false
+
+ignored:
+  - DL3008 # pin versions in apt
+  - DL3013 # pin versions in pip
+  - DL3018 # pin versions in apk
+
+  # allow build args as labels
+  - DL3053 # Label is not a valid time format
+  - DL3055 # Label is not a valid git hash
+
+  # Conditional ignores - consider removing these for better security
+  - DL3015 # use "no-install-recommends" with apt-get
+  # - DL3059 # multiple consecutive RUN instructions (sometimes needed for clarity)
+
+# Override specific rules
+override:
+  error:
+    - DL3020 # Use COPY instead of ADD for files and folders
+    - DL3025 # Use arguments JSON notation for CMD and ENTRYPOINT arguments
+    - DL4006 # Set the SHELL option -o pipefail before RUN with a pipe
+  warning:
+    - DL3015 # Avoid additional packages by specifying --no-install-recommends
+    - DL3059 # Multiple consecutive RUN instructions
+  info:
+    - DL3009 # Delete the apt-get lists after installing something
+    - DL3027 # Do not use apt as it is meant to be an end-user tool

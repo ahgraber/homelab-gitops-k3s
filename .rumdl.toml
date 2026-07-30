@@ -53,66 +53,82 @@ line_length = 119
 #-----------------------------------------------------------------------------
 ### Rule-specific configurations
 #-----------------------------------------------------------------------------
-[MD003] # Heading style
+### Heading style
+[MD003]
 style = "atx"  # Use '#' Heading style
 
-[MD004] # Unordered list style
+### Unordered list style
+[MD004]
 style = "dash"  # asterisk, plus, dash, consistent
 
-[MD007] # (Unordered) list indentation
+### (Unordered) list indentation
+[MD007]
 # indent = 2
 style = "text-aligned" # Align markers with start of parent text
 
-[MD009] # Trailing spaces
+### Trailing spaces
+[MD009]
 br_spaces = 2 # Number of spaces for hard line breaks (default: 2)
 strict = false  # Remove all trailing spaces, even line breaks (default: false)
 
-[MD013] # Line length / wrap
-line_length = 119
+### Line length / wrap
+[MD013]
+line_length = 0
 paragraphs = false  # Do not warn about long paragraphs
 headings = false  # Do not warn about long headings
-code-blocks = false # Warn on extended code blocks
+code-blocks = false # Do not warn about extended code blocks
 tables = false # Do not warn about wide tables
-reflow = true
+reflow = true # reflow triggers when line length is exceeded
 reflow-mode = "sentence-per-line"
 abbreviations = ["e.g.", "i.e.", "vs.", "U.S."]
 
-[MD024] # Avoid duplicate headings
+### Avoid duplicate headings
+[MD024]
 siblings_only = true
 
-[MD025] # Only one H1 / title per document
+### Only one H1 / title per document
+[MD025]
 level = 1
 front_matter_title = "title"
 
-[MD029] # Ordered list
+### Ordered list
+[MD029]
 style = "consistent"
 # style = "one" # Use all 1's for ordered lists; let renderer number
 
-# [MD030] # Spacing after list markers
+### Spacing after list markers
+# [MD030]
 # ul_single = 2  # Spaces after bullet for single-line items (default: 1)
 # ul_multi = 2   # Spaces after bullet for multi-line items (default: 1)
 # ol_single = 1  # Spaces after number for single-line items (default: 1)
 # ol_multi = 1   # Spaces after number for multi-line items (default: 1)
 
-[MD032] # Blank lines around lists
+### Blank lines around lists
+[MD032]
 allow-lazy-continuation = false
 
-[MD035] # Consistent breaks
+### Consistent breaks
+[MD035]
 style = "---"
 
-[MD046] # Code block style
+### Code block style
+[MD046]
 style = "fenced"  # Options: "consistent", "fenced", "indented"
 
-[MD049] # Italic
+### Italic
+[MD049]
 style = "underscore"  # Options: "consistent", "asterisk", "underscore"
 
-[MD050] # Bold
+### Bold
+[MD050]
 style = "asterisk"  # Options: "consistent", "asterisk", "underscore"
 
-[MD055] # Table formatting (pipes)
+### Table formatting (pipes)
+[MD055]
 style = "leading-and-trailing"  # Options: see below
 
-# [MD060] # Table formatting (spacing)
+### Table formatting (spacing)
+# [MD060]
 # enabled = true
 # style = "aligned"
 # max-width = 120  # Independent of MD013, use 120 char threshold

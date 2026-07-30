@@ -2,6 +2,73 @@
 
 This document provides essential context and instructions for AI agents working on this homelab Kubernetes cluster repository.
 
+## General Engineering Directives
+
+Deliver exactly what was requested.
+Avoid speculative extras, but include the minimum tests, documentation, and safeguards needed to keep behavior correct and prevent regressions.
+
+### Directive Priority
+
+If directives conflict, prioritize:
+
+1. Correctness and safety at external boundaries
+2. Explicit user instructions
+3. Minimal scope and simplicity
+
+### 1. Think Before Coding
+
+Objective: surface ambiguity and tradeoffs before writing any code.
+
+- State assumptions explicitly.
+- If uncertainty would materially change the implementation, ask.
+  Otherwise, state your assumption and proceed.
+- If multiple interpretations exist, present them — don't pick silently.
+- If a simpler approach exists, say so.
+  Push back when warranted.
+
+### 2. Simplicity First
+
+Objective: write the minimum change that meets the request.
+
+- No features, abstractions, or configurability beyond what was asked.
+- No "flexibility" or "configurability" that wasn't requested.
+- Prefer the golden path for internal logic; let tests define edge-case expectations.
+- Add explicit validation and error handling at external boundaries (I/O, network, persistence, auth, parsing, external APIs).
+- If you write 200 lines and it could be 50, rewrite it.
+- Apply YAGNI ruthlessly.
+
+### 3. Surgical Changes
+
+Objective: every changed line traces directly to the request.
+
+When editing existing code:
+
+- Touch only what the request requires.
+  Don't "improve" adjacent code, comments, or formatting.
+- Match existing style, even if you'd do it differently.
+  Don't refactor existing code unless it is part of the request.
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked — mention it instead.
+
+### Defaults
+
+- Use descriptive, consistent naming conventions.
+- Write docstrings or comments for public contracts and non-obvious behavior.
+- Comments and docstrings describe what exists now (or the rationale for the current design), never what the code used to be.
+  No "previously…", "no longer…", "changed from…", or "renamed from…" — that history belongs in commit messages and changelogs.
+  When editing, delete stale historical asides you encounter rather than preserving them.
+- Use type annotations where the language supports them.
+- Use structured logging where the project uses logging.
+- Run lint/format/test through project tooling when available; do not hand-format code.
+- Write tests for public behavior and regressions, not implementation details.
+
+### Sandbox Limitations
+
+- The sandbox may not be able to run installs, network calls, or other privileged commands (permission errors) — attempt the command first rather than assuming failure.
+- **Delegate to the user** only if a command actually fails on a permission or network error.
+  Describe the exact command to run.
+- Attempting a command first does **not** relax the [Security Rules](#security-rules): never run a mutating cluster, Flux, or node command without explicit human approval, even to test whether it is permitted.
+
 ## Project Overview
 
 This is a GitOps-managed homelab Kubernetes cluster using:

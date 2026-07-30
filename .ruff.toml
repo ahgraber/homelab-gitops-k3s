@@ -1,7 +1,8 @@
 # --- ruff -------------------------------------------------------------------
+required-version = ">=0.16"  # rule names and defaults below assume 0.16
 preview = false  # do not use unstable rules/fixes
 # # Assumed Python version
-# target-version = "py39" # managed in [project]requires-python above
+# target-version = "py311" # inferred from [project]requires-python in pyproject.toml
 
 # file selection
 extend-exclude = [
@@ -18,18 +19,12 @@ extend-exclude = [
 ]
 extend-include = ["*.ipynb"]
 
-# Autofix behavior
-fix = true
-
 # Line options
 indent-width = 4
 line-length = 119
 
 # Directories with source code; allow relative imports
 src = ["src", "notebooks", "tests"]
-
-# Group output violations by file
-output-format = "grouped"
 
 
 [format]
@@ -43,72 +38,104 @@ docstring-code-format = true
 [lint]
 exclude = ["*.pyi"]
 
+# Listed explicitly rather than via `extend-select` so a ruff upgrade cannot
+# widen the enabled set without a change here.
 select = [
-  "A", # flake8 builtins
-  "B", # flake8 bugbear
-  "C4", # flake8 comprehensions
-  "C90", # mccabe
-  "D", # pydocstyle
-  "E", # pycodestyle
-  "F", # pyflakes
-  "I", # isort
+  "A", # flake8-builtins: names that shadow python builtins
+  "ASYNC", # flake8-async: blocking calls inside `async def`
+  "B", # flake8-bugbear: likely bugs and design problems
+  "BLE", # flake8-blind-except: `except Exception` that swallows everything
+  "C4", # flake8-comprehensions: redundant or slow comprehensions
+  "C90", # mccabe: cyclomatic complexity
+  "D", # pydocstyle: docstring presence and formatting
+  "DTZ", # flake8-datetimez: timezone-naive datetime construction
+  "E", # pycodestyle errors
+  "EXE", # flake8-executable: shebang and file-permission mismatches
+  "F", # pyflakes: undefined names, unused imports, broken f-strings
+  "FA", # flake8-future-annotations: missing `from __future__ import annotations`
+  "FLY", # flynt: static `str.join` that should be an f-string
+  "FURB", # refurb: idioms with a clearer modern equivalent
+  "G", # flake8-logging-format: eager formatting in logging calls
+  "I", # isort: import ordering
+  "INT", # flake8-gettext: f-strings and `.format` inside gettext calls
+  "ISC", # flake8-implicit-str-concat: accidental string concatenation
+  "LOG", # flake8-logging: logger construction and `exc_info` misuse
   "N", # pep8-naming
-  "NPY201", # numpy2.0 migration
-  # "PTH", # flake8-use-pathlib
-  "Q",  # flake8-quotes
-  "S",  # bandit
-  "SIM",  # flake8-simplify
-  "TRY",  # tryceratops
-  "W", # pycodestyle
-  # "T20", # flake8 print
+  "NPY201", # numpy 2.0 migration
+  "PERF", # perflint: avoidable per-iteration work
+  "PGH", # pygrep-hooks: blanket `noqa` / `type: ignore`, mock misuse
+  "PIE", # flake8-pie: dead weight and duplicate definitions
+  "PL", # pylint: errors, warnings, conventions, refactors
+  "PT", # flake8-pytest-style: fixture and assertion conventions
+  "PTH124", # flake8-use-pathlib: `py.path` is deprecated
+  "PTH210", # flake8-use-pathlib: `with_suffix` without a leading dot
+  "Q", # flake8-quotes
+  "RET", # flake8-return: redundant or inconsistent return statements
+  "RUF", # ruff-native checks, including `noqa` hygiene (RUF100)
+  "S", # bandit: security anti-patterns
+  "SIM", # flake8-simplify
+  "T10", # flake8-debugger: leftover `breakpoint()` / `pdb.set_trace()`
+  "TC", # flake8-type-checking: imports only needed for annotations
+  "TRY", # tryceratops: exception handling
+  "UP", # pyupgrade: syntax newer than `requires-python` allows
+  "W", # pycodestyle warnings
+  "YTT", # flake8-2020: `sys.version` comparisons that break on 3.10+
+  # "PTH", # full flake8-use-pathlib forces pathlib everywhere; too invasive
+  # "T20", # flake8-print: `print` is legitimate in scripts and notebooks
 ]
 
 ignore = [
-  "B905",  # zip strict=True; remove once python <3.10 support is dropped.
-  "D100",  # do not require module-level docstrings
-  "D101",  # do not require docstrings in public classes
-  "D104",  # do not require package docstrings
-  "D105",  # do not require docstrings in magic (dunder) methods
-  "D107",  # do not require docstrings in __init__ files
-  # "D205",  # don't require linebreak after docstring (ruff vs black conflict)
-  "D206",  # redundant w formatter
-  "D300",  # redundant w formatter
-  "E111",  # redundant w formatter
-  "E114",  # redundant w formatter
-  "E117",  # redundant w formatter
+  # --- redundant with the formatter
+  # ref: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "COM812",  # missing trailing comma
+  "COM819",  # prohibited trailing comma
+  "D206",  # docstring indented with tabs
+  "D300",  # docstring uses ''' instead of """
+  "E111",  # indentation not a multiple of four
+  "E114",  # indentation not a multiple of four (comment)
+  "E117",  # over-indented
   "E501",  # line too long
-  "F401",  # unused import
-  "F403",  # import *
-  "F405",  # defined from import *
-  # "F541",  # f-string missing placeholders
-  "N999",  # allow "invalid" module names due to jinja templates
-  "Q000",  # redundant w formatter
-  "Q001",  # redundant w formatter
-  "Q002",  # redundant w formatter
-  "Q003",  # redundant w formatter
-  # "S101",  # assert
-  "S311",  # allow pseudorandom generators (we use for stats)
-  "S607",  # allow partial paths ("git" rather than "/usr/bin/git")
-  "SIM105",  # allow except: pass
-  "TRY003",  # Avoid specifying messages outside exception class; overly strict, especially for ValueError
-  "TRY201",  # Allow raise without exception name (align with Sonarlint)
-  "W191",  # redundant w formatter
-  # "W503",  # not in ruff
-  "COM812",  # redundant w formatter
-  "COM819",  # redundant w formatter
-  "ISC001",  # redundant w formatter
-  "ISC002",  # redundant w formatter
+  "ISC001",  # single-line implicit string concatenation
+  "ISC002",  # multi-line implicit string concatenation
+  "Q000",  # bad quotes, inline string
+  "Q001",  # bad quotes, multiline string
+  "Q002",  # bad quotes, docstring
+  "Q003",  # avoidable escaped quote
+  "W191",  # tab indentation
+
+  # --- docstrings document behavior, not existence
+  "D100",  # module docstring
+  "D101",  # public class docstring
+  "D104",  # package docstring
+  "D105",  # magic (dunder) method docstring
+
+  # --- size limits; C90 below already bounds complexity, and counting
+  #     arguments or branches on top of it only rewards artificial splitting
+  "PLR0911",  # too many return statements
+  "PLR0912",  # too many branches
+  "PLR0913",  # too many arguments
+  "PLR0915",  # too many statements
+  "PLR0917",  # too many positional arguments
+
+  # --- deliberate allowances
+  "N999",  # invalid module name; template directories are jinja expressions
+  "PLC0415",  # import outside top level; needed for optional deps and import cycles
+  "PLR2004",  # magic value comparison; unavoidable in tests and config code
+  "S311",  # pseudorandom generators; fine for statistics, never for crypto
+  "S607",  # partial executable path ("git" rather than "/usr/bin/git")
+  "SIM105",  # `try/except/pass` in place of `contextlib.suppress`
+  "TC003",  # stdlib typing-only imports are cheap and safe outside TYPE_CHECKING,
+            # and `from __future__ import annotations` (FA) already defers them
+  "TRY003",  # long message outside the exception class; overly strict for ValueError
+  "TRY201",  # `raise` without the exception name (aligns with SonarLint)
 ]
 
-# Avoid trying to fix extension types:
+# bugbear autofixes can change runtime behavior; apply them deliberately
 unfixable = ["B"]
 
 [lint.extend-per-file-ignores]
-# # Ignore `E402` (import violations) in all `__init__.py` files,
-# # and in `path/to/file.py`.
-# "__init__.py" = ["E402"]
-# "path/to/file.py" = ["E402"]
 ".ci/*" = ["D"]
+"__init__.py" = ["F401", "F403", "F405"]  # re-exports and namespace flattening
 "docs/*" = ["D"]
 "notebooks/*" = ["B018", "D", "S"]
 "**/tests/*" = ["D", "S101", "S301"]
@@ -121,6 +148,21 @@ extend-immutable-calls = [
     "typer.Option",
 ]
 
+[lint.flake8-type-checking]
+# Frameworks that resolve annotations at runtime need their imports to stay
+# importable, so TC001/TC002 must leave these alone.
+runtime-evaluated-base-classes = [
+  "msgspec.Struct",
+  "pydantic.BaseModel",
+  "sqlalchemy.orm.DeclarativeBase",
+]
+runtime-evaluated-decorators = [
+  "attrs.define",
+  "attrs.frozen",
+  "pydantic.validate_call",
+]
+quote-annotations = true  # quote an annotation rather than skip the fix
+
 [lint.isort]
 combine-as-imports = true
 detect-same-package = true
@@ -132,15 +174,15 @@ relative-imports-order = "closest-to-furthest"
 
 # known-first-party = [""]
 known-local-folder = ["src"] # for relative imports
-section-order = ["future", "standard-library", "third-party", "torch", "llm", "web", "sci","plot", "first-party", "local-folder"]
+section-order = ["future", "standard-library", "third-party", "api", "nlp", "llm", "torch", "sci", "plot", "first-party", "local-folder"]
 
 [lint.isort.sections]
 "sci" = ["numpy", "pandas", "scipy", "sklearn", "statsmodels"]
 "nlp" = ["nltk", "spacy", "langcodes"]
 "torch" = ["datasets", "lightning", "torch", "torch*", "tokenizers", "transformers", "sentence_transformers"]
-"llm" = ["aisuite", "langchain*", "llama_index*", "openai", "semantic_kernel", "ragas", "tiktoken"]
+"llm" = ["openai", "tiktoken"]
 "plot" = ["cmcrameri", "matplotlib", "mizani", "plotly", "plotnine", "seaborn"]
-"web" = ["fastapi", "reflex*", "requests", "responses", "tenacity"]
+"api" = ["fastapi", "httpx", "requests", "responses", "tenacity"]
 
 [lint.mccabe]
 max-complexity = 18

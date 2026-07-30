@@ -26,7 +26,10 @@ trim_trailing_whitespace = true
 max_line_length = 239
 trim_trailing_whitespace = false
 
-[*.{py, ipynb}]
+[go.mod]
+indent_style = tab
+
+[*.{py,ipynb}]
 indent_size = unset
 indent_style = space
 
