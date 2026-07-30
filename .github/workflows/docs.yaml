@@ -1,19 +1,53 @@
 name: CI Docs
 
+# Only the inputs the site is built from: the landing page (root README), the
+# hand-authored guides, the per-app READMEs that gen_app_pages.py aggregates,
+# the site config and generator, and the docs toolchain deps.
 on:
   push:
     branches:
       - main
+    paths:
+      - README.md
+      - docs/**
+      - kubernetes/apps/**/README.md
+      - great-docs.yml
+      - scripts/docs/**
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/docs.yaml
   pull_request:
+    paths:
+      - README.md
+      - docs/**
+      - kubernetes/apps/**/README.md
+      - great-docs.yml
+      - scripts/docs/**
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/docs.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  # PRs supersede: a new push to the branch cancels the stale build.
+  # main queues instead — cancelling a run mid-deploy is what leaves a Pages
+  # deployment stuck. Batches still collapse to the last commit, because a newly
+  # queued run replaces the previous pending one.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
 
 jobs:
   build-docs:
     name: "Build Docs"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0 # Full history for accurate page timestamps
+          persist-credentials: false
 
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
@@ -53,9 +87,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: "build-docs"
     if: github.ref == 'refs/heads/main'
+    # Pages allows one deployment at a time, and interrupting one leaves it stuck
+    # in-progress — queue instead of cancelling (ref: actions/starter-workflows
+    # pages/static.yml). Without this, rapid merges to main fail with
+    # "Deployment request failed ... due to in progress deployment".
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
-      pages: write
-      id-token: write
+      pages: write # deploy to GitHub Pages
+      id-token: write # OIDC token for actions/deploy-pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

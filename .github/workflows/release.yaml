@@ -7,6 +7,17 @@ on: # yamllint disable-line rule:truthy
   schedule:
     - cron: "0 0 1 * *" # 1st of every month at midnight
 
+# Serialize so the tag arithmetic below always reads the newest release. A
+# cancelled run could publish a release and still lose to its successor, which
+# would then cut a second, spurious release.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+# The app token below carries every permission this workflow needs;
+# GITHUB_TOKEN is unused.
+permissions: {}
+
 jobs:
   release:
     name: Release
@@ -18,11 +29,17 @@ jobs:
         with:
           client-id: "${{ secrets.BOT_APP_CLIENT_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+          # contents: create the release and its tag.
+          # workflows: required when the tagged commit modifies .github/workflows
+          # (ref: https://docs.github.com/en/rest/releases/releases)
+          permission-contents: write
+          permission-workflows: write
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: "${{ steps.app-token.outputs.token }}"
+          persist-credentials: false
 
       - name: Create Release
         shell: bash

@@ -7,6 +7,16 @@ on: # yamllint disable-line rule:truthy
     branches: ["main"]
     paths: [".github/labels.yaml"]
 
+# `delete-other-labels: true` makes this a destructive sync: a cancelled run can
+# leave labels deleted but not recreated, so queue instead of cancelling.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+# The app token below carries every permission this workflow needs;
+# GITHUB_TOKEN is unused.
+permissions: {}
+
 jobs:
   label-sync:
     name: Label Sync
@@ -18,11 +28,15 @@ jobs:
         with:
           client-id: "${{ secrets.BOT_APP_CLIENT_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+          # contents: read the checkout; issues: labels are part of the Issues API
+          permission-contents: read
+          permission-issues: write
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: "${{ steps.app-token.outputs.token }}"
+          persist-credentials: false
 
       - name: Sync Labels
         uses: EndBug/label-sync@52074158190acb45f3077f9099fea818aa43f97a # v2.3.3

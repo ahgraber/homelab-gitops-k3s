@@ -6,6 +6,14 @@ on: # yamllint disable-line rule:truthy
   schedule:
     - cron: "0 0 * * 0" # 0:00 every sunday
 
+# Queue rather than cancel so overlapping runs can't race on the same
+# link-checker issue.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   link-check:
     name: Link Check
@@ -19,12 +27,15 @@ jobs:
         with:
           client-id: "${{ secrets.BOT_APP_CLIENT_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+          # only used to clone the repo for lychee; the issue steps use GITHUB_TOKEN
+          permission-contents: read
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           token: "${{ steps.app-token.outputs.token }}"
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Link Checker
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
