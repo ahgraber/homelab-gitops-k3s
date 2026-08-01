@@ -480,9 +480,8 @@ shellcheck scripts/my-script.sh
 
 Requirements:
 
-- Prefer scripts that are directly `uv` runnable (`uv run --script`) with:
-  - a `uv` shebang
-  - inline dependencies (PEP 723 metadata block)
+- Give executable Python scripts a `uv` shebang, not a system interpreter: `#!/usr/bin/env -S uv run --script`, paired with a PEP 723 `# /// script` block declaring `requires-python` and `dependencies`.
+  This makes the script self-contained and reproducible; `#!/usr/bin/env python3` picks up whatever interpreter and site-packages happen to be on `PATH`.
 - Use `uv` for dependency management
 - Use `ruff` for linting and formatting
 - Include docstrings and type hints

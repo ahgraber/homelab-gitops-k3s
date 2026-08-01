@@ -1,6 +1,4 @@
 ---
-# renovate: datasource=github-tags depName=pre-commit/pre-commit-hooks
-#
 # Run these hooks with `prek`: https://github.com/j178/prek
 # prek reads this file; see https://pre-commit.com/hooks.html for more hooks
 
@@ -129,7 +127,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=commitizen-tools/commitizen
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.16.5
+    rev: v4.17.0
     hooks:
       - id: commitizen
         language: python
@@ -167,7 +165,7 @@ repos:
           - mdformat-simple-breaks
   # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.43
+    rev: v0.2.48
     hooks:
       # - id: rumdl      # Lint only (fails on issues)
       #   stages: [pre-commit]
@@ -175,7 +173,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=astral-sh/ruff-pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.16.0"
+    rev: "v0.16.1"
     hooks:
       - id: ruff-check
         name: Lint with Ruff
@@ -227,7 +225,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=biomejs/pre-commit
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.5.5
+    rev: v2.5.6
     hooks:
       - id: biome-check
         stages: [pre-commit]
