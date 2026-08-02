@@ -11,14 +11,14 @@ spec:
   scrapeTimeout: 10s
   metricsPath: /metrics
   scheme: http
+  authorization:
+    type: Bearer
+    credentials:
+      name: truenas-garage-token
+      key: token
 
   staticConfigs:
     - targets:
         - truenas.${SECRET_INT_DOMAIN}:30190
       labels:
         instance: garage
-      # authorization:
-      #   type: Bearer
-      #   credentials:
-      #     name: truenas-garage-token
-      #     key: token

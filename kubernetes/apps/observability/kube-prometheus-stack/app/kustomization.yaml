@@ -9,5 +9,6 @@ resources:
   - ./garage-scrapeconfig.yaml
   - ./node-exporter-scrapeconfig.yaml
   - ./secret-alertmgrNotifiers.externalsecret.yaml
+  - ./secret-garageToken.externalsecret.yaml
   # - ./secret-additionalScrapeConfigs.sops.yaml
   # - ./secret-alertmgrNotifiers.sops.yaml
