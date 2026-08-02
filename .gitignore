@@ -115,6 +115,7 @@ bootstrap/.latest-template.sha
 !.gitignore
 !.env.example
 !.env.sample
+!.env.op
 !**.gitkeep
 !**.gitignore
 !*.sops.*
