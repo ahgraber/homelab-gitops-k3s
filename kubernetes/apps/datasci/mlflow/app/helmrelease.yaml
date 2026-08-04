@@ -55,11 +55,14 @@ spec:
                 --backend-store-uri=$POSTGRES_URL
                 --serve-artifacts
                 --artifacts-destination=$S3_BUCKET
+                --expose-prometheus=/tmp/metrics
             env:
               TZ: "America/New_York"
               MLFLOW_HOST: 0.0.0.0
               MLFLOW_PORT: &port 5000
-              MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.${SECRET_DOMAIN},mlflow.datasci.svc.cluster.local,localhost:*,127.0.0.1:*"
+              # setting this replaces mlflow's defaults (loopback + RFC1918), so the pod
+              # CIDR must be listed explicitly for Prometheus to scrape endpoints by pod IP
+              MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.${SECRET_DOMAIN},mlflow.datasci.svc.cluster.local,mlflow.datasci.svc.cluster.local:*,10.42.*,localhost:*,127.0.0.1:*"
               MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: "https://mlflow.${SECRET_DOMAIN}"
               MLFLOW_DISABLE_TELEMETRY: "true"
               POSTGRES_URL:
@@ -105,12 +108,53 @@ spec:
                 memory: 105M
               # limits:
               #   memory: 105M
+
+      gc:
+        type: cronjob
+        cronjob:
+          schedule: "0 3 * * 0"
+          timeZone: America/New_York
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 3
+          backoffLimit: 1
+
+        containers:
+          app:
+            image:
+              # renovate: datasource=docker image=ghcr.io/ninerealmlabs/mlflow-server
+              repository: ghcr.io/ninerealmlabs/mlflow-server
+              tag: 3.14.0
+            env:
+              TZ: "America/New_York"
+              # artifacts are proxied by the tracking server, so gc must resolve them through it
+              MLFLOW_TRACKING_URI: http://mlflow.datasci.svc.cluster.local:5000
+              MLFLOW_BACKEND_STORE_URI:
+                valueFrom:
+                  secretKeyRef:
+                    name: *db_secret
+                    key: POSTGRES_URL
+            # double "$$" escape flux substitutions
+            command: [/bin/bash, -c, mlflow gc --backend-store-uri="$$MLFLOW_BACKEND_STORE_URI" --older-than=30d]
+            resources:
+              requests:
+                cpu: 25m
+                memory: 105M
     service:
       mlflow:
         controller: mlflow
         ports:
           http:
             port: *port
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
     route:
       main:
         hostnames:

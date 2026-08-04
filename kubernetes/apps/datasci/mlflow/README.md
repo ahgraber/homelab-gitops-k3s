@@ -1,7 +1,6 @@
 # [MLFlow](https://mlflow.org/docs/latest/index.html)
 
-MLflow is a platform to streamline machine learning development,
-including tracking experiments, packaging code into reproducible runs, and sharing and deploying models.
+MLflow is a platform to streamline machine learning development, including tracking experiments, packaging code into reproducible runs, and sharing and deploying models.
 
 ## First Start
 
@@ -25,6 +24,15 @@ The **artifact store** persists _artifacts_ (files, models, images, in-memory ob
 > with respect to user authorization / access permissions
 
 ### Cleaning up deleted experiments
+
+The `gc` CronJob runs `mlflow gc --older-than=30d` every Sunday at 03:00 America/New_York.
+It permanently removes runs, experiments, and logged models that have been in the `deleted` lifecycle stage for at least 30 days, along with their artifacts.
+Because artifacts are proxied by the tracking server (`--serve-artifacts`), the job sets `MLFLOW_TRACKING_URI` to the in-cluster service so `gc` can resolve `mlflow-artifacts:` URIs; `mlflow.datasci.svc.cluster.local:*` must therefore stay in `MLFLOW_SERVER_ALLOWED_HOSTS`.
+
+> The gc bug below still affects this job.
+> Check failed jobs with `kubectl logs -n datasci job/<job-name>`.
+
+Manual cleanup:
 
 - Run `mlflow gc` in the mlflow container to clean up deleted runs and artifacts (this retains the experiment).
   The python script `cleanup-runs.py` may also be used to clean up runs from the database (this may orphan the artifacts).
@@ -51,6 +59,17 @@ Use `tracking_uri` when deleting against a non-default endpoint:
 ```sh
 just mlflow delete-traces-older 1 7 https://mlflow.example.com
 ```
+
+## Metrics
+
+The server runs with `--expose-prometheus=/tmp/metrics`, which activates the `prometheus-flask-exporter` and serves request metrics (prefixed `mlflow_`) at `/metrics`.
+A `ServiceMonitor` scrapes that endpoint every minute; kube-prometheus-stack discovers ServiceMonitors in all namespaces, so no extra label is needed.
+
+The `/metrics` endpoint is served on the same port as the UI and is not protected by authentication.
+
+Prometheus scrapes ServiceMonitor endpoints by pod IP, so the pod CIDR (`10.42.*`) must stay in `MLFLOW_SERVER_ALLOWED_HOSTS`.
+Setting that variable replaces MLflow's default allowlist (loopback plus the RFC1918 ranges) rather than extending it, and the host-validation middleware answers a non-matching `Host` header with `403`.
+Only `/health` and `/version` bypass validation, so the pod stays `Ready` while every scrape fails.
 
 ## AI Gateway
 
