@@ -113,11 +113,11 @@ bootstrap/.latest-template.sha
 # -------------------------------------------------------
 !.gitkeep
 !.gitignore
+!**.gitkeep
+!**.gitignore
 !.env.example
 !.env.sample
 !.env.op
-!**.gitkeep
-!**.gitignore
 !*.sops.*
 
 # Great Docs (generated)
