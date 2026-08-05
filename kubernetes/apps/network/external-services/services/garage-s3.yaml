@@ -24,6 +24,35 @@ spec:
         - name: *app
           port: 30188
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/gateway.envoyproxy.io/backendtrafficpolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: &app garage-s3
+  namespace: network
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+# Route-scoped policy that mirrors the gateway-wide `envoy` BackendTrafficPolicy
+# minus `compression`. Envoy Gateway appends `accept-encoding` to the route's
+# `request_headers_to_remove` whenever compression is enabled, which breaks AWS
+# SigV4 clients that sign that header (aws-sdk-go-v2 signs `accept-encoding:
+# identity`): Garage recomputes the signature without it and rejects the request
+# with 403 "header not present". Compressing an S3 API is wrong anyway - object
+# payloads are already compressed. This policy has no `mergeType`, so it fully
+# replaces the gateway-wide policy for this route.
+spec:
+  connection:
+    bufferLimit: 16Ki
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: *app
+  tcpKeepalive: {}
+  timeout:
+    http:
+      requestTimeout: 120s
+---
 # ref: https://kristhecodingunicorn.com/post/k8s_proxy_svc/#proxy-to-external-services-with-service-without-selectors
 apiVersion: v1
 kind: Service
