@@ -21,5 +21,10 @@
         ]
       }
     ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "allowRead": [".env.op"]
+    }
   }
 }
