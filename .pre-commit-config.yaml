@@ -115,7 +115,7 @@ repos:
   # check-jsonschema above only validates shape, not security.
   # renovate: datasource=github-tags depName=zizmorcore/zizmor-pre-commit
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: "v1.28.0"
+    rev: "v1.29.0"
     hooks:
       - id: zizmor
   # renovate: datasource=github-tags depName=stefmolin/exif-stripper
@@ -135,7 +135,7 @@ repos:
           - commit-msg
   # renovate: datasource=github-tags depName=editorconfig-checker/editorconfig-checker.python
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: "3.6.1"
+    rev: "3.8.0"
     hooks:
       - id: editorconfig-checker
         name: Check editorconfig compliance
@@ -165,7 +165,7 @@ repos:
           - mdformat-simple-breaks
   # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.48
+    rev: v0.2.52
     hooks:
       # - id: rumdl      # Lint only (fails on issues)
       #   stages: [pre-commit]
@@ -173,7 +173,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=astral-sh/ruff-pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.16.1"
+    rev: "v0.16.2"
     hooks:
       - id: ruff-check
         name: Lint with Ruff
@@ -192,7 +192,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=AleksaC/hadolint-py
   - repo: https://github.com/AleksaC/hadolint-py
-    rev: "v2.14.0"
+    rev: "v2.15.1"
     hooks:
       - id: hadolint
         name: Lint Dockerfiles
@@ -225,7 +225,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=biomejs/pre-commit
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.5.6
+    rev: v2.5.7
     hooks:
       - id: biome-check
         stages: [pre-commit]
@@ -242,7 +242,7 @@ repos:
   ### In this case, comment out this block until ".typos.toml" has been committed successfully
   # renovate: datasource=github-tags depName=crate-ci/typos
   - repo: https://github.com/crate-ci/typos
-    rev: "v1.48.0"
+    rev: "v1.49.0"
     hooks:
       - id: typos
         name: Spellcheck with Typos
