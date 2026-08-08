@@ -6,6 +6,11 @@ metadata:
   name: pg-s3-store
 spec:
   retentionPolicy: 30d
+  instanceSidecarConfiguration:
+    env:
+      # Garage only accepts its configured region name; boto3 would otherwise default to us-east-1
+      - name: AWS_DEFAULT_REGION
+        value: garage
   configuration:
     endpointURL: ${SECRET_S3_ENDPOINT} # from cluster custom secrets
     destinationPath: s3://postgres/

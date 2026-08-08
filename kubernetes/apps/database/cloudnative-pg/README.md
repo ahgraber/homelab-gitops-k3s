@@ -11,6 +11,10 @@ The operator is deployed via helm release
 S3-compatible storage can be used as a live WAL backup.
 CNPG now uses a [plugin system](https://cloudnative-pg.io/plugin-barman-cloud/docs/intro/).
 
+The backend is Garage, which rejects any region other than `garage`.
+`objectstore.yaml` sets `AWS_DEFAULT_REGION=garage` through `spec.instanceSidecarConfiguration.env`; the plugin injects that into both the instance sidecar and the `full-recovery` job, so backup, WAL archive, and restore all agree on the region.
+Without it barman-cloud falls back to the boto3 default of `us-east-1` and every S3 call fails.
+
 ## Restore
 
 [k8s-at-home discussion](https://discord.com/channels/673534664354430999/1036720267474509885)
