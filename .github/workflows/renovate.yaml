@@ -53,13 +53,18 @@ jobs:
           # Renovate's platform requirements, minus the org-level scopes it only
           # needs for autodiscovery beyond this repo
           # (ref: https://docs.renovatebot.com/modules/platform/github/):
-          #   contents  - commit branches
-          #   issues    - dependency dashboard
-          #   workflows - update files under .github/workflows
+          #   contents             - commit branches
+          #   issues               - dependency dashboard
+          #   workflows            - update files under .github/workflows
+          #   vulnerability-alerts - read Dependabot alerts to raise security PRs
+          #   statuses             - the `renovate/stability-days` check that
+          #                          `minimumReleaseAge` gates merges on
           permission-contents: write
           permission-issues: write
           permission-pull-requests: write
           permission-workflows: write
+          permission-vulnerability-alerts: read
+          permission-statuses: write
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -77,7 +82,7 @@ jobs:
           RENOVATE_DRY_RUN: "${{ inputs.dryRun }}"
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
-          RENOVATE_PLATFORM_COMMIT: true
+          RENOVATE_PLATFORM_COMMIT: enabled
         with:
           ## Intentionally rely on repository config discovery for .renovaterc.json5.
           ## Setting configurationFile here can cause the same config to be loaded twice.
