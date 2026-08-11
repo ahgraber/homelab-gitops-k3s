@@ -97,7 +97,6 @@ site/
 **/*wip/
 .private/
 .logs/
-.task/
 .temp*
 .todo*
 TODO.md
