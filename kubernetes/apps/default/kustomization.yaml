@@ -17,6 +17,7 @@ resources:
   - ./cyberchef/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./freshrss/ks.yaml
+  - ./galene/ks.yaml
   - ./homebox/ks.yaml
   - ./homepage/ks.yaml
   - ./jelu/ks.yaml
