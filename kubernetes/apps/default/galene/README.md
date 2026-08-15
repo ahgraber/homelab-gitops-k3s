@@ -3,23 +3,75 @@
 Galene is a WebRTC videoconference server (an SFU) written in Go by Juliusz Chroboczek.
 This deployment serves small group calls at `meet.${SECRET_DOMAIN}`.
 
+## Using it
+
+The landing page lists only groups marked `public`.
+If no public groups exist, it shows an empty list and a join form.
+Enter the desired group name (e.g. `guests`).
+
+```text
+https://meet.${SECRET_DOMAIN}/group/guests/
+```
+
+### Signing in
+
+Galene asks for a username and password.
+The user account is associated with the group field of the `homelab/default.galene` item, whose top-level keys are the usernames; see [Hashing a password](#hashing-a-password) to set or reset one.
+
+### You join first
+
+`autolock: true` locks the group whenever no operator is present, re-evaluated on every join and leave.
+The lock check skips operator users (`op`); operators can enter and everyone else waits until an operator is present (and possibly the group is `/unlock`ed).
+The group relocks when `op` leaves.
+
+`/unlock` clears the lock for the current session and `/lock [message]` sets it again.
+Both are operator-only.
+
+### Inviting people
+
+Click your own name, the first entry in the participant list, and select _Invite user_.
+The chat command `/invite [username] [expiration]` does the same, with both arguments optional.
+Either returns a link of the form `https://meet.${SECRET_DOMAIN}/group/guests/?token=XXX` that grants password-less entry.
+
+It is possible to use a single link to admit multiple users to a call - or multiple calls - the link works until it expires or is retired.
+Guests pick their own display name unless the token carries a username, which then overrides what the browser sends.
+Issue a link per person when access has to be revocable individually, or when you need participant names you can trust; `/revoke` then removes one guest instead of all of them.
+
+### Invite lifetime
+
+Links expire 48 hours after creation.
+The invite dialog prefills that value and accepts any other date, plus an optional `not-before` date for a link that becomes valid later.
+Permanent links are impossible.
+
+Operators manage existing links from the chat box:
+
+| Command                         | Effect                                                        |
+| ------------------------------- | ------------------------------------------------------------- |
+| `/invite [username] [expiry]`   | Creates a link, anonymous and 48-hour by default              |
+| `/listtokens`                   | Lists outstanding invitation links                            |
+| `/revoke <link>`                | Expires a link immediately                                    |
+| `/reinvite <link> [expiration]` | Extends a link, defaulting to one day if no duration is given |
+
+Durations take a compact syntax (`30min`, `2h`, `7d`, `1yr`) or a full date string.
+Expired tokens are deleted from `tokens.jsonl` seven days after they lapse.
+
+Galene has no web administration page.
+`/stats.html` reports server statistics behind the `adminUsername` credentials and cannot create accounts or links.
+
 ## Why Galene
 
-The cluster has no inbound public port.
-Its only public ingress is a Cloudflare Tunnel, and the home network is double-NATed.
-
-That constraint eliminates most self-hosted conferencing software.
-A Cloudflare Tunnel proxies no UDP, and its TCP service type requires the client to run `cloudflared access tcp`, which guests joining by link will not do.
+The cluster has no inbound public port: its only public ingress is a Cloudflare Tunnel, and the home network is double-NATed.
+That rules out most self-hosted conferencing software.
+A Cloudflare Tunnel proxies no UDP, and its TCP service type requires each client to run `cloudflared access tcp`, which guests joining by link will not do.
 No SFU carries RTP inside HTTP or WebSocket, so the tunnel cannot carry media at all.
 Jitsi's videobridge needs a reachable public address, and the TCP ICE fallback that might have substituted for one was disabled upstream around 2022.
 
-Galene supports this case directly.
+Galene handles this case directly.
 From the installation guide:
 
 > If the server is not accessible from the Internet, e.g. because of NAT or because it is behind a restrictive firewall, then you should configure a TURN server that runs on a host that is accessible by both Galene and the clients.
 
-Galene therefore relays its own media through an external TURN service.
-Only signalling crosses the tunnel, and no inbound port is opened.
+Galene relays its own media through an external TURN service, so only signalling crosses the tunnel and no inbound port opens.
 
 ```text
 browsers --- HTTPS/WSS ---> Cloudflare Tunnel ---> envoy-external ---> galene   (signalling)
@@ -36,7 +88,7 @@ browsers <-- Cloudflare Realtime TURN ---------------------------->    galene   
 | Invite tokens, recordings         | PVC (`volsync` component)         | `/data/var`, `/recordings` |
 
 The TURN file lives on a pod-local `emptyDir` shared by Galene and the two TURN containers.
-The PVC state, group definitions, and recordings are mounted only into Galene, so the TURN containers cannot read password hashes, invite tokens, or recordings.
+The PVC state, group definitions, and recordings mount only into Galene, so the TURN containers cannot read password hashes, invite tokens, or recordings.
 
 ### Secrets
 
@@ -60,32 +112,23 @@ just secrets sync
 
 ### Hashing a password
 
-Galene stores bcrypt hashes as a JSON object rather than a bare string.
-Go's bcrypt implementation accepts the `$2a$`, `$2b$`, and `$2y$` prefixes, so any bcrypt tool will work.
+Galene stores bcrypt hashes as a JSON object, not a bare string.
+Go's bcrypt accepts the `$2a$`, `$2b$`, and `$2y$` prefixes, so any bcrypt tool works.
 
-`htpasswd` prints `username:hash`.
-An empty username leaves a leading colon, which is not part of the hash and must be removed:
+`htpasswd` prints `user:hash`, and an empty username leaves a leading colon that is not part of the hash:
 
 ```bash
-# htpasswd output format is "user:hash", so this leading colon is an artifact
-htpasswd -bnBC 10 "" <password>
-# :$2y$10$...
-
-# keep only the hash
 htpasswd -bnBC 10 "" <password> | cut -d: -f2
 ```
 
-`adminPasswordHash` holds the hash wrapped in the object Galene expects:
+`galenectl` ships in the image and generates hashes too:
 
-```json
-{
-  "type": "bcrypt",
-  "key": "$2y$10$..."
-}
+```bash
+docker run --rm --entrypoint /usr/local/bin/galenectl ghcr.io/ahgraber/galene hash-password -help
 ```
 
-`guests` holds a map of users.
-Each entry pairs such an object with a group permission: `op`, `present`, `message`, `observe`, or `caption`.
+`adminPasswordHash` holds one such object.
+`guests` holds a map of usernames, each pairing an object with a group permission: `op`, `present`, `message`, `observe`, or `caption`.
 
 ```json
 {
@@ -106,14 +149,7 @@ Each entry pairs such an object with a group permission: `op`, `present`, `messa
 }
 ```
 
-Both fields are templated into JSON unquoted.
-Store each as a bare JSON object; a quoted string produces a config or group file that will not parse.
-
-`galenectl` ships in the image and can also generate hashes:
-
-```bash
-docker run --rm --entrypoint /usr/local/bin/galenectl ghcr.io/ahgraber/galene hash-password -help
-```
+Both fields are templated into JSON unquoted, so store each as a bare object; a quoted string produces a config or group file that will not parse.
 
 ### Cloudflare Realtime TURN
 
@@ -124,10 +160,10 @@ Calls fail without a working TURN key, so create one before the first call.
 3. Copy the API Token into `turnApiToken`.
    Cloudflare displays this token once.
 
-`turn_rotate.py` then calls `POST /v1/turn/keys/<turnKeyId>/credentials/generate-ice-servers` with that token to mint the short-lived credentials Galene hands to clients.
+`turn_rotate.py` then calls `POST /v1/turn/keys/<turnKeyId>/credentials/generate-ice-servers` to mint the short-lived credentials Galene hands to clients.
 
 Cloudflare bills per relayed GB above a 1,000 GB allowance; see [Cost](#cost).
-The key is a standards-compliant TURN service, so migrating to a self-hosted coturn later requires only replacing `ice-servers.json` and removing the rotation sidecar.
+The key is a standards-compliant TURN service, so moving to a self-hosted coturn later means replacing `ice-servers.json` and removing the rotation sidecar.
 
 ### Access control
 
@@ -139,62 +175,36 @@ A group exists only when `groups/<name>.json` exists, so an unrecognised URL can
 | no `wildcard-user` | Only named users authenticate; the field would enable shared-password or open joins |
 | `public: false`    | Keeps the group off the landing page                                                |
 | `max-clients`      | Caps concurrency, which also bounds the TURN bill                                   |
-| `autolock: true`   | Locks the group once the last operator leaves                                       |
+| `autolock: true`   | Locks the group whenever no operator is present                                     |
 
-The `allow-anonymous` field is obsolete and plays no part here.
-Current Galene ignores it and logs a warning.
+The `allow-anonymous` field is obsolete; current Galene ignores it and logs a warning.
+See [You join first](#you-join-first) for how the lock behaves during a call.
 
-### Adding people
+### Account model
 
-Galene has no web UI for creating accounts.
-Named accounts come from the JSON files, from `galenectl`, or from the administrative HTTP API at `/galene-api/v0/`.
-Pyrite, the one third-party web admin, is described by upstream as "currently on hold and out of date"; the other listed integrations are a WordPress plugin and an Openfire plugin.
+Named accounts come from the JSON files, `galenectl`, or the administrative HTTP API at `/galene-api/v0/`.
+Pyrite, the one third-party web admin, is described by upstream as "currently on hold and out of date"; the remaining integrations are a WordPress plugin and an Openfire plugin.
 
-Most access does not require an account.
-An operator selects _Invite user_ in the group menu to generate a link of the form `https://meet.${SECRET_DOMAIN}/group/guests/?token=XXX`, which grants password-less entry.
+This deployment expects one named account, yours, holding `op`, with invite links for everyone else, so adding a guest needs no repository change.
+Invite tokens live in `data/var/tokens.jsonl` on the PVC, which is why that volume is backed up.
 
-This deployment therefore expects one named account, yours, holding `op`, with invite links for everyone else.
-Adding a guest needs no repository change, and access stays revocable from the browser.
-Invite tokens are stored in `data/var/tokens.jsonl` on the PVC, which is why that volume is backed up.
-
-#### Invite lifetime and revocation
-
-Invite links expire 48 hours after creation.
-The invite dialog prefills that value and accepts any other date, along with an optional `not-before` date for a link that becomes valid later.
-A link with no expiry is not possible: the server rejects a token that does not expire, and validation treats a missing expiry as already expired.
-
-Operators manage existing links from the chat box:
-
-| Command                         | Effect                                                        |
-| ------------------------------- | ------------------------------------------------------------- |
-| `/listtokens`                   | Lists outstanding invitation links                            |
-| `/revoke <link>`                | Expires a link immediately                                    |
-| `/reinvite <link> [expiration]` | Extends a link, defaulting to one day if no duration is given |
-
-Durations use a compact syntax (`30min`, `2h`, `7d`, `1yr`) or a full date string, so `/reinvite <link> 7d` gives someone another week.
-Expired tokens are deleted from `tokens.jsonl` seven days after they lapse.
-
-A link sent on Friday for a Sunday call still works, but one sent a month ago does not.
-For someone who joins regularly, extend the link with `/reinvite` or give them a named account in the `guests` field.
-
-To manage accounts at runtime instead, set `writableGroups: true` in `config.json` and move `/groups` from the read-only Secret mount onto the PVC as a `groups` subPath.
+To manage accounts at runtime, set `writableGroups: true` in `config.json` and move `/groups` from the read-only Secret mount onto the PVC as a `groups` subPath.
 `galenectl` can then create groups and users through the admin API.
-The cost is that group definitions stop being declarative: access control becomes runtime state that is backed up rather than reviewed in git.
+Group definitions stop being declarative in exchange: access control becomes runtime state that is backed up rather than reviewed in git.
 
 ### TURN credential rotation
 
 Galene sends its ICE configuration verbatim to every client that joins a group, so any credential in `ice-servers.json` is readable by every participant.
-Galene can mint ephemeral credentials itself with coturn's `use-auth-secret` scheme (`credentialType: hmac-sha1`), but Cloudflare does not implement that scheme; its only credential path is a server-to-server REST call.
-`turn_rotate.py` closes the gap by minting short-lived credentials, validating the provider response, and writing it atomically.
-Galene re-reads the file within about five minutes and needs no restart.
+Galene can mint ephemeral credentials itself with coturn's `use-auth-secret` scheme (`credentialType: hmac-sha1`), but Cloudflare does not implement it; its only credential path is a server-to-server REST call.
+`turn_rotate.py` closes the gap.
+It mints short-lived credentials, validates the response, and writes the file atomically, and Galene re-reads that file within about five minutes without a restart.
 
-Rotation happens halfway through the credential lifetime.
-Replaced credentials are not revoked because browsers can retain the ICE configuration they received when they joined.
-The overlap lets an existing browser create another peer connection or restart ICE; the old credential then expires at Cloudflare on its original schedule.
-If the provider returns an empty or malformed response, the helper exits without replacing the last valid file.
+Rotation happens halfway through the credential lifetime, and replaced credentials are not revoked.
+A browser retains the ICE configuration it received on joining, and the overlap lets it open another peer connection or restart ICE; the old credential then expires at Cloudflare on its original schedule.
+If the provider returns an empty or malformed response, the helper exits and leaves the last valid file in place.
 
-Only people already authorised to join a call can read the credential, which limits exposure but does not remove it.
-Cloudflare provides no hard spend cap, and its budget alerts are informational and do not pause usage.
+Only people already authorised to join a call can read the credential, which limits exposure without removing it.
+Cloudflare provides no hard spend cap, and its budget alerts do not pause usage.
 
 ### Cost
 
@@ -214,27 +224,21 @@ Galene's native `hmac-sha1` credentials work against coturn, so no credential re
 
 Upstream publishes no official image, and its FAQ discourages containerising Galene.
 Every community image surveyed was stale, ran as root, built from a floating branch, or omitted the `static/` web client.
-This repository therefore builds its own from `containers/galene/Containerfile`: a versioned release tag on a distroless base, running as UID 65532.
-The generic `.github/workflows/container-images.yaml` workflow publishes it to `ghcr.io/ahgraber/galene`.
+This repository builds its own from `containers/galene/Containerfile`, a versioned release tag on a distroless base running as UID 65532, and `.github/workflows/container-images.yaml` publishes it to `ghcr.io/ahgraber/galene`.
 
-The first rollout is a two-step operation: publish the image tag, then replace the Helm image reference with the published digest before enabling the Flux Kustomization.
-The Python helper image must also be pinned to a registry digest before the first rollout.
-The draft keeps tags only because neither digest exists in this repository yet.
-
-Renovate tracks the base images natively and uses the annotated `ARG VERSION` to track Galene release tags.
-The builder image, runtime image, and Galene source still use mutable tags.
-Pin both base images by digest and verify the Galene source commit or archive checksum before treating the build as reproducible.
+Renovate tracks the base images natively and reads the annotated `ARG VERSION` for Galene release tags.
+The HelmRelease still references mutable tags for both Galene and the Python helper.
+Pin both by digest, and verify the Galene source commit or archive checksum, before treating the build as reproducible.
 
 ## Known issues
 
-`-turn=` is set explicitly rather than left at the `auto` default.
-`auto` disables the built-in TURN server only when `ice-servers.json` already exists, so a cold start would briefly bind a TURN port that nothing can reach.
+`-turn=` is set explicitly rather than left at the `auto` default, which disables the built-in TURN server only once `ice-servers.json` exists.
+A cold start would otherwise bind a TURN port nothing can reach.
 
 The Deployment uses the `Recreate` strategy because Galene keeps conference state in memory and uses one RWO PVC.
-A rollout ends active calls and has a short outage while the TURN init container mints a credential; it never overlaps two independent Galene instances.
+A rollout ends active calls and pauses while the TURN init container mints a credential, but never runs two Galene instances at once.
 
-The PVC holds live state.
-`data/var/tokens.jsonl` stores outstanding invite links, so restoring an old snapshot invalidates links already shared.
+`data/var/tokens.jsonl` on the PVC holds outstanding invite links, so restoring an old snapshot invalidates links already shared.
 
 Recording is disabled.
 Enabling it writes WebM files to `/recordings` on the same PVC, so raise `VOLSYNC_CAPACITY` in `ks.yaml` first; growing the volume afterwards requires resizing the underlying Ceph RBD image.
