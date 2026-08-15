@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: docker.io/traefik/whoami
-              tag: v1.11.0
+              tag: v1.12.0
             probes:
               liveness:
                 enabled: true
