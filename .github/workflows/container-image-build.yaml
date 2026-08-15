@@ -1,0 +1,96 @@
+---
+name: Build Container Image
+
+on:
+  workflow_call:
+    inputs:
+      container:
+        description: Container directory and image name
+        required: true
+        type: string
+      push:
+        description: Push the image and publish its attestation
+        required: true
+        type: boolean
+      version:
+        description: Optional VERSION override
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  build:
+    name: Build ${{ inputs.container }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Resolve image metadata
+        id: image
+        shell: bash
+        env:
+          CONTAINER: ${{ inputs.container }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          version="$(
+            .github/scripts/container-build-info.sh \
+              version "containers/${CONTAINER}/Containerfile" "${INPUT_VERSION}"
+          )"
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "name=ghcr.io/${owner}/${CONTAINER}" >>"${GITHUB_OUTPUT}"
+          echo "version=${version}" >>"${GITHUB_OUTPUT}"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Generate image metadata
+        id: metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ steps.image.outputs.name }}
+          tags: |
+            type=raw,value=${{ steps.image.outputs.version }}
+            type=raw,value=${{ steps.image.outputs.version }}-{{sha}}
+            type=sha
+
+      - name: Log in to GHCR
+        if: inputs.push
+        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4.5.1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          build-args: |
+            VERSION=${{ steps.image.outputs.version }}
+            VCS_REF=${{ github.sha }}
+          cache-from: type=gha,scope=${{ inputs.container }}
+          cache-to: type=gha,mode=max,scope=${{ inputs.container }}
+          context: ./containers/${{ inputs.container }}
+          file: ./containers/${{ inputs.container }}/Containerfile
+          labels: ${{ steps.metadata.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          provenance: mode=max
+          push: ${{ inputs.push }}
+          sbom: true
+          tags: ${{ steps.metadata.outputs.tags }}
+
+      - name: Attest build provenance
+        if: inputs.push
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-name: ${{ steps.image.outputs.name }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true

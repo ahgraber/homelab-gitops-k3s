@@ -7,7 +7,8 @@
       managerFilePatterns: [
         "/(^|/)\\.taskfiles/.+\\.ya?ml$/",
         "/(^|/)ansible/.+\\.ya?ml(\\.j2)?$/",
-        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/"
+        "/(^|/)kubernetes/.+\\.ya?ml(\\.j2)?$/",
+        "/(^|/)containers/[^/]+/Containerfile$/"
       ],
       matchStrings: [
         // # renovate: datasource=github-releases depName=k3s-io/k3s
@@ -15,7 +16,10 @@
         "(?m:# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\n.+?: \"?(?<currentValue>\\S+?)\"?(?:\\s+#.*)?$)",
         // # renovate: datasource=github-releases depName=rancher/system-upgrade-controller
         // https://github.com/rancher/system-upgrade-controller/releases/download/v0.13.2/crd.yaml
-        "(?m:# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+?\/(?<currentValue>(v|\\d)[^\/]+)\\S+(?:\\s+#.*)?$)"
+        "(?m:# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n.+?\/(?<currentValue>(v|\\d)[^\/]+)\\S+(?:\\s+#.*)?$)",
+        // # renovate: datasource=github-tags depName=jech/galene
+        // ARG VERSION=galene-1.1
+        "(?m:# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( repository=(?<registryUrl>\\S+))?\\nARG VERSION=(?<currentValue>\\S+)$)"
       ],
       datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}"
     },

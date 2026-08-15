@@ -1,0 +1,103 @@
+---
+name: CI Container Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - containers/**
+      - .github/scripts/container-build-info.sh
+      - .github/workflows/container-image-build.yaml
+      - .github/workflows/container-images.yaml
+  pull_request:
+    paths:
+      - containers/**
+      - .github/scripts/container-build-info.sh
+      - .github/workflows/container-image-build.yaml
+      - .github/workflows/container-images.yaml
+  workflow_dispatch:
+    inputs:
+      container:
+        description: Container directory name, or "all"
+        required: false
+        default: all
+        type: string
+      version:
+        description: Optional VERSION override when building one container
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}-${{ inputs.container || 'all' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions: {}
+
+jobs:
+  discover:
+    name: Discover containers
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      containers: ${{ steps.discover.outputs.containers }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Discover build contexts
+        id: discover
+        shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          REQUESTED_CONTAINER: ${{ inputs.container || 'all' }}
+        run: |
+          set -euo pipefail
+          if [[ "${REQUESTED_CONTAINER}" == "all" && -n "${INPUT_VERSION}" ]]; then
+            echo "A version override requires one container, not all." >&2
+            exit 1
+          fi
+          containers="$(
+            .github/scripts/container-build-info.sh \
+              discover containers "${REQUESTED_CONTAINER}"
+          )"
+          echo "containers=${containers}" >>"${GITHUB_OUTPUT}"
+
+  verify:
+    name: Verify ${{ matrix.container }}
+    if: github.event_name == 'pull_request'
+    needs: discover
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ${{ fromJSON(needs.discover.outputs.containers) }}
+    uses: ./.github/workflows/container-image-build.yaml
+    with:
+      container: ${{ matrix.container }}
+      push: false
+      version: ${{ inputs.version || '' }}
+
+  publish:
+    name: Publish ${{ matrix.container }}
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: discover
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ${{ fromJSON(needs.discover.outputs.containers) }}
+    uses: ./.github/workflows/container-image-build.yaml
+    with:
+      container: ${{ matrix.container }}
+      push: true
+      version: ${{ inputs.version || '' }}
