@@ -1,0 +1,66 @@
+# syntax=docker/dockerfile:1
+
+# Galene (https://galene.org) is a WebRTC SFU. Upstream ships no official
+# container image and its FAQ actively discourages containerising it, so this
+# repository builds its own: a versioned upstream release tag compiled from source
+# and shipped on a distroless, non-root runtime.
+#
+# The community images surveyed were all disqualified - stale by several
+# releases, running as root, building from a floating branch, or (in the one
+# otherwise well-built case) omitting the static/ web client entirely.
+
+# renovate: datasource=github-tags depName=jech/galene
+ARG VERSION=galene-1.1
+
+FROM --platform=${BUILDPLATFORM} golang:1.26-alpine AS builder
+ARG VERSION
+ARG TARGETOS
+ARG TARGETARCH
+
+RUN apk add --no-cache git
+
+WORKDIR /src
+
+# Always build a tagged release, never a branch. The tag remains mutable until
+# the source commit or archive checksum is pinned separately.
+RUN git clone --depth 1 --branch "${VERSION}" \
+    https://github.com/jech/galene.git .
+
+ENV CGO_ENABLED=0
+
+# Build flags per upstream galene-install.md.
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    GOOS="${TARGETOS}" GOARCH="${TARGETARCH}" \
+    go build -trimpath -ldflags='-s -w' -o /out/galene . \
+    && GOOS="${TARGETOS}" GOARCH="${TARGETARCH}" \
+    go build -trimpath -ldflags='-s -w' -o /out/galenectl ./galenectl
+
+FROM gcr.io/distroless/static-debian12:nonroot
+
+ARG VCS_REF
+# org.opencontainers.image.version and .created come from docker/metadata-action,
+# which the workflow passes through build-push-action's `labels`. Setting version
+# here would publish the upstream tag (galene-1.1), which is not semver and so
+# fails the label-schema in .hadolint.yaml.
+LABEL org.opencontainers.image.source="https://github.com/jech/galene" \
+    org.opencontainers.image.revision="${VCS_REF}" \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.description="Galene WebRTC SFU"
+
+COPY --from=builder /out/galene /out/galenectl /usr/local/bin/
+
+# Galene serves its web client from disk (webserver.StaticRoot) rather than an
+# embedded filesystem, so static/ must ship in the image and be passed via
+# -static. Omitting it yields a server that starts cleanly and serves nothing.
+COPY --from=builder /src/static /app/static
+COPY --from=builder /src/LICENCE /app/LICENCE
+
+# Already the distroless :nonroot default; stated explicitly so the runtime UID
+# is visible to anyone auditing the image, and so it matches APP_UID/APP_GID in
+# the Flux Kustomization.
+USER 65532:65532
+
+EXPOSE 8443
+
+ENTRYPOINT ["/usr/local/bin/galene"]
