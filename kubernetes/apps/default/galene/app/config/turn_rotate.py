@@ -26,6 +26,7 @@ import os
 import pathlib
 import sys
 import time
+import urllib.error
 import urllib.request
 
 logging.basicConfig(
@@ -37,6 +38,7 @@ log = logging.getLogger("turn-rotate")
 
 API_ROOT = "https://rtc.live.cloudflare.com/v1/turn/keys"
 TIMEOUT = 30
+USER_AGENT = "galene-turn-rotate (+https://github.com/ahgraber/homelab-gitops-k3s)"
 
 
 def _env_int(name: str, default: int) -> int:
@@ -58,20 +60,41 @@ def _request(url: str, token: str, payload: dict | None = None) -> object:
         headers={
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
+            # Required, not cosmetic. Cloudflare's edge rejects urllib's default
+            # "Python-urllib/<version>" agent with 403 before the request reaches
+            # the TURN API, so the same credentials succeed from curl and fail
+            # from here. Do not remove this header.
+            "User-Agent": USER_AGENT,
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # noqa: S310
-        return json.load(resp)
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:  # noqa: S310
+            return json.load(resp)
+    except urllib.error.HTTPError as exc:
+        # Cloudflare states the reason for a refusal in the response body, while
+        # HTTPError renders only the status line. Without the body, an expired
+        # token, an unknown key id, and a placeholder value that was never
+        # filled in all produce the same unactionable log entry.
+        detail = exc.read().decode("utf-8", "replace").strip() or "<empty response body>"
+        msg = f"Cloudflare API returned {exc.code} {exc.reason} for {url}: {detail}"
+        raise RuntimeError(msg) from exc
 
 
 def _validate_ice_servers(value: object) -> list[dict[str, object]]:
-    """Validate Cloudflare's ICE servers before Galene can publish them."""
+    """Validate Cloudflare's ICE servers before Galene can publish them.
+
+    Cloudflare returns a credential-free STUN entry alongside the TURN entry, so
+    only entries carrying a turn: or turns: URL are required to have a username
+    and credential. At least one such entry must be present: Galene is behind
+    NAT here and cannot reach participants without a relay.
+    """
     servers = value if isinstance(value, list) else [value]
     if not servers:
         raise ValueError("Cloudflare response iceServers must contain at least one server")
 
     validated: list[dict[str, object]] = []
+    relays = 0
     for server in servers:
         # TRY004 wants TypeError for an isinstance guard, which fits a wrong
         # argument type. This validates an untrusted API payload, where the
@@ -84,15 +107,20 @@ def _validate_ice_servers(value: object) -> list[dict[str, object]]:
         if (
             not isinstance(urls, list)
             or not urls
-            or not all(isinstance(url, str) and url and url.startswith(("turn:", "turns:")) for url in urls)
+            or not all(isinstance(url, str) and url.startswith(("stun:", "stuns:", "turn:", "turns:")) for url in urls)
         ):
-            raise ValueError("Cloudflare response iceServers urls must be a non-empty list of TURN URLs")
+            raise ValueError("Cloudflare response iceServers urls must be a non-empty list of STUN or TURN URLs")
 
-        for field in ("username", "credential"):
-            if not isinstance(server.get(field), str) or not server[field]:
-                raise ValueError(f"Cloudflare response iceServers {field} must be a non-empty string")
+        if any(url.startswith(("turn:", "turns:")) for url in urls):
+            for field in ("username", "credential"):
+                if not isinstance(server.get(field), str) or not server[field]:
+                    raise ValueError(f"Cloudflare response iceServers {field} must be a non-empty string")
+            relays += 1
 
         validated.append(server)
+
+    if not relays:
+        raise ValueError("Cloudflare response iceServers must contain a TURN relay, not only STUN")
 
     return validated
 
