@@ -1,0 +1,209 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app galene
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 1h
+  values:
+    controllers:
+      galene:
+        annotations:
+          secret.reloader.stakater.com/reload: galene-secret
+          configmap.reloader.stakater.com/reload: galene-turn-rotate
+        # Galene keeps conference state in memory. Two overlapping pods would
+        # split participants between independent calls and contend for the PVC.
+        strategy: Recreate
+
+        initContainers:
+          # Seeds data/ice-servers.json before Galene starts. Without this the
+          # first boot has no ICE configuration at all and every call fails
+          # until the sidecar's first write lands.
+          turn-init: &turn
+            image:
+              repository: docker.io/library/python
+              tag: 3.13-alpine
+            command: ["python3", "/scripts/turn_rotate.py"]
+            env:
+              ONESHOT: "1"
+              ICE_SERVERS_PATH: /data/ice-servers.json
+              CF_TURN_KEY_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: galene-secret
+                    key: turnKeyId
+              CF_TURN_API_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: galene-secret
+                    key: turnApiToken
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/ahgraber/galene
+              tag: galene-1.1
+            args:
+              # Envoy terminates TLS; serving plain HTTP here avoids a second,
+              # pointless TLS hop and the cert rotation that comes with it.
+              - -insecure
+              - -http=:8443
+              # Disable the built-in TURN server explicitly rather than relying
+              # on the "auto" default. auto only disables it when
+              # data/ice-servers.json already exists, so on a cold start it
+              # would briefly bind its own TURN port - which is useless here
+              # (nothing can reach it through the tunnel) and, per upstream's
+              # FAQ, fails behind NAT without hairpinning anyway.
+              - -turn=
+              - -data=/data
+              - -groups=/groups
+              - -recordings=/recordings
+              - -static=/app/static
+            resources:
+              requests:
+                cpu: 200m
+                memory: 256Mi
+              # Roughly one core carries 15 camera-on participants; no CPU
+              # limit, so a busy call can burst rather than throttle mid-sentence.
+              limits:
+                memory: 1Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+
+          # Refreshes the TURN credential on an interval. A sidecar rather than
+          # a CronJob: the credential file is pod-local and must share the same
+          # emptyDir that Galene reads.
+          turn-rotate:
+            <<: *turn
+            env:
+              ICE_SERVERS_PATH: /data/ice-servers.json
+              CF_TURN_KEY_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: galene-secret
+                    key: turnKeyId
+              CF_TURN_API_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: galene-secret
+                    key: turnApiToken
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 8443
+
+    route:
+      app:
+        hostnames:
+          - meet.${SECRET_DOMAIN}
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      # Shared only for the current TURN file. The init container seeds it on
+      # every pod start, so it does not need to survive a replacement.
+      runtime:
+        type: emptyDir
+        globalMounts:
+          - path: /data
+
+      # data/var/tokens.jsonl holds outstanding invite links. Mount only the
+      # state directory into Galene so the TURN containers cannot read it.
+      data:
+        existingClaim: *app
+        advancedMounts:
+          galene:
+            app:
+              - path: /data/var
+                subPath: data/var
+
+      recordings:
+        existingClaim: *app
+        advancedMounts:
+          galene:
+            app:
+              - path: /recordings
+                subPath: recordings
+
+      # Mounted as a single file over the data volume. Static content, so a
+      # subPath mount (which does not receive updates) is fine.
+      config:
+        type: secret
+        name: galene-secret
+        advancedMounts:
+          galene:
+            app:
+              - path: /data/config.json
+                subPath: config.json
+                readOnly: true
+
+      # Read-only by design: access control is declarative and reviewed in git,
+      # and nothing at runtime can rewrite the group definitions.
+      groups:
+        type: secret
+        name: galene-groups
+        advancedMounts:
+          galene:
+            app:
+              - path: /groups
+                readOnly: true
+
+      scripts:
+        type: configMap
+        name: galene-turn-rotate
+        defaultMode: 0555
+        advancedMounts:
+          galene:
+            turn-init:
+              - path: /scripts
+                readOnly: true
+            turn-rotate:
+              - path: /scripts
+                readOnly: true

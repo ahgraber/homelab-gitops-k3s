@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app galene
+spec:
+  targetNamespace: default
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
+  components:
+    - ../../../../components/volsync
+  path: ./kubernetes/apps/default/galene/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  wait: true
+  postBuild:
+    substitute:
+      APP: *app
+      # Matches the distroless :nonroot UID/GID baked into the image, so the
+      # volsync mover writes files galene can actually read back.
+      APP_UID: "65532"
+      APP_GID: "65532"
+      # Holds data/var/tokens.jsonl (outstanding invite links) and any
+      # recordings. Recording is disabled in the group definitions; if it is
+      # ever enabled, WebM output will outgrow this quickly - raise
+      # VOLSYNC_CAPACITY before turning it on, since expanding after the fact
+      # means a resize of the underlying Ceph RBD volume.
+      VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_STORAGECLASS: ceph-block
+      VOLSYNC_SNAPSHOTCLASS: csi-ceph-block
+      VOLSYNC_COPY_METHOD: Snapshot
