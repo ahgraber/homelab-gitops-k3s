@@ -13,6 +13,7 @@ resources:
   # Flux-Kustomizations | Databases
   - ./postgres
   # Flux-Kustomizations
+  - ./agentsview/ks.yaml
   - ./docat/ks.yaml
   - ./mlflow/ks.yaml
   - ./prefect/ks.yaml
