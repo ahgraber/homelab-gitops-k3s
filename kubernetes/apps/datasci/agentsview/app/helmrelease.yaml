@@ -30,7 +30,11 @@ spec:
             command:
               - /bin/sh
               - -c
-              - cp /config/config.toml /data/config.toml
+              # Creates the data dir rather than using /data directly: fsGroup
+              # sets the emptyDir's group but leaves it owned by root, and the
+              # daemon runtime record checks owner uid, not write access. A
+              # directory this container creates is owned by the runtime user.
+              - mkdir -p /data/app && cp /config/config.toml /data/app/config.toml
             resources:
               requests:
                 cpu: 10m
@@ -60,6 +64,8 @@ spec:
             env:
               TZ: "America/New_York"
               PG_SERVE: "1"
+              # Overrides the image default of /data; see the init container.
+              AGENTSVIEW_DATA_DIR: /data/app
               AGENTSVIEW_TELEMETRY_ENABLED: "0"
               AGENTSVIEW_DISABLE_UPDATE_CHECK: "1"
               AGENTSVIEW_PG_URL:
