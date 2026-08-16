@@ -1,0 +1,144 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app agentsview
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  interval: 1h
+  values:
+    controllers:
+      agentsview:
+        annotations:
+          # The config is seeded at pod start, so a ConfigMap edit only takes
+          # effect on a roll - name it explicitly rather than relying on search,
+          # since disableNameSuffixHash keeps the name stable across edits.
+          configmap.reloader.stakater.com/reload: agentsview-config
+          secret.reloader.stakater.com/reload: database-agentsview
+
+        initContainers:
+          # Copies rather than mounts: the server writes a generated auth token
+          # back into config.toml on startup and dies if that write fails, so
+          # the file has to live on the writable emptyDir.
+          seed-config:
+            image:
+              repository: docker.io/library/busybox
+              tag: 1.37.0
+            command:
+              - /bin/sh
+              - -c
+              - cp /config/config.toml /data/config.toml
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 32Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+        containers:
+          app:
+            image:
+              # renovate: datasource=docker image=ghcr.io/kenn-io/agentsview
+              repository: ghcr.io/kenn-io/agentsview
+              tag: 0.40.1
+            # The entrypoint runs `agentsview pg serve` when PG_SERVE is set and
+            # the first argument starts with "-", appending these flags to it.
+            args:
+              - --host=0.0.0.0
+              - --no-browser
+              # Without this the server rejects every /api/ request: it validates
+              # the Host header against the addresses it bound to, and requests
+              # arriving through Envoy carry the public hostname instead.
+              - --public-url=https://agentsview.${SECRET_DOMAIN}
+            env:
+              TZ: "America/New_York"
+              PG_SERVE: "1"
+              AGENTSVIEW_TELEMETRY_ENABLED: "0"
+              AGENTSVIEW_DISABLE_UPDATE_CHECK: "1"
+              AGENTSVIEW_PG_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: database-agentsview
+                    key: POSTGRES_URL
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 8080
+
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+        # Internal only: the transcripts this aggregates are not something to
+        # publish through the Cloudflare tunnel.
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - identifier: app
+                port: *port
+
+    persistence:
+      # AGENTSVIEW_DATA_DIR is baked into the image as /data. In pg serve mode
+      # the only thing written there is config.toml (including a generated auth
+      # token, unused here), so it does not need to survive a restart.
+      data:
+        type: emptyDir
+        globalMounts:
+          - path: /data
+
+      # Required by readOnlyRootFilesystem; the export and upload handlers
+      # stage files through the system temp dir.
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+
+      config:
+        type: configMap
+        name: agentsview-config
+        advancedMounts:
+          agentsview:
+            seed-config:
+              - path: /config
+                readOnly: true

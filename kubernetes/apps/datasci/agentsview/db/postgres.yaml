@@ -1,0 +1,34 @@
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: Postgres
+metadata:
+  name: &app agentsview
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  database: *app # db name in postgres cluster
+  # pgvector ships in the CNPG image, but `vector` is not a trusted extension,
+  # so the owner role below cannot create it. The operator connects with its
+  # own credentials, which is the only path here that might hold superuser.
+  extensions:
+    - vector
+---
+apiVersion: db.movetokube.com/v1alpha1
+kind: PostgresUser
+metadata:
+  name: &app agentsview
+  annotations:
+    postgres.db.movetokube.com/instance: datasci
+spec:
+  role: *app
+  database: *app # references the CR
+  secretName: database
+  # AgentsView refuses to connect to a non-loopback host over a DSN that permits
+  # plaintext, and the operator's stock POSTGRES_URL carries no sslmode - which
+  # resolves to libpq's "prefer". Override the key so the URL demands TLS.
+  # (Go template, rendered by the operator; Flux only substitutes ${...}.)
+  secretTemplate:
+    POSTGRES_URL: "postgresql://{{.Role}}:{{.Password}}@{{.Host}}/{{.Database}}?sslmode=require"
+  # OWNER: `pg serve` runs EnsureSchema on startup and `pg push` writes the
+  # session tables, so the role needs CREATE on the database.
+  privileges: OWNER

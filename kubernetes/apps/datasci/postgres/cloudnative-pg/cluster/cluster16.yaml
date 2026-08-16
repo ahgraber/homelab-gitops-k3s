@@ -24,6 +24,35 @@ spec:
   superuserSecret:
     name: postgres-superuser
 
+  managed:
+    services:
+      additional:
+        # Make datasci16 primary available on LAN.
+        # CNPG keeps the selector pointed at the current primary,
+        # so a failover does not strand the LB IP on a replica.
+        - selectorType: rw
+          updateStrategy: patch
+          serviceTemplate:
+            metadata:
+              name: datasci16-lan
+              annotations:
+                lbipam.cilium.io/ips: 10.2.118.7
+                external-dns.alpha.kubernetes.io/hostname: datasci-db.${SECRET_DOMAIN}
+            spec:
+              type: LoadBalancer
+              # Keep Cluster: with Cilium L2, the ARP-responder node can differ
+              # from the pod node, so Local would blackhole traffic to the LB IP.
+              externalTrafficPolicy: Cluster
+              # loadBalancerSourceRanges is the allowlist.
+              # Cilium enforces these ranges in its BPF datapath (kubeProxyReplacement),# dropping other sources at the node.
+              loadBalancerSourceRanges:
+                - 10.1.0.100/32
+                - 10.1.0.105/32
+                - 10.2.1.19/32
+                - 10.2.1.103/32
+                - 10.11.12.13/32
+                - 10.11.12.16/32
+
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true

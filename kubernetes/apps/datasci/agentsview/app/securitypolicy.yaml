@@ -1,0 +1,26 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: &name agentsview-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: &route agentsview
+  oidc:
+    provider:
+      issuer: "https://auth.${SECRET_DOMAIN}"
+      authorizationEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/authorization"
+      tokenEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/token"
+      endSessionEndpoint: "https://auth.${SECRET_DOMAIN}/api/oidc/logout"
+    clientID: *route
+    clientSecret:
+      name: *name
+    scopes:
+      - "openid"
+      - "profile"
+      - "groups"
+      - "email"
+    redirectURL: "https://agentsview.${SECRET_DOMAIN}/oauth2/callback"
+    logoutPath: "/logout"
