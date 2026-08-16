@@ -44,21 +44,29 @@ Requests arriving through Envoy carry the public hostname, so without this flag 
 
 Run this once per workstation.
 
-1. Read the connection string the operator generated (it is one shared role, so
-   every workstation uses the same URL):
+1. Read the role and password the operator generated.
+   It is one shared role, so every workstation uses the same credentials:
 
    ```bash
    kubectl get secret database-agentsview -n datasci -o jsonpath='{.data.POSTGRES_URL}' | base64 -d
    ```
 
-2. Point the LAN hostname at it and give the machine a stable name in `~/.agentsview/config.toml`.
-   Swap the in-cluster host for `datasci-db.${SECRET_DOMAIN}` and keep `sslmode=require` — the client rejects a DSN that permits plaintext to a remote host:
+   That URL is **not** usable as-is.
+   Its host is `datasci16-rw`, the in-cluster service name, which resolves only inside the `datasci` namespace — off-cluster the lookup fails.
+   Take the role and password from it and discard the rest.
+
+2. Add a `[pg]` section to `~/.agentsview/config.toml`, using the LAN hostname and port:
 
    ```toml
    [pg]
    url = "postgresql://<role>:<password>@datasci-db.${SECRET_DOMAIN}:5432/agentsview?sslmode=require"
-   machine_name = "hostname-you-want-in-the-ui"
    ```
+
+   Append it at the end of the file.
+   A TOML table header captures every key below it, so `[pg]` placed above existing top-level keys such as `auth_token` silently reparents them.
+
+   Keep `sslmode=require`: the client refuses a DSN that permits plaintext to a non-loopback host.
+   `machine_name` is optional and defaults to the OS hostname; set it only when that hostname is not what you want labelling this machine's sessions.
 
    `AGENTSVIEW_PG_URL` works too if you would rather keep the URL out of the file.
 
