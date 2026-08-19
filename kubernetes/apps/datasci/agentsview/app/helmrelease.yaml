@@ -51,7 +51,7 @@ spec:
             image:
               # renovate: datasource=docker image=ghcr.io/kenn-io/agentsview
               repository: ghcr.io/kenn-io/agentsview
-              tag: 0.41.0
+              tag: 0.41.1
             # The entrypoint runs `agentsview pg serve` when PG_SERVE is set and
             # the first argument starts with "-", appending these flags to it.
             args:
