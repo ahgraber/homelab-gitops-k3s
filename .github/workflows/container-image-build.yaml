@@ -89,8 +89,11 @@ jobs:
 
       - name: Attest build provenance
         if: inputs.push
-        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
+        # No predicate or sbom input, so the action generates SLSA build provenance.
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: ${{ steps.image.outputs.name }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
+          # Storage records only exist for org-owned repos; this owner is a user.
+          create-storage-record: false
