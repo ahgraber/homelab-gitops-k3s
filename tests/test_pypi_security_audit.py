@@ -4,12 +4,17 @@ Security audit tests using pip-audit to detect known vulnerabilities.
 This test runs pip-audit against the installed packages and emits a warning (not a failure)
 if any vulnerabilities are detected, surfacing them for developer attention.
 
+These tests skip when ``uv audit`` is available, so only one auditor runs per suite.
+"Available" means uv is installed, a lockfile exists, and the uv build is new enough
+to have an audit command with JSON output; older uv builds fall through to pip-audit.
+
 To ignore a CVE, add an entry to ``IGNORED_VULNERABILITIES`` below with a
 justification. Entries are passed to pip-audit via ``--ignore-vuln``.
 
 Ref: https://gist.github.com/mikeckennedy/de70ce13231b407a8dccea758f83a5cd
 """
 
+from functools import cache
 import json
 from pathlib import Path
 import shutil
@@ -20,40 +25,71 @@ import warnings
 import pytest
 
 
-def _find_workspace_root(start: Path) -> Path:
+def _find_workspace_root(start: Path) -> Path | None:
     """Walk up from ``start`` to the nearest ancestor containing ``uv.lock``.
 
     The audit targets the uv workspace's single shared lockfile (one ``uv.lock``,
-    one resolved environment for all members), so the test must resolve the
-    workspace root regardless of which member directory it lives in. The search is
-    bounded to the git repository: it never ascends past the directory holding
-    ``.git``, so a stray ``uv.lock`` outside the checkout can't be picked up. Falls
-    back to ``start`` when no lockfile is found within the repo (e.g. a non-workspace
-    checkout), letting the caller's own skip/fallback logic take over.
+    one resolved environment for all members). The search is bounded to the git
+    repository: it never ascends past the directory holding ``.git``, so a stray
+    ``uv.lock`` outside the checkout can't be picked up. Returns ``None`` when no
+    lockfile is found within the repo.
     """
     for directory in (start, *start.parents):
         if (directory / "uv.lock").exists():
             return directory
         if (directory / ".git").exists():
             break  # reached the repo root; do not search outside the checkout
-    return start
+    return None
 
 
+def _resolve_workspace_root() -> Path:
+    """Resolve the project to audit: the working directory first, then this file's.
+
+    pytest is normally invoked from the project root, so the working directory is
+    searched first. The fallback to this file's own location covers runs started
+    from elsewhere. When neither search finds a lockfile, the working directory is
+    returned and the caller's own skip/fallback logic takes over. This resolution
+    must stay in step with ``test_uv_security_audit.py``, or the two files could
+    audit different roots.
+    """
+    return _find_workspace_root(Path.cwd()) or _find_workspace_root(Path(__file__).resolve().parent) or Path.cwd()
+
+
+@cache
 def _uv_audit_available() -> bool:
-    """Return True when ``uv audit`` can run for this project (uv installed and a lockfile present).
+    """Return True when ``uv audit`` can run for this project.
 
     pip-audit is the fallback auditor: when uv audit is available it runs instead
-    (see ``test_uv_security_audit.py``), so these tests skip to avoid auditing twice.
+    (see ``test_uv_security_audit.py``), so these tests skip to avoid auditing
+    twice. The uv build is probed rather than version-parsed — ``uv audit --help``
+    exits non-zero on builds predating the audit command, and its help text names
+    ``--output-format`` only on builds whose audit can emit JSON. This check must
+    stay in step with the one in ``test_uv_security_audit.py``, or a uv build that
+    is too old will be audited by neither file.
     """
-    project_root = _find_workspace_root(Path(__file__).resolve().parent)
-    return shutil.which("uv") is not None and (project_root / "uv.lock").exists()
+    if shutil.which("uv") is None:
+        return False
+    project_root = _resolve_workspace_root()
+    if not (project_root / "uv.lock").exists():
+        return False
+    try:
+        result = subprocess.run(
+            ["uv", "audit", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return result.returncode == 0 and "--output-format" in result.stdout
 
 
 # Map of CVE id -> reason for ignoring. Revisit periodically; remove entries
 # once an upstream fix is released or the risk assessment changes.
 IGNORED_VULNERABILITIES: dict[str, str] = {
     # "CVE-2025-53000": "nbconvert Windows-only vulnerability (no risk on Linux/macOS)",
-    "CVE-2025-69872": "#nofix / #wontfix per https://github.com/grantjenks/python-diskcache/issues/357",
+    # "CVE-2025-69872": "#nofix / #wontfix per https://github.com/grantjenks/python-diskcache/issues/357",
 }
 
 
@@ -118,7 +154,7 @@ def test_pip_audit_no_vulnerabilities():
         pytest.skip("uv audit is available; using it instead of pip-audit")
 
     # Audit the uv workspace root (the shared environment for all members).
-    project_root = _find_workspace_root(Path(__file__).resolve().parent)
+    project_root = _resolve_workspace_root()
 
     # Run pip-audit with JSON output for easier parsing
     try:
@@ -133,10 +169,10 @@ def test_pip_audit_no_vulnerabilities():
                 *_ignore_vuln_args(),
             ],
             cwd=project_root,
-            check=False,
             capture_output=True,
             text=True,
             timeout=120,  # 2 minute timeout
+            check=False,
         )
     except subprocess.TimeoutExpired:
         pytest.fail("pip-audit command timed out after 120 seconds")
@@ -165,10 +201,6 @@ def test_pip_audit_no_vulnerabilities():
         # Some other error occurred
         pytest.fail(f"pip-audit failed to run properly:\n\nReturn code: {result.returncode}\nOutput: {error_output}\n")
 
-    # Success - no vulnerabilities found
-    if result.returncode != 0:
-        pytest.fail("pip-audit should return 0 when no vulnerabilities are found")
-
 
 def test_pip_audit_runs_successfully():
     """
@@ -182,10 +214,10 @@ def test_pip_audit_runs_successfully():
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pip_audit", "--version"],
-            check=False,
             capture_output=True,
             text=True,
             timeout=10,
+            check=False,
         )
         if result.returncode != 0:
             pytest.fail(f"pip-audit --version failed: {result.stderr}")

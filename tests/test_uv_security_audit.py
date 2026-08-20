@@ -11,13 +11,17 @@ justification. IDs may be GHSA/PYSEC primary IDs or CVE aliases (uv matches both
 entries are passed to uv audit via ``--ignore``.
 
 ``uv audit`` is currently a preview feature, so we pass
-``--preview-features audit,json-output`` to opt in explicitly and silence the
+``--preview-features audit-command,json-output`` to opt in explicitly and silence the
 experimental warnings. Note that uv's malware check is a separate, install-time
 feature (``UV_MALWARE_CHECK=1`` on ``uv sync`` / ``uv add``) and is not covered here.
+
+``uv audit`` landed in uv 0.10.9 and gained ``--output-format json`` in uv 0.11.15;
+older uv builds skip these tests and the pip-audit fallback runs instead.
 
 Ref: https://astral.sh/blog/uv-audit
 """
 
+from functools import cache
 import json
 from pathlib import Path
 import shutil
@@ -27,34 +31,76 @@ import warnings
 import pytest
 
 
-def _find_workspace_root(start: Path) -> Path:
+def _find_workspace_root(start: Path) -> Path | None:
     """Walk up from ``start`` to the nearest ancestor containing ``uv.lock``.
 
     The audit targets the uv workspace's single shared lockfile (one ``uv.lock``,
-    one resolved environment for all members), so the test must resolve the
-    workspace root regardless of which member directory it lives in. The search is
-    bounded to the git repository: it never ascends past the directory holding
-    ``.git``, so a stray ``uv.lock`` outside the checkout can't be picked up. Falls
-    back to ``start`` when no lockfile is found within the repo (e.g. a non-workspace
-    checkout), letting the caller's own skip/fallback logic take over.
+    one resolved environment for all members). The search is bounded to the git
+    repository: it never ascends past the directory holding ``.git``, so a stray
+    ``uv.lock`` outside the checkout can't be picked up. Returns ``None`` when no
+    lockfile is found within the repo.
     """
     for directory in (start, *start.parents):
         if (directory / "uv.lock").exists():
             return directory
         if (directory / ".git").exists():
             break  # reached the repo root; do not search outside the checkout
-    return start
+    return None
+
+
+def _resolve_workspace_root() -> Path:
+    """Resolve the project to audit: the working directory first, then this file's.
+
+    pytest is normally invoked from the project root, so the working directory is
+    searched first. The fallback to this file's own location covers runs started
+    from elsewhere. When neither search finds a lockfile, the working directory is
+    returned and the caller's own skip/fallback logic takes over.
+    """
+    return _find_workspace_root(Path.cwd()) or _find_workspace_root(Path(__file__).resolve().parent) or Path.cwd()
+
+
+@cache
+def _uv_audit_unsupported_reason() -> str | None:
+    """Return why this uv build cannot run the audit we need, or ``None`` if it can.
+
+    Probing beats version parsing: ``uv audit --help`` exits non-zero with
+    "unrecognized subcommand" on uv builds predating the audit command. Because
+    clap short-circuits on ``--help``, that exit code proves only that the
+    subcommand exists — it does not validate the other flags. So we also require
+    ``--output-format`` in the help text, which is what pins uv to a build whose
+    audit can emit the JSON this test parses.
+    """
+    if shutil.which("uv") is None:
+        return "uv is not installed"
+    try:
+        result = subprocess.run(
+            ["uv", "audit", "--help"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except OSError:
+        return "uv is not executable"
+    except subprocess.TimeoutExpired:
+        return "`uv audit --help` timed out"
+    if result.returncode != 0:
+        return "this uv build has no `audit` subcommand (needs uv >= 0.10.9)"
+    if "--output-format" not in result.stdout:
+        return "this uv build's `audit` has no `--output-format` (needs uv >= 0.11.15)"
+    return None
 
 
 def _uv_audit_skip_reason(project_root: Path) -> str | None:
     """Return why uv audit cannot run here, or ``None`` if it can.
 
-    uv audit is skipped when uv is unavailable or the project has no lockfile
-    (``--frozen`` requires ``uv.lock``). In those cases the pip-audit fallback runs
-    instead. See ``test_pypi_security_audit.py``.
+    uv audit is skipped when uv is unavailable or too old, or the project has no
+    lockfile (``--frozen`` requires ``uv.lock``). In those cases the pip-audit
+    fallback runs instead. See ``test_pypi_security_audit.py``.
     """
-    if shutil.which("uv") is None:
-        return "uv is not installed"
+    unsupported = _uv_audit_unsupported_reason()
+    if unsupported:
+        return unsupported
     if not (project_root / "uv.lock").exists():
         return "uv.lock not found (run `uv lock`)"
     return None
@@ -63,7 +109,7 @@ def _uv_audit_skip_reason(project_root: Path) -> str | None:
 # Map of advisory id -> reason for ignoring (GHSA/PYSEC id or CVE alias). Revisit
 # periodically; remove entries once an upstream fix is released or the risk changes.
 IGNORED_VULNERABILITIES: dict[str, str] = {
-    "CVE-2025-69872": "#nofix / #wontfix per https://github.com/grantjenks/python-diskcache/issues/357",
+    # "CVE-2025-69872": "#nofix / #wontfix per https://github.com/grantjenks/python-diskcache/issues/357",
 }
 
 
@@ -118,7 +164,7 @@ def test_uv_audit_no_vulnerabilities():
     To run this test specifically:
         uv run pytest tests/test_uv_security_audit.py -v
     """
-    project_root = _find_workspace_root(Path(__file__).resolve().parent)
+    project_root = _resolve_workspace_root()
 
     skip_reason = _uv_audit_skip_reason(project_root)
     if skip_reason:
@@ -131,16 +177,16 @@ def test_uv_audit_no_vulnerabilities():
                 "audit",
                 "--frozen",
                 "--preview-features",
-                "audit,json-output",
+                "audit-command,json-output",
                 "--output-format",
                 "json",
                 *_ignore_args(),
             ],
             cwd=project_root,
-            check=False,
             capture_output=True,
             text=True,
             timeout=120,  # 2 minute timeout
+            check=False,
         )
     except subprocess.TimeoutExpired:
         pytest.fail("uv audit command timed out after 120 seconds")
@@ -170,30 +216,3 @@ def test_uv_audit_no_vulnerabilities():
         f"uv audit failed to run properly:\n\n"
         f"Return code: {result.returncode}\nOutput: {result.stdout}\n{result.stderr}\n"
     )
-
-
-def test_uv_audit_runs_successfully():
-    """
-    Verify that ``uv audit`` is available and runnable.
-
-    This is a smoke test to ensure uv (with the audit subcommand) is properly
-    installed and functional.
-    """
-    if shutil.which("uv") is None:
-        pytest.skip("uv is not installed")
-
-    try:
-        result = subprocess.run(
-            ["uv", "audit", "--help"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except FileNotFoundError:
-        pytest.fail("uv not installed")
-    except subprocess.TimeoutExpired:
-        pytest.fail("uv audit --help timed out")
-
-    if result.returncode != 0:
-        pytest.fail(f"uv audit --help failed: {result.stderr}")
