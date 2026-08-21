@@ -225,7 +225,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=biomejs/pre-commit
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.5.8
+    rev: v2.5.9
     hooks:
       - id: biome-check
         stages: [pre-commit]
