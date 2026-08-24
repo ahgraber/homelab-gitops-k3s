@@ -9,6 +9,10 @@ spec:
     kind: OCIRepository
     name: *app
   interval: 1h
+  # Daemon restarts for a Ceph version bump or a CephX key rotation take longer than
+  # the 5m default, and a timeout here triggers the rollback configured cluster-wide
+  # in kubernetes/flux/cluster/ks.yaml.
+  timeout: 30m
   values:
     # Prefix for the cephfs/rbd/nfs StorageClass provisioner names. Defaults to the
     # operator namespace, but set explicitly so it keeps matching existing PVs and
@@ -51,6 +55,28 @@ spec:
 
     cephClusterSpec:
       dataDirHostPath: /var/lib/rook
+
+      security:
+        cephx:
+          daemon:
+            keyRotationPolicy: KeyGeneration
+            keyGeneration: 2
+          csi:
+            # AES256K kernel mounts need Linux 7.0+; the nodes run 6.12.
+            # TODO: revisit when host linux kernel >7.0 (keyType: aes -> aes256k)
+            keyType: aes
+            keepPriorKeyCountMax: 1
+
+      # TODO: revisit when host linux kernel >7.0
+      # To reverse this, set `policy: unmute` -- deleting the entry does nothing.
+      healthCheck:
+        muteHealthWarning:
+          AUTH_INSECURE_CLIENT_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_KEYS_ALLOWED:
+            policy: mute
+          AUTH_INSECURE_KEYS_CREATABLE:
+            policy: mute
 
       # https://rook.io/docs/rook/v1.20/Storage-Configuration/Advanced/ceph-configuration/#example
       cephConfig:
