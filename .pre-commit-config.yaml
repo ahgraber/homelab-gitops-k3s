@@ -115,7 +115,7 @@ repos:
   # check-jsonschema above only validates shape, not security.
   # renovate: datasource=github-tags depName=zizmorcore/zizmor-pre-commit
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: "v1.29.0"
+    rev: "v1.30.0"
     hooks:
       - id: zizmor
   # renovate: datasource=github-tags depName=stefmolin/exif-stripper
