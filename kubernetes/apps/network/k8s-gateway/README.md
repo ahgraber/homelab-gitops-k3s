@@ -1,4 +1,4 @@
-# [k8s-gateway](https://github.com/ori-edge/k8s_gateway)
+# [k8s-gateway](https://codeberg.org/k8s-gateway/k8s_gateway)
 
 A CoreDNS plugin to resolve all types of external Kubernetes resources.
 

@@ -13,9 +13,9 @@ spec:
     fullnameOverride: k8s-gateway
 
     image:
-      registry: ghcr.io
+      registry: codeberg.org
       repository: k8s-gateway/k8s_gateway
-      tag: 1.8.2
+      tag: 1.8.3
       pullPolicy: IfNotPresent
 
     domain: ${SECRET_DOMAIN}
