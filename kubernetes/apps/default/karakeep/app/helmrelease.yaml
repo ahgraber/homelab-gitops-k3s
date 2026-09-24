@@ -40,7 +40,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: 0.32.0
+              tag: 0.33.2
             env:
               BROWSER_WEB_URL: http://karakeep-chrome.default.svc.cluster.local:9222
               LOG_LEVEL: "notice" # "debug"
