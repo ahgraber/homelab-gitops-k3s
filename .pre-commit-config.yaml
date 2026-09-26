@@ -105,7 +105,7 @@ repos:
   #   rev: "v1.1.0"
   # renovate: datasource=github-tags depName=python-jsonschema/check-jsonschema
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: "0.38.0"
+    rev: "0.38.2"
     hooks:
       - id: check-github-workflows
       # check-github-workflows does not cover composite actions
