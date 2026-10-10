@@ -25,7 +25,7 @@
         // "editorconfig-checker/editorconfig-checker.python",
         "hukkin/mdformat",
         "rvben/rumdl-pre-commit",
-        "charliermarsh/ruff-pre-commit",
+        "astral-sh/ruff-pre-commit",
         // "kynan/nbstripout",
         "scop/pre-commit-shfmt",
         "biomejs/pre-commit",
