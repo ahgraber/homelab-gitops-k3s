@@ -24,7 +24,6 @@ spec:
               TZ: "America/New_York"
               ALLOW_SIGNUP: "false"
               BASE_URL: https://{{ .Release.Name }}.${SECRET_DOMAIN}
-              OPENAI_MODEL: gpt-5-mini
               # database settings
               DB_ENGINE: postgres
               POSTGRES_DB:
