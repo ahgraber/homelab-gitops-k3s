@@ -70,6 +70,14 @@ spec:
             backendRefs:
               - identifier: app
                 port: 5230
+    persistence:
+      # memos loads memos-idp-*.json from /etc/secrets at startup
+      oidc:
+        type: secret
+        name: memos-oidc
+        globalMounts:
+          - path: /etc/secrets
+            readOnly: true
     # persistence:
     #   data:
     #     existingClaim: *app
