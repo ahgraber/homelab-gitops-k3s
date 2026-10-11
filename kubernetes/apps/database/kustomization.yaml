@@ -14,4 +14,3 @@ resources:
   - ./cloudnative-pg/ks.yaml
   - ./ext-postgres-operator/ks.yaml
   - ./pgadmin/ks.yaml
-  - ./redisinsight/ks.yaml

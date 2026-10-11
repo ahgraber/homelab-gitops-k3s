@@ -206,10 +206,6 @@ data:
             href: https://pgadmin.${SECRET_DOMAIN}
             icon: pgadmin.png
             # description: This is my service
-        - RedisInsight:
-            href: https://redisinsight.${SECRET_DOMAIN}
-            icon: redis.png
-            # description: This is my service
 
   bookmarks.yaml: |
     ---
