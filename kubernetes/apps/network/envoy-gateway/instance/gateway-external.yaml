@@ -19,6 +19,7 @@ metadata:
   name: &name envoy-external
   annotations:
     external-dns.alpha.kubernetes.io/target: &hostname external.${SECRET_DOMAIN}
+    external-dns.kubernetes.io/target: *hostname
 spec:
   gatewayClassName: *name
   infrastructure:
