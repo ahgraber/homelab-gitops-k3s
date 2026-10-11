@@ -19,19 +19,55 @@ spec:
               tag: v3.5.2@sha256:c80ae007ce2ccdcd217a12426e4f039ef763ff90738c808d38810c3e59323767
             env:
               TZ: "America/New_York"
+              LANG: en_US
+              PROMETHEUS_ENABLED: "true"
+              PROMETHEUS_PORT: &metricsPort 8192
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8191
+                  periodSeconds: 5
+                  failureThreshold: 30
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 15
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+            # each request launches its own Chrome; ~1.2GiB peak observed upstream (PR #1776)
             resources:
               requests:
-                cpu: 25m
-                memory: 256Mi
-              limits:
+                cpu: 200m
                 memory: 512Mi
+              limits:
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: false # patches /app/chromedriver at runtime
               capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: false
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
 
@@ -40,4 +76,16 @@ spec:
         controller: *app
         ports:
           http:
-            port: &port 8191
+            port: *port
+          metrics:
+            port: *metricsPort
+
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: metrics
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
