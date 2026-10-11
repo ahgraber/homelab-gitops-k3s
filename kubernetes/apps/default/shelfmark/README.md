@@ -6,8 +6,9 @@ Downloads are pushed into the shared `calibre-library` PVC so the main Calibre i
 ## Notes
 
 - Uses the same CephFS-backed library PVC as Calibre Web Automated (mounted at `/cwa-book-ingest`).
-- Includes the Cloudflare bypass sidecar (via `flaresolverr`) so requests can complete reliably.
+- Uses the built-in Cloudflare bypasser (`USE_CF_BYPASS`); upstream recommends it over FlareSolverr and wants ~2GB of memory for it.
 - Relies on the `calibre-web-automated` deployment and the shared `calibre-library` PVC being present before it reconciles.
+- Env vars in the HelmRelease override and lock the matching UI fields.
 
 ## OIDC Integration
 

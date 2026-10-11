@@ -40,52 +40,40 @@ spec:
               OIDC_AUTO_REDIRECT: "false"
               BOOK_LANGUAGE: en
               DEFAULT_SLEEP: "15"
-              USE_BOOK_TITLE: "true"
-              LOG_LEVEL: debug
+              LOG_LEVEL: info
               USE_CF_BYPASS: true
               CALIBRE_WEB_URL: https://calibre.${SECRET_DOMAIN}
-              CLOUDFLARE_PROXY_URL: http://localhost:8000
-
-              # USING_EXTERNAL_BYPASSER: true
-              # EXT_BYPASSER_URL: http://flaresolverr.default.svc.cluster.local:8191
-              # BYPASS_WARMUP_ON_CONNECT: false
-            # command:
-            #   - /bin/sh
-            #   - -c
-            #   - |
-            #     gunicorn -t 300 -b 0.0.0.0:8084 shelfmark.main:app
             probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 24
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /request/api/status
+                    path: /api/health
                     port: *port
-                  initialDelaySeconds: 15
                   timeoutSeconds: 5
                   periodSeconds: 15
                   failureThreshold: 8
               readiness: *probes
+            # upstream: 2GB is a safe minimum when the bypasser runs Chromium
             resources:
               requests:
-                cpu: 50m
-                memory: 256Mi
+                cpu: 100m
+                memory: 512Mi
               limits:
-                memory: 700Mi
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-          # bypass:
-          #   image:
-          #     repository: ghcr.io/sarperavci/cloudflarebypassforscraping
-          #     tag: latest@sha256:23a4b471954dd25917f44c29e2f6bd36615b7892b36b64d463c06d50cbc27d92
-          #   resources:
-          #     requests:
-          #       cpu: 25m
-          #       memory: 128Mi
-          #     limits:
-          #       memory: 512Mi
 
     service:
       app:
@@ -127,3 +115,10 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp/shelfmark
+      # Kubernetes defaults /dev/shm to 64Mi, which Chromium can exhaust
+      dshm:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 1Gi
+        globalMounts:
+          - path: /dev/shm
