@@ -31,6 +31,8 @@ spec:
       - --gateway-name=envoy-external
     triggerLoopOnEvent: true
     policy: sync
+    # v0.22+ defaults to external-dns.kubernetes.io/; pinned until annotations are migrated
+    annotationPrefix: external-dns.alpha.kubernetes.io/
     managedRecordTypes:
       - CNAME
     sources:
