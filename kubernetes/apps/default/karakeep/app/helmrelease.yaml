@@ -111,7 +111,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep-chrome
-              tag: 151.0.7922.47-r1
+              tag: 154.0.8037.57-r1
             args:
               - --disable-gpu
               - --hide-scrollbars
