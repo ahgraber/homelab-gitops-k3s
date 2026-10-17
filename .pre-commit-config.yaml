@@ -89,7 +89,7 @@ repos:
       #   stages: [pre-commit]
   # renovate: datasource=github-tags depName=sirosen/texthooks
   - repo: https://github.com/sirosen/texthooks
-    rev: "0.7.1"
+    rev: "1.0.0"
     hooks:
       - id: fix-smartquotes
         stages: [pre-commit]
