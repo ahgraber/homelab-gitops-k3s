@@ -6,6 +6,7 @@ resources:
   - ./source.yaml
   - ./helmrelease.yaml
   - ./secret-oidc.externalsecret.yaml
+  - ./secret-embeddings.externalsecret.yaml
   - ./securitypolicy.yaml
 
 configMapGenerator:

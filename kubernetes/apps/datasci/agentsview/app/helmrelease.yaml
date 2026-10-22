@@ -17,7 +17,7 @@ spec:
           # effect on a roll - name it explicitly rather than relying on search,
           # since disableNameSuffixHash keeps the name stable across edits.
           configmap.reloader.stakater.com/reload: agentsview-config
-          secret.reloader.stakater.com/reload: database-agentsview
+          secret.reloader.stakater.com/reload: database-agentsview,agentsview-embeddings
 
         initContainers:
           # Copies rather than mounts: the server writes a generated auth token
@@ -73,6 +73,13 @@ spec:
                   secretKeyRef:
                     name: database-agentsview
                     key: POSTGRES_URL
+              # Encodes semantic-search queries; config.toml names this variable
+              # in [vector.embeddings.servers.openai] api_key_env.
+              AGENTSVIEW_OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: agentsview-embeddings
+                    key: openai-api-key
             resources:
               requests:
                 cpu: 25m

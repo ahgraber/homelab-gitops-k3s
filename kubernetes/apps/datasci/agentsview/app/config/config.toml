@@ -7,33 +7,26 @@
 # Connection settings are NOT set here. AGENTSVIEW_PG_URL comes from the
 # database-agentsview secret and overrides anything this file says about [pg].
 
-# Semantic search, off by default.
+# Semantic search over vectors the workstations embed and push.
 #
-# Turning it on takes three things:
+# The hub embeds nothing itself; it only encodes search queries, through the
+# same OpenAI endpoint the workstations use. Model identity (model, dimension,
+# max_input_chars, and any prefixes/suffixes) must match every workstation's
+# config.toml byte for byte: those fields form the generation fingerprint, and
+# a mismatch leaves the hub with no vectors it can compare against, so semantic
+# search returns "not available" while text search keeps working. Transport
+# settings (endpoint, api_key_env, timeouts) may differ.
 #
-#   1. The `vector` extension in the agentsview database. The Postgres CR in
-#      db/postgres.yaml requests it; confirm with
-#      `\dx` in psql before trusting it.
-#   2. The block below, filled in and enabled = true. Model identity
-#      (model, dimension, and any prefixes/suffixes) must match the
-#      workstations byte for byte: those fields form the generation
-#      fingerprint, and a mismatch means the hub finds no vectors it can
-#      compare against and serves no semantic results. Only the endpoint is
-#      allowed to differ.
-#   3. An OpenAI-compatible embeddings endpoint the pod can reach, used to
-#      encode search queries. There is none in-cluster today.
-#
-# With enabled = false the rest is ignored. With enabled = true, model,
-# dimension, and at least one server are required, and the pod refuses to
-# start without them.
+# AGENTSVIEW_OPENAI_API_KEY comes from the agentsview-embeddings secret.
+# Search also needs the `vector` extension (pgvector 0.7.0 or newer) in the
+# agentsview database; see the README.
 [vector]
-enabled = false
+enabled = true
 
-# [vector.embeddings]
-# model = "text-embedding-3-small"
-# dimension = 1536
-# default_server = "default"
-#
-# [vector.embeddings.servers.default]
-# endpoint = "https://openrouter.ai/api/v1"
-# api_key_env = "AGENTSVIEW_EMBEDDINGS_API_KEY"
+[vector.embeddings]
+model = "text-embedding-3-small"
+dimension = 1536
+
+[vector.embeddings.servers.openai]
+endpoint = "https://api.openai.com/v1"
+api_key_env = "AGENTSVIEW_OPENAI_API_KEY"

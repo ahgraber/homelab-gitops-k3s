@@ -19,9 +19,8 @@ workstation C ─ agentsview pg push ─┘        ▲                          
 - **Sync direction is one-way.**
   Workstations push; nothing flows back.
   The dashboard is read-only — starring and pinning happen locally and travel with the next push.
-- **The pod holds no state.** `pg serve` reads everything from PostgreSQL and
-  runs `EnsureSchema` on startup, so it comes up cleanly against an empty
-  database and needs no PVC or volsync.
+- **The pod holds no state.**
+  `pg serve` reads everything from PostgreSQL and runs `EnsureSchema` on startup, so it comes up cleanly against an empty database and needs no PVC or volsync.
 - **`pg push` speaks the PostgreSQL wire protocol,** not HTTP.
   Workstations therefore connect to the database directly, not through the gateway.
 
@@ -79,10 +78,14 @@ Run this once per workstation.
 
    `agentsview pg push --watch` runs the same loop in the foreground.
 
-## Semantic search (optional, off by default)
+## Semantic search
 
-Text search works out of the box.
-Semantic search is wired but not switched on, and needs three things.
+Workstations embed their own sessions with OpenAI `text-embedding-3-small` and push the vectors with `pg push`.
+The hub embeds nothing; it calls the same OpenAI endpoint only to encode each search query.
+A session becomes semantically searchable once the workstation that owns it has embedded and pushed it.
+Text search works without any of this, and keeps working when semantic search is unavailable.
+
+Semantic search needs three things.
 
 1. The `vector` extension in the `agentsview` database.
    `pgvector` ships in the CNPG image — the `system` tag builds from the `standard` stage, which installs `postgresql-${PG_MAJOR}-pgvector`.
@@ -96,14 +99,22 @@ kubectl exec -n datasci "$(kubectl get pods -n datasci -l cnpg.io/instanceRole=p
 
 Either way nothing crashes without it: AgentsView attempts the same statement during schema setup and logs a one-line notice when it is refused.
 
-2. `[vector]` filled in and enabled in [app/config/config.toml](app/config/config.toml).
-   An init container copies that file to `/data/config.toml` on every pod start — a copy rather than a mount, because the server writes a generated auth token back into it and treats a write failure as fatal.
-   Model identity must match the workstations exactly; those fields form the generation fingerprint, and a mismatch leaves the hub with no vectors it can compare against.
-   Only the endpoint may differ.
-   With `enabled = true` the pod refuses to start unless `model`, `dimension`, and a server are all set, so a half-filled block fails loudly instead of silently serving nothing.
+`halfvec` needs pgvector 0.7.0 or newer; `\dx` in psql shows the installed version.
 
-3. An OpenAI-compatible embeddings endpoint the pod can reach, for encoding search queries.
-   Nothing in the cluster serves one today.
+2. The `[vector]` block in [app/config/config.toml](app/config/config.toml).
+   An init container copies that file to `/data/config.toml` on every pod start — a copy rather than a mount, because the server writes a generated auth token back into it and treats a write failure as fatal.
+   Model identity (`model`, `dimension`, `max_input_chars`, and any prefixes or suffixes) must match every workstation exactly; those fields form the generation fingerprint, and a mismatch leaves the hub with no vectors it can compare against.
+   Transport settings (endpoint, `api_key_env`, timeouts) may differ.
+   `agentsview pg vectors list` shows which generations PostgreSQL holds.
+
+3. The OpenAI API key, in the `openai-api-key` field of the `datasci.agentsview` 1Password item.
+   [app/secret-embeddings.externalsecret.yaml](app/secret-embeddings.externalsecret.yaml) syncs it into the `agentsview-embeddings` secret, and the HelmRelease exposes it as `AGENTSVIEW_OPENAI_API_KEY`.
+
+`pg serve` matches its config to a pushed generation only at startup.
+If the pod starts before any workstation has pushed vectors, restart it after the first push.
+
+On a workstation, add the same `[vector]` block to `~/.agentsview/config.toml`, with `api_key_env` naming a variable the local `agentsview serve` process can read.
+Run `agentsview embeddings build` once to embed the existing archive; after that the daemon embeds new sessions after each sync, and `pg push` uploads them.
 
 ## Recovering from a schema incompatibility
 
@@ -126,13 +137,15 @@ Nothing here is recoverable from PostgreSQL alone, but nothing is lost either: e
    kubectl exec -n datasci "$(kubectl get pods -n datasci -l cnpg.io/instanceRole=primary -o name)" -- psql -d agentsview -c 'DROP SCHEMA IF EXISTS agentsview CASCADE'
    ```
 
-3. Resume. `EnsureSchema` recreates the tables at the current version on startup:
+3. Resume.
+   `EnsureSchema` recreates the tables at the current version on startup:
 
    ```bash
    flux resume hr agentsview -n datasci
    ```
 
-4. Repopulate from every workstation. `--full` is required — an incremental push would skip sessions it believes are already there:
+4. Repopulate from every workstation.
+   `--full` is required — an incremental push would skip sessions it believes are already there:
 
    ```bash
    agentsview pg push --full
@@ -143,8 +156,7 @@ Until each machine has run step 4, the dashboard shows only the machines that ha
 ## Dependencies
 
 - `cnpg-cluster-datasci` — the `datasci16` PostgreSQL cluster
-- `ext-postgres-operator-datasci` — provisions the database and role from the
-  `Postgres`/`PostgresUser` CRs in `db/`
+- `ext-postgres-operator-datasci` — provisions the database and role from the `Postgres`/`PostgresUser` CRs in `db/`
 - `envoy-gateway` (`envoy-internal`) and `authelia` for ingress and login
 - `external-secrets` — pulls the OIDC client secret from `datasci.agentsview`
 
@@ -156,10 +168,8 @@ Until each machine has run step 4, the dashboard shows only the machines that ha
   Removing a session locally leaves it in PostgreSQL; upstream expects manual SQL cleanup.
 - **Text search needs nothing.**
   `EnsureSchema` creates `pg_trgm`, which is a trusted extension the database owner installs on its own.
-- **Bumping the image can require a schema migration.** `pg serve` migrates
-  forward on startup but refuses to run against a schema it considers
-  incompatible; upstream's answer is to drop and recreate the schema, then
-  re-push from each machine.
+- **Bumping the image can require a schema migration.**
+  `pg serve` migrates forward on startup but refuses to run against a schema it considers incompatible; upstream's answer is to drop and recreate the schema, then re-push from each machine.
 
 ## References
 
