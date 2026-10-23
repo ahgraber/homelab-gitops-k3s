@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: freshrss/freshrss
-              tag: 1.30.2
+              tag: 1.30.4
             env:
               TZ: ${TIMEZONE}
               CRON_MIN: "18,48"
