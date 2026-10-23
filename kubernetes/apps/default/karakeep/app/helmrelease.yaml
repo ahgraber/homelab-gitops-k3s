@@ -167,7 +167,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.53.1
+              tag: v1.53.3
             args:
               - /bin/meilisearch
               - --upgrade-db
