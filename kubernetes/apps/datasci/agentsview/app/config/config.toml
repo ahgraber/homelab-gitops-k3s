@@ -24,9 +24,9 @@
 enabled = true
 
 [vector.embeddings]
-model = "text-embedding-3-small"
+model = "openai/text-embedding-3-small"
 dimension = 1536
 
-[vector.embeddings.servers.openai]
-endpoint = "https://api.openai.com/v1"
-api_key_env = "AGENTSVIEW_OPENAI_API_KEY"
+[vector.embeddings.servers.openrouter]
+endpoint = "https://openrouter.ai/api/v1"
+api_key_env = "AGENTSVIEW_OPENROUTER_API_KEY"

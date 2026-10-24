@@ -74,12 +74,12 @@ spec:
                     name: database-agentsview
                     key: POSTGRES_URL
               # Encodes semantic-search queries; config.toml names this variable
-              # in [vector.embeddings.servers.openai] api_key_env.
-              AGENTSVIEW_OPENAI_API_KEY:
+              # in [vector.embeddings.servers.openrouter] api_key_env.
+              AGENTSVIEW_OPENROUTER_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: agentsview-embeddings
-                    key: openai-api-key
+                    key: openrouter-api-key
             resources:
               requests:
                 cpu: 25m
