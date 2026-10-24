@@ -68,6 +68,9 @@ spec:
               AGENTSVIEW_DATA_DIR: /data/app
               AGENTSVIEW_TELEMETRY_ENABLED: "0"
               AGENTSVIEW_DISABLE_UPDATE_CHECK: "1"
+              # Rely on Authelia at the gateway is the login instead of built-in token auth
+              AGENTSVIEW_REQUIRE_AUTH: "false"
+
               AGENTSVIEW_PG_URL:
                 valueFrom:
                   secretKeyRef:
@@ -134,7 +137,7 @@ spec:
     persistence:
       # AGENTSVIEW_DATA_DIR is baked into the image as /data. In pg serve mode
       # the only thing written there is config.toml (including a generated auth
-      # token, unused here), so it does not need to survive a restart.
+      # token, unused while AGENTSVIEW_REQUIRE_AUTH is false)
       data:
         type: emptyDir
         globalMounts:
