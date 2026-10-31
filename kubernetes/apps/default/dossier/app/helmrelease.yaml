@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/aientech/dossier
-              tag: v1.10.0@sha256:2a4dd7b790637fbf9135b462c584ccfdf056f28836a6dd17fd8a660cffd2d677
+              tag: v1.11.0@sha256:216df01e3f8adec7c807a4ab209edf253d18a5817eedc26a86fb53db9e570c6d
             env:
               TZ: "America/New_York"
               DOSSIER_TELEMETRY: "off"
