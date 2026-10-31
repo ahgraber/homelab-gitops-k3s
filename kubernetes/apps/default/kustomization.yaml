@@ -15,6 +15,7 @@ resources:
   - ./bentopdf/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./cyberchef/ks.yaml
+  - ./dossier/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./freshrss/ks.yaml
   - ./galene/ks.yaml
