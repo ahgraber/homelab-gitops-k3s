@@ -113,11 +113,6 @@
             # unstable.renovate # Cross-platform Dependency Automation # TODO: update renovate when it works; remove brew renovate
             # velero         # Kubernetes disaster recovery
             yq-go # Lightweight and portable command-line YAML processor
-            #--- containers ---
-            docker # Pack, ship and run any application as a lightweight container
-            # podman
-            colima
-            qemu
           ];
           # imports = [ (devshell.importTOML ./devshell.toml) ];
         };
