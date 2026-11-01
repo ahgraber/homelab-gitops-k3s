@@ -17,8 +17,7 @@ It uses the syncthing binary itself — `syncthing generate --home=/var/syncthin
 
 ### GUI authentication
 
-Syncthing has no native OIDC/OAuth, so the GUI is protected by a static username + password (and a
-fixed REST API key), sourced from 1Password via ESO — never stored in Git.
+Syncthing has no native OIDC/OAuth, so the GUI is protected by a static username + password (and a fixed REST API key), sourced from 1Password via ESO — never stored in Git.
 
 Required 1Password item `op://homelab/default.syncthing` with fields:
 
@@ -69,3 +68,23 @@ Two hostnames front the central node:
 
 > **Networking note:** the sync protocol needs raw L4 reachability, so it is exposed via a dedicated Cilium LoadBalancer (`discovery` service) rather than the Envoy GUI route, which only speaks HTTP.
 > `sync.${SECRET_DOMAIN}` is published to internal DNS by k8s-gateway from the service's `external-dns` hostname annotation and pinned to `10.2.118.6` via LBIPAM, so the address stays stable across redeploys.
+
+## Troubleshooting
+
+### VolSync backup out of sync (stale restic lock)
+
+Symptom: `VolSyncVolumeOutOfSync` alerts for `syncthing`, and `volsync-src-syncthing` mover pods fail in a loop.
+The mover log shows `snapshot ... saved`, then `forget` fails with `repository is already locked by PID ... on volsync-src-syncthing-<id>`.
+
+Cause: a mover pod left its lock in the restic repository.
+Each retry saves a valid snapshot and then fails at `forget`; the repository is not damaged.
+
+Fix: pause the source before unlocking, because `just volsync unlock` runs `restic unlock --remove-all`, which also removes a running mover's live lock.
+
+```bash
+kubectl -n default patch replicationsources syncthing --type merge -p '{"spec":{"paused":true}}'
+kubectl -n default delete job volsync-src-syncthing
+just volsync unlock syncthing default
+kubectl -n default patch replicationsources syncthing --type merge -p '{"spec":{"paused":false}}'
+just volsync snapshot syncthing default
+```
