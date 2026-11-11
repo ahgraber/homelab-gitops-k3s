@@ -14,7 +14,7 @@ spec:
 
     image:
       repository: codeberg.org/k8s-gateway/k8s_gateway
-      tag: 1.9.2
+      tag: 1.10.0
       pullPolicy: IfNotPresent
 
     serviceType: LoadBalancer
