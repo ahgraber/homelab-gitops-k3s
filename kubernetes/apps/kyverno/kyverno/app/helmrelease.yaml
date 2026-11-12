@@ -12,8 +12,6 @@ spec:
   values:
     crds:
       install: true
-    upgrade:
-      acknowledgeLegacyPoliciesNotEnforced: true
     grafana:
       enabled: true
       # annotations:
@@ -50,6 +48,17 @@ spec:
     reportsController:
       serviceMonitor:
         enabled: true
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups:
+                - gateway.networking.k8s.io
+              resources:
+                - httproutes
+              verbs:
+                - get
+                - list
+                - watch
     admissionController:
       replicas: 3
       serviceMonitor:
