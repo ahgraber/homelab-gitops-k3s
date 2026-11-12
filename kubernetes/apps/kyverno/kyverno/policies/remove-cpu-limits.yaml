@@ -12,6 +12,9 @@ metadata:
     policies.kyverno.io/description: >-
       This policy removes CPU limits from all Pods.
 spec:
+  autogen:
+    podControllers:
+      controllers: []
   matchConstraints:
     resourceRules:
       - apiGroups: [""]
