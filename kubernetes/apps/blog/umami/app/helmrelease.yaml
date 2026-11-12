@@ -30,9 +30,9 @@ spec:
                     name: &db_secret database-umami
                     key: POSTGRES_URL
               DISABLE_TELEMETRY: "true"
-            # envFrom:
-            #   - secretRef:
-            #       name: *app
+            envFrom:
+              - secretRef:
+                  name: *app
             probes:
               liveness: &probes
                 enabled: true
