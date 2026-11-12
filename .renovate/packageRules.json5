@@ -2,9 +2,16 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "Use timestamp-optional stability checks for GHCR docker images",
+      description: "Use timestamp-optional stability checks for docker registries that return no release timestamps",
       matchDatasources: ["docker"],
-      matchPackageNames: ["/^ghcr\\.io\\//"],
+      matchPackageNames: [
+        "/^ghcr\\.io\\//",
+        "/^mirror\\.gcr\\.io\\//",
+        "/^quay\\.io\\//",
+        "/^codeberg\\.org\\//",
+        "/^registry\\.k8s\\.io\\//",
+        "/^us-docker\\.pkg\\.dev\\//",
+      ],
       minimumReleaseAgeBehaviour: "timestamp-optional"
     },
     {

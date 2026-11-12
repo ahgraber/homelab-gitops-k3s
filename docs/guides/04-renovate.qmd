@@ -56,7 +56,7 @@ It is both an introduction and a normative specification.
 
 - Renovate MUST default PR creation delay to `3 days` to reduce churn from immediately-retracted releases and improve merge-confidence signal quality.
 - Exceptions to the global delay MAY be used only for explicitly documented, allowlist-scoped rules.
-- Renovate MUST handle missing/partial release timestamps for GHCR images via `minimumReleaseAgeBehaviour=timestamp-optional`.
+- Renovate MUST handle missing/partial release timestamps for images from registries other than Docker Hub (GHCR, `mirror.gcr.io`, Quay, Codeberg, `registry.k8s.io`, `us-docker.pkg.dev`) via `minimumReleaseAgeBehaviour=timestamp-optional`.
 - Renovate MUST ignore encrypted and generated paths that should never be dependency-churn surfaces:
   - `**/*.sops.*`
   - `**/.archive/**`
