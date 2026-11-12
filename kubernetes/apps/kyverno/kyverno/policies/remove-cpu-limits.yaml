@@ -16,6 +16,11 @@ spec:
     podControllers:
       controllers: []
   matchConstraints:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: [kube-system, kyverno]
     resourceRules:
       - apiGroups: [""]
         apiVersions: [v1]
