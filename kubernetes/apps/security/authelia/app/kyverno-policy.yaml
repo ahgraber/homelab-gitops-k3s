@@ -1,34 +1,39 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/policies.kyverno.io/namespacedgeneratingpolicy_v1.json
+apiVersion: policies.kyverno.io/v1
+kind: NamespacedGeneratingPolicy
 metadata:
   name: authelia-session-secret
   annotations:
     policies.kyverno.io/category: Other
-    policies.kyverno.io/subject: Deployment, Job
+    policies.kyverno.io/subject: Deployment, Secret
     policies.kyverno.io/description: >-
       Automatically regenerate a session secret for Authelia when it is deployed
       to invalidate existing sessions/cookies.
 spec:
-  rules:
-    - name: generate-authelia-session-secret
-      match:
-        resources:
-          kinds:
-            - Deployment
-          namespaces:
-            - security
-          names:
-            - authelia
-      generate:
-        synchronize: true
-        apiVersion: v1
-        kind: Secret
-        name: authelia-session
-        namespace: security
-        data:
+  evaluation:
+    synchronize:
+      enabled: true
+    generateExisting:
+      enabled: true
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [apps]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [deployments]
+        resourceNames: [authelia]
+  generate:
+    - template:
+        interpolate: cel
+        value: |
+          apiVersion: v1
+          kind: Secret
           metadata:
+            name: authelia-session
+            namespace: security
             labels:
               kyverno.io/generated-by: authelia-session-secret
           type: Opaque
           stringData:
-            AUTHELIA_SESSION_SECRET: "{{ random('[0-9a-f]{128}') }}"
+            AUTHELIA_SESSION_SECRET: (( random('[0-9a-f]{128}') ))

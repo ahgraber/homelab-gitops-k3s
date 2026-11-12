@@ -1,7 +1,7 @@
 ---
-# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kyverno.io/policy_v1.json
-apiVersion: kyverno.io/v1
-kind: Policy
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/policies.kyverno.io/namespacedgeneratingpolicy_v1.json
+apiVersion: policies.kyverno.io/v1
+kind: NamespacedGeneratingPolicy
 metadata:
   name: hugo-cache-purge-on-rollout
   annotations:
@@ -11,35 +11,28 @@ metadata:
       Automatically purge Cloudflare cache when Hugo deployment is updated
       with a new image tag or configuration change.
 spec:
-  rules:
-    - name: create-cache-purge-job-on-rollout
-      match:
-        any:
-          - resources:
-              kinds:
-                - Deployment
-              names:
-                - hugo
-                - hugo-*
-      preconditions:
-        all:
-          - key: "{{ request.operation || 'BACKGROUND' }}"
-            operator: Equals
-            value: UPDATE
-          - key: "{{ request.object.metadata.generation }}"
-            operator: NotEquals
-            value: "{{ request.oldObject.metadata.generation }}"
-          - key: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" || '' }}"
-            operator: NotEquals
-            value: ""
-      generate:
-        generateExisting: false
-        synchronize: false
-        apiVersion: batch/v1
-        kind: Job
-        name: "cache-purge-{{ request.object.metadata.generation }}"
-        namespace: blog
-        data:
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [apps]
+        apiVersions: [v1]
+        operations: [UPDATE]
+        resources: [deployments]
+  matchConditions:
+    - name: is-hugo
+      expression: object.metadata.name == 'hugo' || object.metadata.name.startsWith('hugo-')
+    - name: generation-changed
+      expression: object.metadata.generation != oldObject.metadata.generation
+    - name: has-cache-tag
+      expression: oldObject.metadata.?annotations['cache.cloudflare.com/tag'].orValue('') != ''
+  generate:
+    - template:
+        interpolate: cel
+        value: |
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: cache-purge-(( string(object.metadata.generation) ))
+            namespace: blog
           spec:
             template:
               spec:
@@ -56,7 +49,7 @@ spec:
                           --data "{\"tags\":[\"$CF_CACHE_TAG\"]}"
                     env:
                       - name: CF_CACHE_TAG
-                        value: "{{ request.oldObject.metadata.annotations.\"cache.cloudflare.com/tag\" }}"
+                        value: (( oldObject.metadata.annotations['cache.cloudflare.com/tag'] ))
                     envFrom:
                       - secretRef:
                           name: hugo

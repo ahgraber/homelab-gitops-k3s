@@ -12,6 +12,8 @@ spec:
   values:
     crds:
       install: true
+    upgrade:
+      acknowledgeLegacyPoliciesNotEnforced: true
     grafana:
       enabled: true
       # annotations:

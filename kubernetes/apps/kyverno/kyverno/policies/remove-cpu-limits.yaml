@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kyverno.io/clusterpolicy_v1.json
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/policies.kyverno.io/mutatingpolicy_v1.json
 ---
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: MutatingPolicy
 metadata:
   name: remove-cpu-limit
   annotations:
@@ -11,45 +11,33 @@ metadata:
     policies.kyverno.io/subject: Pod
     policies.kyverno.io/description: >-
       This policy removes CPU limits from all Pods.
-    pod-policies.kyverno.io/autogen-controllers: none
 spec:
-  rules:
-    - name: remove-containers-cpu-limits
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-      exclude:
-        any:
-          - resources:
-              annotations:
-                kyverno.io/ignore: "true"
-      mutate:
-        foreach:
-          - list: "request.object.spec.containers"
-            patchesJson6902: |-
-              - path: /spec/containers/{{elementIndex}}/resources/limits/cpu
-                op: remove
-    - name: delete-initcontainers-cpu-limits
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-      exclude:
-        any:
-          - resources:
-              annotations:
-                kyverno.io/ignore: "true"
-      preconditions:
-        all:
-          - key: "{{ request.object.spec.initContainers[] || `[]` | length(@) }}"
-            operator: GreaterThanOrEquals
-            value: 1
-      mutate:
-        foreach:
-          - list: "request.object.spec.initContainers"
-            patchesJson6902: |-
-              - path: /spec/initContainers/{{elementIndex}}/resources/limits/cpu
-                op: remove
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE]
+        resources: [pods]
+  matchConditions:
+    - name: not-ignored
+      expression: object.metadata.?annotations['kyverno.io/ignore'].orValue('') != 'true'
+  variables:
+    - name: initContainers
+      expression: object.spec.?initContainers.orValue([])
+  mutations:
+    - patchType: JSONPatch
+      jsonPatch:
+        expression: >-
+          object.spec.containers
+            .filter(c, has(c.resources) && has(c.resources.limits) && 'cpu' in c.resources.limits)
+            .map(c, JSONPatch{
+              op: "remove",
+              path: "/spec/containers/" + string(object.spec.containers.indexOf(c)) + "/resources/limits/cpu"
+            })
+          +
+          variables.initContainers
+            .filter(c, has(c.resources) && has(c.resources.limits) && 'cpu' in c.resources.limits)
+            .map(c, JSONPatch{
+              op: "remove",
+              path: "/spec/initContainers/" + string(variables.initContainers.indexOf(c)) + "/resources/limits/cpu"
+            })
