@@ -165,7 +165,7 @@ repos:
           - mdformat-simple-breaks
   # renovate: datasource=github-tags depName=rvben/rumdl-pre-commit
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.3.2
+    rev: v0.3.4
     hooks:
       # - id: rumdl      # Lint only (fails on issues)
       #   stages: [pre-commit]
@@ -173,7 +173,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=astral-sh/ruff-pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.17.4"
+    rev: "v0.17.5"
     hooks:
       - id: ruff-check
         name: Lint with Ruff
@@ -199,7 +199,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=shellcheck-py/shellcheck-py versioning=loose
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: "v0.11.0.1"
+    rev: "v0.11.0.1-1"
     hooks:
       - id: shellcheck
         name: Lint shell scripts
@@ -207,7 +207,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=scop/pre-commit-shfmt versioning=loose
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: "v3.13.1-1"
+    rev: "v3.14.1-1"
     hooks:
       - id: shfmt
         name: Format shell scripts
@@ -225,7 +225,7 @@ repos:
         stages: [pre-commit]
   # renovate: datasource=github-tags depName=biomejs/pre-commit
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.6.6
+    rev: v2.6.7
     hooks:
       - id: biome-check
         stages: [pre-commit]
@@ -242,7 +242,7 @@ repos:
   ### In this case, comment out this block until ".typos.toml" has been committed successfully
   # renovate: datasource=github-tags depName=crate-ci/typos
   - repo: https://github.com/crate-ci/typos
-    rev: "v1.52.1"
+    rev: "v1.52.2"
     hooks:
       - id: typos
         name: Spellcheck with Typos
