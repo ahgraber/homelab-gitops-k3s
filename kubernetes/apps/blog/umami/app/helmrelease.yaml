@@ -20,7 +20,7 @@ spec:
             image:
               repository: ghcr.io/umami-software/umami
               # tag: postgresql-v2.11.3
-              tag: 3.4.1
+              tag: 3.5.0
             env:
               TZ: "America/New_York"
               DATABASE_TYPE: postgresql
@@ -30,9 +30,9 @@ spec:
                     name: &db_secret database-umami
                     key: POSTGRES_URL
               DISABLE_TELEMETRY: "true"
-            # envFrom:
-            #   - secretRef:
-            #       name: *app
+            envFrom:
+              - secretRef:
+                  name: *app
             probes:
               liveness: &probes
                 enabled: true
