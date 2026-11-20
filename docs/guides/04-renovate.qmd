@@ -106,7 +106,7 @@ It is both an introduction and a normative specification.
 This section defines where new policy should go.
 It does not require current files to be renamed.
 
-- Root Renovate config (`.renovaterc.json5`) MUST stay minimal and composition-focused:
+- Root Renovate config (`.github/renovate.json5`) MUST stay minimal and composition-focused:
   - global toggles
   - manager enablement/scope
   - inclusion of local preset modules
