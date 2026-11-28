@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/usememos/memos
-              tag: 26.11.0@sha256:087e7dc6b76b31fcd1107a5767398b2a310ced209adb791efd8760c745dc8034
+              tag: 26.11.3@sha256:544d36b5f2a0747addb16e320bd601fddf626e29d71ddcbd371c3443c2636274
             env:
               TZ: "America/New_York"
               MEMOS_PORT: "5230" # https://github.com/usememos/memos/issues/1782
